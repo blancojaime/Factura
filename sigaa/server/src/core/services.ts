@@ -26,27 +26,32 @@ export async function gestion(db: Db): Promise<number> {
 }
 
 // ───────── Numeración correlativa por gestión: CGI-0001/2026 ─────────
-export async function siguienteNro(db: Db, prefijo: string, g?: number): Promise<string> {
+/**
+ * Genera el siguiente número `PREFIJO-0001/GESTIÓN`. El contador se lleva por `serie`
+ * (por defecto el propio prefijo); se usa una serie distinta cuando dos módulos comparten prefijo (p. ej. TRF, BAJ).
+ */
+export async function siguienteNro(db: Db, prefijo: string, g?: number, serie: string = prefijo): Promise<string> {
   const gest = g ?? (await gestion(db));
-  const row = await db('core_secuencias').where({ prefijo, gestion: gest }).first();
+  const row = await db('core_secuencias').where({ prefijo: serie, gestion: gest }).first();
   let n: number;
   if (row) {
     n = Number(row.ultimo) + 1;
-    await db('core_secuencias').where({ prefijo, gestion: gest }).update({ ultimo: n });
+    await db('core_secuencias').where({ prefijo: serie, gestion: gest }).update({ ultimo: n });
   } else {
     n = 1;
-    await db('core_secuencias').insert({ prefijo, gestion: gest, ultimo: 1 });
+    await db('core_secuencias').insert({ prefijo: serie, gestion: gest, ultimo: 1 });
   }
   return `${prefijo}-${String(n).padStart(4, '0')}/${gest}`;
 }
 /** Registra en la secuencia un número ya existente (carga de datos históricos). */
-export async function registrarNro(db: Db, nro: string) {
+export async function registrarNro(db: Db, nro: string, serie?: string) {
   const m = /^([A-Z]+)-(\d+)\/(\d{4})$/.exec(nro);
   if (!m) return;
   const [, prefijo, n, g] = m;
-  const row = await db('core_secuencias').where({ prefijo, gestion: Number(g) }).first();
-  if (!row) await db('core_secuencias').insert({ prefijo, gestion: Number(g), ultimo: Number(n) });
-  else if (Number(row.ultimo) < Number(n)) await db('core_secuencias').where({ prefijo, gestion: Number(g) }).update({ ultimo: Number(n) });
+  const key = serie ?? prefijo;
+  const row = await db('core_secuencias').where({ prefijo: key, gestion: Number(g) }).first();
+  if (!row) await db('core_secuencias').insert({ prefijo: key, gestion: Number(g), ultimo: Number(n) });
+  else if (Number(row.ultimo) < Number(n)) await db('core_secuencias').where({ prefijo: key, gestion: Number(g) }).update({ ultimo: Number(n) });
 }
 /** Id correlativo con prefijo de una letra (L000001, M000001, ...). */
 export async function siguienteId(db: Db, tabla: string, col: string, letra: string, ancho = 6): Promise<() => string> {

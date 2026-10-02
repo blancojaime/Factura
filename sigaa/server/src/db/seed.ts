@@ -162,7 +162,8 @@ export async function seedActivos(db: Knex) {
   await ins(db, 'af_asignaciones', f.T_ASIG.map((x) => ({ nro: x.NroActa, fecha: d(x.Fecha), nro_sol: s(x.NroSol), funcionario: s(x.Funcionario), ci: s(x.CI), cargo: s(x.Cargo), unidad: s(x.Unidad), cod_edif: x.CodEdif ?? null, cod_amb: x.CodAmb ?? null, cantidad: n(x.Cantidad), valor: n(x.Valor), observaciones: s(x.Observaciones), fecha_reg: ts(x.FechaReg) })));
   await ins(db, 'af_asignaciones_det', f.T_ASIGDET.map((x) => ({ nro: x.NroActa, codigo: x.Codigo })));
   await ins(db, 'af_movimientos', f.T_MOV.map((x) => ({ fecha: d(x.Fecha), codigo: x.Codigo, tipo: x.Tipo, documento: s(x.Documento), origen: s(x.Origen), destino: s(x.Destino), detalle: s(x.Detalle), usuario: s(x.Usuario), fecha_reg: ts(x.FechaReg) })));
-  for (const x of [...f.T_INGRESOS.map((r) => r.NroIngreso), ...f.T_SOLIC.map((r) => r.NroSol), ...f.T_ASIG.map((r) => r.NroActa)]) await registrarNro(db, x);
+  for (const x of [...f.T_INGRESOS.map((r) => r.NroIngreso), ...f.T_SOLIC.map((r) => r.NroSol), ...f.T_ASIG.map((r) => r.NroActa)]) await registrarNro(db, x, 'AF.' + x.split('-')[0]);
+  for (const x of f.T_MOV.map((r) => r.Documento).filter(Boolean)) await registrarNro(db, x, 'AF.' + String(x).split('-')[0]);
 }
 
 export async function seedAll(db: Knex, opts: { demo?: boolean } = {}) {
