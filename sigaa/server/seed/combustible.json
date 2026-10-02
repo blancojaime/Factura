@@ -1,0 +1,501 @@
+{
+"tblCobros": [],
+"tblVehiculos": [
+{
+"Código": "V-001",
+"Placa": "2345ABC",
+"Tipo": "Vagoneta",
+"Clase": "Liviano",
+"Uso": "Ejecutivo",
+"Marca": "Toyota",
+"Modelo": "Land Cruiser",
+"Año": 2019,
+"Color": "Blanco",
+"Combustible": "Gasolina",
+"Medidor": "Km",
+"Capacidad Tanque L": 90,
+"Rendimiento": 0.12,
+"Unidad": "DESPACHO DEL EJECUTIVO MUNICIPAL",
+"Conductor Asignado": "JOSÉ LUIS MAMANI CHOQUE",
+"Acta Asignación": "ACT-01/2026",
+"Estado": "Activo",
+"Observaciones": null
+},
+{
+"Código": "V-002",
+"Placa": "3456BCD",
+"Tipo": "Camioneta",
+"Clase": "Liviano",
+"Uso": "Operativo",
+"Marca": "Nissan",
+"Modelo": "Frontier",
+"Año": 2020,
+"Color": "Blanco",
+"Combustible": "Diésel",
+"Medidor": "Km",
+"Capacidad Tanque L": 80,
+"Rendimiento": 0.11,
+"Unidad": "SECRETARÍA MUNICIPAL DE DESARROLLO PRODUCTIVO",
+"Conductor Asignado": "FREDDY APAZA LAURA",
+"Acta Asignación": "ACT-02/2026",
+"Estado": "Activo",
+"Observaciones": null
+},
+{
+"Código": "M-001",
+"Placa": "RETRO-01",
+"Tipo": "Retroexcavadora",
+"Clase": "Pesado",
+"Uso": "Operativo",
+"Marca": "Caterpillar",
+"Modelo": "416F",
+"Año": 2018,
+"Color": "Amarillo",
+"Combustible": "Diésel",
+"Medidor": "Horas",
+"Capacidad Tanque L": 160,
+"Rendimiento": 8,
+"Unidad": "SECRETARÍA MUNICIPAL TÉCNICA E INFRAESTRUCTURA",
+"Conductor Asignado": "MARCO ANTONIO QUISPE",
+"Acta Asignación": "ACT-03/2026",
+"Estado": "Activo",
+"Observaciones": null
+},
+{
+"Código": "M-002",
+"Placa": "4567CDE",
+"Tipo": "Volqueta",
+"Clase": "Semipesado",
+"Uso": "Operativo",
+"Marca": "Volvo",
+"Modelo": "FMX",
+"Año": 2017,
+"Color": "Rojo",
+"Combustible": "Diésel",
+"Medidor": "Km",
+"Capacidad Tanque L": 300,
+"Rendimiento": 0.4,
+"Unidad": "SECRETARÍA MUNICIPAL TÉCNICA E INFRAESTRUCTURA",
+"Conductor Asignado": "RENÉ CONDORI TICONA",
+"Acta Asignación": "ACT-04/2026",
+"Estado": "Activo",
+"Observaciones": null
+}
+],
+"tblConductores": [
+{
+"CI": "4567891",
+"Nombre": "JOSÉ LUIS MAMANI CHOQUE",
+"Cargo": "Chofer",
+"Unidad": "DESPACHO DEL EJECUTIVO MUNICIPAL",
+"Celular": "71234567",
+"Licencia": "4567891",
+"Categoría": "B",
+"Vence Licencia": "2028-05-30T00:00:00",
+"Estado": "Activo",
+"Observaciones": null
+},
+{
+"CI": "5678912",
+"Nombre": "MARCO ANTONIO QUISPE",
+"Cargo": "Operador de maquinaria",
+"Unidad": "SECRETARÍA MUNICIPAL TÉCNICA E INFRAESTRUCTURA",
+"Celular": "72345678",
+"Licencia": "5678912",
+"Categoría": "C",
+"Vence Licencia": "2027-08-15T00:00:00",
+"Estado": "Activo",
+"Observaciones": null
+},
+{
+"CI": "6789123",
+"Nombre": "RENÉ CONDORI TICONA",
+"Cargo": "Chofer",
+"Unidad": "SECRETARÍA MUNICIPAL TÉCNICA E INFRAESTRUCTURA",
+"Celular": "73456789",
+"Licencia": "6789123",
+"Categoría": "C",
+"Vence Licencia": "2026-03-01T00:00:00",
+"Estado": "Activo",
+"Observaciones": null
+},
+{
+"CI": "7891234",
+"Nombre": "FREDDY APAZA LAURA",
+"Cargo": "Chofer",
+"Unidad": "SECRETARÍA MUNICIPAL DE DESARROLLO PRODUCTIVO",
+"Celular": "74567890",
+"Licencia": "7891234",
+"Categoría": "B",
+"Vence Licencia": "2029-01-10T00:00:00",
+"Estado": "Activo",
+"Observaciones": null
+}
+],
+"tblUnidades": [
+{
+"Código": "DE",
+"Unidad": "DESPACHO DEL EJECUTIVO MUNICIPAL",
+"Responsable": "Prof. Mario Tola",
+"Cargo": "ALCALDE MUNICIPAL"
+},
+{
+"Código": "SMAF",
+"Unidad": "SECRETARÍA MUNICIPAL ADMINISTRATIVA Y FINANCIERA",
+"Responsable": "Lic. Juan Pérez Mamani",
+"Cargo": "SECRETARIO MUNICIPAL"
+},
+{
+"Código": "SMTI",
+"Unidad": "SECRETARÍA MUNICIPAL TÉCNICA E INFRAESTRUCTURA",
+"Responsable": "Ing. Luis Callisaya",
+"Cargo": "SECRETARIO MUNICIPAL"
+},
+{
+"Código": "SMDP",
+"Unidad": "SECRETARÍA MUNICIPAL DE DESARROLLO PRODUCTIVO",
+"Responsable": "Ing. Ana Mamani",
+"Cargo": "SECRETARIA MUNICIPAL"
+}
+],
+"tblAperturas": [
+{
+"Apertura": "00 0 001",
+"Descripción": "Funcionamiento del Ejecutivo Municipal",
+"Presupuesto Bs": 60000
+},
+{
+"Apertura": "18 0 001",
+"Descripción": "Mantenimiento de caminos vecinales",
+"Presupuesto Bs": 250000
+},
+{
+"Apertura": "10 0 002",
+"Descripción": "Apoyo a la producción agropecuaria",
+"Presupuesto Bs": 80000
+}
+],
+"tblProveedores": [
+{
+"NIT": "1020304025",
+"Razón Social": "ESTACIÓN DE SERVICIO EL ALTO SRL",
+"Estación de Servicio": "EESS Senkata",
+"Dirección": "Carretera a Oruro km 12",
+"Teléfono": "22800000"
+}
+],
+"tblPuestos": [
+{
+"Código": "PT-01",
+"Nombre": "Campamento Caminos",
+"Ubicación": "Comunidad Ajoya",
+"Responsable": "Tec. Pedro Limachi",
+"Combustible": "Diésel",
+"Capacidad L": 1000,
+"Estado": "Activo"
+}
+],
+"tblContratos": [
+{
+"Nro Contrato": "GAMC-CONT-001/2026",
+"Proveedor": "ESTACIÓN DE SERVICIO EL ALTO SRL",
+"Modalidad": "Prepago",
+"Combustible": "Gasolina",
+"Fecha Firma": "2026-01-20T00:00:00",
+"Vigencia Desde": "2026-01-20T00:00:00",
+"Vigencia Hasta": "2026-12-31T00:00:00",
+"Monto Bs": 50000,
+"Recibido Bs": 0,
+"Saldo Bs": 50000,
+"Estado": "Vigente",
+"Observaciones": null
+},
+{
+"Nro Contrato": "GAMC-CONT-002/2026",
+"Proveedor": "ESTACIÓN DE SERVICIO EL ALTO SRL",
+"Modalidad": "Postpago",
+"Combustible": "Diésel",
+"Fecha Firma": "2026-01-20T00:00:00",
+"Vigencia Desde": "2026-01-20T00:00:00",
+"Vigencia Hasta": "2026-12-31T00:00:00",
+"Monto Bs": 150000,
+"Recibido Bs": 0,
+"Saldo Bs": 150000,
+"Estado": "Vigente",
+"Observaciones": null
+}
+],
+"tblCronograma": [],
+"tblConfig": [
+{
+"Parámetro": "ENTIDAD",
+"Valor": "GOBIERNO AUTÓNOMO MUNICIPAL DE CALAMARCA",
+"Descripción": "Nombre de la entidad (encabezado de documentos)"
+},
+{
+"Parámetro": "NIT",
+"Valor": 1234567019,
+"Descripción": "NIT de la entidad (facturas)"
+},
+{
+"Parámetro": "DEPARTAMENTO",
+"Valor": "LA PAZ",
+"Descripción": "Departamento"
+},
+{
+"Parámetro": "GESTION",
+"Valor": 2026,
+"Descripción": "Gestión fiscal (reinicia la numeración de documentos)"
+},
+{
+"Parámetro": "NOMBRE_SMAF",
+"Valor": "Lic. Juan Pérez Mamani",
+"Descripción": "Nombre del Secretario(a) Municipal Administrativo(a) y Financiero(a)"
+},
+{
+"Parámetro": "CARGO_SMAF",
+"Valor": "SECRETARIO MUNICIPAL ADMINISTRATIVO Y FINANCIERO",
+"Descripción": "Cargo que autoriza"
+},
+{
+"Parámetro": "NOMBRE_RAF",
+"Valor": "Sr. Carlos Quispe Choque",
+"Descripción": "Nombre del Responsable de Activos Fijos y Almacenes"
+},
+{
+"Parámetro": "CARGO_RAF",
+"Valor": "RESPONSABLE DE ACTIVOS FIJOS Y ALMACENES",
+"Descripción": "Encargado de la provisión de combustible"
+},
+{
+"Parámetro": "NOMBRE_SMG",
+"Valor": "Ing. Rosa Condori Apaza",
+"Descripción": "Nombre del Secretario(a) Municipal General"
+},
+{
+"Parámetro": "CARGO_SMG",
+"Valor": "SECRETARIO MUNICIPAL GENERAL",
+"Descripción": "Programación de maquinaria"
+},
+{
+"Parámetro": "LITROS_DIA_EJECUTIVO",
+"Valor": 16,
+"Descripción": "Litros por día hábil (lunes a sábado) para uso ejecutivo - DS 27327 Art. 19"
+},
+{
+"Parámetro": "STOCK_MIN_30",
+"Valor": 20,
+"Descripción": "Stock mínimo de vales de Bs 30 (alerta)"
+},
+{
+"Parámetro": "STOCK_MIN_50",
+"Valor": 20,
+"Descripción": "Stock mínimo de vales de Bs 50 (alerta)"
+},
+{
+"Parámetro": "STOCK_MIN_100",
+"Valor": 10,
+"Descripción": "Stock mínimo de vales de Bs 100 (alerta)"
+},
+{
+"Parámetro": "TOLERANCIA_RENDIMIENTO",
+"Valor": 0.2,
+"Descripción": "Tolerancia del rendimiento real frente al de referencia (0,2 = 20%). Fuera de ella el descargo queda OBSERVADO"
+},
+{
+"Parámetro": "MAX_DESCARGOS_PENDIENTES",
+"Valor": 2,
+"Descripción": "Descargos vencidos que puede acumular un conductor antes de bloquear nuevas entregas (0 = sin bloqueo)"
+},
+{
+"Parámetro": "DIAS_PLAZO_DESCARGO",
+"Valor": 3,
+"Descripción": "Días después del fin del periodo para presentar el descargo (Anexo 3)"
+},
+{
+"Parámetro": "RUTA_LOGO",
+"Valor": "logo_gam.jpg",
+"Descripción": "Archivo del logo (en la misma carpeta del sistema) para los reportes"
+},
+{
+"Parámetro": "PLANILLA_AL_EMITIR",
+"Valor": "SI",
+"Descripción": "SI = al emitir vales se genera automáticamente la planilla de descargo del conductor (Excel)"
+}
+],
+"tblPrecios": [
+{
+"Combustible": "Gasolina",
+"Precio Bs L": 6.96,
+"Vigente Desde": "2026-01-13T00:00:00",
+"Norma": "DS 5516"
+},
+{
+"Combustible": "Diésel",
+"Precio Bs L": 9.8,
+"Vigente Desde": "2026-01-13T00:00:00",
+"Norma": "DS 5516"
+}
+],
+"tblTipos": [
+{
+"Tipo": "Motocicleta",
+"Clase": "Liviano",
+"Medidor": "Km",
+"Rendimiento Ref": 0.04
+},
+{
+"Tipo": "Cuadratrack",
+"Clase": "Liviano",
+"Medidor": "Km",
+"Rendimiento Ref": 0.06
+},
+{
+"Tipo": "Vagoneta",
+"Clase": "Liviano",
+"Medidor": "Km",
+"Rendimiento Ref": 0.12
+},
+{
+"Tipo": "Camioneta",
+"Clase": "Liviano",
+"Medidor": "Km",
+"Rendimiento Ref": 0.12
+},
+{
+"Tipo": "Jeep",
+"Clase": "Liviano",
+"Medidor": "Km",
+"Rendimiento Ref": 0.12
+},
+{
+"Tipo": "Minibús",
+"Clase": "Liviano",
+"Medidor": "Km",
+"Rendimiento Ref": 0.14
+},
+{
+"Tipo": "Ambulancia",
+"Clase": "Liviano",
+"Medidor": "Km",
+"Rendimiento Ref": 0.14
+},
+{
+"Tipo": "Bus",
+"Clase": "Semipesado",
+"Medidor": "Km",
+"Rendimiento Ref": 0.3
+},
+{
+"Tipo": "Camión",
+"Clase": "Semipesado",
+"Medidor": "Km",
+"Rendimiento Ref": 0.3
+},
+{
+"Tipo": "Volqueta",
+"Clase": "Semipesado",
+"Medidor": "Km",
+"Rendimiento Ref": 0.4
+},
+{
+"Tipo": "Cisterna",
+"Clase": "Semipesado",
+"Medidor": "Km",
+"Rendimiento Ref": 0.4
+},
+{
+"Tipo": "Retroexcavadora",
+"Clase": "Pesado",
+"Medidor": "Horas",
+"Rendimiento Ref": 8
+},
+{
+"Tipo": "Excavadora",
+"Clase": "Pesado",
+"Medidor": "Horas",
+"Rendimiento Ref": 16
+},
+{
+"Tipo": "Motoniveladora",
+"Clase": "Pesado",
+"Medidor": "Horas",
+"Rendimiento Ref": 14
+},
+{
+"Tipo": "Tractor oruga",
+"Clase": "Pesado",
+"Medidor": "Horas",
+"Rendimiento Ref": 20
+},
+{
+"Tipo": "Cargador frontal",
+"Clase": "Pesado",
+"Medidor": "Horas",
+"Rendimiento Ref": 15
+},
+{
+"Tipo": "Vibrocompactadora",
+"Clase": "Pesado",
+"Medidor": "Horas",
+"Rendimiento Ref": 10
+},
+{
+"Tipo": "Tractor agrícola",
+"Clase": "Pesado",
+"Medidor": "Horas",
+"Rendimiento Ref": 8
+},
+{
+"Tipo": "Generador",
+"Clase": "Equipo menor",
+"Medidor": "Horas",
+"Rendimiento Ref": 2
+},
+{
+"Tipo": "Motobomba",
+"Clase": "Equipo menor",
+"Medidor": "Horas",
+"Rendimiento Ref": 1.5
+},
+{
+"Tipo": "Desbrozadora",
+"Clase": "Equipo menor",
+"Medidor": "Horas",
+"Rendimiento Ref": 0.8
+},
+{
+"Tipo": "Motosierra",
+"Clase": "Equipo menor",
+"Medidor": "Horas",
+"Rendimiento Ref": 1
+}
+],
+"tblUsuarios": [
+{
+"Usuario": "admin",
+"Nombre": "Administrador del sistema",
+"Rol": "ADMIN",
+"Estado": "Activo",
+"Debe Cambiar": "SI",
+"Clave": "F109685C371AFD26"
+}
+],
+"tblVales": [],
+"tblEmisiones": [],
+"tblLotes": [],
+"tblKardex": [],
+"tblDescargos": [],
+"tblBitacora": [],
+"tblConciliacion": [],
+"tblViajes": [],
+"tblViajeDet": [],
+"tblAuditoria": [],
+"tblCorrelativos": [
+{
+"Clave": null,
+"Ultimo": null,
+"CLAVE_HOJAS": "sicomb2026"
+}
+]
+}

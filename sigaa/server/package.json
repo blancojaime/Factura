@@ -1,0 +1,34 @@
+{
+  "name": "@sigaa/server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsup src/index.ts --format esm --out-dir dist --external better-sqlite3 --external pg --external pg-native --external pg-query-stream --external mysql --external mysql2 --external sqlite3 --external oracledb --external tedious",
+    "seed": "tsx src/db/seed-cli.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fastify/jwt": "^9.0.0",
+    "@fastify/static": "^8.0.0",
+    "better-sqlite3": "^11.0.0",
+    "exceljs": "^4.4.0",
+    "fastify": "^5.0.0",
+    "knex": "^3.1.0",
+    "pdfkit": "^0.15.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.0.0",
+    "@types/pdfkit": "^0.13.4",
+    "@types/pg": "^8.11.0",
+    "tsup": "^8.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}
