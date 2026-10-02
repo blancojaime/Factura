@@ -1,0 +1,10 @@
+export { default as ComTablero } from './Tablero';
+export { default as ComRecepcion } from './Recepcion';
+export { default as ComEmitir } from './Emitir';
+export { default as ComDescargo } from './Descargo';
+export { default as ComMovimientos } from './Movimientos';
+export { default as ComTurriles } from './Turriles';
+export { default as ComViajes } from './Viajes';
+export { default as ComConciliacion } from './Conciliacion';
+export { default as ComCronograma } from './Cronograma';
+export { default as ComVales } from './Vales';

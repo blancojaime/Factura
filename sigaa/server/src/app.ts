@@ -187,9 +187,9 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
   await registerActivos(ctx);
 
   // ── Aplicación web (SPA) ──
-  const webDir = opts.webDir ?? path.resolve(process.cwd(), '../web/dist');
+  const webDir = path.resolve(opts.webDir ?? path.resolve(process.cwd(), '../web/dist'));
   if (fs.existsSync(path.join(webDir, 'index.html'))) {
-    await app.register(fastifyStatic, { root: webDir, wildcard: false });
+    await app.register(fastifyStatic, { root: webDir });
     app.setNotFoundHandler((req, reply) => {
       if (req.url.startsWith('/api/')) return reply.code(404).send({ error: 'Recurso no encontrado.' });
       return reply.sendFile('index.html');

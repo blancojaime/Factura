@@ -13,7 +13,8 @@ import { registrarNro } from '../core/services.js';
 
 type Row = Record<string, any>;
 const here = path.dirname(fileURLToPath(import.meta.url));
-const SEED_DIR = process.env.SIGAA_SEED_DIR || path.resolve(here, '../../seed');
+// En desarrollo: server/src/db → server/seed; empaquetado: server/dist → server/seed
+const SEED_DIR = [process.env.SIGAA_SEED_DIR, path.resolve(here, '../../seed'), path.resolve(here, '../seed')].filter((d): d is string => !!d).find((d) => fs.existsSync(path.join(d, 'almacenes.json'))) ?? path.resolve(here, '../../seed');
 
 const load = (f: string): Record<string, Row[]> => JSON.parse(fs.readFileSync(path.join(SEED_DIR, f), 'utf8'));
 

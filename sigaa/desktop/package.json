@@ -1,0 +1,60 @@
+{
+  "name": "sigaa-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SIGAA Escritorio — Almacenes, Combustible y Activos Fijos (base de datos SQLite local)",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsup src/main.ts --format cjs --out-dir dist --external electron && node scripts/copiar.mjs",
+    "start": "npm run build && electron .",
+    "dist": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  },
+  "build": {
+    "appId": "bo.gob.sigaa",
+    "productName": "SIGAA",
+    "directories": {
+      "output": "release"
+    },
+    "npmRebuild": true,
+    "files": [
+      "dist/**",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "**/node_modules/better-sqlite3/**"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Office"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.business"
+    }
+  },
+  "dependencies": {
+    "@fastify/jwt": "^9.0.0",
+    "@fastify/static": "^8.0.0",
+    "better-sqlite3": "^11.0.0",
+    "exceljs": "^4.4.0",
+    "fastify": "^5.0.0",
+    "knex": "^3.1.0",
+    "pdfkit": "^0.15.0",
+    "pg": "^8.13.0"
+  }
+}

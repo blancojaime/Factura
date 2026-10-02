@@ -30,7 +30,7 @@ export async function dashboardAlm(db: Db) {
   const cnt = async (t: string, w: Record<string, string>) => Number((await db(t).where(w).count({ n: '*' }).first())?.n);
   const pedidos = Number((await db('alm_salidas').whereIn('estado', ['PEDIDO', 'APROBADO']).count({ n: '*' }).first())?.n);
   const ingresos = await cnt('alm_ingresos', { estado: 'REGISTRADO' });
-  const bajas = await cnt('alm_bajas', { estado: 'EN TRÁMITE' });
+  const bajas = Number((await db('alm_bajas').whereIn('estado', ['EN TRÁMITE', 'BAJA EJECUTADA']).count({ n: '*' }).first())?.n); // no concluidos (pasos de disposición pendientes)
   const seg = await alertasSeguridad(db);
   const alertas: Alerta[] = [];
   if (bajo) alertas.push({ modulo: 'alm', nivel: 'aviso', texto: `${bajo} ítem(s) en o bajo el stock mínimo: genere el requerimiento de compra.`, ruta: '/almacenes/reposicion' });

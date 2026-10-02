@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "description": "SIGAA - Sistema Integrado de Gestión de Almacenes, Combustible y Activos Fijos",
-  "workspaces": ["server", "web", "desktop"],
+  "workspaces": [
+    "server",
+    "web"
+  ],
   "scripts": {
     "dev:server": "npm run dev -w server",
     "dev:web": "npm run dev -w web",
@@ -11,6 +14,9 @@
     "start": "npm run start -w server",
     "seed": "npm run seed -w server",
     "test": "npm run test -w server",
-    "desktop": "npm run start -w desktop"
+    "typecheck": "npm run typecheck -w server && npm run typecheck -w web",
+    "desktop:install": "npm install --prefix desktop",
+    "desktop": "npm run start --prefix desktop",
+    "desktop:dist": "npm run build && npm run dist --prefix desktop"
   }
 }

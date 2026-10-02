@@ -94,6 +94,10 @@ describe('API de los tres módulos', () => {
     // un usuario de almacén no puede modificar catálogos de combustible
     expect((await app.inject({ method: 'POST', url: '/api/maestros/precios', headers: H(t), payload: { combustible: 'Diésel', precio: 9, vigente_desde: '2026-10-01' } })).statusCode).toBe(403);
   });
+  it('no expone tablas de seguridad por la lista de valores', async () => {
+    expect((await app.inject({ url: '/api/ref/core_usuarios.clave_hash', headers: H(t) })).statusCode).toBe(404);
+    expect((await app.inject({ url: '/api/ref/core_unidades.nombre', headers: H(t) })).statusCode).toBe(200);
+  });
   it('sirve reportes en JSON, PDF y Excel', async () => {
     const j = await app.inject({ url: '/api/reportes/alm-inventario?formato=json', headers: H(t) });
     expect(j.json().filas.length).toBeGreaterThan(10);

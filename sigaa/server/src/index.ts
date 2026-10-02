@@ -1,21 +1,9 @@
-import path from 'node:path';
-import { connect } from './db/connect.js';
-import { seedAll } from './db/seed.js';
-import { buildApp } from './app.js';
+import { startServer } from './start.js';
 
-const db = connect();
-// Crea el esquema si no existe. Los datos demo solo se cargan con SIGAA_DEMO=1 o con `npm run seed`.
-await seedAll(db, { demo: process.env.SIGAA_DEMO === '1' });
-
-const app = await buildApp({ db, logger: true, webDir: process.env.SIGAA_WEB_DIR || path.resolve(process.cwd(), '../web/dist') });
-const port = Number(process.env.PORT || 3000);
-const host = process.env.HOST || '0.0.0.0';
-await app.listen({ port, host });
-console.log(`SIGAA en http://${host === '0.0.0.0' ? 'localhost' : host}:${port}`);
-
+const s = await startServer();
+console.log(`SIGAA en ${s.url}`);
 const salir = async () => {
-  await app.close();
-  await db.destroy();
+  await s.close();
   process.exit(0);
 };
 process.on('SIGINT', salir);

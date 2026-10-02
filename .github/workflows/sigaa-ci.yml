@@ -1,0 +1,25 @@
+name: SIGAA CI
+on:
+  push: { paths: ['sigaa/**', '.github/workflows/sigaa-ci.yml'] }
+  pull_request: { paths: ['sigaa/**'] }
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: sigaa } }
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_USER: postgres, POSTGRES_PASSWORD: postgres, POSTGRES_DB: sigaa_test }
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: sigaa/package-lock.json }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test                      # SQLite en memoria
+      - run: npm run test -w server -- --no-file-parallelism   # PostgreSQL
+        env: { TEST_DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/sigaa_test' }
+      - run: npm run build

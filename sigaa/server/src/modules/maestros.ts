@@ -123,9 +123,12 @@ export async function listarMaestro(db: Db, key: string, q?: string) {
   return qb.limit(2000);
 }
 
+/** Referencias permitidas: solo las declaradas en los metadatos de los catálogos (nunca tablas de seguridad). */
+const REFS_PERMITIDAS = new Set(MAESTROS.flatMap((m) => m.cols.filter((c) => c.ref).map((c) => c.ref as string)));
+
 export async function opcionesRef(db: Db, ref: string): Promise<string[]> {
+  if (!REFS_PERMITIDAS.has(ref)) throw new NotFound('Lista de valores no disponible.');
   const [t, c] = ref.split('.');
-  if (!/^[a-z_]+$/.test(t) || !/^[a-z_]+$/.test(c)) return [];
   const rows = await db(t).distinct(c).whereNotNull(c).orderBy(c).limit(5000);
   return rows.map((r: any) => String(r[c]));
 }
