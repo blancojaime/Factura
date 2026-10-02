@@ -23,9 +23,23 @@ export function validarClaveNueva(clave: string) {
   if (!/[A-Za-z]/.test(clave) || !/\d/.test(clave)) fail('La clave debe combinar letras y números.');
 }
 
+/** Bloqueo temporal tras intentos fallidos (en memoria del proceso): 5 intentos → 15 minutos. */
+const MAX_INTENTOS = 5;
+const BLOQUEO_MS = 15 * 60 * 1000;
+const fallos = new Map<string, { n: number; hasta: number }>();
+export const reiniciarBloqueos = () => fallos.clear();
+
 export async function autenticar(db: Db, usuario: string, clave: string): Promise<{ user: Usuario; debeCambiar: boolean }> {
-  const r = await db('core_usuarios').whereRaw('lower(usuario) = ?', [usuario.trim().toLowerCase()]).first();
-  if (!r || r.estado !== 'ACTIVO' || !verificarClave(clave, r.clave_hash)) throw new BusinessError('Usuario o clave incorrectos.');
+  const k = usuario.trim().toLowerCase();
+  const f = fallos.get(k);
+  if (f && f.hasta > Date.now()) throw new BusinessError(`Usuario bloqueado por intentos fallidos. Reintente en ${Math.ceil((f.hasta - Date.now()) / 60000)} minuto(s) o pida al administrador restablecer la clave.`);
+  const r = await db('core_usuarios').whereRaw('lower(usuario) = ?', [k]).first();
+  if (!r || r.estado !== 'ACTIVO' || !verificarClave(clave, r.clave_hash)) {
+    const n = (f && f.hasta <= Date.now() && f.hasta > 0 ? 0 : f?.n ?? 0) + 1;
+    fallos.set(k, { n, hasta: n >= MAX_INTENTOS ? Date.now() + BLOQUEO_MS : 0 });
+    throw new BusinessError('Usuario o clave incorrectos.');
+  }
+  fallos.delete(k);
   await db('core_usuarios').where({ usuario: r.usuario }).update({ ultimo_acceso: nowIso() });
   return {
     user: { usuario: r.usuario, nombre: r.nombre, roles: String(r.roles).split(',').map((s: string) => s.trim()) },

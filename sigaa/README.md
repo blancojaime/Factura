@@ -118,14 +118,21 @@ Notas: los NIT repetidos entre sistemas se unifican por razón social; las clave
 ## Pruebas
 
 ```bash
-npm test                                                      # 110 pruebas sobre SQLite en memoria
+npm test                                                      # 113 pruebas sobre SQLite en memoria
 TEST_DATABASE_URL=postgres://u:p@host/db npm run test -w server -- --no-file-parallelism   # las mismas sobre PostgreSQL
 npm run typecheck
 ```
 Cubren el motor de existencias (PEPS/FEFO, anulaciones, integridad kardex↔lotes), cada flujo de negocio con sus reglas, la API con roles, y la generación de **todos** los documentos y reportes (PDF y Excel).
 
+## Seguridad y respaldos
+
+- Bloqueo de 15 minutos tras 5 intentos fallidos de ingreso.
+- Copia diaria automática de SQLite en `<datos>/respaldos` (retención de 14 días; `SIGAA_BACKUP=0` la desactiva, `SIGAA_BACKUP_DIR` cambia la carpeta). Con PostgreSQL use `pg_dump`.
+- En producción defina `SIGAA_JWT_SECRET` y publique detrás de HTTPS.
+- Los stickers incluyen código QR con el código del activo.
+
 ## Limitaciones conocidas
 
 - El empaquetado de escritorio (`desktop/`) compila y su servidor embebido fue verificado, pero la ventana Electron y el instalador no se ejecutaron en el entorno de desarrollo (sin pantalla): pruébelos en su equipo.
 - Los documentos formales (vale, CGI, actas) se emiten en **PDF**; los reportes tabulares en PDF **y** Excel. No se portó la macro «Importar versión anterior» de SICOMB (use el procedimiento de migración de arriba).
-- La conciliación de combustible acepta detalle pegado desde Excel o CSV/TSV; no lee `.xlsx` directamente.
+- La conciliación de combustible acepta el detalle del proveedor en `.xlsx`, CSV/TSV o pegado desde Excel.

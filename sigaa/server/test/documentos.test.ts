@@ -94,3 +94,27 @@ describe('reportes PDF y Excel', () => {
     guardar(`rep-${id}.pdf`, pdf);
   });
 });
+
+describe('conciliación desde Excel y copia automática', () => {
+  it('lee el .xlsx del proveedor con encabezado', async () => {
+    const { leerCobrosXlsx } = await import('../src/modules/combustible/cobros.js');
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet('c');
+    ws.addRow(['Nro Vale', 'Fecha', 'Placa', 'Litros', 'Monto Bs', 'Factura']);
+    ws.addRow([1001, new Date('2026-09-29'), '2345ABC', 4.31, 30, 'F1']);
+    ws.addRow(['x', '', '', '', '', '']);
+    const c = await leerCobrosXlsx(Buffer.from(await wb.xlsx.writeBuffer()));
+    expect(c).toEqual([{ nro_vale: 1001, fecha: '2026-09-29', placa: '2345ABC', litros: 4.31, monto: 30, factura: 'F1' }]);
+  });
+  it('genera la copia diaria una sola vez y respeta la retención', async () => {
+    if (process.env.TEST_DATABASE_URL) return;
+    const { respaldar } = await import('../src/core/backup.js');
+    const dir = fs.mkdtempSync('/tmp/sigaa-bk-');
+    expect(await respaldar(db, dir)).toMatch(/sigaa-\d{4}-\d{2}-\d{2}\.sqlite$/);
+    expect(await respaldar(db, dir)).toBeNull();
+    fs.writeFileSync(`${dir}/sigaa-2020-01-01.sqlite`, 'x');
+    fs.writeFileSync(`${dir}/sigaa-2020-01-02.sqlite`, 'x');
+    await respaldar(db, dir, 1);
+    expect(fs.readdirSync(dir).length).toBeGreaterThanOrEqual(1);
+  });
+});

@@ -5,6 +5,7 @@ import { anularEmision, emitirVales, ejecutarMovimiento, movimientoPorRango, reg
 import { conciliarProveedor, descargoViaje, despachoTurril, guardarCronograma, ingresoTurril, listarCronograma, registrarViaje, tablero } from '../modules/combustible/otros.js';
 import { costoPromTurril, descargosPendientes, litrosMaximos, precioVigente, saldoTurril, ultimaLectura } from '../modules/combustible/base.js';
 import { cfgAll } from '../core/services.js';
+import { leerCobrosXlsx } from '../modules/combustible/cobros.js';
 
 /** Rutas del módulo de Combustible (/api/com). */
 export async function registerCombustible({ db, app, w }: Ctx) {
@@ -99,6 +100,11 @@ export async function registerCombustible({ db, app, w }: Ctx) {
   app.post(`${P}/viajes/:nro/descargo`, W, async (req) => descargoViaje(db, req.usuario, { ...body(req), nro: nro(req) }));
 
   app.post(`${P}/conciliaciones`, W, async (req) => conciliarProveedor(db, req.usuario, body(req)));
+  /** Lee el detalle de cobros del proveedor desde un .xlsx (columnas: Nº vale, Fecha, Placa, Litros, Monto, Factura). */
+  app.post(`${P}/conciliaciones/leer-xlsx`, W, async (req) => {
+    if (!Buffer.isBuffer(req.body) || !(req.body as Buffer).length) fail('Seleccione un archivo .xlsx.');
+    return { cobros: await leerCobrosXlsx(req.body as Buffer) };
+  });
   app.get(`${P}/conciliaciones`, async () => db('com_conciliaciones').select('nro', 'fecha', 'proveedor', 'desde', 'hasta').count({ lineas: '*' }).groupBy('nro', 'fecha', 'proveedor', 'desde', 'hasta').orderBy('nro', 'desc'));
 
   app.get(`${P}/cronograma`, async (req) => listarCronograma(db, q(req).mes));

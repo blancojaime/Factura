@@ -142,3 +142,14 @@ describe('API de los tres módulos', () => {
     expect(r.rawPayload.subarray(0, 15).toString()).toBe('SQLite format 3');
   });
 });
+
+describe('bloqueo por intentos fallidos', () => {
+  it('bloquea al 5º intento fallido', async () => {
+    for (let i = 0; i < 5; i++) expect((await login('consulta', 'mala')).status).toBe(422);
+    const r = await login('consulta', 'Consulta2026');
+    expect(r.status).toBe(422);
+    expect(r.body.error).toMatch(/bloqueado/);
+    (await import('../src/core/auth.js')).reiniciarBloqueos();
+    expect((await login('consulta', 'Consulta2026')).status).toBe(200);
+  });
+});

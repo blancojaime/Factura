@@ -48,6 +48,7 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
   const secret = opts.jwtSecret || process.env.SIGAA_JWT_SECRET || crypto.randomBytes(32).toString('hex');
   await app.register(fastifyJwt, { secret, sign: { expiresIn: '10h' } });
 
+  app.addContentTypeParser(/^application\/(vnd\.openxmlformats.*|octet-stream)$/, { parseAs: 'buffer' }, (_req, body, done) => done(null, body));
   app.addContentTypeParser(/^image\/.*/, { parseAs: 'buffer' }, (_req, body, done) => done(null, body));
 
   app.setErrorHandler((err: any, req, reply) => {

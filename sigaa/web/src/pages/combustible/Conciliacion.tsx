@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { abrirDocumento, fmt2, get, hoy, post } from '../../api';
+import { abrirDocumento, fmt2, get, getToken, hoy, post } from '../../api';
 import { useAuth } from '../../auth';
 import { Badge, Card, DataTable, DateField, PageHead, SelectField, useAction, useLoad } from '../../ui';
 import { useComMeta } from './common';
@@ -44,7 +44,16 @@ export default function ComConciliacion() {
   const [res, setRes] = useState<any>(null);
   const [run, busy] = useAction();
   const cobros = parseCobros(texto);
-  const cargarArchivo = (file?: File) => file && file.text().then(setTexto);
+  const cargarArchivo = (file?: File) => {
+    if (!file) return;
+    if (!/\.xlsx$/i.test(file.name)) return file.text().then(setTexto);
+    run(async () => {
+      const r = await fetch('/api/com/conciliaciones/leer-xlsx', { method: 'POST', headers: { authorization: `Bearer ${getToken()}`, 'content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }, body: file });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'No se pudo leer el Excel');
+      setTexto(['Nro Vale\tFecha\tPlaca\tLitros\tMonto Bs\tFactura', ...d.cobros.map((c: any) => [c.nro_vale, c.fecha ?? '', c.placa ?? '', c.litros ?? '', c.monto, c.factura ?? ''].join('\t'))].join('\n'));
+    });
+  };
   return (
     <>
       <PageHead title="Conciliación con el proveedor" sub="Compare los vales que cobra la estación de servicio con los entregados y descargados en el sistema" />
@@ -56,7 +65,7 @@ export default function ComConciliacion() {
           <DateField label="Hasta" req value={f.hasta} onChange={(v) => setF({ ...f, hasta: v })} />
         </div>
       </Card>
-      <Card title="2. Vales cobrados por el proveedor" right={<input type="file" accept=".csv,.txt,.tsv" onChange={(e) => cargarArchivo(e.target.files?.[0])} />}>
+      <Card title="2. Vales cobrados por el proveedor" right={<input type="file" accept=".xlsx,.csv,.txt,.tsv" onChange={(e) => cargarArchivo(e.target.files?.[0])} />}>
         <p className="muted" style={{ marginTop: 0 }}>Pegue aquí el detalle del proveedor (una fila por vale) copiado desde Excel o cargue un archivo CSV. Columnas: Nº vale, Fecha, Placa, Litros, Monto Bs, Factura (con o sin encabezado).</p>
         <textarea rows={7} value={texto} onChange={(e) => setTexto(e.target.value)} placeholder={'Nro Vale\tFecha\tPlaca\tLitros\tMonto Bs\tFactura\n1001\t29/09/2026\t2345ABC\t4.31\t30\tF-123'} style={{ fontFamily: 'monospace' }} />
         <small className="muted">Se reconocen {cobros.length} vale(s) por Bs {fmt2(cobros.reduce((t, c) => t + c.monto, 0))}.</small>
