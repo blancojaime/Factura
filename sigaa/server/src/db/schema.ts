@@ -298,8 +298,8 @@ export const TABLES: Record<string, Builder> = {
     t.string('responsable', 140);
     t.string('designado', 300);
     t.string('observador', 200);
-    t.string('corte_ing', 40);
-    t.string('corte_sal', 40);
+    t.string('corte_ing', 200);
+    t.string('corte_sal', 200);
     t.string('filtro_subgrupo', 10);
     t.string('estado', 12).notNullable().defaultTo('EN CONTEO'); // EN CONTEO | CERRADO
     money(t, 'faltante_bs');

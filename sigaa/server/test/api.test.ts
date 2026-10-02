@@ -1,12 +1,11 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { FastifyInstance } from 'fastify';
-import { connect } from '../src/db/connect.js';
-import { seedAll } from '../src/db/seed.js';
+import { dbDemo } from './helpers.js';
 import { buildApp } from '../src/app.js';
 import { crearUsuario } from '../src/core/auth.js';
 
 let app: FastifyInstance;
-let db: ReturnType<typeof connect>;
+let db: Awaited<ReturnType<typeof dbDemo>>;
 let admin = '';
 const H = (t: string) => ({ authorization: `Bearer ${t}` });
 
@@ -16,8 +15,7 @@ async function login(usuario: string, clave: string) {
 }
 
 beforeAll(async () => {
-  db = connect({ url: 'sqlite::memory:' });
-  await seedAll(db);
+  db = await dbDemo();
   app = await buildApp({ db, jwtSecret: 'test-secret', webDir: '/nonexistent' });
   await crearUsuario(db, { usuario: 'consulta', nombre: 'Consulta', roles: ['CONSULTA'], clave: 'Consulta2026' });
   await crearUsuario(db, { usuario: 'almacen', nombre: 'Almacén', roles: ['ALMACEN'], clave: 'Almacen2026' });
@@ -135,6 +133,7 @@ describe('API de los tres módulos', () => {
   it('respaldo de la base de datos (solo ADMIN)', async () => {
     expect((await app.inject({ url: '/api/backup', headers: H(t) })).statusCode).toBe(403);
     const r = await app.inject({ url: '/api/backup', headers: H(admin) });
+    if (process.env.TEST_DATABASE_URL) return expect(r.statusCode).toBe(422); // PostgreSQL: se usa pg_dump
     expect(r.statusCode).toBe(200);
     expect(r.rawPayload.subarray(0, 15).toString()).toBe('SQLite format 3');
   });
