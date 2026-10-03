@@ -12,7 +12,7 @@ if errorlevel 1 (
 
 if not exist node_modules\.bin\vite.cmd (
   echo [1/3] Instalando componentes. Puede tardar varios minutos, espere...
-  call npm install --include=dev
+  call npm install --include=dev --ignore-scripts
   if errorlevel 1 ( echo Fallo la instalacion. Revise su conexion a internet. & pause & exit /b 1 )
 )
 
