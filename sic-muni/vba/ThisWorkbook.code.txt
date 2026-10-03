@@ -1,0 +1,11 @@
+' Pegar en el modulo "ThisWorkbook" (Microsoft Excel Objects).
+
+Private Sub Workbook_Open()
+    Application.ScreenUpdating = True
+    modCore.ProtectDB            ' oculta y protege hojas de datos y plantillas
+    modMain.IniciarSistema
+End Sub
+
+Private Sub Workbook_BeforeClose(Cancel As Boolean)
+    modSecurity.Logout
+End Sub
