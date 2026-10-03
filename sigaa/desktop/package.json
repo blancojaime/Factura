@@ -46,10 +46,7 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "perMachine": false,
-      "createDesktopShortcut": true,
-      "language": "3082"
+      "allowToChangeInstallationDirectory": true
     },
     "extraResources": [
       {
