@@ -93,7 +93,7 @@ End Function
 ' 2) Cuadro Comparativo de Cotizaciones
 '------------------------------------------------------------------------------
 Public Function GenerarCuadroComparativo(ByVal idSol As String, Optional ByVal aPDF As Boolean = True) As String
-    Dim rS As Long, sh As Worksheet, shC As Worksheet, r As Long, n As Long, d() As Variant, rec As String, req As Long
+    Dim rS As Long, sh As Worksheet, shC As Worksheet, r As Long, n As Long, d() As Variant, rec As String, req As Long, nota As String
     ChequeoDoc
     rS = FilaSolicitud(idSol)
     Set sh = WS(SH_SOL): Set shC = WS(SH_COT)
@@ -113,12 +113,19 @@ Public Function GenerarCuadroComparativo(ByVal idSol As String, Optional ByVal a
             d(n, 4) = GetV(shC, r, "ValidezOferta"): d(n, 5) = GetV(shC, r, "MontoTotalCotizado")
             d(n, 6) = IIf(CStr(GetV(shC, r, "CumplimientoTecnico")) = "SI", "Cumple", "No cumple")
             d(n, 7) = IIf(CStr(GetV(shC, r, "Recomendado")) = "SI", "RECOMENDADA", "")
-            If CStr(GetV(shC, r, "Recomendado")) = "SI" Then rec = GetV(shC, r, "RazonSocial") & " - Bs " & Format$(GetV(shC, r, "MontoTotalCotizado"), "#,##0.00")
+            If CStr(GetV(shC, r, "Recomendado")) = "SI" Then
+                rec = GetV(shC, r, "RazonSocial") & " - Bs " & Format$(GetV(shC, r, "MontoTotalCotizado"), "#,##0.00")
+                If Len(CStr(GetV(shC, r, "Desempate"))) > 0 Then
+                    d(n, 7) = "RECOMENDADA (desempate)"
+                    nota = " Hubo empate de precio entre ofertas habiles; se resolvio por primera recepcion de la oferta (" & _
+                           Replace(CStr(GetV(shC, r, "Desempate")), "PRIMERA RECEPCION ", "recibida el ") & ")."
+                End If
+            End If
         End If
     Next r
     If Len(rec) = 0 Then Fail "Ejecute primero la evaluacion del cuadro (no hay oferta recomendada)."
     FillTable "CC_OfertasIni", 10, d, n, 7
-    PutN "CC_Recomendacion", "Se recomienda adjudicar a: " & rec
+    PutN "CC_Recomendacion", "Se recomienda adjudicar a: " & rec & "." & nota
     GenerarCuadroComparativo = Cerrar(DOC_CUADRO, "CC_" & idSol, aPDF)
 End Function
 

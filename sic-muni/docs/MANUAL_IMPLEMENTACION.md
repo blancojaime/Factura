@@ -36,7 +36,7 @@ Una aplicación de escritorio construida como **un solo libro de Excel con macro
 
 | Capa | Componentes |
 | :-- | :-- |
-| Interfaz | `frmLogin` (inicio de sesión), `frmContratacionesConsolidado` (5 pestañas), Menú del Administrador (`MenuAdmin`) |
+| Interfaz | `frmLogin` (inicio de sesión), `frmContratacionesConsolidado` (5 pestañas con código de colores, franja de estado y de «siguiente paso» según el rol, ayudas emergentes), Menú del Administrador (`MenuAdmin`) |
 | Reglas de negocio | Módulos VBA: seguridad, validación CHB, procura, motor presupuestario, post-adjudicación, documentos, importación |
 | Datos | 13 hojas del libro (tablas), ocultas y protegidas |
 | Documentos | 6 hojas plantilla `Doc_*` con rangos con nombre y fórmulas; exportación a PDF |
@@ -91,7 +91,7 @@ Orden: `EMITIDA → RECIBIDA` (o `ANULADA`).
 | :-- | :-- |
 | Un monto sobre el tope de contratación menor no pasa a cotización | Enviar a cotización |
 | Sobre el tope sin cuadro se exigen tres cotizaciones | Evaluar cuadro, documento de cuadro |
-| Un empate en el precio más bajo no se resuelve automáticamente | Evaluar cuadro |
+| Ante un empate en el precio más bajo entre ofertas hábiles gana la **primera recepción** (fecha y hora; si coinciden, la registrada primero); queda anotado en la oferta, en la auditoría y en el cuadro impreso | Evaluar cuadro |
 | La reserva solo se emite con la solicitud EVALUADA y valida **todas** las líneas antes de aplicar | Emitir C-31 |
 | Adjudicar exige oferta recomendada, CHB habilitado y C-31 vigente que cubra el monto | Adjudicar |
 | La Orden exige solicitud ADJUDICADA, CHB habilitado (se reconsulta la vigencia de la ficha) y, si está activo, C-31 asociado a SIGEP | Generar Orden |
@@ -301,13 +301,14 @@ Se ejecutan sin interfaz, con usuarios `t_us`, `t_rc` y `t_pf` y datos demo. El 
 | :-- | :-- |
 | Seguridad | SHA-256 contra un valor conocido, hash con sal, política de contraseñas, inicio de sesión, bloqueo a los 3 intentos, desbloqueo, permisos por rol |
 | Reglas | Modalidad (Bs 15.000, 30.000 y 60.000), cotizaciones requeridas, monto en literal, redondeo comercial |
+| Desempate | Recepción futura rechazada, gana la oferta recibida primero, criterio registrado, mensaje, cuadro impreso, y limpieza al reevaluar sin empate |
 | CHB | Código con ficha vigente, sin ficha, fuera de catálogo; excepción incompleta, completa y con fecha futura |
 | Flujo completo | Solicitud → CHB → cotización → cuadro → C-31 (rechazo por saldo) → adjudicación → exigencia de C-31 SIGEP → Orden → bloqueo de reversión → anulación y reemisión → recepción con 10 días de retraso y multa de 19,50 |
 | Reversiones | Parcial y total devuelven saldo; no se revierte dos veces; anulación de solicitud; no se anula con Orden vigente |
 | Documentos | Volcado a las plantillas, totales por fórmula, filas sobrantes ocultas, cláusulas con rangos con nombre, exportación a PDF |
 | Importación | CSV de catálogo (punto y coma, campo entre comillas, actualización) y de presupuesto (duplicado rechazado) |
 
-Total: 87 verificaciones. **Criterio de aceptación: 0 `FAIL`.**
+Total: 97 verificaciones. **Criterio de aceptación: 0 `FAIL`.**
 
 ### 9.2 Prueba de aceptación manual (pantallas)
 
@@ -484,6 +485,7 @@ El sistema fue diseñado a partir de la especificación del proyecto, que cita e
 | Art. 22 Normas de Contabilidad Integrada | Reserva presupuestaria previa a adjudicar | Condiciones del registro preventivo |
 | Manual SICOES / SIGEP (formularios 100, 110, 200; perfiles 991, 1014, 1109, 1111) | Estructura del C-31, asociación del N° SIGEP, nombres de roles | Correspondencia con los procedimientos reales |
 | Penalidades | `PenalidadPorMil` = 3 y `PenalidadMaxPct` = 10 por defecto | Porcentajes y topes aplicables a la entidad |
+| Criterio de desempate | Primera recepción de la oferta ante igualdad de precio (decisión de diseño, no tomada de la norma) | Que coincida con lo que fija la invitación a cotizar o el reglamento interno; si no, ajustar la regla |
 
 ## Anexo A. Estructura de las tablas
 
@@ -498,7 +500,7 @@ Las columnas marcadas con (+) se agregaron a las requeridas por la especificaci�
 | `PRESUPUESTO` | Gestion, DA, UE, Programa, Proyecto, ActObra, Fuente, Organismo, Partida_ObjetoGasto, DescripcionPartida, PresupuestoAprobado, PreventivoComprometido, SaldoDisponible (fórmula) |
 | `SOLICITUDES` | ID_Solicitud, Correlativo, Fecha, Cod_DA, Cod_UE, Solicitante, Justificacion, Estado, (+) Modalidad, (+) MontoReferencial |
 | `SOLICITUDES_DET` | ID_Solicitud, Item, CodigoUNSPSC, Descripcion, Cantidad, Unidad, PrecioRefUnitario, PrecioRefTotal, CumpleCHB, CodigoExcepcionMDPyEP, (+) JustificacionExcepcion, (+) NroAutorizacionMDPyEP, (+) FechaAutorizacion |
-| `COTIZACIONES` | ID_Cotizacion, ID_Solicitud, Proveedor_NIT, RazonSocial, (+) FechaCotizacion, ValidezOferta, MontoTotalCotizado, CumplimientoTecnico, Recomendado, (+) Adjudicada |
+| `COTIZACIONES` | ID_Cotizacion, ID_Solicitud, Proveedor_NIT, RazonSocial, (+) FechaCotizacion, ValidezOferta, MontoTotalCotizado, CumplimientoTecnico, Recomendado, (+) Adjudicada, (+) FechaHoraRecepcion, (+) Desempate |
 | `ORDENES_GASTO` | NroOrden, Tipo, CUCE_SICOES, ID_Solicitud, (+) ID_Cotizacion, Proveedor_Adjudicado, NIT, MontoTotal, NroPreventivo_C31, EstadoC31, FechaEmision, (+) PlazoDias, (+) LugarEntrega, (+) EstadoOrden, (+) MotivoAnulacion, (+) Usuario |
 | `C31` (+) | NroInterno, Fecha, ID_Solicitud, DA, UE, MontoTotal, MontoRevertido, Estado, NroC31_SIGEP, Usuario |
 | `C31_DET` (+) | NroInterno, Linea, Programa, Proyecto, ActObra, Fuente, Organismo, Partida, Importe, ImporteRevertido |
@@ -562,7 +564,7 @@ Se ejecutan desde Alt+F8 (o desde el editor con F5). Las marcadas con (*) requie
 
 ## Anexo E. Ejemplos guiados de prueba de aceptación
 
-Cinco casos completos, con datos exactos y resultados esperados, que recorren **todos los módulos desde el ingreso hasta la generación de documentos**. Úselos para validar la instalación, capacitar a los usuarios y dejar constancia de la aceptación (columna ☐: marque cuando el resultado coincida).
+Cinco casos completos (más la preparación y un ejemplo adicional de desempate), con datos exactos y resultados esperados, que recorren **todos los módulos desde el ingreso hasta la generación de documentos**. Úselos para validar la instalación, capacitar a los usuarios y dejar constancia de la aceptación (columna ☐: marque cuando el resultado coincida).
 
 ### E.1 Reglas para realizar los ejemplos
 
@@ -576,25 +578,26 @@ Cinco casos completos, con datos exactos y resultados esperados, que recorren **
 
 ### E.2 Mapa de cobertura
 
-| Función a probar | E0 | E1 | E2 | E3 | E4 | E5 |
-| :-- | :-: | :-: | :-: | :-: | :-: | :-: |
-| Inicio de sesión, roles y permisos | ● | ● | ● | ● | ● | ● |
-| Bloqueo por intentos, desbloqueo y cambio de contraseña | | | | | | ● |
-| Aislamiento por DA | | | | | | ● |
-| Alta de usuarios, importación CSV y configuración | ● | | | | | ● |
-| Solicitud con ítems y modalidad por monto | | ● | ● | ● | ● | ● |
-| Alerta CHB y evaluación por catálogo | | ● | ● | | ● | |
-| Excepción CHB (incompleta, completa, bloqueo) | | | | ● | | |
-| Cotizaciones y cuadro comparativo (1 y 3 ofertas) | | ● | ● | ● | ● | |
-| Control de saldo y C-31 con varias partidas | | ● | ● | ● | ● | |
-| Asociación del N° de SIGEP y sus validaciones | | ● | ● | ● | ● | |
-| Reversión parcial y total | | ● | | | ● | |
-| Adjudicación y Orden de Compra | | ● | ● | ● | | |
-| Orden de Servicio, anulación y reemisión | | | | | ● | ● |
-| Recepción con multa y acta | | ● | | | | ● |
-| Anulación de solicitud | | | | | | ● |
-| Documentos PDF (C-1, cuadro, excepción, C-31, Orden, acta) | | ● | ● | ● | ● | ● |
-| Auditoría | ● | | | | | ● |
+| Función a probar | E0 | E1 | E2 | E3 | E4 | E5 | E6 |
+| :-- | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| Inicio de sesión, roles y permisos | ● | ● | ● | ● | ● | ● | ● |
+| Bloqueo por intentos, desbloqueo y cambio de contraseña | | | | | | ● |  |
+| Aislamiento por DA | | | | | | ● |  |
+| Alta de usuarios, importación CSV y configuración | ● | | | | | ● |  |
+| Solicitud con ítems y modalidad por monto | | ● | ● | ● | ● | ● | ● |
+| Alerta CHB y evaluación por catálogo | | ● | ● | | ● | |  |
+| Excepción CHB (incompleta, completa, bloqueo) | | | | ● | | |  |
+| Cotizaciones y cuadro comparativo (1 y 3 ofertas) | | ● | ● | ● | ● | | ● |
+| Control de saldo y C-31 con varias partidas | | ● | ● | ● | ● | |  |
+| Asociación del N° de SIGEP y sus validaciones | | ● | ● | ● | ● | |  |
+| Reversión parcial y total | | ● | | | ● | |  |
+| Adjudicación y Orden de Compra | | ● | ● | ● | | |  |
+| Orden de Servicio, anulación y reemisión | | | | | ● | ● |  |
+| Recepción con multa y acta | | ● | | | | ● |  |
+| Anulación de solicitud | | | | | | ● |  |
+| Documentos PDF (C-1, cuadro, excepción, C-31, Orden, acta) | | ● | ● | ● | ● | ● | ● |
+| Auditoría | ● | | | | | ● | ● |
+| Desempate por primera recepción | | | | | | | ● |
 
 ### E.3 Ejemplo 0 — Preparación (usuarios, configuración y datos)
 
@@ -646,28 +649,28 @@ Cinco casos completos, con datos exactos y resultados esperados, que recorren **
 | :-- | :-- | :-- | :-- | :-: |
 | 1.1 | US `us_ejemplo`, pestaña 1 | Compruebe que **DA** muestra `01`. Escriba UE `001`, la justificación del cuadro y pulse **Crear solicitud** | Se asigna `SOL-2026-000001` y aparece en **Solicitud N°** | ☐ |
 | 1.2 | US, pestaña 1 | Ítem 1: escriba el código `44121600` y salga del campo | Alerta **roja** CHB; se completan descripción y unidad desde el catálogo | ☐ |
-| 1.3 | US, pestaña 1 | Complete cantidad 20 y precio 45 y pulse **Agregar item** | Aviso de alerta CHB; el ítem aparece en la lista con total 900.00 y CHB `NO` (pendiente) | ☐ |
-| 1.4 | US, pestaña 1 | Ítem 2: código `44121701`, descripción `Boligrafos azules`, unidad `Unidad`, cantidad 100, precio 2.50. **Agregar item** | Sin alerta CHB (código fuera de catálogo); CHB `N/A`; el estado muestra Referencial **1.150,00** y modalidad **CONTRATACION MENOR** | ☐ |
+| 1.3 | US, pestaña 1 | Complete cantidad 20 y precio 45 y pulse **Agregar ítem** | Aviso de alerta CHB; el ítem aparece en la lista con total 900.00 y CHB `NO` (pendiente) | ☐ |
+| 1.4 | US, pestaña 1 | Ítem 2: código `44121701`, descripción `Boligrafos azules`, unidad `Unidad`, cantidad 100, precio 2.50. **Agregar ítem** | Sin alerta CHB (código fuera de catálogo); CHB `N/A`; el estado muestra Referencial **1.150,00** y modalidad **CONTRATACION MENOR** | ☐ |
 | 1.5 | US, pestaña 1 | Intente agregar un ítem con cantidad `0` | Rechazo: "Cantidad y precio referencial deben ser mayores a cero." | ☐ |
-| 1.6 | US, pestaña 1 | Pulse **Enviar a cotizacion**, luego **Generar C-1 (PDF)** | Estado `EN_COTIZACION`. PDF en `PDF\` con los 2 ítems, total 1.150,00 y "Son: MIL CIENTO CINCUENTA 00/100 BOLIVIANOS", declaración de no impedimento y firmas | ☐ |
+| 1.6 | US, pestaña 1 | Pulse **Enviar a cotización**, luego **Imprimir C-1 (PDF)** | Estado `EN_COTIZACION`. PDF en `PDF\` con los 2 ítems, total 1.150,00 y "Son: MIL CIENTO CINCUENTA 00/100 BOLIVIANOS", declaración de no impedimento y firmas | ☐ |
 | 1.7 | US, pestaña 3 | Observe los botones | **Deshabilitados** (el rol US no cotiza) | ☐ |
-| 1.8 | RC `rc_ejemplo` | Cargue `SOL-2026-000001`. Pestaña 2: **N de item** `1`, casilla de excepción **sin marcar**, **Registrar evaluacion CHB** | Mensaje CHB. En la pestaña 1 el ítem 1 queda en CHB **`SI`** | ☐ |
-| 1.9 | RC, pestaña 3 | NIT `1020304050`, razón social `LIBRERIA EJEMPLO S.R.L.`, validez HOY+30, monto `1080`, marque **Cumple tecnicamente**, **Registrar** | Aparece la cotización `COT-2026-000001` en la lista | ☐ |
+| 1.8 | RC `rc_ejemplo` | Cargue `SOL-2026-000001`. Pestaña 2: **N de item** `1`, casilla de excepción **sin marcar**, **Registrar evaluación CHB** | Mensaje CHB. En la pestaña 1 el ítem 1 queda en CHB **`SI`** | ☐ |
+| 1.9 | RC, pestaña 3 | NIT `1020304050`, razón social `LIBRERIA EJEMPLO S.R.L.`, validez HOY+30, monto `1080`, marque **Cumple técnicamente**, **Registrar oferta** | Aparece la cotización `COT-2026-000001` en la lista | ☐ |
 | 1.10 | RC, pestaña 3 | Pulse **Evaluar cuadro** | Mensaje "Recomendada: LIBRERIA EJEMPLO S.R.L. por Bs 1,080.00"; estado `EVALUADA`; en la lista la columna recomendada dice `SI` | ☐ |
 | 1.11 | RC, pestaña 3 | Pulse **Adjudicar seleccionada** con la fila seleccionada | Rechazo: "No existe C-31 Preventivo vigente…" (falta la reserva) | ☐ |
 | 1.12 | PF `pf_ejemplo`, pestaña 4 | Cargue la solicitud. Ingrese Programa `01`, Proyecto `0000`, Act./Obra `001`, Fuente `20`, Organismo `230`, Partida `31120`, Importe `1150`. **Consultar saldo** | "Saldo disponible: Bs 12,000.00" | ☐ |
-| 1.13 | PF, pestaña 4 | **Agregar linea** y **Emitir C-31 Preventivo** | Mensaje con `C31P-2026-000001`; el estado pasa a `PRESUPUESTADA`; la lista de líneas se limpia | ☐ |
+| 1.13 | PF, pestaña 4 | **Agregar línea** y **Emitir C-31 Preventivo** | Mensaje con `C31P-2026-000001`; el estado pasa a `PRESUPUESTADA`; la lista de líneas se limpia | ☐ |
 | 1.14 | PF, pestaña 4 | Con el N° interno en la casilla, escriba SIGEP `ABC` y pulse **Asociar C-31** | Rechazo: "N de C-31 SIGEP invalido (numerico, hasta 10 digitos)." | ☐ |
 | 1.15 | PF, pestaña 4 | Escriba SIGEP `250001` y **Asociar C-31** | "C-31 SIGEP asociado." | ☐ |
 | 1.16 | RC, pestaña 3 | Cargue la solicitud, seleccione la cotización y **Adjudicar seleccionada** | "Adjudicada."; estado `ADJUDICADA` | ☐ |
 | 1.17 | RC, pestaña 5 | Tipo `COMPRA`, CUCE `EJEMPLO-CUCE-001`, plazo `10`, lugar `Almacen Municipal`. **Generar Orden** | Orden `OC-2026-000001`; estado `ORDEN_EMITIDA` | ☐ |
-| 1.18 | RC, pestaña 5 | **Orden (PDF)** | PDF "ORDEN DE COMPRA": proveedor, NIT, ítems (sin precios unitarios), monto **1.080,00**, "Son: MIL OCHENTA 00/100 BOLIVIANOS", plazo 10 días, N° del preventivo (`C31P-2026-000001`) y 6 cláusulas con el plazo y las penalidades (3 por mil, tope 10 %) | ☐ |
-| 1.19 | PF, pestaña 4 | Reversión parcial: N° interno `C31P-2026-000001`, Línea `1`, Monto `70`, Motivo `Ajuste de reserva al monto adjudicado`. **Reversion parcial** | "Reversion parcial registrada." | ☐ |
+| 1.18 | RC, pestaña 5 | **Imprimir Orden (PDF)** | PDF "ORDEN DE COMPRA": proveedor, NIT, ítems (sin precios unitarios), monto **1.080,00**, "Son: MIL OCHENTA 00/100 BOLIVIANOS", plazo 10 días, N° del preventivo (`C31P-2026-000001`) y 6 cláusulas con el plazo y las penalidades (3 por mil, tope 10 %) | ☐ |
+| 1.19 | PF, pestaña 4 | Reversión parcial: N° interno `C31P-2026-000001`, Línea `1`, Monto `70`, Motivo `Ajuste de reserva al monto adjudicado`. **Reversión parcial** | "Reversion parcial registrada." | ☐ |
 | 1.20 | PF, pestaña 4 | Con la solicitud cargada, escriba Programa `01`, Proyecto `0000`, Act./Obra `001`, Fuente `20`, Organismo `230`, Partida `31120` e importe `1` y pulse **Consultar saldo** | Saldo **10,920.00** (12.000 − 1.150 + 70) | ☐ |
 | 1.21 | PF, pestaña 4 | **C-31 (PDF)** | PDF con la línea: Importe 1.150,00, Revertido 70,00, Vigente 1.080,00; total en literal "MIL OCHENTA"; estado `REVERTIDO_PARCIAL` | ☐ |
-| 1.22 | RC, pestaña 5 | Fecha recepción HOY, casilla **Recepcion CONFORME** marcada, **Registrar recepcion** | Mensaje con `REC-2026-000001`; la Orden queda `RECIBIDA` | ☐ |
-| 1.23 | RC, pestaña 5 | **Acta de recepcion (PDF)** | Acta con 0 días de retraso, multa 0,00 y neto a pagar **1.080,00** | ☐ |
-| 1.24 | RC, pestaña 3 | **Cuadro comparativo (PDF)** | PDF con una oferta, "Cumple", recomendada, menor oferta hábil 1.080,00 y variación −6,1 % sobre el referencial | ☐ |
+| 1.22 | RC, pestaña 5 | Fecha recepción HOY, casilla **Recepción CONFORME** marcada, **Registrar recepción** | Mensaje con `REC-2026-000001`; la Orden queda `RECIBIDA` | ☐ |
+| 1.23 | RC, pestaña 5 | **Imprimir acta (PDF)** | Acta con 0 días de retraso, multa 0,00 y neto a pagar **1.080,00** | ☐ |
+| 1.24 | RC, pestaña 3 | **Imprimir cuadro comparativo (PDF)** | PDF con una oferta, "Cumple", recomendada, menor oferta hábil 1.080,00 y variación −6,1 % sobre el referencial | ☐ |
 | 1.25 | RC, pestaña 5 | Pulse **Anular Orden** con motivo `Prueba de anulacion de orden recibida` | Rechazo: "No se anula una Orden con recepcion conforme." | ☐ |
 
 ### E.5 Ejemplo 2 — Contratación con cuadro comparativo y dos partidas (Bs 26.000)
@@ -692,19 +695,19 @@ Cinco casos completos, con datos exactos y resultados esperados, que recorren **
 | N° | Rol y pantalla | Qué hacer (datos exactos) | Resultado esperado | ☐ |
 | :-- | :-- | :-- | :-- | :-: |
 | 2.1 | US `us_ejemplo`, pestaña 1 | Cree la solicitud (`SOL-2026-000002`) y agregue el ítem `43211500`, cantidad 5, precio 5200 | Alerta CHB roja. Referencial **26.000,00**; modalidad **con invitación y cuadro comparativo** | ☐ |
-| 2.2 | US | **Enviar a cotizacion** y **Generar C-1 (PDF)** | Estado `EN_COTIZACION`; C-1 con "Son: VEINTISEIS MIL 00/100 BOLIVIANOS" | ☐ |
-| 2.3 | RC `rc_ejemplo`, pestaña 2 | Cargue la solicitud. Ítem `1`, sin marcar excepción, **Registrar evaluacion CHB** | Ítem 1 en `SI` | ☐ |
+| 2.2 | US | **Enviar a cotización** y **Imprimir C-1 (PDF)** | Estado `EN_COTIZACION`; C-1 con "Son: VEINTISEIS MIL 00/100 BOLIVIANOS" | ☐ |
+| 2.3 | RC `rc_ejemplo`, pestaña 2 | Cargue la solicitud. Ítem `1`, sin marcar excepción, **Registrar evaluación CHB** | Ítem 1 en `SI` | ☐ |
 | 2.4 | RC, pestaña 3 | Registre las cotizaciones A y B (validez HOY+30; A y B cumplen). Pulse **Evaluar cuadro** | "Se requieren 3 cotizaciones; hay 2." | ☐ |
 | 2.5 | RC, pestaña 3 | Registre la cotización C **sin** marcar "Cumple tecnicamente". **Evaluar cuadro** | "Recomendada: TECNOLOGIA BOLIVIA EJEMPLO S.A. por Bs 24,800.00" (C es la más barata pero no cumple). Estado `EVALUADA` | ☐ |
-| 2.6 | RC, pestaña 3 | **Cuadro comparativo (PDF)** | PDF con 3 ofertas; C "No cumple"; B "RECOMENDADA"; menor oferta hábil **24.800,00**; variaciones: A −2,3 %, B −4,6 %, C −7,3 % | ☐ |
-| 2.7 | PF `pf_ejemplo`, pestaña 4 | Cargue la solicitud. Estructura `01/0000/001/20/230`, Partida `43130`, Importe `15000`. **Agregar linea** | La línea aparece en la lista | ☐ |
-| 2.8 | PF, pestaña 4 | Cambie la partida a `43120`, importe `9800`, **Agregar linea**. Pulse **Emitir C-31 Preventivo** | `C31P-2026-000002`; estado `PRESUPUESTADA` | ☐ |
+| 2.6 | RC, pestaña 3 | **Imprimir cuadro comparativo (PDF)** | PDF con 3 ofertas; C "No cumple"; B "RECOMENDADA"; menor oferta hábil **24.800,00**; variaciones: A −2,3 %, B −4,6 %, C −7,3 % | ☐ |
+| 2.7 | PF `pf_ejemplo`, pestaña 4 | Cargue la solicitud. Estructura `01/0000/001/20/230`, Partida `43130`, Importe `15000`. **Agregar línea** | La línea aparece en la lista | ☐ |
+| 2.8 | PF, pestaña 4 | Cambie la partida a `43120`, importe `9800`, **Agregar línea**. Pulse **Emitir C-31 Preventivo** | `C31P-2026-000002`; estado `PRESUPUESTADA` | ☐ |
 | 2.9 | PF, pestaña 4 | Con ese N° escriba SIGEP `250001` y **Asociar C-31** | Rechazo: "Ese N de C-31 SIGEP ya esta asociado a otro preventivo." | ☐ |
 | 2.10 | PF, pestaña 4 | SIGEP `250002`, **Asociar C-31**, luego **C-31 (PDF)** | PDF con **2 líneas** (15.000,00 y 9.800,00), total **24.800,00** y "VEINTICUATRO MIL OCHOCIENTOS" | ☐ |
 | 2.11 | RC, pestaña 3 | Seleccione la cotización **A** (no recomendada) y **Adjudicar seleccionada** | Rechazo: "Solo puede adjudicarse la oferta recomendada…" | ☐ |
 | 2.12 | RC, pestaña 3 | Seleccione la cotización **B** y **Adjudicar seleccionada** | "Adjudicada."; estado `ADJUDICADA` | ☐ |
 | 2.13 | RC, pestaña 5 | COMPRA, CUCE `EJEMPLO-CUCE-002`, plazo `30`, lugar `Oficinas Centrales`. **Generar Orden** | `OC-2026-000002`; estado `ORDEN_EMITIDA` | ☐ |
-| 2.14 | RC, pestaña 5 | **Orden (PDF)** | Orden por **24.800,00**, plazo 30 días y proveedor TECNOLOGIA BOLIVIA EJEMPLO S.A. | ☐ |
+| 2.14 | RC, pestaña 5 | **Imprimir Orden (PDF)** | Orden por **24.800,00**, plazo 30 días y proveedor TECNOLOGIA BOLIVIA EJEMPLO S.A. | ☐ |
 | 2.15 | PF, pestaña 4 | **Consultar saldo** con partidas `43130` y luego `43120` (cualquier importe) | **65,000.00** y **50,200.00** | ☐ |
 
 (La recepción de esta Orden se hace en el Ejemplo 5, con retraso y multa.)
@@ -734,8 +737,8 @@ Cinco casos completos, con datos exactos y resultados esperados, que recorren **
 | N° | Rol y pantalla | Qué hacer (datos exactos) | Resultado esperado | ☐ |
 | :-- | :-- | :-- | :-- | :-: |
 | 3.1 | US `us_ejemplo` | Cree la solicitud `SOL-2026-000003` y agregue los 3 ítems. Observe la alerta al digitar cada código | Alerta roja en los tres (los tres están en catálogo). Referencial 17.500,00. Los 3 ítems en CHB `NO` | ☐ |
-| 3.2 | US | **Enviar a cotizacion** | Estado `EN_COTIZACION` | ☐ |
-| 3.3 | RC `rc_ejemplo`, pestaña 2 | Cargue la solicitud. Ítem `1`, marque **Comprar FUERA del catalogo**, Cod. Excepción `EXC-1` (solo ese dato). **Registrar evaluacion CHB** | Mensaje: "Codigo Unico de Excepcion … ausente o con formato invalido." Ítem 1 sigue en `NO` | ☐ |
+| 3.2 | US | **Enviar a cotización** | Estado `EN_COTIZACION` | ☐ |
+| 3.3 | RC `rc_ejemplo`, pestaña 2 | Cargue la solicitud. Ítem `1`, marque **Comprar FUERA del catálogo**, Cod. Excepción `EXC-1` (solo ese dato). **Registrar evaluación CHB** | Mensaje: "Codigo Unico de Excepcion … ausente o con formato invalido." Ítem 1 sigue en `NO` | ☐ |
 | 3.4 | RC, pestaña 2 | Ítem `1`: Cod. `EXC-2026-0147`, N° `MDPyEP-AUT-0391`, fecha, pero Justificación `Muy corta`. Registrar | Mensaje: justificación insuficiente (mínimo 80 caracteres). Sigue `NO` | ☐ |
 | 3.5 | RC, pestaña 2 | Repita con la fecha **de mañana** y la justificación completa | Mensaje: "La fecha de autorizacion no puede ser futura." | ☐ |
 | 3.6 | RC, pestaña 2 | Repita con fecha anterior a HOY y la justificación completa | Ítem 1 queda en **`EXCEPCION`** | ☐ |
@@ -744,12 +747,12 @@ Cinco casos completos, con datos exactos y resultados esperados, que recorren **
 | 3.9 | RC, pestaña 3 | Registre la cotización (NIT `6060606060`, 17100, cumple) y **Evaluar cuadro** | "Recomendada: MUEBLES Y SISTEMAS EJEMPLO S.A. por Bs 17,100.00". Estado `EVALUADA` | ☐ |
 | 3.10 | RC, pestaña 3 | Con el **ítem 3 todavía pendiente**, seleccione la cotización y **Adjudicar seleccionada** | **Bloqueo**: "Bloqueado por CHB: - Item 3: sin Ficha Tecnica CHB vigente ni Codigo de Excepcion autorizado." | ☐ |
 | 3.11 | RC, pestaña 2 | Ítem `3` (ficha vigente): marque la casilla de excepción y complete `EXC-2026-0149`, `MDPyEP-AUT-0393`, fecha y justificación | Ítem 3 en `EXCEPCION` | ☐ |
-| 3.12 | RC, pestaña 2 | **Justificacion de excepcion (PDF)** | PDF "Justificación de excepción de ficha técnica": 3 ítems con código de excepción, N° de autorización, fecha y justificación; filas sin recortes | ☐ |
-| 3.13 | PF `pf_ejemplo`, pestaña 4 | Cargue la solicitud; partida `43120`, importe `17500`. **Agregar linea**, **Emitir C-31 Preventivo** | `C31P-2026-000003` | ☐ |
+| 3.12 | RC, pestaña 2 | **Imprimir justificación de excepción (PDF)** | PDF "Justificación de excepción de ficha técnica": 3 ítems con código de excepción, N° de autorización, fecha y justificación; filas sin recortes | ☐ |
+| 3.13 | PF `pf_ejemplo`, pestaña 4 | Cargue la solicitud; partida `43120`, importe `17500`. **Agregar línea**, **Emitir C-31 Preventivo** | `C31P-2026-000003` | ☐ |
 | 3.14 | PF | SIGEP `250003`, **Asociar C-31** | "C-31 SIGEP asociado." | ☐ |
 | 3.15 | RC, pestaña 3 | **Adjudicar seleccionada** | Ahora sí: "Adjudicada." | ☐ |
 | 3.16 | RC, pestaña 5 | COMPRA, CUCE `EJEMPLO-CUCE-003`, plazo `15`, lugar `Almacen Municipal`. **Generar Orden** | `OC-2026-000003` | ☐ |
-| 3.17 | RC, pestaña 1 | **Generar C-1 (PDF)** (desde la pestaña 1) | La columna CHB del C-1 muestra `EXCEPCION` en los 3 ítems; total 17.500,00 | ☐ |
+| 3.17 | RC, pestaña 1 | **Imprimir C-1 (PDF)** (desde la pestaña 1) | La columna CHB del C-1 muestra `EXCEPCION` en los 3 ítems; total 17.500,00 | ☐ |
 | 3.18 | PF, pestaña 4 | **Consultar saldo** de la partida `43120` | **32,700.00** | ☐ |
 
 ### E.7 Ejemplo 4 — Orden de Servicio, saldo insuficiente, reversiones y anulación (Bs 28.000)
@@ -775,26 +778,26 @@ Cinco casos completos, con datos exactos y resultados esperados, que recorren **
 | :-- | :-- | :-- | :-- | :-: |
 | 4.1 | US `us_ejemplo` | Cree `SOL-2026-000004`, agregue el ítem, envíe a cotización | Modalidad con cuadro comparativo; estado `EN_COTIZACION` | ☐ |
 | 4.2 | RC `rc_ejemplo` | Evalúe el ítem 1 por catálogo (`SI`). Registre las tres cotizaciones y **Evaluar cuadro** | "Recomendada: ELECTRO SERVICIOS EJEMPLO S.R.L. por Bs 27,500.00"; estado `EVALUADA` | ☐ |
-| 4.3 | RC | **Cuadro comparativo (PDF)** | 3 ofertas; A recomendada; variación de A −1,8 % | ☐ |
-| 4.4 | PF `pf_ejemplo`, pestaña 4 | Partida `25800`, importe `31000`, **Agregar linea**, **Emitir C-31 Preventivo** | Rechazo: "Saldo insuficiente en partida 25800: disponible Bs 30,000.00, requerido Bs 31,000.00". Las líneas se limpian y no se reserva nada | ☐ |
+| 4.3 | RC | **Imprimir cuadro comparativo (PDF)** | 3 ofertas; A recomendada; variación de A −1,8 % | ☐ |
+| 4.4 | PF `pf_ejemplo`, pestaña 4 | Partida `25800`, importe `31000`, **Agregar línea**, **Emitir C-31 Preventivo** | Rechazo: "Saldo insuficiente en partida 25800: disponible Bs 30,000.00, requerido Bs 31,000.00". Las líneas se limpian y no se reserva nada | ☐ |
 | 4.5 | PF | Partida `99999`, importe `1000`, agregar línea y emitir | Rechazo: "La estructura programatica (partida 99999) no existe en el presupuesto de la gestion." | ☐ |
 | 4.6 | PF | Partida `25800`, importe `27500`, agregar línea y **Emitir C-31 Preventivo** | `C31P-2026-000004`. Saldo 25800 = 2.500,00 | ☐ |
 | 4.7 | PF | Intente emitir **otro** C-31 para la misma solicitud (partida `25800`, importe `100`) | Rechazo: "La solicitud debe estar EVALUADA … (estado: PRESUPUESTADA)": una solicitud ya presupuestada no admite otra reserva | ☐ |
 | 4.8 | PF | Asocie el SIGEP `250004` | "C-31 SIGEP asociado." | ☐ |
-| 4.9 | PF | **Reversion parcial**: N° `C31P-2026-000004`, línea `1`, monto `500`, motivo `Correccion del importe reservado` | Registrada. Estado del preventivo `REVERTIDO_PARCIAL`; vigente 27.000,00 | ☐ |
+| 4.9 | PF | **Reversión parcial**: N° `C31P-2026-000004`, línea `1`, monto `500`, motivo `Correccion del importe reservado` | Registrada. Estado del preventivo `REVERTIDO_PARCIAL`; vigente 27.000,00 | ☐ |
 | 4.10 | RC | Cargue la solicitud, seleccione la cotización A y **Adjudicar seleccionada** | Rechazo: "El preventivo … no cubre el monto cotizado." (27.000 < 27.500) | ☐ |
-| 4.11 | PF | **Reversion total**: mismo N°, motivo `Reserva insuficiente: se reemite el preventivo`. Confirme | Registrada. La solicitud vuelve a `EVALUADA`; saldo de 25800 = **30,000.00** | ☐ |
+| 4.11 | PF | **Reversión total**: mismo N°, motivo `Reserva insuficiente: se reemite el preventivo`. Confirme | Registrada. La solicitud vuelve a `EVALUADA`; saldo de 25800 = **30,000.00** | ☐ |
 | 4.12 | PF | **C-31 (PDF)** del `C31P-2026-000004` | Estado `REVERTIDO_TOTAL`: importe 27.500,00, revertido 27.500,00, vigente 0,00 | ☐ |
 | 4.13 | PF | Emita un C-31 nuevo: partida `25800`, importe `27500` | `C31P-2026-000005` | ☐ |
 | 4.14 | PF | Intente asociar SIGEP `250004` | Rechazo por número repetido ("…ya esta asociado a otro preventivo") | ☐ |
 | 4.15 | PF | Asocie SIGEP `250005` | "C-31 SIGEP asociado." | ☐ |
 | 4.16 | RC | **Adjudicar seleccionada** (cotización A) | "Adjudicada." | ☐ |
 | 4.17 | RC, pestaña 5 | Tipo **SERVICIO**, CUCE `EJEMPLO-CUCE-004`, plazo `20`, lugar `Edificio Municipal`. **Generar Orden** | `OS-2026-000001` (la numeración de servicios es independiente de la de compras) | ☐ |
-| 4.18 | RC | **Orden (PDF)** | Título **"ORDEN DE SERVICIO"**, monto 27.500,00 en letras "VEINTISIETE MIL QUINIENTOS" | ☐ |
-| 4.19 | PF | Intente **Reversion total** de `C31P-2026-000005` con motivo `Intento de reversion con orden vigente` | Rechazo: "Existe una Orden emitida con cargo a este preventivo; anule la Orden primero." | ☐ |
+| 4.18 | RC | **Imprimir Orden (PDF)** | Título **"ORDEN DE SERVICIO"**, monto 27.500,00 en letras "VEINTISIETE MIL QUINIENTOS" | ☐ |
+| 4.19 | PF | Intente **Reversión total** de `C31P-2026-000005` con motivo `Intento de reversion con orden vigente` | Rechazo: "Existe una Orden emitida con cargo a este preventivo; anule la Orden primero." | ☐ |
 | 4.20 | RC, pestaña 5 | Motivo `Error en el plazo de ejecucion consignado`, pulse **Anular Orden** y confirme | Orden anulada; estado de la solicitud `ADJUDICADA`; el número de Orden desaparece de la pantalla | ☐ |
 | 4.21 | RC, pestaña 5 | Plazo `25`, mismo CUCE y lugar. **Generar Orden** | `OS-2026-000002` | ☐ |
-| 4.22 | RC | **Orden (PDF)** | Orden de Servicio con plazo **25 días** | ☐ |
+| 4.22 | RC | **Imprimir Orden (PDF)** | Orden de Servicio con plazo **25 días** | ☐ |
 | 4.23 | PF | **Consultar saldo** de la partida `25800` | **2,500.00** | ☐ |
 
 ### E.8 Ejemplo 5 — Seguridad, recepción con multa, anulaciones, importación con observaciones y auditoría
@@ -818,13 +821,13 @@ Cinco casos completos, con datos exactos y resultados esperados, que recorren **
 | 5.11 | US `us_dos`, pestaña 1 | DA `02`, UE `001`, justificación `Solicitud de prueba para verificar la anulacion de tramites`. Cree y agregue el ítem `44121701`, `Cinta adhesiva`, `Unidad`, cantidad 5, precio 10 | Se asigna `SOL-2026-000005`; referencial 50,00 | ☐ |
 | 5.12 | US `us_dos`, pestaña 5 | Motivo `Prueba de anulacion de una solicitud en borrador`, **Anular solicitud** y confirme | Estado `ANULADA` (se ve al cargarla de nuevo) | ☐ |
 | 5.13 | RC `rc_ejemplo`, pestaña 5 | Cargue `SOL-2026-000001` (Ejemplo 1, ya recibida). Motivo `Intento de anular solicitud con orden`, **Anular solicitud** | Rechazo: "Hay una Orden vigente; anulela primero." | ☐ |
-| 5.14 | RC, pestaña 5 | Cargue `SOL-2026-000002`. Fecha recepción **HOY**, **sin** marcar conforme, observaciones `Dos de las cinco computadoras llegaron sin garantia ni manual` y **Registrar recepcion** | `REC-2026-000002` (observada). La Orden **sigue** `EMITIDA` | ☐ |
+| 5.14 | RC, pestaña 5 | Cargue `SOL-2026-000002`. Fecha recepción **HOY**, **sin** marcar conforme, observaciones `Dos de las cinco computadoras llegaron sin garantia ni manual` y **Registrar recepción** | `REC-2026-000002` (observada). La Orden **sigue** `EMITIDA` | ☐ |
 | 5.15 | RC, pestaña 5 | Intente registrar otra recepción **sin** marcar conforme y **sin** observaciones | Rechazo: "Detalle las observaciones (min. 10 caracteres)." | ☐ |
 | 5.16 | RC, pestaña 5 | Fecha **mañana**, conforme marcado | Rechazo: "La fecha de recepcion no puede ser futura." | ☐ |
-| 5.17 | RC, pestaña 5 | Fecha HOY, marque **Recepcion CONFORME**, observaciones vacías, **Registrar recepcion** | `REC-2026-000003`; la Orden pasa a `RECIBIDA` | ☐ |
-| 5.18 | RC, pestaña 5 | **Acta de recepcion (PDF)** | Acta: **15 días de retraso**, multa **1.116,00**, resultado CONFORME, monto de la Orden 24.800,00 y neto a pagar **23.684,00** | ☐ |
+| 5.17 | RC, pestaña 5 | Fecha HOY, marque **Recepción CONFORME**, observaciones vacías, **Registrar recepción** | `REC-2026-000003`; la Orden pasa a `RECIBIDA` | ☐ |
+| 5.18 | RC, pestaña 5 | **Imprimir acta (PDF)** | Acta: **15 días de retraso**, multa **1.116,00**, resultado CONFORME, monto de la Orden 24.800,00 y neto a pagar **23.684,00** | ☐ |
 | 5.19 | RC, pestaña 5 | Cargue `SOL-2026-000004` y pulse **Anular Orden** con motivo `Prueba de anulacion tras reemision` | Se anula la `OS-2026-000002` y la solicitud vuelve a `ADJUDICADA` (puede emitirse otra, pero no es necesario) | ☐ |
-| 5.20 | PF `pf_ejemplo`, pestaña 5 | Observe los botones **Generar Orden**, **Anular Orden**, **Registrar recepcion** | **Deshabilitados** (el rol PF no los puede usar) | ☐ |
+| 5.20 | PF `pf_ejemplo`, pestaña 5 | Observe los botones **Generar Orden**, **Anular Orden**, **Registrar recepción** | **Deshabilitados** (el rol PF no los puede usar) | ☐ |
 | 5.21 | RC `rc_ejemplo`, pestaña 4 | Observe **Emitir C-31 Preventivo** y las reversiones | **Deshabilitados** (el rol RC no reserva presupuesto) | ☐ |
 | 5.22 | ADM, menú 4 | Importar `catalogo_actualizacion.csv` | "Nuevos: 1 / Actualizados: 1 / Rechazados: 0" | ☐ |
 | 5.23 | ADM, menú 5 | Importar `presupuesto_con_duplicado.csv` | "Nuevos: 1 / Actualizados: 0 / Rechazados: 1" y el detalle "Linea 2: estructura/clave repetida, no se importa." | ☐ |
@@ -849,12 +852,40 @@ Nota 5.25: el comprometido de 25800 sigue en 27.500,00 aunque la Orden de servic
 | `DOC_GENERADO` | Cada PDF emitido |
 | `SHOW_DB`, `PROTECT_DB` | Cada vez que el administrador mostró o protegió las hojas |
 
-### E.9 Resumen de documentos que debe haber en la carpeta `PDF`
+### E.9 Ejemplo 6 (adicional) — Desempate por primera recepción
+
+**Objetivo:** probar la regla de desempate: cuando dos ofertas hábiles cotizan **exactamente el mismo precio**, se recomienda la que se **recibió primero**, y queda constancia en pantalla, en la auditoría y en el cuadro comparativo impreso. Hágalo después del Ejemplo 5 (no consume saldo presupuestario).
+
+**Datos del caso**
+
+| Dato | Valor |
+| :-- | :-- |
+| Solicitud | DA `01`, UE `001`. Justificación: `Compra de boligrafos para probar el criterio de desempate` |
+| Ítem único | `44121701` Bolígrafos azules, Unidad, cantidad 10, precio 100.00 → 1.000,00 (1 cotización exigida) |
+| Oferta A | NIT `2020202020`, `PROVEEDOR A EJEMPLO`, 950.00, cumple, **Recibida el: AYER 16:00** |
+| Oferta B | NIT `2121212121`, `PROVEEDOR B EJEMPLO`, 950.00, cumple, **Recibida el: AYER 09:00** (la primera) |
+| Oferta C | NIT `2323232323`, `PROVEEDOR C EJEMPLO`, 980.00, cumple, **Recibida el vacío** (se toma el momento del registro) |
+
+**Cifras de control:** referencial 1.000,00 · A y B empatan en 950,00 · recomendada **B** por primera recepción · variaciones sobre el referencial: A −5,0 %, B −5,0 %, C −2,0 %.
+
+| N° | Rol y pantalla | Qué hacer (datos exactos) | Resultado esperado | ☐ |
+| :-- | :-- | :-- | :-- | :-: |
+| 6.1 | US `us_ejemplo` | Cree la solicitud (`SOL-2026-000006`), agregue el ítem y **Enviar a cotización** | Estado `EN_COTIZACION`. La franja amarilla "Siguiente paso" cambia según el estado | ☐ |
+| 6.2 | RC `rc_ejemplo`, pestaña 3 | Registre una oferta de prueba con **Recibida el** = mañana a las 10:00 (NIT `1111111`, 990, validez HOY+30) | Rechazo: "La fecha y hora de recepcion de la oferta no puede ser futura." | ☐ |
+| 6.3 | RC, pestaña 3 | Oferta A con **Recibida el** = ayer 16:00 | Aparece `COT-2026-000009`; en la columna *Recibida* se ve ayer 16:00 | ☐ |
+| 6.4 | RC, pestaña 3 | Oferta B con **Recibida el** = ayer 09:00 | `COT-2026-000010` con ayer 09:00 | ☐ |
+| 6.5 | RC, pestaña 3 | Oferta C, **dejando vacío** *Recibida el* | `COT-2026-000011`; la columna *Recibida* muestra la fecha y hora actuales | ☐ |
+| 6.6 | RC, pestaña 3 | **Evaluar cuadro** | Mensaje: "Recomendada: PROVEEDOR B EJEMPLO por Bs 950.00 / Hubo 2 ofertas con el mismo precio: se desempato por PRIMERA RECEPCION (…09:00)". Estado `EVALUADA`. En la lista, B dice `SI` y A dice `NO` | ☐ |
+| 6.7 | RC, pestaña 3 | **Imprimir cuadro comparativo (PDF)** | B figura como "RECOMENDADA (desempate)" y la recomendación incluye la nota "Hubo empate de precio entre ofertas hábiles; se resolvió por primera recepción de la oferta (recibida el …)". Menor oferta hábil 950,00 | ☐ |
+| 6.8 | RC, pestaña 3 | Seleccione la oferta **A** (empatada pero recibida después) y **Adjudicar seleccionada** | Rechazo: "Solo puede adjudicarse la oferta recomendada por el cuadro comparativo." | ☐ |
+| 6.9 | ADM, menú 8 | Ver auditoría | Fila `CUADRO_DESEMPATE`: "SOL-2026-000006: 2 ofertas empatadas en Bs 950.00 -> COT-2026-000010 por primera recepcion" | ☐ |
+
+### E.10 Resumen de documentos que debe haber en la carpeta `PDF`
 
 | Documento | Ejemplo y paso | Cantidad mínima |
 | :-- | :-- | :-: |
 | Formulario C-1 | 1.6, 2.2, 3.17 | 3 |
-| Cuadro comparativo | 1.24, 2.6, 4.3 | 3 |
+| Cuadro comparativo | 1.24, 2.6, 4.3, 6.7 | 4 |
 | Justificación de excepción CHB | 3.12 | 1 |
 | C-31 Preventivo | 1.21, 2.10, 4.12 | 3 |
 | Orden de Compra | 1.18, 2.14 | 2 |
@@ -863,9 +894,9 @@ Nota 5.25: el comprometido de 25800 sigue en 27.500,00 aunque la Orden de servic
 
 Revise en cada PDF: membrete con el nombre de la entidad de ejemplo, número de trámite, fechas, totales, montos en letras, firmas y pie con el usuario que lo generó.
 
-### E.10 Criterio de aceptación y registro
+### E.11 Criterio de aceptación y registro
 
-La prueba de aceptación manual se da por aprobada cuando **todos los resultados esperados coinciden** y los documentos de E.9 están completos y legibles. Registre:
+La prueba de aceptación manual se da por aprobada cuando **todos los resultados esperados coinciden** y los documentos de E.10 están completos y legibles. Registre:
 
 | Dato | Valor |
 | :-- | :-- |
@@ -879,7 +910,7 @@ La prueba de aceptación manual se da por aprobada cuando **todos los resultados
 
 **Limitaciones conocidas que verá durante las pruebas** (no son errores de uso):
 
-- Un **empate** en el precio más bajo detiene el trámite: el sistema avisa y no elige; hoy no existe una opción para resolverlo. La salida es anular la solicitud y repetirla, o pedir una mejora al desarrollo.
+- El **desempate** por primera recepción es automático y no puede cambiarse a mano. Si la entidad exigiera otro criterio, debe modificarse la regla (ver sección 15).
 - Los ítems, cotizaciones y reservas **no se editan ni se borran** una vez cargados; se corrigen anulando, o con reversión en el caso del C-31.
 - El número de acta que se muestra tras registrar una recepción no se puede volver a consultar desde la pantalla: anótelo (queda también en la hoja `RECEPCIONES`).
 - Para el retraso en la recepción hace falta que la Orden haya sido emitida en el pasado; en las pruebas se simula con el paso 5.1.

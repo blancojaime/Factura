@@ -8,6 +8,11 @@ Private Sub UserForm_Initialize()
     lblMsg.Caption = ""
 End Sub
 
+Private Sub UserForm_Activate()
+    On Error Resume Next
+    txtUsuario.SetFocus
+End Sub
+
 Private Sub cmdIngresar_Click()
     Dim msg As String
     On Error GoTo EH

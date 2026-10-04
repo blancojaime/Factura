@@ -77,18 +77,34 @@ Pulse **Cerrar sesión** (arriba a la derecha de la pantalla principal) y luego 
 
 ## 5. La pantalla principal (US, RC y PF)
 
-Después de iniciar sesión aparece la pantalla **Contrataciones Menores**:
+Después de iniciar sesión aparece la pantalla **Contrataciones Menores**. Está pensada para que siempre sepa **dónde está y qué sigue**:
 
 | Zona | Contenido |
 | :-- | :-- |
-| Arriba | Su nombre, rol y DA; botón **Cerrar sesión** |
-| Segunda línea | Casilla **Solicitud N°**, botón **Cargar** y, a la derecha, el estado de la solicitud, el monto referencial y la modalidad |
-| Pestañas | **1 Solicitud · 2 Evaluación CHB · 3 Cotizaciones · 4 Presupuesto / C-31 · 5 Orden / Recepción** |
-| Cuerpo | Los campos y botones de la pestaña elegida |
+| Barra azul superior | Nombre del sistema, su nombre, rol y DA, y el botón rojo **Cerrar sesión** |
+| **Solicitud N°** y **Cargar** | Escriba el número de una solicitud y pulse **Cargar** para trabajar con ella |
+| Franja de **estado** (con color) | El estado, el monto referencial y la modalidad de la solicitud cargada |
+| Franja amarilla **Siguiente paso** | Le dice, según el estado y **su rol**, qué debe hacer ahora |
+| Pestañas de colores | **1 Solicitud · 2 Evaluación CHB · 3 Cotizaciones · 4 Presupuesto / C-31 · 5 Orden / Recepción**. La pestaña activa se resalta con su color; cada pantalla tiene su banner del mismo color |
+| Cuerpo | Barras de sección con los campos y botones. Pase el mouse sobre un campo o botón para ver una **ayuda emergente** |
 
-Cómo trabajar con una solicitud que ya existe: escriba su número (por ejemplo `SOL-2026-000001`) en **Solicitud N°** y pulse **Cargar**. Se actualizan el estado, la lista de ítems y la lista de cotizaciones.
+**Código de colores de los botones** (igual en todas las pantallas):
 
-Los botones que su rol no puede usar aparecen **deshabilitados** (en gris).
+| Color | Significado | Ejemplos |
+| :-- | :-- | :-- |
+| Azul | Registrar o consultar datos | Crear solicitud, Agregar ítem, Registrar oferta, Consultar saldo |
+| Verde | Avanza el trámite al siguiente estado | Enviar a cotización, Evaluar cuadro, Adjudicar, Emitir C-31, Generar Orden, Registrar recepción |
+| Violeta | Genera un documento PDF | Imprimir C-1, Imprimir Orden, Imprimir acta |
+| Rojo | Acción que anula o revierte (pide motivo) | Reversión parcial, Reversión total, Anular Orden, Anular solicitud |
+| Gris | **Botón no disponible para su rol** (deshabilitado) | — |
+
+**Color del estado:** gris = BORRADOR · azul = EN_COTIZACION · verde azulado = EVALUADA · ámbar = PRESUPUESTADA · violeta = ADJUDICADA · verde = ORDEN_EMITIDA · rojo = ANULADA.
+
+**Pestaña inicial:** el sistema abre en la que más usa su rol (US → 1, RC → 2, PF → 4).
+
+**Listas:** la primera fila de cada lista son los títulos de las columnas; las demás son los datos. Al adjudicar seleccione una fila de datos, no la de títulos.
+
+Cómo trabajar con una solicitud que ya existe: escriba su número (por ejemplo `SOL-2026-000001`) en **Solicitud N°** y pulse **Cargar**. Se actualizan el estado, la sugerencia, la lista de ítems y la de cotizaciones.
 
 Los **PDF** se guardan en la carpeta `PDF` junto al libro (por ejemplo `C:\SIC-MUNI\PDF\`). Al terminar, el sistema muestra la ruta del archivo.
 
@@ -107,7 +123,7 @@ Para cada bien o servicio:
 1. **Código UNSPSC**: escríbalo y salga del campo. Si el código está en el catálogo CHB, aparece una **alerta en rojo** y se completan solos la descripción y la unidad.
 2. **Descripción**: especificaciones técnicas claras. No deben dirigir la compra a un proveedor determinado.
 3. **Unidad**, **Cantidad** y **P. ref. unit. (Bs)**: el precio referencial por unidad.
-4. Pulse **Agregar item**. El ítem aparece en la lista con su total.
+4. Pulse **Agregar ítem**. El ítem aparece en la lista con su total.
 
 Al agregar un ítem que está en el catálogo CHB el sistema muestra un aviso: la decisión (comprar por catálogo o pedir excepción) la toma el Responsable de Contrataciones en la pestaña 2. No necesita hacer nada más.
 
@@ -125,7 +141,7 @@ La línea de estado muestra el **monto referencial** acumulado y la **modalidad*
 
 1. Revise que el monto y los ítems sean correctos. **Después de enviar ya no se pueden agregar ítems.**
 2. Pulse **Enviar a cotización**. Si el monto excede el tope de contratación menor, el sistema lo rechaza.
-3. Pulse **Generar C-1 (PDF)** para obtener el Formulario de Requerimiento y Especificaciones Técnicas con la declaración de no impedimento. Imprímalo y fírmelo.
+3. Pulse **Imprimir C-1 (PDF)** para obtener el Formulario de Requerimiento y Especificaciones Técnicas con la declaración de no impedimento. Imprímalo y fírmelo.
 
 ### 6.4 Si se equivoca
 
@@ -151,7 +167,7 @@ Cada ítem cuyo código está en el catálogo "Compro Hecho en Bolivia" debe res
    - **Fecha autoriz.**: fecha de esa autorización (no puede ser futura).
    - **Justificación**: razón técnica y legal detallada (mínimo 80 caracteres).
 3. Pulse **Registrar evaluación CHB**. Si falta algo, el sistema dice qué y el ítem queda en **NO** (bloqueado). Si todo está completo queda en **EXCEPCION**.
-4. Pulse **Justificación de excepción (PDF)** para obtener el reporte que se archiva en el expediente.
+4. Pulse **Imprimir justificación de excepción (PDF)** para obtener el reporte que se archiva en el expediente.
 
 Resultado que verá en la columna **CHB** de la lista de ítems:
 
@@ -167,12 +183,12 @@ Resultado que verá en la columna **CHB** de la lista de ítems:
 ### 7.2 Cotizaciones y cuadro comparativo (pestaña 3)
 
 1. Cargue la solicitud (debe estar **EN_COTIZACION**).
-2. Para cada oferta recibida, complete **NIT** (solo números, 6 o más dígitos), **Razón social**, **Validez** (fecha hasta la que vale la oferta), **Monto cotizado** (total de la oferta) y marque **Cumple técnicamente** si corresponde. Pulse **Registrar**.
+2. Para cada oferta recibida, complete **NIT** (solo números, 6 o más dígitos), **Razón social**, **Validez** (fecha hasta la que vale la oferta), **Monto cotizado** (total de la oferta) y marque **Cumple técnicamente** si corresponde. En **Recibida el** escriba, si lo sabe, la fecha y hora en que el proveedor entregó o envió su oferta (`dd/mm/aaaa hh:mm`, no puede ser futura); si lo deja vacío se usa el momento en que usted la registra. Pulse **Registrar oferta**.
 3. Cuántas cotizaciones se necesitan: **1** hasta Bs 20.000; **3** si el referencial supera Bs 20.000.
 4. Cuando tenga todas, pulse **Evaluar cuadro**. El sistema aplica el criterio *Cumple / No cumple* y *Precio evaluado más bajo*, y marca como **recomendada** la oferta vigente, que cumple técnicamente y tiene el menor monto. La solicitud pasa a **EVALUADA**.
-   - Si hay **empate** en el precio más bajo, el sistema avisa y **no** elige: usted debe resolverlo con el criterio de desempate de la entidad.
+   - **Desempate:** si dos o más ofertas hábiles tienen **exactamente el mismo precio más bajo**, el sistema adjudica la recomendación a la que **se recibió primero** (fecha y hora de la columna *Recibida*). Si coinciden también en la hora, gana la que se registró antes. El sistema lo avisa en pantalla, lo anota en la auditoría y lo deja escrito en el cuadro comparativo impreso. Por eso conviene registrar con exactitud **Recibida el** en cada oferta.
    - Si ninguna oferta cumple, también lo avisa.
-5. Pulse **Cuadro comparativo (PDF)** para imprimirlo.
+5. Pulse **Imprimir cuadro comparativo (PDF)** para imprimirlo.
 
 Si una oferta supera el referencial en más del porcentaje de tolerancia, el sistema muestra un aviso (no impide registrarla).
 
@@ -192,7 +208,7 @@ Requisitos: solicitud **ADJUDICADA**, CHB habilitado y, si la entidad lo exige (
 1. Elija el **Tipo**: COMPRA o SERVICIO.
 2. Escriba el **CUCE (SICOES)**, el **Plazo (días calendario)** y el **Lugar** de entrega o prestación.
 3. Pulse **Generar Orden**. El sistema asigna el número (por ejemplo `OC-2026-000001`) y lo muestra.
-4. Pulse **Orden (PDF)** para imprimirla. Incluye las cláusulas de objeto, plazo, penalidades, recepción, forma de pago y marco normativo.
+4. Pulse **Imprimir Orden (PDF)** para imprimirla. Incluye las cláusulas de objeto, plazo, penalidades, recepción, forma de pago y marco normativo.
 
 ### 7.5 Recepción y acta (pestaña 5)
 
@@ -200,7 +216,7 @@ Requisitos: solicitud **ADJUDICADA**, CHB habilitado y, si la entidad lo exige (
 2. Escriba la **Fecha recepción** (no puede ser anterior a la Orden ni futura).
 3. Marque **Recepción CONFORME** si todo se recibió bien. Si no, déjela sin marcar y detalle las **Observaciones** (mínimo 10 caracteres).
 4. Pulse **Registrar recepción**. El sistema calcula los **días de retraso** respecto al plazo de la Orden y la **multa** (por mil por día, con tope), y muestra el número de recepción (por ejemplo `REC-2026-000001`).
-5. Pulse **Acta de recepción (PDF)** para imprimir el acta con el monto neto a pagar.
+5. Pulse **Imprimir acta (PDF)** para imprimir el acta con el monto neto a pagar.
 
 Notas:
 - Una recepción **conforme** deja la Orden en RECIBIDA. Una **observada** la deja abierta para registrar otra después de que el proveedor subsane.
@@ -313,7 +329,8 @@ Cada PDF se guarda con el número del trámite y la fecha y hora en el nombre. I
 | La solicitud no tiene items | Falta agregar ítems | Agregue al menos uno |
 | Se requieren N cotizaciones; hay M | Faltan ofertas para el cuadro | Registre las que falten |
 | Ninguna oferta cumple tecnicamente / vigente | Todas incumplen o vencieron | Solicite nuevas ofertas |
-| EMPATE en precio mas bajo | Dos ofertas con el mismo monto | Resuelva con el criterio de desempate |
+| Hubo N ofertas con el mismo precio: se desempató por PRIMERA RECEPCION | Aviso informativo: ofertas hábiles con igual precio | Verifique las fechas y horas de recepción; el cuadro impreso lo explica |
+| La fecha y hora de recepcion de la oferta no puede ser futura | Escribió una fecha posterior a ahora | Corrija **Recibida el** |
 | Bloqueado por CHB | Hay ítems sin ficha vigente ni excepción | Complete la pestaña 2 |
 | Saldo insuficiente en partida X | La partida no alcanza | Cambie la partida o gestione modificación presupuestaria |
 | La estructura programatica no existe en el presupuesto | Algún código no coincide | Revise los códigos con el presupuesto |
@@ -330,6 +347,8 @@ Cada PDF se guarda con el número del trámite y la fecha y hora en el nombre. I
 **¿Se pierde lo que hago si se corta la luz?** Se pierde lo que no se guardó. Excel guarda al cerrar y con Ctrl+G. Acostumbre guardar después de cada trámite importante.
 
 **¿Dónde quedan los PDF?** En la carpeta `PDF` junto al libro, por ejemplo `C:\SIC-MUNI\PDF`.
+
+**¿Qué pasa si dos ofertas cotizan lo mismo?** Se recomienda la que se recibió primero (por fecha y hora de recepción). Es una regla del sistema; confirme con su Asesoría Legal que sea la que fija la invitación a cotizar.
 
 **Me equivoqué en un monto o un ítem.** Antes de enviar a cotización, anule la solicitud y cree otra. Después de adjudicar, anule la Orden y revierta el C-31 con motivo.
 

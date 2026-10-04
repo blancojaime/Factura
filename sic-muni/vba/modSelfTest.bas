@@ -59,6 +59,7 @@ Public Function EjecutarPruebas() As Long
     T_CHB
     T_Flujo
     T_Reversion
+    T_Desempate
     T_DocC1
     T_DocPDF
     T_DocCuadro
@@ -290,6 +291,44 @@ Private Sub T_Reversion()
     Err.Clear
     Exit Sub
 EH: RegEx "T_Reversion"
+End Sub
+
+Private Sub T_Desempate()
+    Dim id As String, rs As String, cA As String, cB As String, cC As String, rA As Long, rB As Long, rC As Long
+    On Error GoTo EH
+    Sesion "t_us", ROL_US
+    id = CrearSolicitud("01", "001", "Solicitud para probar el desempate por primera recepcion")
+    AgregarItem id, "44121701", "Boligrafos", 10, "Unidad", 100
+    EnviarACotizacion id
+    Sesion "t_rc", ROL_RC
+    On Error Resume Next
+    RegistrarCotizacion id, "1111111", "FUTURA SRL", Date + 5, 990, True, Now + 1
+    Reg "Oferta con recepcion futura es rechazada", Err.Number <> 0, Err.Description
+    Err.Clear
+    On Error GoTo EH
+    cA = RegistrarCotizacion(id, "2222222", "PROVEEDOR A SRL", Date + 30, 950, True, Now - 1)   ' recibida hace 1 dia
+    cB = RegistrarCotizacion(id, "3333333", "PROVEEDOR B SRL", Date + 30, 950, True, Now - 3)   ' recibida hace 3 dias: la primera
+    cC = RegistrarCotizacion(id, "4444444", "PROVEEDOR C SRL", Date + 30, 980, True)            ' sin fecha: usa el momento del registro
+    rA = FindRow(WS(SH_COT), "ID_Cotizacion", cA)
+    rB = FindRow(WS(SH_COT), "ID_Cotizacion", cB)
+    rC = FindRow(WS(SH_COT), "ID_Cotizacion", cC)
+    Reg "Recepcion por defecto = momento del registro", IsDate(GetV(WS(SH_COT), rC, "FechaHoraRecepcion"))
+    rs = EvaluarCuadro(id)
+    Reg "Empate de precio: gana la oferta recibida primero", CStr(GetV(WS(SH_COT), rB, "Recomendado")) = "SI", rs
+    Reg "Empate de precio: la otra oferta empatada no es recomendada", CStr(GetV(WS(SH_COT), rA, "Recomendado")) = "NO"
+    Reg "Empate de precio: queda registrado el criterio", Len(CStr(GetV(WS(SH_COT), rB, "Desempate"))) > 0
+    Reg "Empate de precio: el mensaje informa el desempate", InStr(rs, "PRIMERA RECEPCION") > 0, rs
+    Reg "Empate de precio: solicitud EVALUADA", Estado(SH_SOL, "ID_Solicitud", id, "Estado") = "EVALUADA"
+    GenerarCuadroComparativo id, False
+    Application.Calculate
+    Reg "Cuadro comparativo explica el desempate", InStr(CStr(NombreVal("CC_Recomendacion")), "empate") > 0, CStr(NombreVal("CC_Recomendacion"))
+    ' sin empate: se reevalua con un precio menor y no debe quedar marca de desempate
+    cC = RegistrarCotizacion(id, "5555555", "PROVEEDOR D SRL", Date + 30, 900, True)
+    rs = EvaluarCuadro(id)
+    Reg "Sin empate: gana el menor precio y no hay marca de desempate", InStr(rs, "PROVEEDOR D") > 0 And InStr(rs, "PRIMERA RECEPCION") = 0, rs
+    Reg "Sin empate: se limpia el desempate anterior", Len(CStr(GetV(WS(SH_COT), rB, "Desempate"))) = 0
+    Exit Sub
+EH: RegEx "T_Desempate"
 End Sub
 
 '--- Documentos (se llenan sin exportar; el PDF se prueba aparte) ---

@@ -135,15 +135,26 @@ End Sub
 '------------------------------------------------------------------------------
 ' COTIZACIONES
 '------------------------------------------------------------------------------
+' recibida (opcional): fecha y hora en que el proveedor entrego/envio su oferta; si se omite
+' se usa el momento del registro. Es el dato que desempata ofertas de igual precio.
 Public Function RegistrarCotizacion(ByVal idSol As String, ByVal nit As String, ByVal razon As String, _
-        ByVal validez As Date, ByVal monto As Double, ByVal cumpleTec As Boolean) As String
-    Dim sh As Worksheet, r As Long, n As Long, rS As Long
+        ByVal validez As Date, ByVal monto As Double, ByVal cumpleTec As Boolean, _
+        Optional ByVal recibida As Variant) As String
+    Dim sh As Worksheet, r As Long, n As Long, rS As Long, cuando As Date
     RequirePermiso P_COTIZACION
     rS = FilaSolicitud(idSol)
     If CStr(GetV(WS(SH_SOL), rS, "Estado")) <> "EN_COTIZACION" Then Fail "La solicitud no esta en cotizacion."
     If Not (Len(Trim$(nit)) >= 6 And IsNumeric(nit)) Then Fail "NIT invalido."
     If monto <= 0 Then Fail "Monto cotizado invalido."
     If validez < Date Then Fail "La oferta ya vencio (validez anterior a hoy)."
+    If IsMissing(recibida) Then
+        cuando = Now
+    ElseIf IsEmpty(recibida) Or Not IsDate(recibida) Then
+        cuando = Now
+    Else
+        cuando = CDate(recibida)
+        If cuando > Now Then Fail "La fecha y hora de recepcion de la oferta no puede ser futura."
+    End If
     If monto > CDbl(GetV(WS(SH_SOL), rS, "MontoReferencial")) * (1 + CfgNum("TolerCotizacionPct", 20) / 100) Then
         Aviso "Aviso: la cotizacion supera el referencial en mas de " & CfgNum("TolerCotizacionPct", 20) & "%.", vbExclamation
     End If
@@ -160,6 +171,8 @@ Public Function RegistrarCotizacion(ByVal idSol As String, ByVal nit As String, 
     SetV sh, r, "CumplimientoTecnico", IIf(cumpleTec, "SI", "NO")
     SetV sh, r, "Recomendado", "NO"
     SetV sh, r, "Adjudicada", "NO"
+    SetV sh, r, "FechaHoraRecepcion", cuando
+    SetV sh, r, "Desempate", ""
     RegistrarCotizacion = CStr(GetV(sh, r, "ID_Cotizacion"))
     LogAudit "COTIZACION_REGISTRADA", RegistrarCotizacion & " " & razon
 End Function
@@ -175,7 +188,8 @@ End Function
 ' Cuadro comparativo: criterio Cumple/No cumple + Precio Evaluado Mas Bajo.
 ' Marca Recomendado="SI" a la oferta habil de menor monto. Devuelve resumen/alerta.
 Public Function EvaluarCuadro(ByVal idSol As String) As String
-    Dim sh As Worksheet, r As Long, rS As Long, req As Long, best As Long, bestM As Double, empate As Boolean, m As Double
+    Dim sh As Worksheet, r As Long, rS As Long, req As Long, best As Long, bestM As Double, m As Double
+    Dim nEmp As Long, rec As Date, recBest As Date
     RequirePermiso P_COTIZACION
     rS = FilaSolicitud(idSol)
     req = CotizacionesRequeridas(CDbl(GetV(WS(SH_SOL), rS, "MontoReferencial")))
@@ -184,24 +198,56 @@ Public Function EvaluarCuadro(ByVal idSol As String) As String
         Exit Function
     End If
     Set sh = WS(SH_COT)
+    ' 1) limpia marcas y busca el menor monto entre las ofertas habiles
     For r = 2 To LastRow(sh)
         If CStr(GetV(sh, r, "ID_Solicitud")) = idSol Then
             SetV sh, r, "Recomendado", "NO"
-            If UCase$(CStr(GetV(sh, r, "CumplimientoTecnico"))) = "SI" And CDate(GetV(sh, r, "ValidezOferta")) >= Date Then
+            SetV sh, r, "Desempate", ""
+            If EsHabil(sh, r) Then
                 m = CDbl(GetV(sh, r, "MontoTotalCotizado"))
-                If best = 0 Or m < bestM Then
-                    best = r: bestM = m: empate = False
-                ElseIf m = bestM Then
-                    empate = True
-                End If
+                If best = 0 Or m < bestM Then best = r: bestM = m
             End If
         End If
     Next r
     If best = 0 Then EvaluarCuadro = "Ninguna oferta cumple tecnicamente / vigente.": Exit Function
-    If empate Then EvaluarCuadro = "EMPATE en precio mas bajo: el RC debe resolver y registrar el criterio de desempate.": Exit Function
+    ' 2) desempate: entre las habiles con el mismo monto gana la de PRIMERA RECEPCION
+    '    (fecha/hora de recepcion mas antigua; si coinciden, la registrada primero)
+    best = 0
+    For r = 2 To LastRow(sh)
+        If CStr(GetV(sh, r, "ID_Solicitud")) = idSol Then
+            If EsHabil(sh, r) Then
+                If CDbl(GetV(sh, r, "MontoTotalCotizado")) = bestM Then
+                    nEmp = nEmp + 1
+                    rec = FechaRecepcionOferta(sh, r)
+                    If best = 0 Then
+                        best = r: recBest = rec
+                    ElseIf rec < recBest Then
+                        best = r: recBest = rec
+                    End If
+                End If
+            End If
+        End If
+    Next r
     SetV sh, best, "Recomendado", "SI"
-    CambiarEstadoSolicitud idSol, "EVALUADA"
     EvaluarCuadro = "Recomendada: " & GetV(sh, best, "RazonSocial") & " por Bs " & Format$(bestM, "#,##0.00")
+    If nEmp > 1 Then
+        SetV sh, best, "Desempate", "PRIMERA RECEPCION " & Format$(recBest, "dd/mm/yyyy hh:nn")
+        EvaluarCuadro = EvaluarCuadro & vbLf & "Hubo " & nEmp & " ofertas con el mismo precio: se desempato por PRIMERA RECEPCION (" & _
+                        Format$(recBest, "dd/mm/yyyy hh:nn") & ")."
+        LogAudit "CUADRO_DESEMPATE", idSol & ": " & nEmp & " ofertas empatadas en Bs " & Format$(bestM, "#,##0.00") & _
+                 " -> " & GetV(sh, best, "ID_Cotizacion") & " por primera recepcion"
+    End If
+    CambiarEstadoSolicitud idSol, "EVALUADA"
+End Function
+
+Private Function EsHabil(ByVal sh As Worksheet, ByVal r As Long) As Boolean
+    EsHabil = (UCase$(CStr(GetV(sh, r, "CumplimientoTecnico"))) = "SI") And (CDate(GetV(sh, r, "ValidezOferta")) >= Date)
+End Function
+
+Private Function FechaRecepcionOferta(ByVal sh As Worksheet, ByVal r As Long) As Date
+    Dim v As Variant
+    v = GetV(sh, r, "FechaHoraRecepcion")
+    If IsDate(v) Then FechaRecepcionOferta = CDate(v) Else FechaRecepcionOferta = CDate(GetV(sh, r, "FechaCotizacion"))
 End Function
 
 ' Adjudica. Exige: oferta recomendada, C-31 vigente que cubra el monto (Art. 22
