@@ -63,11 +63,11 @@ Criterio de aceptación: **0 FAIL**. Con fallos el instalador conserva los datos
 ## 5. Puesta en marcha (después de instalar)
 
 1. Abra `C:\SIC-MUNI\SIC-MUNI.xlsm` → *Habilitar contenido* → aparece el login.
-2. Ingrese como administrador. Verá el aviso de rol ADM; el ADM no opera transacciones.
-3. **Alt+F8** → `AdminCrearUsuario` por cada persona: usuario, nombre, rol (`US`, `RC`, `PF`, `ADM`), código de DA y contraseña inicial.
+2. Ingrese como administrador. Aparece el **Menú Administrador** (1 crear usuario, 2 desbloquear, 3 cambiar contraseña, 4 importar catálogo, 5 importar presupuesto, 6 mostrar hojas de datos, 7 ocultar y proteger, 8 auditoría, 0 cerrar sesión). Para reabrirlo: Alt+F8 → `MenuAdmin`. El ADM no opera transacciones.
+3. Menú → opción **1** por cada persona: usuario, nombre, rol (`US`, `RC`, `PF`, `ADM`), código de DA y contraseña inicial.
    Un usuario de rol `US` solo ve solicitudes de su propia DA.
-4. **Alt+F8** → `AdminMantenimiento` para mostrar las hojas de datos y editar `CONFIG`. Al terminar ejecute `modCore.ProtectDB` desde el editor VBA (Alt+F11, Ctrl+G, escriba `ProtectDB`) o cierre y reabra el libro.
-5. Cargue el **catálogo CHB** y el **presupuesto** con `AdminImportarCatalogo` / `AdminImportarPresupuesto` (CSV UTF-8, columnas con los nombres de la hoja; ver README).
+4. Menú → opción **6** para mostrar las hojas de datos y editar `CONFIG`. Al terminar, opción **7** (o cierre y reabra el libro).
+5. Cargue el **catálogo CHB** y el **presupuesto** con las opciones **4** y **5** (CSV UTF-8, columnas con los nombres de la hoja; ver README).
 6. Proteja el proyecto VBA: Alt+F11 → clic derecho en *VBAProject* → *Propiedades → Protección* → *Bloquear proyecto para su visualización* + contraseña.
 7. Configure copia de seguridad (sección 8).
 
