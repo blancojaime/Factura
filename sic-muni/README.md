@@ -28,12 +28,14 @@ Detalle de tablas, estados, plantillas, rangos con nombre y fórmulas: [`docs/AR
 
 ## Instalación
 
-1. Excel (Windows, con **.NET Framework 3.5** habilitado para el hash) → libro nuevo → guardar como `SIC-MUNI.xlsm`.
-2. Copiar la carpeta `vba/` junto al `.xlsm`. Habilitar *Confiar en el acceso al modelo de objetos de proyectos de VBA*.
-3. En el editor VBA (Alt+F11): *Archivo → Importar archivo…* y cargar los 11 `.bas`. Pegar `ThisWorkbook.code.txt` en `ThisWorkbook`.
-4. Ejecutar `InstalarSistema` (pide usuario y contraseña del administrador; no hay contraseña por defecto), luego opcionalmente `CargarDatosDemo`, luego `ConstruirFormularios`.
-5. Completar `CONFIG` (Entidad, DA, UE, Gestión), cargar `CAT_CHB` y `PRESUPUESTO` reales (vía `AdminMantenimiento`), **cambiar `PROT_PWD` en `modCore`** y proteger el proyecto VBA con contraseña.
-6. Guardar y reabrir: `Workbook_Open` oculta/protege las hojas y abre el login.
+1. Excel de escritorio para Windows (2010 o superior) con **.NET Framework 3.5** habilitado (Panel de control → Características de Windows). Libro nuevo → guardar como `C:\SIC-MUNI\SIC-MUNI.xlsm` (tipo *Libro de Excel habilitado para macros*). Copiar la carpeta `vba/` a `C:\SIC-MUNI\vba\`.
+2. Archivo → Opciones → Centro de confianza → Configuración de macros → habilitar macros y **"Confiar en el acceso al modelo de objetos de proyectos de VBA"**. Si descargó un ZIP, desbloquee los archivos (Propiedades → Desbloquear).
+3. Alt+F11. Importar (arrastrar desde el Explorador al panel del proyecto, o Archivo → Importar archivo) **todos los `.bas` excepto `modMain.bas`** (este va después: referencia a los formularios, que aún no existen). Antes de nada, cambie `PROT_PWD` en `modCore` (si lo cambia después de proteger, no podrá desproteger).
+4. Depuración → *Compilar VBAProject*. Debe terminar sin errores. Prueba del hash: en la ventana Inmediato, `?modSecurity.SHA256Hex("a")` debe dar `ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb`.
+5. Ejecutar (F5 dentro del procedimiento) `InstalarSistema` (pide usuario y contraseña del administrador), luego opcionalmente `CargarDatosDemo`, luego `modUIBuilder.ConstruirFormularios`.
+6. Importar `modMain.bas` y pegar `ThisWorkbook.code.txt` en el módulo `ThisWorkbook`. Compilar de nuevo.
+7. Completar `CONFIG`, cargar catálogo y presupuesto reales (`AdminImportarCatalogo` / `AdminImportarPresupuesto` o `AdminMantenimiento`) y proteger el proyecto VBA con contraseña.
+8. Guardar, cerrar y reabrir (Habilitar contenido): `Workbook_Open` oculta/protege las hojas y abre el login. Con el rol ADM cree los demás usuarios con la macro `AdminCrearUsuario` (Alt+F8).
 
 ## Flujo y roles
 
