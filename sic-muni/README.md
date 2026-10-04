@@ -7,6 +7,16 @@ presupuestaria (C-31 preventivo) → Orden de Compra/Servicio, con documentos PD
 > **Estado:** el código fue escrito y revisado estáticamente, **no se pudo ejecutar** (no hay Excel en el
 > entorno de desarrollo). Haga una prueba integral con los datos demo antes de usarlo en producción.
 
+## Documentación
+
+| Documento | Para quién |
+| :-- | :-- |
+| [`docs/MANUAL_USUARIO.docx`](docs/MANUAL_USUARIO.docx) ([md](docs/MANUAL_USUARIO.md)) | US, RC, PF y ADM: uso diario de cada pestaña |
+| [`docs/MANUAL_IMPLEMENTACION.docx`](docs/MANUAL_IMPLEMENTACION.docx) ([md](docs/MANUAL_IMPLEMENTACION.md)) | Sistemas y ADM: instalación, configuración, pruebas, seguridad, operación y puesta en producción |
+| [`docs/ARQUITECTURA_Y_PLANTILLAS.md`](docs/ARQUITECTURA_Y_PLANTILLAS.md) | Detalle técnico de tablas y plantillas |
+
+Los `.docx` se generan desde los `.md` con `docs/_build/md2docx.js` (Node + paquete `docx`).
+
 ## Contenido
 
 | Archivo (`vba/`) | Qué es |
