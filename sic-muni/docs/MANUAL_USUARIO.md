@@ -365,3 +365,7 @@ Cada PDF se guarda con el número del trámite y la fecha y hora en el nombre. I
 **PF:** Cargar solicitud EVALUADA → Pestaña 4 líneas de imputación → Consultar saldo → Emitir C-31 → Registrar en SIGEP → Asociar N° SIGEP → Reversiones si corresponde.
 
 **ADM:** Menú: 1 usuarios · 2 desbloqueo · 3 contraseña · 4-5 importar · 6-7 configurar y proteger · 8 auditoría.
+
+## 15. Practique con casos de ejemplo
+
+Antes de usar el sistema con trámites reales, practique en una **copia de ensayo** con los cinco ejemplos guiados del **Anexo E del Manual de Implementación** (con usuarios, catálogo y presupuesto de práctica). Cubren: compra simple, contratación con cuadro comparativo, excepciones CHB, orden de servicio con reversiones y anulación, y recepción con multa.

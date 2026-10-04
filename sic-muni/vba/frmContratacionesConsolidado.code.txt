@@ -256,7 +256,7 @@ EH: m_nLin = m_nLin - 1: Aviso Err
 End Sub
 
 Private Sub cmdEmitirC31_Click()
-    Dim nro As String
+    Dim nro As String, msg As String
     On Error GoTo EH
     If m_nLin = 0 Then Err.Raise vbObjectError + 706, , "Agregue al menos una linea de imputacion."
     nro = modBudgetEngine.EmitirC31(SolActiva(), m_Lineas)
@@ -265,7 +265,10 @@ Private Sub cmdEmitirC31_Click()
     MsgBox "Preventivo interno emitido: " & nro & vbLf & "Registre el C-31 en SIGEP y asocie su numero.", vbInformation
     Refrescar
     Exit Sub
-EH: Aviso Err
+EH:
+    msg = Err.Description
+    lstLineas.Clear: m_nLin = 0          ' evita duplicar lineas al reintentar
+    MsgBox msg & vbLf & vbLf & "(Las lineas se limpiaron; vuelva a ingresarlas.)", vbExclamation, "SIC-MUNI"
 End Sub
 
 Private Sub cmdAsociar_Click()

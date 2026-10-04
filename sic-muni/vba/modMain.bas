@@ -101,7 +101,7 @@ End Sub
 Public Sub AdminMantenimiento()
     On Error GoTo EH
     ShowDB                      ' tambien registra en AUDITORIA
-    MsgBox "Hojas visibles. Al terminar ejecute modCore.ProtectDB.", vbInformation
+    MsgBox "Hojas visibles (pestanas inferiores). Al terminar use la opcion 7 del menu.", vbInformation
     Exit Sub
 EH: MsgBox Err.Description, vbExclamation
 End Sub
