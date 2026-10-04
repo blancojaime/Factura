@@ -28,6 +28,17 @@ Public Const SH_REC As String = "RECEPCIONES"
 ' proteger tambien el proyecto VBA (Herramientas > Propiedades de VBAProject).
 Public Const PROT_PWD As String = "CambiarEstaClave#2025"
 
+' Modo silencioso: usado por la instalacion automatica y las pruebas (sin MsgBox).
+Public g_Silent As Boolean
+
+Public Sub SetSilent(ByVal v As Boolean)
+    g_Silent = v
+End Sub
+
+Public Sub Aviso(ByVal msg As String, Optional ByVal estilo As Long = 64)
+    If Not g_Silent Then MsgBox msg, estilo, "SIC-MUNI"
+End Sub
+
 Public Function WS(ByVal nombre As String) As Worksheet
     Set WS = ThisWorkbook.Worksheets(nombre)
 End Function

@@ -145,7 +145,7 @@ Public Function RegistrarCotizacion(ByVal idSol As String, ByVal nit As String, 
     If monto <= 0 Then Fail "Monto cotizado invalido."
     If validez < Date Then Fail "La oferta ya vencio (validez anterior a hoy)."
     If monto > CDbl(GetV(WS(SH_SOL), rS, "MontoReferencial")) * (1 + CfgNum("TolerCotizacionPct", 20) / 100) Then
-        MsgBox "Aviso: la cotizacion supera el referencial en mas de " & CfgNum("TolerCotizacionPct", 20) & "%.", vbExclamation
+        Aviso "Aviso: la cotizacion supera el referencial en mas de " & CfgNum("TolerCotizacionPct", 20) & "%.", vbExclamation
     End If
     Set sh = WS(SH_COT)
     n = NextSeq("COT")

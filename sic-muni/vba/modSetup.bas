@@ -9,7 +9,11 @@ Attribute VB_Name = "modSetup"
 Option Explicit
 
 Public Sub InstalarSistema()
-    Dim pwd As String, usr As String
+    InstalarSistemaAuto "", ""
+End Sub
+
+' usuario/clave vacios = los pide con InputBox (modo interactivo).
+Public Sub InstalarSistemaAuto(ByVal adminUsr As String, ByVal adminPwd As String)
     Application.ScreenUpdating = False
     ThisWorkbook.Unprotect PROT_PWD
     CrearTabla SH_CFG, "Clave|Valor|Descripcion"
@@ -40,13 +44,13 @@ Public Sub InstalarSistema()
     WS(SH_PRE).Range("M2:M2000").Formula = "=IF(K2="""","""",K2-L2)"
 
     CargarConfigInicial
-    CrearAdministrador
+    CrearAdministrador adminUsr, adminPwd
     modSetupTemplates.BuildTemplates
     On Error Resume Next
     ThisWorkbook.Names.Add Name:="PROT_INFO", RefersTo:="=""SIC-MUNI instalado"""
     On Error GoTo 0
     Application.ScreenUpdating = True
-    MsgBox "Instalacion completada." & vbLf & "Ejecute modUIBuilder.ConstruirFormularios y luego ProtectDB.", vbInformation
+    Aviso "Instalacion completada." & vbLf & "Ejecute modUIBuilder.ConstruirFormularios y luego ProtectDB."
 End Sub
 
 Private Sub CrearTabla(ByVal nombre As String, ByVal headers As String)
@@ -102,18 +106,23 @@ Private Sub CargarConfigInicial()
     Cfg "TimeoutSesionMin", "20", "Minutos de inactividad antes de cerrar sesion"
 End Sub
 
-Private Sub CrearAdministrador()
-    Dim sh As Worksheet, usr As String, pwd As String, e As String, r As Long
+Private Sub CrearAdministrador(ByVal usr As String, ByVal pwd As String)
+    Dim sh As Worksheet, e As String, r As Long
     Set sh = WS(SH_AUTH)
     If LastRow(sh) > 1 Then Exit Sub
-    usr = InputBox("Usuario del Administrador inicial:", "SIC-MUNI", "admin")
+    If Len(usr) = 0 Then usr = InputBox("Usuario del Administrador inicial:", "SIC-MUNI", "admin")
     If Len(usr) = 0 Then Fail "Instalacion cancelada."
-    Do
-        pwd = InputBox("Contrasena inicial (min. 10 car., mayus/minus/digitos).", "SIC-MUNI")
-        If Len(pwd) = 0 Then Fail "Instalacion cancelada."
+    If Len(pwd) > 0 Then
         e = PasswordPolicyError(pwd)
-        If Len(e) > 0 Then MsgBox e, vbExclamation
-    Loop While Len(e) > 0
+        If Len(e) > 0 Then Fail e
+    Else
+        Do
+            pwd = InputBox("Contrasena inicial (min. 10 car., mayus/minus/digitos).", "SIC-MUNI")
+            If Len(pwd) = 0 Then Fail "Instalacion cancelada."
+            e = PasswordPolicyError(pwd)
+            If Len(e) > 0 Then Aviso e, vbExclamation
+        Loop While Len(e) > 0
+    End If
     r = NewRow(sh)
     SetV sh, r, "Usuario", usr
     SetV sh, r, "PasswordHash", BuildStoredHash(pwd)
@@ -135,5 +144,5 @@ Public Sub CargarDatosDemo()
     sh.Cells(r, 4).Value = "01": sh.Cells(r, 5).Value = "0000": sh.Cells(r, 6).Value = "001"
     sh.Cells(r, 7).Value = "20": sh.Cells(r, 8).Value = "230": sh.Cells(r, 9).Value = "31120"
     sh.Cells(r, 10).Value = "DEMO - Material de oficina": sh.Cells(r, 11).Value = 100000: sh.Cells(r, 12).Value = 0
-    MsgBox "Datos demo cargados (ficticios).", vbInformation
+    Aviso "Datos demo cargados (ficticios)."
 End Sub

@@ -21,12 +21,17 @@ presupuestaria (C-31 preventivo) → Orden de Compra/Servicio, con documentos PD
 | `modPostAward.bas` | Anulación de Orden/solicitud, recepción con cálculo de multa |
 | `modImport.bas` | Importación CSV de catálogo CHB y presupuesto (rol ADM) |
 | `modUIBuilder.bas` | Crea `frmLogin` y `frmContratacionesConsolidado` por código e inyecta su código |
+| `modSelfTest.bas` | Pruebas automáticas de la lógica de negocio (escribe `resultado_pruebas.txt`) |
 | `modMain.bas` | Punto de entrada y macros de administración |
 | `frmLogin.code.txt`, `frmContratacionesConsolidado.code.txt`, `ThisWorkbook.code.txt` | Código de eventos |
 
 Detalle de tablas, estados, plantillas, rangos con nombre y fórmulas: [`docs/ARQUITECTURA_Y_PLANTILLAS.md`](docs/ARQUITECTURA_Y_PLANTILLAS.md).
 
 ## Instalación
+
+**Automática (recomendada):** doble clic en `instalar/Instalar.cmd`; instala, corre las pruebas y deja el libro listo. Ver [`docs/MANUAL_IMPLEMENTACION.md`](docs/MANUAL_IMPLEMENTACION.md).
+
+**Manual:**
 
 1. Excel de escritorio para Windows (2010 o superior) con **.NET Framework 3.5** habilitado (Panel de control → Características de Windows). Libro nuevo → guardar como `C:\SIC-MUNI\SIC-MUNI.xlsm` (tipo *Libro de Excel habilitado para macros*). Copiar la carpeta `vba/` a `C:\SIC-MUNI\vba\`.
 2. Archivo → Opciones → Centro de confianza → Configuración de macros → habilitar macros y **"Confiar en el acceso al modelo de objetos de proyectos de VBA"**. Si descargó un ZIP, desbloquee los archivos (Propiedades → Desbloquear).

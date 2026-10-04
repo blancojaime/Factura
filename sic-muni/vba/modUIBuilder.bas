@@ -21,7 +21,7 @@ Public Sub ConstruirFormularios()
     dirV = ThisWorkbook.Path & "\vba\"
     BuildLogin dirV
     BuildConsolidado dirV
-    MsgBox "Formularios creados. Pegue ThisWorkbook.code.txt en ThisWorkbook y ejecute modCore.ProtectDB.", vbInformation
+    Aviso "Formularios creados. Pegue ThisWorkbook.code.txt en ThisWorkbook y ejecute modCore.ProtectDB."
 End Sub
 
 Private Function NuevoForm(ByVal nombre As String, ByVal cap As String, ByVal w As Double, ByVal h As Double) As Object
