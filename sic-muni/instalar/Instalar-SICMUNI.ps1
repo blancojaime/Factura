@@ -61,7 +61,11 @@ try {
     $ruta = Join-Path $Destino "SIC-MUNI.xlsm"
     New-Item -ItemType Directory -Path $Destino -Force | Out-Null
     if (Test-Path $ruta) {
-        if (-not $Reemplazar) { throw "Ya existe $ruta. Use -Reemplazar para reinstalar (se conserva una copia .bak)." }
+        if (-not $Reemplazar) {
+            Write-Warning "Ya existe $ruta (instalacion anterior)."
+            $r = Read-Host "   Reinstalar? Se guarda una copia .bak y se reemplaza el libro (s/N)"
+            if ($r -notmatch '^[sS]') { throw "Instalacion cancelada por el usuario." }
+        }
         Copy-Item $ruta ($ruta + "." + (Get-Date -Format "yyyyMMdd_HHmmss") + ".bak")
         Remove-Item $ruta -Force
     }
