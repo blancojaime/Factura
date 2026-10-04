@@ -59,7 +59,7 @@ El detalle tiene capacidad fija; las filas sobrantes se **ocultan** y las column
 
 | Hoja (prefijo) | Orient. | Campos con nombre (celda) | Tabla (encabezado → 1ª fila, capacidad) | Fórmulas |
 | :-- | :-- | :-- | :-- | :-- |
-| `Doc_Solicitud_C1` (`C1_`) | Vertical | Solicitud C5, Fecha G5, DA C6, UE G6, Solicitante C7, Modalidad G7, Justificacion C8, Literal A27 | Fila 10 → `C1_ItemsIni`=A11, 15 filas, 8 col. | `G11:G25 =IF(E11="","",ROUND(E11*F11,2))`; `G26 =SUM(G11:G25)` |
+| `Doc_Solicitud_C1` (`RQ_`) | Vertical | Solicitud C5, Fecha G5, DA C6, UE G6, Solicitante C7, Modalidad G7, Justificacion C8, Literal A27 | Fila 10 → `RQ_ItemsIni`=A11, 15 filas, 8 col. | `G11:G25 =IF(E11="","",ROUND(E11*F11,2))`; `G26 =SUM(G11:G25)` |
 | `Doc_CuadroComparativo` (`CC_`) | Horizontal | Solicitud C5, Fecha G5, Modalidad C6, Referencial G6, Criterio C7, Recomendacion A22 | Fila 9 → `CC_OfertasIni`=A10, 10 filas, 7 col. | `H10:H19 =IF(E10="","",E10/$G$6-1)`; `F20 =IFERROR(AGGREGATE(15,6,E10:E19/(F10:F19="Cumple"),1),"")` (Excel ≥ 2010) |
 | `Doc_JustificacionExcepcionCHB` (`EX_`) | Horizontal | Solicitud C5, Fecha G5, DA C6, Solicitante G6 | Fila 12 → `EX_ItemsIni`=A13, 10 filas, 7 col. | — (autoajuste de alto de fila al volcar) |
 | `Doc_Preventivo_C31` (`PV_`) | Horizontal | Nro C5, Sigep H5, Fecha C6, Estado H6, DA C7, UE H7, Solicitud C8, Literal A22 | Fila 10 → `PV_LineasIni`=A11, 10 filas, 9 col. | `J11:J20 =IF(H11="","",H11-I11)`; `H21:J21 =SUM(…)` |

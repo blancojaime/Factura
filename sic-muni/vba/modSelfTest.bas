@@ -298,7 +298,7 @@ Private Sub T_DocC1()
     Sesion "t_rc", ROL_RC
     GenerarC1 m_id1, False
     Application.Calculate
-    Reg "C-1: datos volcados (N de solicitud)", CStr(NombreVal("C1_Solicitud")) = m_id1
+    Reg "C-1: datos volcados (N de solicitud)", CStr(NombreVal("RQ_Solicitud")) = m_id1
     Reg "C-1: total por formula = 700", Round(CDbl(WS(DOC_C1).Range("G26").Value), 2) = 700, CStr(WS(DOC_C1).Range("G26").Value)
     Reg "C-1: filas sobrantes ocultas", WS(DOC_C1).Rows(13).Hidden And Not WS(DOC_C1).Rows(12).Hidden
     Exit Sub

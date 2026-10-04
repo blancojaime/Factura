@@ -3,7 +3,7 @@ Attribute VB_Name = "modDocumentAutomation"
 ' SIC-MUNI - modDocumentAutomation
 ' Vuelca datos a las plantillas (hojas Doc_*) y exporta a PDF.
 ' Las plantillas se crean con modSetup.BuildTemplates. Cada plantilla usa
-' RANGOS CON NOMBRE (prefijo C1_, CC_, EX_, PV_, OC_) para campos y para la
+' RANGOS CON NOMBRE (prefijo RQ_, CC_, EX_, PV_, OC_) para campos y para la
 ' primera celda de la tabla de detalle; las columnas calculadas (totales)
 ' son FORMULAS de la plantilla y no se sobrescriben desde VBA.
 '==============================================================================
@@ -65,14 +65,14 @@ Public Function GenerarC1(ByVal idSol As String, Optional ByVal aPDF As Boolean 
     ChequeoDoc True
     rS = FilaSolicitud(idSol)
     Set sh = WS(SH_SOL)
-    Membrete "C1"
-    PutN "C1_Solicitud", idSol
-    PutN "C1_Fecha", GetV(sh, rS, "Fecha")
-    PutN "C1_DA", GetV(sh, rS, "Cod_DA")
-    PutN "C1_UE", GetV(sh, rS, "Cod_UE")
-    PutN "C1_Solicitante", GetV(sh, rS, "Solicitante")
-    PutN "C1_Justificacion", GetV(sh, rS, "Justificacion")
-    PutN "C1_Modalidad", GetV(sh, rS, "Modalidad")
+    Membrete "RQ"
+    PutN "RQ_Solicitud", idSol
+    PutN "RQ_Fecha", GetV(sh, rS, "Fecha")
+    PutN "RQ_DA", GetV(sh, rS, "Cod_DA")
+    PutN "RQ_UE", GetV(sh, rS, "Cod_UE")
+    PutN "RQ_Solicitante", GetV(sh, rS, "Solicitante")
+    PutN "RQ_Justificacion", GetV(sh, rS, "Justificacion")
+    PutN "RQ_Modalidad", GetV(sh, rS, "Modalidad")
     Set shD = WS(SH_DET)
     ReDim d(1 To 40, 1 To 8)
     For r = 2 To LastRow(shD)
@@ -84,9 +84,9 @@ Public Function GenerarC1(ByVal idSol As String, Optional ByVal aPDF As Boolean 
             d(n, 8) = GetV(shD, r, "CumpleCHB")
         End If
     Next r
-    FillTable "C1_ItemsIni", 15, d, n, 8, "|7|"            ' col 7 = formula Cant x P.Unit
-    PutN "C1_Literal", MontoLiteral(CDbl(GetV(sh, rS, "MontoReferencial")))
-    GenerarC1 = Cerrar(DOC_C1, "C1_" & idSol, aPDF)
+    FillTable "RQ_ItemsIni", 15, d, n, 8, "|7|"            ' col 7 = formula Cant x P.Unit
+    PutN "RQ_Literal", MontoLiteral(CDbl(GetV(sh, rS, "MontoReferencial")))
+    GenerarC1 = Cerrar(DOC_C1, "RQ_" & idSol, aPDF)
 End Function
 
 '------------------------------------------------------------------------------

@@ -128,31 +128,31 @@ End Sub
 '------------------------------------------------------------------------------
 Private Sub BuildC1()
     Dim sh As Worksheet
-    Set sh = Hoja(DOC_C1, "6,14,38,10,10,13,13,8", "FORMULARIO C-1 - REQUERIMIENTO Y ESPECIFICACIONES TECNICAS", "C1")
-    Par sh, 5, 1, 2, "N Solicitud:", 3, 4, "C1_Solicitud"
-    Par sh, 5, 5, 6, "Fecha:", 7, 8, "C1_Fecha", "dd/mm/yyyy"
-    Par sh, 6, 1, 2, "Direccion Admin. (DA):", 3, 4, "C1_DA"
-    Par sh, 6, 5, 6, "Unidad Ejecutora (UE):", 7, 8, "C1_UE"
-    Par sh, 7, 1, 2, "Solicitante:", 3, 4, "C1_Solicitante"
-    Par sh, 7, 5, 6, "Modalidad:", 7, 8, "C1_Modalidad"
+    Set sh = Hoja(DOC_C1, "6,14,38,10,10,13,13,8", "FORMULARIO C-1 - REQUERIMIENTO Y ESPECIFICACIONES TECNICAS", "RQ")
+    Par sh, 5, 1, 2, "N Solicitud:", 3, 4, "RQ_Solicitud"
+    Par sh, 5, 5, 6, "Fecha:", 7, 8, "RQ_Fecha", "dd/mm/yyyy"
+    Par sh, 6, 1, 2, "Direccion Admin. (DA):", 3, 4, "RQ_DA"
+    Par sh, 6, 5, 6, "Unidad Ejecutora (UE):", 7, 8, "RQ_UE"
+    Par sh, 7, 1, 2, "Solicitante:", 3, 4, "RQ_Solicitante"
+    Par sh, 7, 5, 6, "Modalidad:", 7, 8, "RQ_Modalidad"
     sh.Cells(8, 1).Value = "Justificacion:": sh.Cells(8, 1).Font.Bold = True
     sh.Range("A8:B8").Merge: sh.Range("C8:H8").Merge: sh.Cells(8, 3).WrapText = True: sh.Rows(8).RowHeight = 40
-    NombreRango sh, "C1_Justificacion", 8, 3
+    NombreRango sh, "RQ_Justificacion", 8, 3
     Encabezado sh, 10, "Item|Codigo UNSPSC|Descripcion y especificaciones tecnicas|Unidad|Cantidad|P. Ref. Unit. (Bs)|Total (Bs)|CHB"
     Cuerpo sh, 11, 25, 8
-    NombreRango sh, "C1_ItemsIni", 11, 1
+    NombreRango sh, "RQ_ItemsIni", 11, 1
     sh.Range("B11:B25").NumberFormat = "@"
     sh.Range("E11:E25").NumberFormat = "#,##0.00": sh.Range("F11:G25").NumberFormat = "#,##0.00"
     sh.Range("G11:G25").Formula = "=IF(E11="""","""",ROUND(E11*F11,2))"          ' columna calculada
     sh.Cells(26, 6).Value = "TOTAL Bs": sh.Cells(26, 6).Font.Bold = True: sh.Cells(26, 6).HorizontalAlignment = xlRight
     sh.Cells(26, 7).Formula = "=SUM(G11:G25)": sh.Cells(26, 7).NumberFormat = "#,##0.00": sh.Cells(26, 7).Font.Bold = True
     sh.Cells(26, 7).Borders.LineStyle = xlContinuous
-    sh.Range("A27:H27").Merge: NombreRango sh, "C1_Literal", 27, 1: sh.Cells(27, 1).Font.Italic = True
+    sh.Range("A27:H27").Merge: NombreRango sh, "RQ_Literal", 27, 1: sh.Cells(27, 1).Font.Italic = True
     Texto sh, 29, 31, 8, "DECLARACION: El servidor publico solicitante declara que el presente requerimiento responde a una necesidad " & _
         "institucional prevista en el POA/PAC, que las especificaciones tecnicas no direccionan la contratacion hacia un proveedor determinado " & _
         "y que no se encuentra comprendido en causales de impedimento ni conflicto de intereses (art. 43 NB-SABS segun especificacion del proyecto)."
     Firmas sh, 34, 8, "Servidor publico solicitante|Jefe de Unidad / Autoridad|Responsable de Contrataciones (RC)"
-    Pie sh, 37, 8, "C1"
+    Pie sh, 37, 8, "RQ"
     PageSetup_ sh, 37, 8, False
 End Sub
 
