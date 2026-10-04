@@ -140,7 +140,8 @@ End Sub
 
 Public Function RoundM(ByVal x As Double) As Double
     ' Redondeo comercial a 2 decimales (VBA Round() es bancario).
-    RoundM = Int(Abs(x) * 100 + 0.5) / 100 * Sgn(x)
+    ' Aritmetica decimal (CDec) para evitar errores de coma flotante: 2.675*100 = 267.4999...
+    RoundM = CDbl(Int(Abs(CDec(x)) * 100 + CDec(0.5))) / 100 * Sgn(x)
 End Function
 
 Public Sub Fail(ByVal msg As String)
