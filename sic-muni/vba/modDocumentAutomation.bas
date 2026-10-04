@@ -14,6 +14,7 @@ Public Const DOC_CUADRO As String = "Doc_CuadroComparativo"
 Public Const DOC_EXCEPCION As String = "Doc_JustificacionExcepcionCHB"
 Public Const DOC_C31 As String = "Doc_Preventivo_C31"
 Public Const DOC_ORDEN As String = "Doc_OrdenCompraServicio"
+Public Const DOC_ACTA As String = "Doc_ActaRecepcion"
 
 '------------------------------------------------------------------------------
 ' Helpers de plantilla
@@ -190,6 +191,7 @@ Public Function GenerarDocOrden(ByVal nroOrden As String, Optional ByVal aPDF As
     If rO = 0 Then Fail "Orden inexistente."
     idSol = CStr(GetV(shO, rO, "ID_Solicitud"))
     FilaSolicitud idSol
+    If CStr(GetV(shO, rO, "EstadoOrden")) = "ANULADA" Then Fail "La Orden esta ANULADA; no se imprime."
     If Len(ValidarSolicitudParaOrden(idSol)) > 0 Then Fail "No se imprime: la solicitud tiene observaciones CHB."
     Membrete "OC"
     PutN "OC_Titulo", "ORDEN DE " & UCase$(CStr(GetV(shO, rO, "Tipo")))
@@ -217,6 +219,32 @@ Public Function GenerarDocOrden(ByVal nroOrden As String, Optional ByVal aPDF As
     Next r
     FillTable "OC_ItemsIni", 15, d, n, 4
     GenerarDocOrden = Cerrar(DOC_ORDEN, nroOrden, aPDF)
+End Function
+
+'------------------------------------------------------------------------------
+' 6) Acta de Recepcion y Conformidad
+'------------------------------------------------------------------------------
+Public Function GenerarActaRecepcion(ByVal nroRecepcion As String, Optional ByVal aPDF As Boolean = True) As String
+    Dim shR As Worksheet, shO As Worksheet, rR As Long, rO As Long
+    ChequeoDoc
+    Set shR = WS(SH_REC): Set shO = WS(SH_ORD)
+    rR = FindRow(shR, "NroRecepcion", nroRecepcion)
+    If rR = 0 Then Fail "Recepcion inexistente."
+    rO = FindRow(shO, "NroOrden", CStr(GetV(shR, rR, "NroOrden")))
+    FilaSolicitud CStr(GetV(shO, rO, "ID_Solicitud"))
+    Membrete "AR"
+    PutN "AR_Nro", nroRecepcion
+    PutN "AR_Fecha", GetV(shR, rR, "FechaRecepcion")
+    PutN "AR_Orden", GetV(shR, rR, "NroOrden")
+    PutN "AR_Solicitud", GetV(shO, rO, "ID_Solicitud")
+    PutN "AR_Proveedor", GetV(shO, rO, "Proveedor_Adjudicado")
+    PutN "AR_Limite", GetV(shR, rR, "FechaLimite")
+    PutN "AR_Dias", GetV(shR, rR, "DiasRetraso")
+    PutN "AR_Monto", GetV(shO, rO, "MontoTotal")
+    PutN "AR_Multa", GetV(shR, rR, "MontoMulta")
+    PutN "AR_Conformidad", GetV(shR, rR, "Resultado")
+    PutN "AR_Obs", GetV(shR, rR, "Observaciones")
+    GenerarActaRecepcion = Cerrar(DOC_ACTA, "ACTA_" & nroRecepcion, aPDF)
 End Function
 
 '------------------------------------------------------------------------------

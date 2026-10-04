@@ -20,9 +20,10 @@ Public Sub InstalarSistema()
     CrearTabla SH_SOL, "ID_Solicitud|Correlativo|Fecha|Cod_DA|Cod_UE|Solicitante|Justificacion|Estado|Modalidad|MontoReferencial"
     CrearTabla SH_DET, "ID_Solicitud|Item|CodigoUNSPSC|Descripcion|Cantidad|Unidad|PrecioRefUnitario|PrecioRefTotal|CumpleCHB|CodigoExcepcionMDPyEP|JustificacionExcepcion|NroAutorizacionMDPyEP|FechaAutorizacion"
     CrearTabla SH_COT, "ID_Cotizacion|ID_Solicitud|Proveedor_NIT|RazonSocial|FechaCotizacion|ValidezOferta|MontoTotalCotizado|CumplimientoTecnico|Recomendado|Adjudicada"
-    CrearTabla SH_ORD, "NroOrden|Tipo|CUCE_SICOES|ID_Solicitud|ID_Cotizacion|Proveedor_Adjudicado|NIT|MontoTotal|NroPreventivo_C31|EstadoC31|FechaEmision|PlazoDias|LugarEntrega|EstadoOrden|Usuario"
+    CrearTabla SH_ORD, "NroOrden|Tipo|CUCE_SICOES|ID_Solicitud|ID_Cotizacion|Proveedor_Adjudicado|NIT|MontoTotal|NroPreventivo_C31|EstadoC31|FechaEmision|PlazoDias|LugarEntrega|EstadoOrden|MotivoAnulacion|Usuario"
     CrearTabla SH_C31, "NroInterno|Fecha|ID_Solicitud|DA|UE|MontoTotal|MontoRevertido|Estado|NroC31_SIGEP|Usuario"
     CrearTabla SH_C31D, "NroInterno|Linea|Programa|Proyecto|ActObra|Fuente|Organismo|Partida|Importe|ImporteRevertido"
+    CrearTabla SH_REC, "NroRecepcion|NroOrden|FechaRecepcion|FechaLimite|DiasRetraso|MontoMulta|Resultado|Observaciones|Usuario"
     CrearTabla SH_AUD, "Fecha|Usuario|Rol|Accion|Detalle"
 
     ' Columnas de codigo = TEXTO (conserva ceros a la izquierda)

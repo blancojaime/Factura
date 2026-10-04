@@ -33,6 +33,8 @@ Private Sub AplicarRol()
     cmdRevParcial.Enabled = PuedeHacer(P_REVERSION): cmdRevTotal.Enabled = PuedeHacer(P_REVERSION)
     cmdAddLinea.Enabled = PuedeHacer(P_C31): cmdSaldo.Enabled = PuedeHacer(P_C31)
     cmdGenOrden.Enabled = PuedeHacer(P_ORDEN): cmdDocOrden.Enabled = PuedeHacer(P_ORDEN)
+    cmdRecepcion.Enabled = PuedeHacer(P_ORDEN): cmdActa.Enabled = PuedeHacer(P_ORDEN)
+    cmdAnularOrden.Enabled = PuedeHacer(P_ORDEN): cmdAnularSol.Enabled = PuedeHacer(P_SOLICITUD)
     cmdDocC31.Enabled = PuedeHacer(P_DOCS) And modSecurity.g_Rol <> ROL_US
 End Sub
 
@@ -88,6 +90,7 @@ Private Sub Refrescar()
     Set sh = WS(SH_SOL)
     lblEstado.Caption = "Estado: " & GetV(sh, rS, "Estado") & "  |  Referencial Bs " & Format$(GetV(sh, rS, "MontoReferencial"), "#,##0.00") & _
                         "  |  " & GetV(sh, rS, "Modalidad")
+    lblNroOrden.Caption = modPostAward.OrdenVigenteDeSolicitud(idSol)
     lstItems.Clear
     Set sh = WS(SH_DET)
     For r = 2 To LastRow(sh)
@@ -315,6 +318,45 @@ End Sub
 Private Sub cmdDocOrden_Click()
     On Error GoTo EH
     MsgBox "PDF generado:" & vbLf & modDocumentAutomation.GenerarDocOrden(lblNroOrden.Caption), vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdRecepcion_Click()
+    Dim nro As String
+    On Error GoTo EH
+    If Len(lblNroOrden.Caption) = 0 Then Err.Raise vbObjectError + 709, , "La solicitud no tiene Orden vigente."
+    If Not IsDate(txtFechaRec.Text) Then Err.Raise vbObjectError + 710, , "Fecha de recepcion invalida."
+    nro = modPostAward.RegistrarRecepcion(lblNroOrden.Caption, CDate(txtFechaRec.Text), chkConforme.Value, txtObsRec.Text)
+    lblNroActa.Caption = nro
+    MsgBox "Recepcion registrada: " & nro, vbInformation
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdActa_Click()
+    On Error GoTo EH
+    MsgBox "PDF generado:" & vbLf & modDocumentAutomation.GenerarActaRecepcion(lblNroActa.Caption), vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdAnularOrden_Click()
+    On Error GoTo EH
+    If Len(lblNroOrden.Caption) = 0 Then Err.Raise vbObjectError + 711, , "No hay Orden vigente."
+    If MsgBox("Anular la Orden " & lblNroOrden.Caption & "?", vbYesNo + vbQuestion) = vbNo Then Exit Sub
+    modPostAward.AnularOrden lblNroOrden.Caption, txtMotivoAnu.Text
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdAnularSol_Click()
+    On Error GoTo EH
+    If MsgBox("Anular la solicitud " & SolActiva() & "?", vbYesNo + vbQuestion) = vbNo Then Exit Sub
+    modPostAward.AnularSolicitud SolActiva(), txtMotivoAnu.Text
+    Refrescar
     Exit Sub
 EH: Aviso Err
 End Sub

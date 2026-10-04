@@ -22,6 +22,7 @@ Public Const SH_ORD As String = "ORDENES_GASTO"
 Public Const SH_C31 As String = "C31"
 Public Const SH_C31D As String = "C31_DET"
 Public Const SH_AUD As String = "AUDITORIA"
+Public Const SH_REC As String = "RECEPCIONES"
 
 ' Clave de proteccion de hojas/estructura. CAMBIAR antes de implantar y
 ' proteger tambien el proyecto VBA (Herramientas > Propiedades de VBAProject).
@@ -137,8 +138,8 @@ End Sub
 
 ' --- Proteccion de hojas de datos ---
 Public Function TodasLasHojas() As Variant
-    TodasLasHojas = Array(SH_CFG, SH_SEQ, SH_AUTH, SH_CAT, SH_PRE, SH_SOL, SH_DET, SH_COT, SH_ORD, SH_C31, SH_C31D, SH_AUD, _
-                          DOC_C1, DOC_CUADRO, DOC_EXCEPCION, DOC_C31, DOC_ORDEN)
+    TodasLasHojas = Array(SH_CFG, SH_SEQ, SH_AUTH, SH_CAT, SH_PRE, SH_SOL, SH_DET, SH_COT, SH_ORD, SH_C31, SH_C31D, SH_AUD, SH_REC, _
+                          DOC_C1, DOC_CUADRO, DOC_EXCEPCION, DOC_C31, DOC_ORDEN, DOC_ACTA)
 End Function
 
 Public Sub ProtectDB()

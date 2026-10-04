@@ -14,6 +14,7 @@ Public Sub BuildTemplates()
     BuildExcepcion
     BuildC31
     BuildOrden
+    BuildActa
 End Sub
 
 '------------------------------------------------------------------------------
@@ -268,4 +269,32 @@ Private Sub BuildOrden()
     Firmas sh, 45, 6, "Responsable de Contrataciones (RC)|Proveedor (recibi conforme)"
     Pie sh, 48, 6, "OC"
     PageSetup_ sh, 48, 6, False
+End Sub
+
+'------------------------------------------------------------------------------
+' 6) Doc_ActaRecepcion  (A:F)  - Acta de recepcion / conformidad con multa
+'------------------------------------------------------------------------------
+Private Sub BuildActa()
+    Dim sh As Worksheet
+    Set sh = Hoja(DOC_ACTA, "6,40,14,14,14,14", "ACTA DE RECEPCION Y CONFORMIDAD", "AR")
+    Par sh, 4, 1, 2, "N Acta:", 3, 4, "AR_Nro"
+    Par sh, 4, 5, 5, "Fecha:", 6, 6, "AR_Fecha", "dd/mm/yyyy"
+    Par sh, 5, 1, 2, "N Orden:", 3, 4, "AR_Orden"
+    Par sh, 5, 5, 5, "Solicitud:", 6, 6, "AR_Solicitud"
+    Par sh, 6, 1, 2, "Proveedor:", 3, 6, "AR_Proveedor"
+    Par sh, 7, 1, 2, "Fecha limite de entrega:", 3, 4, "AR_Limite", "dd/mm/yyyy"
+    Par sh, 7, 5, 5, "Dias retraso:", 6, 6, "AR_Dias"
+    Par sh, 8, 1, 2, "Monto de la Orden (Bs):", 3, 4, "AR_Monto", "#,##0.00"
+    Par sh, 8, 5, 5, "Multa (Bs):", 6, 6, "AR_Multa", "#,##0.00"
+    Par sh, 9, 1, 2, "Resultado:", 3, 4, "AR_Conformidad"
+    Par sh, 10, 1, 2, "Observaciones:", 3, 6, "AR_Obs"
+    sh.Cells(10, 3).WrapText = True: sh.Cells(10, 3).VerticalAlignment = xlTop: sh.Rows(10).RowHeight = 60
+    Par sh, 11, 1, 2, "Monto neto a pagar (Bs):", 3, 4, "AR_Pagar", "#,##0.00"
+    sh.Cells(11, 3).Formula = "=IF(AR_Monto="""","""",AR_Monto-AR_Multa)"           ' celda calculada
+    sh.Cells(11, 3).Font.Bold = True
+    Texto sh, 13, 15, 6, "Los suscritos dejan constancia de que los bienes o servicios de la Orden indicada fueron recibidos con el resultado consignado, " & _
+        "verificados contra las especificaciones tecnicas del requerimiento. La multa, si corresponde, se calcula segun la Orden y se descuenta del pago."
+    Firmas sh, 18, 6, "Responsable / Comision de Recepcion|Proveedor|Responsable de Contrataciones (RC)"
+    Pie sh, 21, 6, "AR"
+    PageSetup_ sh, 21, 6, False
 End Sub

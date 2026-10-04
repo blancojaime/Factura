@@ -18,6 +18,8 @@ presupuestaria (C-31 preventivo) → Orden de Compra/Servicio, con documentos PD
 | `modBudgetEngine.bas` | Módulo 3: saldos, emisión de C-31 (todo-o-nada), asociación SIGEP, reversión parcial/total, Orden |
 | `modDocumentAutomation.bas` | Volcado a plantillas `Doc_*` y exportación a PDF |
 | `modSetup.bas` / `modSetupTemplates.bas` | Instalación: tablas, CONFIG, administrador, datos demo, 5 plantillas con rangos con nombre y fórmulas |
+| `modPostAward.bas` | Anulación de Orden/solicitud, recepción con cálculo de multa |
+| `modImport.bas` | Importación CSV de catálogo CHB y presupuesto (rol ADM) |
 | `modUIBuilder.bas` | Crea `frmLogin` y `frmContratacionesConsolidado` por código e inyecta su código |
 | `modMain.bas` | Punto de entrada y macros de administración |
 | `frmLogin.code.txt`, `frmContratacionesConsolidado.code.txt`, `ThisWorkbook.code.txt` | Código de eventos |
@@ -28,7 +30,7 @@ Detalle de tablas, estados, plantillas, rangos con nombre y fórmulas: [`docs/AR
 
 1. Excel (Windows, con **.NET Framework 3.5** habilitado para el hash) → libro nuevo → guardar como `SIC-MUNI.xlsm`.
 2. Copiar la carpeta `vba/` junto al `.xlsm`. Habilitar *Confiar en el acceso al modelo de objetos de proyectos de VBA*.
-3. En el editor VBA (Alt+F11): *Archivo → Importar archivo…* y cargar los 9 `.bas`. Pegar `ThisWorkbook.code.txt` en `ThisWorkbook`.
+3. En el editor VBA (Alt+F11): *Archivo → Importar archivo…* y cargar los 11 `.bas`. Pegar `ThisWorkbook.code.txt` en `ThisWorkbook`.
 4. Ejecutar `InstalarSistema` (pide usuario y contraseña del administrador; no hay contraseña por defecto), luego opcionalmente `CargarDatosDemo`, luego `ConstruirFormularios`.
 5. Completar `CONFIG` (Entidad, DA, UE, Gestión), cargar `CAT_CHB` y `PRESUPUESTO` reales (vía `AdminMantenimiento`), **cambiar `PROT_PWD` en `modCore`** y proteger el proyecto VBA con contraseña.
 6. Guardar y reabrir: `Workbook_Open` oculta/protege las hojas y abre el login.
@@ -46,4 +48,5 @@ audita; **no transacciona** (segregación de funciones).
 * **El C-31 de este sistema es un registro interno de reserva.** El C-31 oficial lo genera y aprueba el SIGEP; aquí solo se asocia su número. No hay integración con SIGEP/SICOES.
 * **Seguridad:** la protección de hojas de Excel y del proyecto VBA es disuasiva, no criptográfica (quien tenga el archivo y tiempo puede eludirla). Para datos sensibles o multiusuario concurrente use una base de datos real; Excel no maneja bien la escritura simultánea.
 * El hash usa objetos COM de .NET (`SHA256Managed`); en equipos sin .NET 3.5 el login falla.
+* Importación CSV: UTF-8, `,` o `;`, fila 1 con los nombres de columna de la hoja (`CAT_CHB`: CodigoUNSPSC, Descripcion, Unidad, FichaTecnicaCHB, Tipo, Vigencia, RequiereAutorizacionMDPyEP; `PRESUPUESTO`: Gestion, DA, UE, Programa, Proyecto, ActObra, Fuente, Organismo, Partida_ObjetoGasto, DescripcionPartida, PresupuestoAprobado). Macros `AdminImportarCatalogo` / `AdminImportarPresupuesto`.
 * Cotizaciones registran monto total (no precio por ítem); la Orden lista ítems/cantidades y el monto total adjudicado.

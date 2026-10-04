@@ -45,3 +45,11 @@ Public Sub AdminMantenimiento()
     Exit Sub
 EH: MsgBox Err.Description, vbExclamation
 End Sub
+
+Public Sub AdminImportarCatalogo()
+    modImport.ImportarCatalogoCHB
+End Sub
+
+Public Sub AdminImportarPresupuesto()
+    modImport.ImportarPresupuesto
+End Sub

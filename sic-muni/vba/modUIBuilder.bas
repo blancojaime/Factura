@@ -90,7 +90,7 @@ Private Sub BuildConsolidado(ByVal dirV As String)
     Ctl f, FM_BTN, "cmdP2", 165, 54, 150, 24, "2 Evaluacion CHB"
     Ctl f, FM_BTN, "cmdP3", 320, 54, 150, 24, "3 Cotizaciones"
     Ctl f, FM_BTN, "cmdP4", 475, 54, 150, 24, "4 Presupuesto / C-31"
-    Ctl f, FM_BTN, "cmdP5", 630, 54, 145, 24, "5 Orden"
+    Ctl f, FM_BTN, "cmdP5", 630, 54, 145, 24, "5 Orden / Recepcion"
 
     ' --- P1 Solicitud ---
     Fld f, "P1", "DA", "txtDA", FM_TXT, 10, 92, 80
@@ -161,6 +161,15 @@ Private Sub BuildConsolidado(ByVal dirV As String)
     Ctl f, FM_BTN, "cmdGenOrden", 10, 200, 170, 28, "Generar Orden", "P5"
     Set c = Ctl(f, FM_LBL, "lblNroOrden", 190, 206, 180, 18, "", "P5"): c.Font.Bold = True
     Ctl f, FM_BTN, "cmdDocOrden", 380, 200, 170, 28, "Orden (PDF)", "P5"
+    Fld f, "P5", "Fecha recepcion", "txtFechaRec", FM_TXT, 10, 260, 100
+    Ctl f, FM_CHK, "chkConforme", 290, 258, 200, 20, "Recepcion CONFORME", "P5"
+    Set c = Fld(f, "P5", "Observaciones", "txtObsRec", FM_TXT, 10, 286, 560, 40): c.MultiLine = True
+    Ctl f, FM_BTN, "cmdRecepcion", 10, 336, 170, 28, "Registrar recepcion", "P5"
+    Set c = Ctl(f, FM_LBL, "lblNroActa", 190, 342, 180, 18, "", "P5"): c.Font.Bold = True
+    Ctl f, FM_BTN, "cmdActa", 380, 336, 170, 28, "Acta de recepcion (PDF)", "P5"
+    Set c = Fld(f, "P5", "Motivo anulacion", "txtMotivoAnu", FM_TXT, 10, 390, 560, 40): c.MultiLine = True
+    Ctl f, FM_BTN, "cmdAnularOrden", 10, 440, 170, 28, "Anular Orden", "P5"
+    Ctl f, FM_BTN, "cmdAnularSol", 190, 440, 170, 28, "Anular solicitud", "P5"
 
     Inyectar f, dirV & "frmContratacionesConsolidado.code.txt"
 End Sub
