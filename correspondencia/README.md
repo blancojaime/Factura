@@ -35,6 +35,8 @@ Roles: `admin`, `jefe` (reportes de su oficina), `usuario`, `ventanilla`.
 Instalación por consola: `php bin/install.php host base usuario clave "Entidad" SIGLA admin clave_admin`.
 Datos de ejemplo (capacitación): `php bin/demo.php` (usuarios `alcalde`, `finanzas`, `obras`, `ventanilla`… clave `Demo12345`).
 
+Guía para quien no sabe de informática (instalación en Windows con XAMPP y pruebas): ver `GUIA-PRUEBAS.md`.
+
 Requisitos PHP: `pdo_mysql`, `mbstring`, `fileinfo`, `dom` (y `zip` para el respaldo). Se recomienda HTTPS.
 
 ## Operación

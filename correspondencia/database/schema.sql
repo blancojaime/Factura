@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
   rol ENUM('admin','jefe','usuario','ventanilla') NOT NULL DEFAULT 'usuario',
   password_hash VARCHAR(255) NOT NULL,
   activo TINYINT(1) NOT NULL DEFAULT 1,
+  cambiar_clave TINYINT(1) NOT NULL DEFAULT 0,
   ultimo_ingreso DATETIME NULL,
   nro_ingresos INT UNSIGNED NOT NULL DEFAULT 0,
   FOREIGN KEY (oficina_id) REFERENCES oficinas(id)

@@ -3,14 +3,78 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\{Audit, Auth, Controller, DB};
+use App\Services\ImportadorCargos;
 
 final class AdminController extends Controller
 {
-    protected array $roles = ['oficinas' => ['admin'], 'oficina' => ['admin'], 'usuarios' => ['admin'], 'usuario' => ['admin'], 'tipos' => ['admin'], 'tipo' => ['admin'], 'auditoria' => ['admin']];
+    protected array $roles = ['importar' => ['admin'], 'importar_confirmar' => ['admin'], 'credenciales' => ['admin'], 'credenciales_cerrar' => ['admin'], 'nombres' => ['admin'], 'oficinas' => ['admin'], 'oficina' => ['admin'], 'usuarios' => ['admin'], 'usuario' => ['admin'], 'tipos' => ['admin'], 'tipo' => ['admin'], 'auditoria' => ['admin']];
 
     private function pag(string $tpl, string $titulo, array $d = []): void
     {
         $this->view($tpl, $d + ['menu' => 'admin', 'titulo' => $titulo]);
+    }
+
+
+    public function importar(): void
+    {
+        if ($this->esPost()) {
+            $f = $_FILES['archivo'] ?? null;
+            if (!$f || $f['error'] !== UPLOAD_ERR_OK) throw new \RuntimeException('Seleccione el archivo Excel (.xlsx) con los cargos y oficinas.');
+            if ($f['size'] > 2 * 1048576) throw new \RuntimeException('El archivo es demasiado grande (máximo 2 MB).');
+            $_SESSION['plan_import'] = ImportadorCargos::planificar(ImportadorCargos::leer($f['tmp_name'], $f['name']));
+            redirect('admin/importar');
+        }
+        $this->pag('admin/importar', 'Importar cargos y oficinas desde Excel', ['plan' => $_SESSION['plan_import'] ?? null]);
+    }
+
+    public function importar_confirmar(): void
+    {
+        $plan = $_SESSION['plan_import'] ?? null;
+        if (!$plan) throw new \RuntimeException('No hay una importación pendiente. Suba el archivo nuevamente.');
+        if ($this->in('cancelar') === '1') { unset($_SESSION['plan_import']); flash('Importación cancelada.'); redirect('admin/importar'); }
+        $_SESSION['credenciales'] = ImportadorCargos::aplicar($plan);
+        unset($_SESSION['plan_import']);
+        flash(count($_SESSION['credenciales']) . ' usuario(s) creado(s). Guarde o imprima la lista de claves temporales.');
+        redirect('admin/credenciales');
+    }
+
+    public function credenciales(): void
+    {
+        $cred = $_SESSION['credenciales'] ?? [];
+        if ($this->in('csv') === '1' && $cred) {
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="claves_temporales.csv"');
+            $o = fopen('php://output', 'w'); fwrite($o, "\xEF\xBB\xBF");
+            fputcsv($o, ['Oficina', 'Cargo', 'Usuario', 'Clave temporal'], ';');
+            foreach ($cred as $c) fputcsv($o, [$c['oficina'], $c['cargo'], $c['login'], $c['clave']], ';');
+            fclose($o);
+            return;
+        }
+        $this->pag('admin/credenciales', 'Claves temporales', ['cred' => $cred]);
+    }
+
+    public function credenciales_cerrar(): void
+    {
+        unset($_SESSION['credenciales']);
+        flash('Lista de claves eliminada del servidor.');
+        redirect('admin/nombres');
+    }
+
+    /** Asignación rápida de nombres reales a los usuarios "Por asignar". */
+    public function nombres(): void
+    {
+        if ($this->esPost()) {
+            $n = 0;
+            foreach ((array)($_POST['nombre'] ?? []) as $id => $nombre) {
+                $nombre = mb_substr(trim((string)$nombre), 0, 120);
+                if ($nombre === '') continue;
+                $n += DB::exec('UPDATE usuarios SET nombre=?, mosca=? WHERE id=?', [$nombre, mb_strtoupper(implode('', array_map(fn($w) => mb_substr($w, 0, 1), array_slice(preg_split('/\s+/u', $nombre), 0, 2)))), (int)$id]);
+            }
+            Audit::log('asignar_nombres', 'usuario', null, "$n nombres");
+            flash("$n nombre(s) guardado(s).");
+            redirect('admin/nombres');
+        }
+        $this->pag('admin/nombres', 'Asignar nombres', ['rows' => DB::all("SELECT u.id, u.login, u.cargo, o.nombre AS oficina FROM usuarios u JOIN oficinas o ON o.id=u.oficina_id WHERE u.nombre='Por asignar' ORDER BY o.nombre, u.cargo")]);
     }
 
     public function oficinas(): void
@@ -59,14 +123,14 @@ final class AdminController extends Controller
             if ($id === Auth::id() && (!$d['activo'] || $d['rol'] !== 'admin')) throw new \RuntimeException('No puede desactivarse ni quitarse el rol de administrador a sí mismo.');
             $pass = (string)($_POST['password'] ?? '');
             if ($id) {
-                if ($pass !== '') { if (mb_strlen($pass) < 8) throw new \RuntimeException('La contraseña debe tener al menos 8 caracteres.'); $d['password_hash'] = password_hash($pass, PASSWORD_DEFAULT); }
+                if ($pass !== '') { if (mb_strlen($pass) < 8) throw new \RuntimeException('La contraseña debe tener al menos 8 caracteres.'); $d['password_hash'] = password_hash($pass, PASSWORD_DEFAULT); if ($id !== Auth::id()) $d['cambiar_clave'] = 1; }
                 DB::update('usuarios', $id, $d);
             } else {
                 $login = $this->in('login');
                 if (!preg_match('/^[A-Za-z0-9_.-]{3,60}$/', $login)) throw new \RuntimeException('Usuario inválido (3-60 caracteres: letras, números, . _ -).');
                 if (DB::val('SELECT 1 FROM usuarios WHERE login=?', [$login])) throw new \RuntimeException('Ese nombre de usuario ya existe.');
                 if (mb_strlen($pass) < 8) throw new \RuntimeException('La contraseña debe tener al menos 8 caracteres.');
-                $id = DB::insert('usuarios', $d + ['login' => $login, 'password_hash' => password_hash($pass, PASSWORD_DEFAULT)]);
+                $id = DB::insert('usuarios', $d + ['login' => $login, 'password_hash' => password_hash($pass, PASSWORD_DEFAULT), 'cambiar_clave' => 1]);
             }
             Audit::log('guardar_usuario', 'usuario', $id);
             flash('Usuario guardado.');

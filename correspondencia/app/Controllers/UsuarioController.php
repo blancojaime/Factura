@@ -14,7 +14,8 @@ final class UsuarioController extends Controller
             if (!password_verify((string)($_POST['actual'] ?? ''), $u['password_hash'])) throw new \RuntimeException('La contraseña actual no es correcta.');
             if (mb_strlen($nueva) < 8) throw new \RuntimeException('La nueva contraseña debe tener al menos 8 caracteres.');
             if ($nueva !== (string)($_POST['repite'] ?? '')) throw new \RuntimeException('La confirmación no coincide.');
-            DB::update('usuarios', (int)$u['id'], ['password_hash' => password_hash($nueva, PASSWORD_DEFAULT)]);
+            if (password_verify($nueva, $u['password_hash'])) throw new \RuntimeException('La nueva contraseña debe ser distinta de la actual.');
+            DB::update('usuarios', (int)$u['id'], ['password_hash' => password_hash($nueva, PASSWORD_DEFAULT), 'cambiar_clave' => 0]);
             Audit::log('cambiar_password', 'usuario', (int)$u['id']);
             flash('Contraseña actualizada.');
             redirect('dashboard/index');

@@ -26,13 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?><!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Instalación</title><link rel="stylesheet" href="assets/css/app.css"></head><body class="simple">
 <main class="card narrow"><h1>Instalación del sistema de correspondencia</h1>
-<p class="muted">Cree primero una base de datos vacía (utf8mb4) en su hosting.</p>
+<p class="muted">En XAMPP deje los valores propuestos (usuario <b>root</b>, contraseña vacía): la base de datos se crea sola. En un hosting use los datos que le entregó el proveedor.</p>
 <?php if ($err): ?><div class="flash error"><?= e($err) ?></div><?php endif; ?>
 <form method="post" class="form">
 <h3>Base de datos</h3>
 <label>Servidor<input name="host" value="localhost"></label>
-<label>Nombre de la base<input name="dbname" required></label>
-<label>Usuario<input name="dbuser" required></label>
+<label>Nombre de la base<input name="dbname" value="correspondencia" required></label>
+<label>Usuario<input name="dbuser" value="root" required></label>
 <label>Contraseña<input name="dbpass" type="password"></label>
 <h3>Entidad</h3>
 <label>Nombre (ej. Gobierno Autónomo Municipal de …)<input name="entidad" required></label>

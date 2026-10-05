@@ -15,7 +15,7 @@ $sub = [
     'hojas' => [['Lista de hojas de ruta', 'hoja/lista'], ['Imprimir hoja de ruta', 'hoja/imprimir']],
     'reportes' => [['Pendientes oficina', 'reporte/oficina'], ['Correspondencia recibida', 'reporte/recibida'], ['Correspondencia enviada', 'reporte/enviada'], ['Personalizado', 'reporte/personalizado']],
     'ventanilla' => [['Registros externos', 'ventanilla/index'], ['Registrar nueva', 'ventanilla/nueva']],
-    'admin' => [['Usuarios', 'admin/usuarios'], ['Oficinas', 'admin/oficinas'], ['Tipos de documento', 'admin/tipos'], ['Auditoría', 'admin/auditoria']],
+    'admin' => [['Usuarios', 'admin/usuarios'], ['Oficinas', 'admin/oficinas'], ['Importar cargos (Excel)', 'admin/importar'], ['Asignar nombres', 'admin/nombres'], ['Tipos de documento', 'admin/tipos'], ['Auditoría', 'admin/auditoria']],
     'usuario' => [['Cambiar contraseña', 'usuario/password'], ['Cambiar mis datos', 'usuario/datos'], ['Mi información', 'usuario/info']],
 ];
 $actual = $_GET['r'] ?? '';

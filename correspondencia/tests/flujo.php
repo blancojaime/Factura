@@ -89,5 +89,20 @@ foreach ($pids as $p) pcntl_waitpid($p, $st);
 DB::reset();
 ok((int)DB::val("SELECT ultimo FROM correlativos WHERE clave='TEST'") === 40, 'Sin duplicados ni saltos con 4 procesos × 10');
 
+echo "== Importador de cargos (Excel real)\n";
+use App\Services\ImportadorCargos as IC;
+$plan = IC::planificar(IC::leer(ROOT . '/database/Cargos_y_Oficinas_GAM.xlsx', 'x.xlsx'));
+ok(count($plan['usuarios']) === 46, 'Plan: 46 cargos → ' . count($plan['usuarios']));
+ok(count($plan['oficinas']) === 4, 'Plan: 4 oficinas (unidad truncada unida) → ' . implode(' | ', array_map(fn($o) => $o['sigla'] . ':' . $o['nombre'], $plan['oficinas'])));
+ok(count($plan['avisos']) >= 2, 'Avisos de nombres cortados: ' . implode(' / ', $plan['avisos']));
+$cred = IC::aplicar($plan);
+ok(count($cred) === 46 && strlen($cred[0]['clave']) === 8, 'Aplicar crea 46 usuarios con clave temporal');
+ok(count(IC::aplicar(IC::planificar(IC::leer(ROOT . '/database/Cargos_y_Oficinas_GAM.xlsx', 'x.xlsx')))) === 0, 'Idempotente: segunda importación no crea nada');
+ok(DB::val("SELECT rol FROM usuarios WHERE login='u401'") === 'jefe' && DB::val("SELECT jefe_id FROM usuarios WHERE login='u401'") === null, 'Alcalde: rol jefe sin jefe superior');
+ok(DB::val("SELECT j.login FROM usuarios u JOIN usuarios j ON j.id=u.jefe_id WHERE u.login='u410'") === 'u402', 'Jefe de Contrataciones depende del Secretario Administrativo (u402)');
+ok(DB::val("SELECT rol FROM usuarios WHERE login='u435'") === 'ventanilla', 'Responsable de Archivo → ventanilla');
+ok((int)DB::val("SELECT COUNT(*) FROM usuarios u JOIN oficinas o ON o.id=u.oficina_id WHERE o.sigla LIKE 'SMOP%'") === 6, 'Fila 151 unida a Obras Públicas (6 cargos)');
+ok((int)DB::val("SELECT COUNT(*) FROM usuarios WHERE cambiar_clave=1") === 46 && password_verify($cred[0]['clave'], DB::val("SELECT password_hash FROM usuarios WHERE login=?", [$cred[0]['login']])), 'Clave temporal válida y cambio obligatorio');
+
 echo $fallos ? "\n$fallos FALLO(S)\n" : "\nTODO OK\n";
 exit($fallos ? 1 : 0);

@@ -40,6 +40,10 @@ final class Router
                 flash('Inicie sesión para continuar.', 'warn');
                 redirect('auth/login');
             }
+            if (Auth::user()['cambiar_clave'] && !in_array($r, ['usuario/password', 'auth/salir'], true)) {
+                flash('Por seguridad debe cambiar su contraseña temporal antes de continuar.', 'warn');
+                redirect('usuario/password');
+            }
             if (isset($roles[$accion]) && !Auth::es(...$roles[$accion])) {
                 http_response_code(403);
                 echo View::render('error', ['codigo' => 403, 'mensaje' => 'No tiene permiso para esta acción.']);

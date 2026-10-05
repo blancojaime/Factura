@@ -10,7 +10,14 @@ final class Installer
 {
     public static function instalar(array $db, string $entidad, string $sigla, array $admin, bool $escribirConfig = true): void
     {
-        $pdo = DB::connect($db);
+        if (!preg_match('/^[A-Za-z0-9_]{1,64}$/', (string)$db['name'])) throw new \RuntimeException('El nombre de la base de datos solo puede tener letras, números y guion bajo.');
+        try {
+            $srv = DB::connect(array_merge($db, ['name' => '']));
+            $srv->exec('CREATE DATABASE IF NOT EXISTS `' . $db['name'] . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci');
+            $pdo = DB::connect($db);
+        } catch (\PDOException $e) {
+            throw new \RuntimeException('No se pudo conectar a MySQL (' . $e->getMessage() . '). Verifique que MySQL esté iniciado (botón Start en XAMPP), y el usuario y la clave.');
+        }
         Config::set(['db' => $db, 'entidad' => $entidad, 'entidad_sigla' => $sigla]);
         DB::reset();
         foreach (array_filter(array_map('trim', explode(';', file_get_contents(ROOT . '/database/schema.sql')))) as $sql) {
