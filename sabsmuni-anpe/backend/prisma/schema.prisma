@@ -1,0 +1,351 @@
+// SABSMUNI-ANPE · Esquema PostgreSQL
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────── Enums estrictos ─────────────
+enum NombreRol {
+  UNIDAD_SOLICITANTE
+  RESPONSABLE_PRESUPUESTO
+  RESPONSABLE_CONTRATACIONES
+  AUTORIDAD_RPA
+  ADMINISTRADOR_SISTEMA
+}
+
+enum TipoObjeto {
+  BIENES
+  SERVICIOS
+  OBRAS
+}
+
+enum MetodoSeleccion {
+  PRECIO_EVALUADO_MAS_BAJO
+  CALIDAD_PROPUESTA_COSTO
+}
+
+enum EstadoFlujo {
+  BORRADOR
+  REQUERIMIENTO_VALIDADO
+  PRESUPUESTO_CERTIFICADO
+  DBC_ELABORADO
+  DBC_APROBADO
+  PUBLICADO
+  EVALUACION
+  RECOMENDACION_EMITIDA
+  ADJUDICADO
+  DESIERTO
+  CONTRATO_FORMALIZADO
+  RECEPCION
+  LIQUIDADO
+  CANCELADO
+}
+
+enum CategoriaProponente {
+  NACIONAL_GENERAL
+  MYPE_APP_OECA
+  EXTRANJERO
+}
+
+enum TipoInstrumento {
+  CONTRATO
+  ORDEN_COMPRA
+  ORDEN_SERVICIO
+}
+
+enum TipoDocumento {
+  SOLICITUD_C1
+  JUSTIFICACION_CHB
+  PREVENTIVO_C31
+  DBC
+  INFORME_V1
+  CUADRO_COMPARATIVO
+  INFORME_EVALUACION
+  ACTA_ADJUDICACION
+  CONTRATO
+  ORDEN_COMPRA_SERVICIO
+  ACTA_RECEPCION
+  DEVENGADO_C31
+  EXPEDIENTE_UNICO
+  OTRO
+}
+
+// ───────────── Seguridad ─────────────
+model Rol {
+  id          Int       @id @default(autoincrement())
+  nombre      NombreRol @unique
+  descripcion String
+  usuarios    Usuario[]
+
+  @@map("roles")
+}
+
+model Usuario {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  nombre       String
+  cargo        String?
+  unidad       String?
+  passwordHash String    @map("password_hash")
+  activo       Boolean   @default(true)
+  rolId        Int       @map("rol_id")
+  rol          Rol       @relation(fields: [rolId], references: [id])
+  creadoEn     DateTime  @default(now()) @map("creado_en")
+  sesiones     Sesion[]
+  solicitados  ProcesoAnpe[] @relation("Solicitante")
+  autorizados  ProcesoAnpe[] @relation("Rpa")
+
+  @@map("usuarios")
+}
+
+model Sesion {
+  id          String    @id @default(uuid())
+  usuarioId   String    @map("usuario_id")
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  refreshHash String    @unique @map("refresh_hash")
+  ip          String?
+  userAgent   String?   @map("user_agent")
+  creadaEn    DateTime  @default(now()) @map("creada_en")
+  expiraEn    DateTime  @map("expira_en")
+  revocadaEn  DateTime? @map("revocada_en")
+
+  @@index([usuarioId])
+  @@map("sesiones")
+}
+
+/// Registro inmutable encadenado por hash (cada fila sella a la anterior).
+model LogAuditoria {
+  id              BigInt   @id @default(autoincrement())
+  fecha           DateTime @default(now())
+  usuarioId       String?  @map("usuario_id")
+  usuarioEmail    String?  @map("usuario_email")
+  ip              String?
+  accion          String
+  entidad         String
+  entidadId       String?  @map("entidad_id")
+  estadoPrevio    Json?    @map("estado_previo")
+  estadoPosterior Json?    @map("estado_posterior")
+  hashPrevio      String   @map("hash_previo")
+  hash            String
+
+  @@index([entidad, entidadId])
+  @@index([fecha])
+  @@map("logs_auditoria")
+}
+
+// ───────────── Configuración y catálogos ─────────────
+model ConfigInstitucional {
+  id           Int     @id @default(1)
+  nombreGam    String  @map("nombre_gam")
+  nit          String
+  da           String
+  ue           String
+  ciudad       String
+  departamento String
+  direccion    String
+  rpaNombre    String  @map("rpa_nombre")
+  rpaCargo     String  @map("rpa_cargo")
+  /// Sobrescribe márgenes de preferencia {NACIONAL_GENERAL: 10, MYPE_APP_OECA: 18}
+  margenes     Json?
+  /// Sobrescribe plazos {diasEvaluacion, diasPresentacionDoc, diasFirmaContrato}
+  plazos       Json?
+
+  @@map("config_institucional")
+}
+
+model Feriado {
+  id          Int      @id @default(autoincrement())
+  fecha       DateTime @unique @db.Date
+  descripcion String
+  ambito      String   @default("NACIONAL")
+
+  @@map("feriados")
+}
+
+model CatalogoPartida {
+  codigo      String @id
+  descripcion String
+  grupo       String
+
+  @@map("catalogo_partidas")
+}
+
+model CatalogoChb {
+  id           String  @id @default(uuid())
+  codigoUnspsc String  @map("codigo_unspsc")
+  descripcion  String
+  productor    String?
+  fichaUrl     String? @map("ficha_url")
+  vigente      Boolean @default(true)
+
+  @@unique([codigoUnspsc, productor])
+  @@index([codigoUnspsc])
+  @@map("catalogo_chb")
+}
+
+model MarcaRegistrada {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique
+
+  @@map("marcas_registradas")
+}
+
+// ───────────── Procesos ─────────────
+model ProcesoAnpe {
+  id                    String          @id @default(uuid())
+  codigo                String          @unique
+  cuceProvisorio        String          @map("cuce_provisorio")
+  objetoContratacion    String          @map("objeto_contratacion")
+  tipoObjeto            TipoObjeto      @map("tipo_objeto")
+  precioReferencialTotal Decimal        @default(0) @db.Decimal(14, 2) @map("precio_referencial_total")
+  metodoSeleccion       MetodoSeleccion @map("metodo_seleccion")
+  estadoFlujo           EstadoFlujo     @default(BORRADOR) @map("estado_flujo")
+  idSolicitante         String          @map("id_solicitante")
+  solicitante           Usuario         @relation("Solicitante", fields: [idSolicitante], references: [id])
+  idRpa                 String?         @map("id_rpa")
+  rpa                   Usuario?        @relation("Rpa", fields: [idRpa], references: [id])
+  plazoEjecucionDias    Int?            @map("plazo_ejecucion_dias")
+  /// Secciones del asistente de ET/TdR {clave: texto}
+  requerimiento         Json?
+  /// Resultado serializado de la última evaluación
+  evaluacion            Json?
+  propuestaAdjudicadaId String?         @unique @map("propuesta_adjudicada_id")
+  resolucionObs         String?         @map("resolucion_obs")
+  resolucionFecha       DateTime?       @map("resolucion_fecha")
+  creadoEn              DateTime        @default(now()) @map("creado_en")
+  actualizadoEn         DateTime        @updatedAt @map("actualizado_en")
+
+  items          ItemContratacion[]
+  cronograma     CronogramaAnpe?
+  certificaciones CertificacionPresupuesto[]
+  propuestas     PropuestaRupe[]
+  documentos     DocumentoExpediente[]
+  contrato       Contrato?
+
+  @@index([estadoFlujo])
+  @@index([idSolicitante])
+  @@map("procesos_anpe")
+}
+
+model ItemContratacion {
+  id                  String      @id @default(uuid())
+  procesoId           String      @map("proceso_id")
+  proceso             ProcesoAnpe @relation(fields: [procesoId], references: [id], onDelete: Cascade)
+  numero              Int
+  codigoUnspsc        String      @map("codigo_unspsc")
+  partidaGasto        String      @map("partida_gasto")
+  descripcionTecnica  String      @map("descripcion_tecnica")
+  unidadMedida        String      @map("unidad_medida")
+  cantidad            Decimal     @db.Decimal(14, 3)
+  precioUnitario      Decimal     @db.Decimal(14, 2) @map("precio_unitario")
+  precioTotal         Decimal     @db.Decimal(14, 2) @map("precio_total")
+  fichaChbId          String?     @map("ficha_chb_id")
+  requiereExcepcionChb Boolean    @default(false) @map("requiere_excepcion_chb")
+  incompatibilidadTecnica String? @map("incompatibilidad_tecnica")
+  resultadoChb        String?     @map("resultado_chb")
+
+  @@unique([procesoId, numero])
+  @@map("items_contratacion")
+}
+
+model CronogramaAnpe {
+  id                   String      @id @default(uuid())
+  procesoId            String      @unique @map("proceso_id")
+  proceso              ProcesoAnpe @relation(fields: [procesoId], references: [id], onDelete: Cascade)
+  fechaPublicacion     DateTime    @db.Date @map("fecha_publicacion")
+  fechaApertura        DateTime    @db.Date @map("fecha_apertura")
+  fechaAdjudicacion    DateTime    @db.Date @map("fecha_adjudicacion")
+  fechaPresentacionDoc DateTime    @db.Date @map("fecha_presentacion_doc")
+  fechaContrato        DateTime    @db.Date @map("fecha_contrato")
+
+  @@map("cronogramas_anpe")
+}
+
+model CertificacionPresupuesto {
+  id               String      @id @default(uuid())
+  procesoId        String      @map("proceso_id")
+  proceso          ProcesoAnpe @relation(fields: [procesoId], references: [id], onDelete: Cascade)
+  da               String
+  ue               String
+  programa         String
+  proyecto         String
+  actividadObra    String      @map("actividad_obra")
+  fuente           String
+  organismo        String
+  partida          String
+  importe          Decimal     @db.Decimal(14, 2)
+  c31PreventivoNumero String?  @map("c31_preventivo_numero")
+
+  @@index([procesoId])
+  @@map("certificaciones_presupuesto")
+}
+
+model PropuestaRupe {
+  id                 String              @id @default(uuid())
+  procesoId          String              @map("proceso_id")
+  proceso            ProcesoAnpe         @relation(fields: [procesoId], references: [id], onDelete: Cascade)
+  orden              Int
+  nitProveedor       String              @map("nit_proveedor")
+  razonSocial        String              @map("razon_social")
+  categoria          CategoriaProponente @default(NACIONAL_GENERAL)
+  montoOfertado      Decimal             @db.Decimal(14, 2) @map("monto_ofertado")
+  montoSubasta       Decimal?            @db.Decimal(14, 2) @map("monto_subasta")
+  plazoDias          Int                 @map("plazo_dias")
+  puntajeTecnico     Decimal?            @db.Decimal(5, 2) @map("puntaje_tecnico")
+  /// Verificación V-1 {codigo: presentó}
+  v1                 Json                @default("{}")
+  califica_v1        Boolean             @default(false) @map("califica_v1")
+  margenProboliviaMype Decimal           @default(0) @db.Decimal(5, 2) @map("margen_probolivia_mype")
+
+  @@unique([procesoId, nitProveedor])
+  @@unique([procesoId, orden])
+  @@map("propuestas_rupe")
+}
+
+model Contrato {
+  id                 String          @id @default(uuid())
+  procesoId          String          @unique @map("proceso_id")
+  proceso            ProcesoAnpe     @relation(fields: [procesoId], references: [id], onDelete: Cascade)
+  tipo               TipoInstrumento
+  numero             String
+  propuestaId        String          @map("propuesta_id")
+  monto              Decimal         @db.Decimal(14, 2)
+  plazoDias          Int             @map("plazo_dias")
+  fechaFirma         DateTime        @db.Date @map("fecha_firma")
+  garantiaPorcentaje Decimal         @db.Decimal(5, 2) @map("garantia_porcentaje")
+  garantiaMonto      Decimal         @db.Decimal(14, 2) @map("garantia_monto")
+  garantiaInstrumento String?        @map("garantia_instrumento")
+  polizaNumero       String?         @map("poliza_numero")
+  polizaEntidad      String?         @map("poliza_entidad")
+  polizaVigenciaHasta DateTime?      @db.Date @map("poliza_vigencia_hasta")
+  fechaRecepcion     DateTime?       @db.Date @map("fecha_recepcion")
+  observacionRecepcion String?       @map("observacion_recepcion")
+
+  @@map("contratos")
+}
+
+model DocumentoExpediente {
+  id            String        @id @default(uuid())
+  procesoId     String        @map("proceso_id")
+  proceso       ProcesoAnpe   @relation(fields: [procesoId], references: [id], onDelete: Cascade)
+  tipoDocumento TipoDocumento @map("tipo_documento")
+  rutaArchivo   String        @map("ruta_archivo")
+  hashSha256    String        @map("hash_sha256")
+  /// Hash del contenido lógico (datos fuente + tipo + versión); es el que codifica el QR de verificación.
+  hashContenido String?       @map("hash_contenido")
+  version       Int
+  generado      Boolean       @default(true)
+  paginas       Int?
+  creadoPor     String?       @map("creado_por")
+  creadoEn      DateTime      @default(now()) @map("creado_en")
+
+  @@unique([procesoId, tipoDocumento, version])
+  @@index([hashSha256])
+  @@index([hashContenido])
+  @@map("documentos_expediente")
+}

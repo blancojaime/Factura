@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.next/
+storage/
+.env
+*.log
+coverage/
+next-env.d.ts
