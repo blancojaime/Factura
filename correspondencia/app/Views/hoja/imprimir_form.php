@@ -1,0 +1,1 @@
+<form method="get" class="form card"><input type="hidden" name="r" value="hoja/imprimir"><label>Número de hoja de ruta (NUR)<input name="nur" placeholder="<?= e(App\Core\Config::get('entidad_sigla')) ?>/<?= gestion() ?>-00001" required></label><button class="btn primary">Imprimir hoja de ruta</button></form>

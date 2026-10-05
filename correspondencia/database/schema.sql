@@ -1,0 +1,170 @@
+SET NAMES utf8mb4;
+
+CREATE TABLE IF NOT EXISTS oficinas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(150) NOT NULL,
+  sigla VARCHAR(20) NOT NULL UNIQUE,
+  padre_id INT UNSIGNED NULL,
+  activa TINYINT(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS usuarios (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  login VARCHAR(60) NOT NULL UNIQUE,
+  nombre VARCHAR(120) NOT NULL,
+  cargo VARCHAR(150) NOT NULL DEFAULT '',
+  mosca VARCHAR(10) NOT NULL DEFAULT '',
+  email VARCHAR(120) NOT NULL DEFAULT '',
+  genero ENUM('M','F') NOT NULL DEFAULT 'M',
+  oficina_id INT UNSIGNED NOT NULL,
+  jefe_id INT UNSIGNED NULL,
+  rol ENUM('admin','jefe','usuario','ventanilla') NOT NULL DEFAULT 'usuario',
+  password_hash VARCHAR(255) NOT NULL,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  ultimo_ingreso DATETIME NULL,
+  nro_ingresos INT UNSIGNED NOT NULL DEFAULT 0,
+  FOREIGN KEY (oficina_id) REFERENCES oficinas(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS tipos_documento (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(80) NOT NULL,
+  prefijo VARCHAR(10) NOT NULL UNIQUE,
+  activo TINYINT(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS tipos_documento_oficina (
+  tipo_id INT UNSIGNED NOT NULL,
+  oficina_id INT UNSIGNED NOT NULL,
+  PRIMARY KEY (tipo_id, oficina_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS correlativos (
+  clave VARCHAR(80) NOT NULL PRIMARY KEY,
+  ultimo INT UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS hojas_ruta (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nur VARCHAR(40) NOT NULL UNIQUE,
+  gestion SMALLINT UNSIGNED NOT NULL,
+  creada_por INT UNSIGNED NOT NULL,
+  referencia VARCHAR(255) NOT NULL DEFAULT '',
+  origen ENUM('interno','externo') NOT NULL DEFAULT 'interno',
+  ext_remitente VARCHAR(150) NULL,
+  ext_institucion VARCHAR(150) NULL,
+  ext_fojas VARCHAR(30) NULL,
+  ext_documento VARCHAR(120) NULL,
+  codigo_consulta VARCHAR(10) NOT NULL,
+  creado_en DATETIME NOT NULL,
+  FOREIGN KEY (creada_por) REFERENCES usuarios(id),
+  KEY (referencia(100))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS documentos (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  hoja_id INT UNSIGNED NOT NULL,
+  tipo_id INT UNSIGNED NOT NULL,
+  cite VARCHAR(80) NOT NULL UNIQUE,
+  oficina_id INT UNSIGNED NOT NULL,
+  creado_por INT UNSIGNED NOT NULL,
+  destinatario_nombre VARCHAR(150) NOT NULL DEFAULT '',
+  destinatario_cargo VARCHAR(150) NOT NULL DEFAULT '',
+  via_nombre VARCHAR(150) NOT NULL DEFAULT '',
+  via_cargo VARCHAR(150) NOT NULL DEFAULT '',
+  remitente_nombre VARCHAR(150) NOT NULL DEFAULT '',
+  remitente_cargo VARCHAR(150) NOT NULL DEFAULT '',
+  mosca VARCHAR(10) NOT NULL DEFAULT '',
+  adjunto_txt VARCHAR(255) NOT NULL DEFAULT '',
+  con_copia VARCHAR(255) NOT NULL DEFAULT '',
+  referencia VARCHAR(255) NOT NULL DEFAULT '',
+  contenido MEDIUMTEXT NULL,
+  creado_en DATETIME NOT NULL,
+  modificado_en DATETIME NOT NULL,
+  FOREIGN KEY (hoja_id) REFERENCES hojas_ruta(id),
+  FOREIGN KEY (tipo_id) REFERENCES tipos_documento(id),
+  KEY (oficina_id), KEY (creado_por)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS derivaciones (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  hoja_id INT UNSIGNED NOT NULL,
+  padre_id INT UNSIGNED NULL,
+  de_usuario_id INT UNSIGNED NOT NULL,
+  a_usuario_id INT UNSIGNED NOT NULL,
+  tipo ENUM('oficial','copia') NOT NULL,
+  accion VARCHAR(80) NOT NULL DEFAULT '',
+  adjunto_txt VARCHAR(255) NOT NULL DEFAULT '',
+  proveido TEXT NOT NULL,
+  urgente TINYINT(1) NOT NULL DEFAULT 0,
+  estado ENUM('no_recibido','pendiente','derivado','archivado','agrupado','cancelado') NOT NULL DEFAULT 'no_recibido',
+  fecha_envio DATETIME NOT NULL,
+  fecha_recepcion DATETIME NULL,
+  FOREIGN KEY (hoja_id) REFERENCES hojas_ruta(id),
+  FOREIGN KEY (de_usuario_id) REFERENCES usuarios(id),
+  FOREIGN KEY (a_usuario_id) REFERENCES usuarios(id),
+  KEY (a_usuario_id, estado), KEY (de_usuario_id, estado), KEY (hoja_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS adjuntos (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  hoja_id INT UNSIGNED NOT NULL,
+  documento_id INT UNSIGNED NULL,
+  nombre_original VARCHAR(200) NOT NULL,
+  nombre_disco VARCHAR(80) NOT NULL,
+  mime VARCHAR(120) NOT NULL,
+  tamano INT UNSIGNED NOT NULL,
+  subido_por INT UNSIGNED NOT NULL,
+  creado_en DATETIME NOT NULL,
+  FOREIGN KEY (hoja_id) REFERENCES hojas_ruta(id),
+  KEY (documento_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS carpetas (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT UNSIGNED NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  UNIQUE KEY (usuario_id, nombre)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS archivados (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  derivacion_id INT UNSIGNED NOT NULL UNIQUE,
+  carpeta_id INT UNSIGNED NOT NULL,
+  observacion VARCHAR(255) NOT NULL DEFAULT '',
+  fecha DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS agrupaciones (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT UNSIGNED NOT NULL,
+  principal_derivacion_id INT UNSIGNED NOT NULL,
+  creada_en DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS agrupacion_items (
+  agrupacion_id INT UNSIGNED NOT NULL,
+  derivacion_id INT UNSIGNED NOT NULL,
+  PRIMARY KEY (agrupacion_id, derivacion_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS auditoria (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT UNSIGNED NULL,
+  accion VARCHAR(40) NOT NULL,
+  entidad VARCHAR(40) NOT NULL DEFAULT '',
+  entidad_id INT UNSIGNED NULL,
+  detalle VARCHAR(500) NOT NULL DEFAULT '',
+  ip VARCHAR(45) NOT NULL DEFAULT '',
+  fecha DATETIME NOT NULL,
+  KEY (fecha), KEY (usuario_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS intentos_login (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  login VARCHAR(60) NOT NULL,
+  ip VARCHAR(45) NOT NULL,
+  ok TINYINT(1) NOT NULL,
+  fecha DATETIME NOT NULL,
+  KEY (fecha)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
