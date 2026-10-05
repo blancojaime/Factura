@@ -5,7 +5,7 @@ import { AuditService } from '../../common/audit.service';
 import { CalendarioProvider } from '../../common/calendario.provider';
 import { PrismaService } from '../../common/prisma.service';
 import { ProcesoCompleto, ProcesoRepo, isoFecha, num } from '../../common/proceso.repo';
-import { validarCronograma } from '../../domain/cronograma';
+import { validarCronograma, validarRangoAnpe } from '../../domain/cronograma';
 import { ResultadoEvaluacion } from '../../domain/evaluacion';
 import { ContextoFlujo, EstadoFlujo, evaluarTransicion, transicionesDesde } from '../../domain/flujo';
 import { TipoGenerable } from '../../pdf/templates';
@@ -40,6 +40,7 @@ export class FlujoService {
     const itemsValidados = p.items.length > 0 && p.items.every((i) => i.resultadoChb !== null);
     return {
       itemsCargados: p.items.length > 0,
+      rangoAnpeValido: validarRangoAnpe(num(p.precioReferencialTotal)) === null,
       requerimientoValido: estadoReq ? estadoReq.valido : true,
       excepcionesChbJustificadas: p.estadoFlujo !== 'BORRADOR' || (itemsValidados && (!p.items.some((i) => i.requiereExcepcionChb) || tiposDoc.has('JUSTIFICACION_CHB'))),
       c31Valido: this.pres.validar(p).valido,

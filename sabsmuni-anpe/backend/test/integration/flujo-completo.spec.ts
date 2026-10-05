@@ -216,6 +216,19 @@ d('Integración: flujo completo ANPE (Nest + PostgreSQL)', () => {
     expect((await A.rc.get(`/api/procesos/${id}/propuestas`)).body.propuestas).toHaveLength(0);
   }, 120_000);
 
+  it('Un proceso por debajo de Bs 50.001 no puede validarse como ANPE; por encima de Bs 1.000.000 no admite más ítems', async () => {
+    const id = ok(await A.us.post('/api/procesos').send({ objetoContratacion: 'Compra menor de útiles de escritorio', tipoObjeto: 'BIENES', metodoSeleccion: 'PRECIO_EVALUADO_MAS_BAJO' })).body.id as string;
+    ok(await A.us.post(`/api/procesos/${id}/items`).send({ codigoUnspsc: '44121500', partidaGasto: '39500', descripcionTecnica: 'Papel bond tamaño carta', unidadMedida: 'resma', cantidad: 100, precioUnitario: 40 }));
+    ok(await A.us.put(`/api/procesos/${id}/requerimiento`).send({ secciones: secciones('BIENES') }));
+    ok(await A.us.post(`/api/procesos/${id}/requerimiento/validar`));
+    const r = await paso(A.us, id, 'REQUERIMIENTO_VALIDADO');
+    expect(r.status).toBe(409);
+    expect(JSON.stringify(r.body)).toMatch(/entre Bs 50\.001 y Bs 1\.000\.000/);
+    const grande = await A.us.post(`/api/procesos/${id}/items`).send({ codigoUnspsc: '44121500', partidaGasto: '39500', descripcionTecnica: 'Lote grande', unidadMedida: 'lote', cantidad: 1, precioUnitario: 1_000_000 });
+    expect(grande.status).toBe(400);
+    expect(JSON.stringify(grande.body)).toMatch(/Licitación Pública/);
+  }, 60_000);
+
   it('Seguridad: sesión obligatoria, bloqueo de credenciales inválidas y rotación de refresh token', async () => {
     expect((await request(app.getHttpServer()).get('/api/procesos')).status).toBe(401);
     expect((await request(app.getHttpServer()).post('/api/auth/login').send({ email: 'rpa@gam.bo', password: 'incorrecta123' })).status).toBe(401);

@@ -98,9 +98,14 @@ describe('Validación C-31 / SIGEP', () => {
 });
 
 describe('Flujo de estados y RBAC', () => {
-  const ok: ContextoFlujo = { itemsCargados: true, requerimientoValido: true, excepcionesChbJustificadas: true, c31Valido: true, cronogramaValido: true, documentoDbcGenerado: true, evaluacionRealizada: true, hayRecomendacion: true, contratoGenerado: true, actaRecepcionGenerada: true };
+  const ok: ContextoFlujo = { itemsCargados: true, rangoAnpeValido: true, requerimientoValido: true, excepcionesChbJustificadas: true, c31Valido: true, cronogramaValido: true, documentoDbcGenerado: true, evaluacionRealizada: true, hayRecomendacion: true, contratoGenerado: true, actaRecepcionGenerada: true };
   it('permite la transición con rol y precondiciones correctas', () => {
     expect(evaluarTransicion('BORRADOR', 'REQUERIMIENTO_VALIDADO', 'UNIDAD_SOLICITANTE', ok).permitido).toBe(true);
+  });
+  it('bloquea un precio referencial fuera del rango ANPE desde el requerimiento', () => {
+    const r = evaluarTransicion('BORRADOR', 'REQUERIMIENTO_VALIDADO', 'UNIDAD_SOLICITANTE', { ...ok, rangoAnpeValido: false });
+    expect(r.permitido).toBe(false);
+    expect(r.motivos[0]).toMatch(/50\.001/);
   });
   it('bloquea por rol incorrecto', () => {
     const r = evaluarTransicion('DBC_ELABORADO', 'DBC_APROBADO', 'RESPONSABLE_CONTRATACIONES', ok);

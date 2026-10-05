@@ -7,6 +7,7 @@ export type EstadoFlujo =
 /** Precondiciones calculadas por el servicio a partir de la base de datos. */
 export interface ContextoFlujo {
   itemsCargados: boolean;
+  rangoAnpeValido: boolean;           // precio referencial entre Bs 50.001 y 1.000.000
   requerimientoValido: boolean;       // ET sin hallazgos bloqueantes y completa
   excepcionesChbJustificadas: boolean;
   c31Valido: boolean;
@@ -25,6 +26,7 @@ const RC: Rol = 'RESPONSABLE_CONTRATACIONES', RPA: Rol = 'AUTORIDAD_RPA', RP: Ro
 export const REGLAS: Regla[] = [
   { desde: 'BORRADOR', hacia: 'REQUERIMIENTO_VALIDADO', roles: [US], requiere: [
     { campo: 'itemsCargados', mensaje: 'Cargue al menos un ítem.' },
+    { campo: 'rangoAnpeValido', mensaje: 'El precio referencial debe estar entre Bs 50.001 y Bs 1.000.000 (modalidad ANPE).' },
     { campo: 'requerimientoValido', mensaje: 'La especificación técnica/TdR tiene hallazgos bloqueantes o está incompleta.' },
     { campo: 'excepcionesChbJustificadas', mensaje: 'Hay ítems sin validar contra el catálogo CHB o sin su formulario de justificación de insuficiencia técnica.' } ] },
   { desde: 'REQUERIMIENTO_VALIDADO', hacia: 'BORRADOR', roles: [RP, RC] },

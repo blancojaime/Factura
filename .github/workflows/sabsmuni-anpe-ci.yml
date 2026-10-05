@@ -1,0 +1,41 @@
+name: sabsmuni-anpe-ci
+on:
+  push:
+    paths: ['sabsmuni-anpe/**', '.github/workflows/sabsmuni-anpe-ci.yml']
+  pull_request:
+    paths: ['sabsmuni-anpe/**']
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: sabsmuni-anpe/backend } }
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_PASSWORD: postgres, POSTGRES_DB: anpe_test }
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/anpe_test?schema=public
+      LOGIN_RATE_LIMIT: '1000'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: sabsmuni-anpe/backend/package-lock.json }
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npx tsc --noEmit -p tsconfig.json
+      - run: npx jest        # unitarias + integración (flujo completo sobre PostgreSQL)
+      - run: npm run build
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: sabsmuni-anpe/frontend } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: sabsmuni-anpe/frontend/package-lock.json }
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build

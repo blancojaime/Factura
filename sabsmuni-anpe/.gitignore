@@ -6,3 +6,7 @@ storage/
 *.log
 coverage/
 next-env.d.ts
+*.tsbuildinfo
+test-results/
+playwright-report/
+backups/

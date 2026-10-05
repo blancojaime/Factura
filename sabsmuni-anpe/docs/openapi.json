@@ -1,0 +1,1546 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [
+          {
+            "name": "user-agent",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [
+          {
+            "name": "user-agent",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "AuthController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Autenticación"
+        ]
+      }
+    },
+    "/usuarios": {
+      "get": {
+        "operationId": "AdminController_usuarios",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      },
+      "post": {
+        "operationId": "AdminController_crearUsuario",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearUsuarioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/usuarios/{id}": {
+      "patch": {
+        "operationId": "AdminController_actualizarUsuario",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarUsuarioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/config": {
+      "get": {
+        "operationId": "AdminController_config",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      },
+      "put": {
+        "operationId": "AdminController_guardarConfig",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/catalogos/chb": {
+      "get": {
+        "operationId": "AdminController_chb",
+        "parameters": [
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      },
+      "post": {
+        "operationId": "AdminController_agregarChb",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChbDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/catalogos/chb/{id}": {
+      "patch": {
+        "operationId": "AdminController_chbVigencia",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/catalogos/partidas": {
+      "get": {
+        "operationId": "AdminController_partidas",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      },
+      "post": {
+        "operationId": "AdminController_partida",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PartidaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/catalogos/feriados": {
+      "get": {
+        "operationId": "AdminController_feriados",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      },
+      "post": {
+        "operationId": "AdminController_feriado",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeriadoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/catalogos/feriados/{id}": {
+      "delete": {
+        "operationId": "AdminController_quitarFeriado",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/catalogos/marcas": {
+      "post": {
+        "operationId": "AdminController_marca",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarcaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/auditoria": {
+      "get": {
+        "operationId": "AdminController_auditoria",
+        "parameters": [
+          {
+            "name": "entidad",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "entidadId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/auditoria/verificar": {
+      "get": {
+        "operationId": "AdminController_verificar",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Administración"
+        ]
+      }
+    },
+    "/procesos": {
+      "get": {
+        "operationId": "ProcesosController_listar",
+        "parameters": [
+          {
+            "name": "estado",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      },
+      "post": {
+        "operationId": "ProcesosController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearProcesoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Crea una solicitud de contratación ANPE en estado BORRADOR",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}": {
+      "get": {
+        "operationId": "ProcesosController_detalle",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Detalle completo + transiciones disponibles para el rol",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      },
+      "patch": {
+        "operationId": "ProcesosController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarProcesoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/transicion": {
+      "post": {
+        "operationId": "ProcesosController_transicion",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransicionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Avanza el flujo; valida rol y precondiciones y emite los documentos del paso",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/items": {
+      "post": {
+        "operationId": "ProcesosController_agregarItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/items/{itemId}": {
+      "patch": {
+        "operationId": "ProcesosController_actualizarItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      },
+      "delete": {
+        "operationId": "ProcesosController_eliminarItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/requerimiento/analizar": {
+      "post": {
+        "operationId": "ProcesosController_analizar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalizarTextoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Analiza un texto en vivo: marcas, exclusividad, patentes",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/requerimiento": {
+      "put": {
+        "operationId": "ProcesosController_guardarRequerimiento",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequerimientoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/requerimiento/validar": {
+      "post": {
+        "operationId": "ProcesosController_validarRequerimiento",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Valida ET/TdR y cruza cada ítem con el catálogo CHB (D.S. 4505); emite el formulario de insuficiencia si corresponde",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/cronograma/calcular": {
+      "post": {
+        "operationId": "ProcesosController_calcularCronograma",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalcularCronogramaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Simula el cronograma (Art. 47 D.S. 0181) sin guardar",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/cronograma": {
+      "put": {
+        "operationId": "ProcesosController_guardarCronograma",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalcularCronogramaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      },
+      "get": {
+        "operationId": "ProcesosController_cronograma",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/sigep": {
+      "get": {
+        "operationId": "ProcesosController_captura",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/presupuesto": {
+      "put": {
+        "operationId": "ProcesosController_guardarPresupuesto",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PresupuestoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/propuestas": {
+      "get": {
+        "operationId": "ProcesosController_propuestas",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      },
+      "post": {
+        "operationId": "ProcesosController_crearPropuesta",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropuestaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/propuestas/{pid}": {
+      "patch": {
+        "operationId": "ProcesosController_actualizarPropuesta",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarPropuestaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      },
+      "delete": {
+        "operationId": "ProcesosController_eliminarPropuesta",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/propuestas/{pid}/v1": {
+      "put": {
+        "operationId": "ProcesosController_v1",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pid",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/V1Dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Registra el Formulario V-1 (Presentó / No presentó)",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/evaluacion": {
+      "post": {
+        "operationId": "ProcesosController_evaluar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Ejecuta la evaluación técnico-económica con márgenes de preferencia y devuelve el cuadro comparativo",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/contrato/simular": {
+      "get": {
+        "operationId": "ProcesosController_simular",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "plazoDias",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/contrato": {
+      "post": {
+        "operationId": "ProcesosController_contrato",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContratoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Genera contrato u orden (≤15 días calendario) con garantía de cumplimiento 7% / 3,5%",
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/recepcion": {
+      "post": {
+        "operationId": "ProcesosController_recepcion",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecepcionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Procesos ANPE"
+        ]
+      }
+    },
+    "/procesos/{id}/documentos": {
+      "get": {
+        "operationId": "DocumentosController_listar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Documentos y Expediente"
+        ]
+      }
+    },
+    "/procesos/{id}/documentos/generar/{tipo}": {
+      "post": {
+        "operationId": "DocumentosController_generar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tipo",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Genera (nueva versión) un PDF oficial con marca de agua, SHA-256 y QR",
+        "tags": [
+          "Documentos y Expediente"
+        ]
+      }
+    },
+    "/procesos/{id}/documentos/subir": {
+      "post": {
+        "operationId": "DocumentosController_subir",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/SubirDocumentoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Documentos y Expediente"
+        ]
+      }
+    },
+    "/documentos/{id}/descargar": {
+      "get": {
+        "operationId": "DocumentosController_descargar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Documentos y Expediente"
+        ]
+      }
+    },
+    "/procesos/{id}/expediente": {
+      "post": {
+        "operationId": "DocumentosController_compilar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Compila el Expediente Único foliado con índice, marcadores y sello criptográfico",
+        "tags": [
+          "Documentos y Expediente"
+        ]
+      }
+    },
+    "/verificar/{hash}": {
+      "get": {
+        "operationId": "DocumentosController_verificar",
+        "parameters": [
+          {
+            "name": "hash",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Documentos y Expediente"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "SABSMUNI-ANPE API",
+    "description": "",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "access_token"
+      }
+    },
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CrearUsuarioDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ActualizarUsuarioDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ConfigDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ChbDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "PartidaDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "FeriadoDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "MarcaDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CrearProcesoDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ActualizarProcesoDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "TransicionDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ItemDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ActualizarItemDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AnalizarTextoDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RequerimientoDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CalcularCronogramaDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "PresupuestoDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "PropuestaDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ActualizarPropuestaDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "V1Dto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ContratoDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RecepcionDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "SubirDocumentoDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}

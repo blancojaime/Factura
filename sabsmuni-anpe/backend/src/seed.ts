@@ -1,7 +1,7 @@
 /**
  * Datos iniciales. Idempotente: puede ejecutarse en cada despliegue.
  *  - Producción: solo crea roles, configuración mínima y UN administrador (requiere SEED_ADMIN_PASSWORD).
- *  - Desarrollo/demo: crea además un usuario por rol (contraseña SEED_DEMO_PASSWORD) y datos de ejemplo.
+ *  - Desarrollo, o SEED_DEMO_USERS=true: crea además un usuario por rol (contraseña SEED_DEMO_PASSWORD) y catálogos de ejemplo.
  * Los catálogos CHB y de partidas son EJEMPLOS: cargue los oficiales vigentes desde el panel de administración.
  */
 import { NombreRol, PrismaClient } from '@prisma/client';
@@ -31,11 +31,13 @@ async function main() {
 
   const adminPass = process.env.SEED_ADMIN_PASSWORD;
   if (produccion && !adminPass) throw new Error('En producción defina SEED_ADMIN_PASSWORD para crear el administrador inicial.');
+  const demo = !produccion || process.env.SEED_DEMO_USERS === 'true';
+  if (produccion && demo && !process.env.SEED_DEMO_PASSWORD) throw new Error('SEED_DEMO_USERS=true en producción exige SEED_DEMO_PASSWORD.');
   const demoPass = process.env.SEED_DEMO_PASSWORD ?? 'Anpe2026Demo';
   const usuarios: { email: string; nombre: string; cargo: string; unidad: string; rol: NombreRol; password: string }[] = [
     { email: process.env.SEED_ADMIN_EMAIL ?? 'admin@gam.bo', nombre: 'Administrador del Sistema', cargo: 'Administrador', unidad: 'Sistemas', rol: 'ADMINISTRADOR_SISTEMA', password: adminPass ?? demoPass },
   ];
-  if (!produccion)
+  if (demo)
     usuarios.push(
       { email: 'solicitante@gam.bo', nombre: 'Carla Mamani (Obras Públicas)', cargo: 'Jefa de Obras Públicas', unidad: 'Dirección de Obras Públicas', rol: 'UNIDAD_SOLICITANTE', password: demoPass },
       { email: 'presupuesto@gam.bo', nombre: 'Luis Quispe', cargo: 'Responsable de Presupuesto', unidad: 'Dirección Financiera', rol: 'RESPONSABLE_PRESUPUESTO', password: demoPass },
@@ -49,7 +51,7 @@ async function main() {
 
   for (const m of MARCAS_BASE) await prisma.marcaRegistrada.upsert({ where: { nombre: m }, create: { nombre: m }, update: {} });
 
-  if (!produccion) {
+  if (demo) {
     const partidas = [
       ['22500', 'Mantenimiento y reparación de inmuebles y equipos', 'Servicios no personales'], ['25100', 'Consultorías por producto', 'Servicios no personales'],
       ['34200', 'Productos de minerales no metálicos (cemento, cal, yeso)', 'Materiales y suministros'], ['39500', 'Útiles y materiales eléctricos', 'Materiales y suministros'],
@@ -64,7 +66,7 @@ async function main() {
     for (const [codigoUnspsc, descripcion, productor] of chb)
       await prisma.catalogoChb.upsert({ where: { codigoUnspsc_productor: { codigoUnspsc, productor } }, create: { codigoUnspsc, descripcion, productor }, update: {} });
   }
-  console.log(`Seed completado (${produccion ? 'producción' : 'desarrollo'}). Usuarios: ${usuarios.map((u) => u.email).join(', ')}`);
+  console.log(`Seed completado (${produccion ? 'producción' : 'desarrollo'}${demo ? ', con datos demo' : ''}). Usuarios: ${usuarios.map((u) => u.email).join(', ')}`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); }).finally(() => prisma.$disconnect());

@@ -17,7 +17,7 @@ export class AuthController {
   constructor(private readonly auth: AuthService) {}
 
   /** Inicia sesión: access token (15 min) y refresh token (7 días) en cookies HTTP-only. */
-  @Public() @Throttle({ default: { limit: 10, ttl: 60_000 } }) @Post('auth/login') @HttpCode(200)
+  @Public() @Throttle({ default: { limit: Number(process.env.LOGIN_RATE_LIMIT ?? 10), ttl: 60_000 } }) @Post('auth/login') @HttpCode(200)
   login(@Body() dto: LoginDto, @IpCliente() ip: string, @Headers('user-agent') ua: string, @Res({ passthrough: true }) res: Response) {
     return this.auth.login(dto.email, dto.password, ip, ua, res);
   }

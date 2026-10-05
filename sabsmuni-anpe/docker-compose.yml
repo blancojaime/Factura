@@ -1,0 +1,65 @@
+# SABSMUNI-ANPE · despliegue completo con un solo comando:
+#   ./scripts/init-env.sh && docker compose up --build
+# (init-env.sh genera .env con secretos aleatorios la primera vez)
+name: sabsmuni-anpe
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: anpe
+      POSTGRES_USER: anpe
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD en .env (use scripts/init-env.sh)}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U anpe -d anpe"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    # La base no se publica al host: solo la alcanza el backend por la red interna.
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://anpe:${POSTGRES_PASSWORD}@db:5432/anpe?schema=public
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET en .env (mínimo 32 caracteres)}
+      FRONTEND_ORIGIN: ${PUBLIC_URL:-http://localhost:3000}
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:3000}
+      STORAGE_DIR: /data/storage
+      # true cuando el sistema se sirve por HTTPS (recomendado en producción)
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      LOGIN_RATE_LIMIT: ${LOGIN_RATE_LIMIT:-10}
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
+      GAM_NOMBRE: ${GAM_NOMBRE:-Gobierno Autónomo Municipal de Demostración}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@gam.bo}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?Defina SEED_ADMIN_PASSWORD en .env}
+      SEED_DEMO_USERS: ${SEED_DEMO_USERS:-false}
+      SEED_DEMO_PASSWORD: ${SEED_DEMO_PASSWORD:-}
+    volumes:
+      - storage:/data/storage
+    expose:
+      - "4000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BACKEND_URL: http://backend:4000
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+
+volumes:
+  pgdata:
+  storage:
