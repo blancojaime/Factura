@@ -84,7 +84,7 @@ services:
     <<: *backend
     profiles: ["seed"]
     restart: "no"
-    command: ["python", "-m", "app.seeds"]
+    command: ["sh", "-c", "alembic upgrade head && python -m app.seeds"]
     ports: []
 
 volumes:

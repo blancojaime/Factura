@@ -33,6 +33,7 @@ cd frontend && npm ci && npx tsc --noEmit && npm run lint && npm run build
 
 ## Documentación
 
+- [Guía de prueba para principiantes (Word, paso a paso)](docs/GUIA_PRUEBA_PARA_PRINCIPIANTES.docx)
 - [Manual de Implementación y Prueba (Word, con capturas)](docs/MANUAL_IMPLEMENTACION_SICOM-MUNI.docx)
 - [Manual de Implementación](docs/MANUAL_IMPLEMENTACION.md)
 - [Manual de Usuario](docs/MANUAL_USUARIO.md)
