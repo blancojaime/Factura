@@ -33,6 +33,7 @@ cd frontend && npm ci && npx tsc --noEmit && npm run lint && npm run build
 
 ## Documentación
 
+- [Manual de Implementación y Prueba (Word, con capturas)](docs/MANUAL_IMPLEMENTACION_SICOM-MUNI.docx)
 - [Manual de Implementación](docs/MANUAL_IMPLEMENTACION.md)
 - [Manual de Usuario](docs/MANUAL_USUARIO.md)
 - [Casos de prueba de validación](docs/CASOS_PRUEBA.md) (Bs 18.500 bienes; Bs 32.000 servicio)
