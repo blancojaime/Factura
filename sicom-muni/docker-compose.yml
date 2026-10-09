@@ -1,0 +1,92 @@
+# SICOM-MUNI: PostgreSQL + MinIO + API (FastAPI) + Web (Next.js)
+# Uso:  cp .env.example .env  (editar secretos)  &&  docker compose up -d --build
+# Datos demo (opcional):  docker compose --profile seed run --rm seed
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sicom
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD en .env}
+      POSTGRES_DB: sicom
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sicom -d sicom"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?defina MINIO_ROOT_USER en .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?defina MINIO_ROOT_PASSWORD en .env}
+    volumes:
+      - miniodata:/data
+    ports:
+      - "127.0.0.1:9001:9001"   # consola de MinIO (solo local)
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "mc alias set local http://minio:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD} &&
+      mc mb --ignore-existing local/sicom-expedientes && mc anonymous set none local/sicom-expedientes"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+
+  backend: &backend
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+      minio-init:
+        condition: service_completed_successfully
+    environment: &backend-env
+      ENV: prod
+      DATABASE_URL: postgresql+psycopg://sicom:${POSTGRES_PASSWORD}@db:5432/sicom
+      SECRET_KEY: ${SECRET_KEY:?defina SECRET_KEY en .env}
+      FERNET_KEY: ${FERNET_KEY:-}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost:3000}
+      CORS_ORIGINS: ${PUBLIC_BASE_URL:-http://localhost:3000}
+      STORAGE_BACKEND: s3
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      S3_BUCKET: sicom-expedientes
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BACKEND_URL: http://backend:8000
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  # Carga usuarios demo, partidas y catalogo CHB (idempotente). Solo bajo el perfil "seed".
+  seed:
+    <<: *backend
+    profiles: ["seed"]
+    restart: "no"
+    command: ["python", "-m", "app.seeds"]
+    ports: []
+
+volumes:
+  pgdata:
+  miniodata:

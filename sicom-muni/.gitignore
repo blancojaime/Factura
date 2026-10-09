@@ -12,3 +12,4 @@ frontend/out/
 # Entorno
 .env
 *.log
+*.tsbuildinfo

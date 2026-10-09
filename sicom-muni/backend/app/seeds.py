@@ -74,3 +74,12 @@ def cargar(db: Session, gestion: int | None = None, password: str = PASSWORD_DEM
             db.add(CatalogoCHB(id=_id(f"chb:{codigo}"), codigo_unspsc=codigo, descripcion_bien=desc, unidad_medida=unidad,
                                precio_referencial_nacional=precio, activo=True))
     db.flush()
+
+
+if __name__ == "__main__":  # python -m app.seeds  (idempotente)
+    from app.database import SessionLocal
+
+    with SessionLocal() as _db:
+        cargar(_db)
+        _db.commit()
+    print("Datos demo cargados (usuarios, partidas, catalogo CHB, parametros).")
