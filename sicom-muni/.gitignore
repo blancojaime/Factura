@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+backend/storage/
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+# Entorno
+.env
+*.log
+*.tsbuildinfo
+.local/

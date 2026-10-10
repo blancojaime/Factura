@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+<h2 style="text-align:center;font-size:12pt">{{ ctx.titulo_orden }}</h2>
+{{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("CUCE", ctx.tramite.cuce), ("N° preventivo C-31", ctx.tramite.c31),
+  ("Proveedor", ctx.adjudicatario.razon_social), ("NIT / CI", ctx.adjudicatario.nit_ci),
+  ("Monto total (Bs)", ctx.adjudicatario.monto | bs), ("Plazo", ctx.adjudicatario.plazo ~ " días calendario"),
+  ("Lugar de entrega / ejecución", ctx.tramite.lugar_entrega)]) }}
+<p class="literal">{{ ctx.adjudicatario.monto_literal }}</p>
+<h2>Detalle</h2>{{ m.tabla_items(ctx, False, False) }}
+<h2>Condiciones</h2>
+<ol class="clausulas">
+<li><b>Objeto.</b> El proveedor se obliga a {{ 'proveer los bienes' if ctx.tramite.metodo == 'ORDEN_COMPRA' else 'prestar el servicio' }} descritos, conforme a las especificaciones técnicas de la solicitud {{ ctx.tramite.correlativo }}.</li>
+<li><b>Plazo y lugar.</b> {{ ctx.adjudicatario.plazo }} días calendario desde la fecha de emisión, en {{ ctx.tramite.lugar_entrega or 'el lugar señalado por la entidad' }}.</li>
+<li><b>Penalidades.</b> Las demoras injustificadas se sancionan con la multa que establece la normativa aplicable (NB-SABS), descontable del pago.</li>
+<li><b>Recepción.</b> A cargo del Responsable o Comisión de Recepción, que emitirá el informe de conformidad y el Acta Formulario 500.</li>
+<li><b>Forma de pago.</b> Contra entrega, conformidad y factura, con cargo al preventivo C-31 {{ ctx.tramite.c31 or '' }}.</li>
+</ol>
+{{ m.firmas(["Responsable del proceso de contratación (RPA)", "Proveedor (recibí conforme)"]) }}
+{% endblock %}

@@ -1,0 +1,534 @@
+' Codigo de frmContratacionesConsolidado (inyectado por modUIBuilder).
+' Navegacion por "pestanas" propias: los controles llevan Tag="P1".."P5"; los de Tag vacio son comunes.
+' P1 Solicitud | P2 Evaluacion CHB | P3 Cotizaciones | P4 Presupuesto/C-31 | P5 Orden
+
+Private m_Lineas() As LineaC31
+Private m_nLin As Long
+Private m_base As Object            ' colores originales de los botones (para restaurar al habilitar)
+Private m_pag As Long
+
+' Texto con acentos: {a}{e}{i}{o}{u}{n}, mayusculas {A}{E}{I}{O}{U}{N}, {deg}
+Private Function Tx(ByVal s As String) As String
+    s = Replace(s, "{a}", ChrW(225)): s = Replace(s, "{e}", ChrW(233)): s = Replace(s, "{i}", ChrW(237))
+    s = Replace(s, "{o}", ChrW(243)): s = Replace(s, "{u}", ChrW(250)): s = Replace(s, "{n}", ChrW(241))
+    s = Replace(s, "{A}", ChrW(193)): s = Replace(s, "{E}", ChrW(201)): s = Replace(s, "{I}", ChrW(205))
+    s = Replace(s, "{O}", ChrW(211)): s = Replace(s, "{U}", ChrW(218)): s = Replace(s, "{N}", ChrW(209))
+    Tx = Replace(s, "{deg}", ChrW(176))
+End Function
+
+Private Function ColorPag(ByVal n As Long) As Long
+    Select Case n
+        Case 1: ColorPag = RGB(31, 78, 121)
+        Case 2: ColorPag = RGB(0, 121, 107)
+        Case 3: ColorPag = RGB(96, 74, 150)
+        Case 4: ColorPag = RGB(176, 96, 0)
+        Case Else: ColorPag = RGB(56, 118, 29)
+    End Select
+End Function
+
+' Cabecera de una lista (primera fila, no seleccionable)
+Private Sub IniciarLista(ByVal lst As MSForms.ListBox, ByVal titulos As String)
+    Dim t() As String, i As Long
+    lst.Clear
+    t = Split(Tx(titulos), ";")
+    lst.AddItem t(0)
+    For i = 1 To UBound(t): lst.List(0, i) = t(i): Next i
+End Sub
+
+Private Sub GuardarColoresBotones()
+    Dim c As MSForms.Control
+    Set m_base = CreateObject("Scripting.Dictionary")
+    For Each c In Me.Controls
+        If TypeName(c) = "CommandButton" Then
+            m_base(c.Name & "|b") = c.BackColor
+            m_base(c.Name & "|f") = c.ForeColor
+        End If
+    Next c
+End Sub
+
+' Botones deshabilitados en gris; habilitados con su color original
+Private Sub PintarBotones()
+    Dim c As MSForms.Control
+    For Each c In Me.Controls
+        If TypeName(c) = "CommandButton" Then
+            If Not (c.Name Like "cmdP#") Then
+                If c.Enabled Then
+                    c.BackColor = m_base(c.Name & "|b"): c.ForeColor = m_base(c.Name & "|f")
+                Else
+                    c.BackColor = RGB(208, 213, 218): c.ForeColor = RGB(140, 146, 152)
+                End If
+            End If
+        End If
+    Next c
+End Sub
+
+Private Sub ColorearPestanas(ByVal n As Long)
+    Dim i As Long, b As MSForms.Control
+    For i = 1 To 5
+        Set b = Me.Controls("cmdP" & i)
+        If i = n Then
+            b.BackColor = ColorPag(i): b.ForeColor = RGB(255, 255, 255)
+        Else
+            b.BackColor = RGB(222, 230, 240): b.ForeColor = RGB(31, 78, 121)
+        End If
+    Next i
+End Sub
+
+Private Function EstadoColor(ByVal est As String) As Long
+    Select Case est
+        Case "BORRADOR": EstadoColor = RGB(120, 130, 140)
+        Case "EN_COTIZACION": EstadoColor = RGB(46, 117, 182)
+        Case "EVALUADA": EstadoColor = RGB(0, 121, 107)
+        Case "PRESUPUESTADA": EstadoColor = RGB(176, 96, 0)
+        Case "ADJUDICADA": EstadoColor = RGB(96, 74, 150)
+        Case "ORDEN_EMITIDA": EstadoColor = RGB(56, 118, 29)
+        Case "ANULADA": EstadoColor = RGB(192, 57, 43)
+        Case Else: EstadoColor = RGB(150, 160, 170)
+    End Select
+End Function
+
+' Texto de ayuda: que sigue segun el estado y el rol del usuario
+Private Function Sugerencia(ByVal est As String, ByVal rol As String, ByVal estOrden As String) As String
+    Dim t As String
+    Select Case est
+        Case ""
+            t = "Cree una solicitud nueva (pesta{n}a 1) o escriba el n{u}mero de una existente y pulse Cargar."
+        Case "BORRADOR"
+            If rol = "US" Or rol = "RC" Then
+                t = "Agregue los {i}tems y pulse 'Enviar a cotizaci{o}n'. Luego imprima el C-1."
+            Else
+                t = "La solicitud todav{i}a est{a} en elaboraci{o}n por la unidad solicitante."
+            End If
+        Case "EN_COTIZACION"
+            If rol = "RC" Then
+                t = "RC: eval{u}e cada {i}tem CHB (pesta{n}a 2), registre las ofertas y pulse 'Evaluar cuadro' (pesta{n}a 3)."
+            ElseIf rol = "PF" Then
+                t = "A{u}n no hay oferta recomendada: podr{a} reservar el presupuesto cuando la solicitud est{e} EVALUADA."
+            Else
+                t = "En cotizaci{o}n: espere la evaluaci{o}n del Responsable de Contrataciones."
+            End If
+        Case "EVALUADA"
+            If rol = "PF" Then
+                t = "PF: reserve el presupuesto: ingrese las l{i}neas y pulse 'Emitir C-31 Preventivo' (pesta{n}a 4)."
+            Else
+                t = "Oferta recomendada lista. Falta la reserva presupuestaria (C-31) de Presupuesto/Finanzas."
+            End If
+        Case "PRESUPUESTADA"
+            If rol = "PF" Then
+                t = "PF: registre el C-31 en SIGEP y asocie su n{u}mero (pesta{n}a 4)."
+            ElseIf rol = "RC" Then
+                t = "RC: seleccione la oferta recomendada y pulse 'Adjudicar seleccionada' (pesta{n}a 3)."
+            Else
+                t = "Presupuesto reservado. El Responsable de Contrataciones adjudicar{a}."
+            End If
+        Case "ADJUDICADA"
+            If rol = "RC" Then
+                t = "RC: genere la Orden de Compra o de Servicio (pesta{n}a 5). Requiere el C-31 asociado a SIGEP."
+            ElseIf rol = "PF" Then
+                t = "PF: si falta, asocie el n{u}mero de C-31 de SIGEP (pesta{n}a 4) para que se pueda emitir la Orden."
+            Else
+                t = "Adjudicada: en espera de la Orden."
+            End If
+        Case "ORDEN_EMITIDA"
+            If estOrden = "RECIBIDA" Then
+                t = "Tr{a}mite concluido: lo contratado fue recibido. Puede imprimir el acta de recepci{o}n."
+            ElseIf rol = "RC" Then
+                t = "RC: cuando se reciba lo contratado, registre la recepci{o}n (pesta{n}a 5)."
+            Else
+                t = "Orden emitida: en espera de la recepci{o}n."
+            End If
+        Case "ANULADA"
+            t = "Solicitud anulada: no admite m{a}s acciones."
+        Case Else
+            t = ""
+    End Select
+    Sugerencia = "  " & Tx("Siguiente paso: " & t)
+End Function
+
+Private Sub UserForm_Initialize()
+    Me.Caption = "SIC-MUNI - Contrataciones Menores"
+    lblSesion.Caption = modSecurity.g_Nombre & "  [" & modSecurity.g_Rol & "]  DA " & modSecurity.g_DA
+    txtDA.Text = modSecurity.g_DA
+    cboTipo.AddItem "COMPRA": cboTipo.AddItem "SERVICIO": cboTipo.ListIndex = 0
+    lstItems.ColumnCount = 6: lstItems.ColumnWidths = "40;80;270;50;80;70"
+    lstCot.ColumnCount = 7: lstCot.ColumnWidths = "90;80;190;80;50;80;100"
+    lstLineas.ColumnCount = 7: lstLineas.ColumnWidths = "60;60;60;50;60;70;90"
+    IniciarLista lstItems, "{I}tem;C{o}digo;Descripci{o}n;Cant.;Total (Bs);CHB"
+    IniciarLista lstCot, "ID;NIT;Raz{o}n social;Monto (Bs);Cumple;Recomendada;Recibida"
+    IniciarLista lstLineas, "Prog.;Proy.;Act.;Fte.;Org.;Partida;Importe (Bs)"
+    m_nLin = 0
+    GuardarColoresBotones
+    AplicarRol
+    lblEstado.Caption = "  Sin solicitud cargada"
+    lblSugerencia.Caption = Sugerencia("", modSecurity.g_Rol, "")
+    Select Case modSecurity.g_Rol
+        Case "RC": MostrarPagina 2
+        Case "PF": MostrarPagina 4
+        Case Else: MostrarPagina 1
+    End Select
+End Sub
+
+Private Sub UserForm_Activate()
+    If Not modSecurity.SesionActiva() Then MsgBox "Sesion expirada.", vbExclamation: Unload Me
+End Sub
+
+Private Sub AplicarRol()
+    ' Habilita botones segun permiso (la verificacion real la repite cada rutina de negocio).
+    cmdCrearSolicitud.Enabled = PuedeHacer(P_SOLICITUD): cmdAgregarItem.Enabled = PuedeHacer(P_SOLICITUD)
+    cmdEnviarCot.Enabled = PuedeHacer(P_SOLICITUD)
+    cmdEvalCHB.Enabled = PuedeHacer(P_CHB): cmdDocExc.Enabled = PuedeHacer(P_CHB)
+    cmdRegCot.Enabled = PuedeHacer(P_COTIZACION): cmdEvaluar.Enabled = PuedeHacer(P_COTIZACION)
+    cmdCuadro.Enabled = PuedeHacer(P_COTIZACION): cmdAdjudicar.Enabled = PuedeHacer(P_ADJUDICAR)
+    cmdEmitirC31.Enabled = PuedeHacer(P_C31): cmdAsociar.Enabled = PuedeHacer(P_C31)
+    cmdRevParcial.Enabled = PuedeHacer(P_REVERSION): cmdRevTotal.Enabled = PuedeHacer(P_REVERSION)
+    cmdAddLinea.Enabled = PuedeHacer(P_C31): cmdSaldo.Enabled = PuedeHacer(P_C31)
+    cmdGenOrden.Enabled = PuedeHacer(P_ORDEN): cmdDocOrden.Enabled = PuedeHacer(P_ORDEN)
+    cmdRecepcion.Enabled = PuedeHacer(P_ORDEN): cmdActa.Enabled = PuedeHacer(P_ORDEN)
+    cmdAnularOrden.Enabled = PuedeHacer(P_ORDEN): cmdAnularSol.Enabled = PuedeHacer(P_SOLICITUD)
+    cmdDocC31.Enabled = PuedeHacer(P_DOCS) And modSecurity.g_Rol <> ROL_US
+    PintarBotones
+End Sub
+
+Private Sub MostrarPagina(ByVal n As Long)
+    Dim c As MSForms.Control
+    m_pag = n
+    For Each c In Me.Controls
+        If Len(c.Tag) > 0 Then c.Visible = (c.Tag = "P" & n)
+    Next c
+    ColorearPestanas n
+End Sub
+
+Private Sub cmdP1_Click()
+    MostrarPagina 1
+End Sub
+Private Sub cmdP2_Click()
+    MostrarPagina 2
+End Sub
+Private Sub cmdP3_Click()
+    MostrarPagina 3
+End Sub
+Private Sub cmdP4_Click()
+    MostrarPagina 4
+End Sub
+Private Sub cmdP5_Click()
+    MostrarPagina 5
+End Sub
+Private Sub cmdSalir_Click()
+    modSecurity.Logout
+    Unload Me
+End Sub
+
+Private Function SolActiva() As String
+    SolActiva = Trim$(txtSol.Text)
+    If Len(SolActiva) = 0 Then Err.Raise vbObjectError + 700, , "Cargue o cree una solicitud primero."
+End Function
+
+Private Sub Aviso(ByVal e As ErrObject)
+    MsgBox e.Description, vbExclamation, "SIC-MUNI"
+End Sub
+
+'-------------------------- Comunes --------------------------
+Private Sub cmdCargar_Click()
+    On Error GoTo EH
+    modProcurement.FilaSolicitud SolActiva()
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub Refrescar()
+    Dim idSol As String, rS As Long, r As Long, sh As Worksheet, est As String, nroOrd As String, estOrd As String, v As Variant
+    idSol = SolActiva()
+    rS = modProcurement.FilaSolicitud(idSol)
+    Set sh = WS(SH_SOL)
+    est = CStr(GetV(sh, rS, "Estado"))
+    nroOrd = modPostAward.OrdenVigenteDeSolicitud(idSol)
+    If Len(nroOrd) > 0 Then estOrd = CStr(GetV(WS(SH_ORD), FindRow(WS(SH_ORD), "NroOrden", nroOrd), "EstadoOrden"))
+    lblEstado.Caption = "  " & est & "   |   Referencial Bs " & Format$(GetV(sh, rS, "MontoReferencial"), "#,##0.00") & "   |   " & GetV(sh, rS, "Modalidad")
+    lblEstado.BackColor = EstadoColor(est)
+    lblSugerencia.Caption = Sugerencia(est, modSecurity.g_Rol, estOrd)
+    lblNroOrden.Caption = nroOrd
+    IniciarLista lstItems, "{I}tem;C{o}digo;Descripci{o}n;Cant.;Total (Bs);CHB"
+    Set sh = WS(SH_DET)
+    For r = 2 To LastRow(sh)
+        If CStr(GetV(sh, r, "ID_Solicitud")) = idSol Then
+            lstItems.AddItem GetV(sh, r, "Item")
+            lstItems.List(lstItems.ListCount - 1, 1) = GetV(sh, r, "CodigoUNSPSC")
+            lstItems.List(lstItems.ListCount - 1, 2) = GetV(sh, r, "Descripcion")
+            lstItems.List(lstItems.ListCount - 1, 3) = GetV(sh, r, "Cantidad")
+            lstItems.List(lstItems.ListCount - 1, 4) = Format$(GetV(sh, r, "PrecioRefTotal"), "#,##0.00")
+            lstItems.List(lstItems.ListCount - 1, 5) = GetV(sh, r, "CumpleCHB")
+        End If
+    Next r
+    IniciarLista lstCot, "ID;NIT;Raz{o}n social;Monto (Bs);Cumple;Recomendada;Recibida"
+    Set sh = WS(SH_COT)
+    For r = 2 To LastRow(sh)
+        If CStr(GetV(sh, r, "ID_Solicitud")) = idSol Then
+            lstCot.AddItem GetV(sh, r, "ID_Cotizacion")
+            lstCot.List(lstCot.ListCount - 1, 1) = GetV(sh, r, "Proveedor_NIT")
+            lstCot.List(lstCot.ListCount - 1, 2) = GetV(sh, r, "RazonSocial")
+            lstCot.List(lstCot.ListCount - 1, 3) = Format$(GetV(sh, r, "MontoTotalCotizado"), "#,##0.00")
+            lstCot.List(lstCot.ListCount - 1, 4) = GetV(sh, r, "CumplimientoTecnico")
+            lstCot.List(lstCot.ListCount - 1, 5) = GetV(sh, r, "Recomendado")
+            v = GetV(sh, r, "FechaHoraRecepcion")
+            If IsDate(v) Then lstCot.List(lstCot.ListCount - 1, 6) = Format$(CDate(v), "dd/mm/yyyy hh:nn")
+        End If
+    Next r
+End Sub
+
+'-------------------------- P1 Solicitud --------------------------
+Private Sub cmdCrearSolicitud_Click()
+    On Error GoTo EH
+    txtSol.Text = modProcurement.CrearSolicitud(Trim$(txtDA.Text), Trim$(txtUE.Text), txtJustificacion.Text)
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub txtCodigo_AfterUpdate()
+    ' Alerta CHB inmediata al digitar el codigo UNSPSC
+    Dim res As CHBResultado
+    res = modValidationCHB.ConsultarCHB(txtCodigo.Text)
+    lblAlertaCHB.Caption = res.Mensaje
+    lblAlertaCHB.ForeColor = IIf(res.EnCatalogo, RGB(192, 0, 0), RGB(0, 110, 0))
+    If res.EnCatalogo Then
+        If Len(txtDescItem.Text) = 0 Then txtDescItem.Text = res.Descripcion
+        If Len(txtUnidad.Text) = 0 Then txtUnidad.Text = res.Unidad
+    End If
+End Sub
+
+Private Sub cmdAgregarItem_Click()
+    Dim a As String
+    On Error GoTo EH
+    If Not IsNumeric(txtCant.Text) Or Not IsNumeric(txtPrecio.Text) Then Err.Raise vbObjectError + 701, , "Cantidad y precio deben ser numericos."
+    a = modProcurement.AgregarItem(SolActiva(), Trim$(txtCodigo.Text), txtDescItem.Text, CDbl(txtCant.Text), txtUnidad.Text, CDbl(txtPrecio.Text))
+    If Len(a) > 0 Then MsgBox a & vbLf & vbLf & "Pase a la pestana 'Evaluacion CHB' para registrar compra por catalogo o la excepcion.", vbExclamation, "Alerta CHB"
+    txtCodigo.Text = "": txtDescItem.Text = "": txtCant.Text = "": txtUnidad.Text = "": txtPrecio.Text = ""
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdEnviarCot_Click()
+    On Error GoTo EH
+    modProcurement.EnviarACotizacion SolActiva()
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdC1_Click()
+    On Error GoTo EH
+    MsgBox "PDF generado:" & vbLf & modDocumentAutomation.GenerarC1(SolActiva()), vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+'-------------------------- P2 Evaluacion CHB --------------------------
+Private Sub cmdEvalCHB_Click()
+    Dim m As String, f As Variant
+    On Error GoTo EH
+    If Not IsNumeric(txtItemCHB.Text) Then Err.Raise vbObjectError + 702, , "Indique el N de item."
+    If IsDate(txtFechaAut.Text) Then f = CDate(txtFechaAut.Text) Else f = Empty
+    m = modValidationCHB.EvaluarItemCHB(SolActiva(), CLng(txtItemCHB.Text), chkFuera.Value, txtCodExc.Text, txtJustExc.Text, txtNroAut.Text, f)
+    If Len(m) > 0 Then MsgBox m, vbExclamation, "Evaluacion CHB"
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdDocExc_Click()
+    On Error GoTo EH
+    MsgBox "PDF generado:" & vbLf & modDocumentAutomation.GenerarJustificacionExcepcion(SolActiva()), vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+'-------------------------- P3 Cotizaciones --------------------------
+Private Sub cmdRegCot_Click()
+    Dim rec As Variant
+    On Error GoTo EH
+    If Not IsDate(txtValidez.Text) Or Not IsNumeric(txtMontoCot.Text) Then Err.Raise vbObjectError + 703, , "Validez (fecha) y monto numerico requeridos."
+    If Len(Trim$(txtRecibida.Text)) > 0 Then
+        If Not IsDate(txtRecibida.Text) Then Err.Raise vbObjectError + 712, , "Fecha y hora de recepcion invalida (use dd/mm/aaaa hh:mm)."
+        rec = CDate(txtRecibida.Text)
+    Else
+        rec = Empty
+    End If
+    modProcurement.RegistrarCotizacion SolActiva(), txtNIT.Text, txtRazon.Text, CDate(txtValidez.Text), CDbl(txtMontoCot.Text), chkCumple.Value, rec
+    txtNIT.Text = "": txtRazon.Text = "": txtMontoCot.Text = "": txtRecibida.Text = "": chkCumple.Value = False
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdEvaluar_Click()
+    On Error GoTo EH
+    MsgBox modProcurement.EvaluarCuadro(SolActiva()), vbInformation, "Cuadro comparativo"
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdCuadro_Click()
+    On Error GoTo EH
+    MsgBox "PDF generado:" & vbLf & modDocumentAutomation.GenerarCuadroComparativo(SolActiva()), vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdAdjudicar_Click()
+    On Error GoTo EH
+    If lstCot.ListIndex < 1 Then Err.Raise vbObjectError + 704, , "Seleccione en la lista la oferta a adjudicar (no la fila de titulos)."
+    modProcurement.Adjudicar SolActiva(), CStr(lstCot.List(lstCot.ListIndex, 0))
+    MsgBox "Adjudicada.", vbInformation
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+'-------------------------- P4 Presupuesto / C-31 --------------------------
+Private Function LeerLinea() As LineaC31
+    Dim L As LineaC31
+    If Not IsNumeric(txtImporte.Text) Then Err.Raise vbObjectError + 705, , "Importe invalido."
+    L.Programa = Trim$(txtProg.Text): L.Proyecto = Trim$(txtProy.Text): L.ActObra = Trim$(txtAct.Text)
+    L.Fuente = Trim$(txtFte.Text): L.Organismo = Trim$(txtOrg.Text): L.Partida = Trim$(txtPartida.Text)
+    L.Importe = CDbl(txtImporte.Text)
+    LeerLinea = L
+End Function
+
+Private Sub cmdSaldo_Click()
+    Dim L As LineaC31, rS As Long
+    On Error GoTo EH
+    L = LeerLinea()
+    rS = modProcurement.FilaSolicitud(SolActiva())
+    lblSaldo.Caption = "Saldo disponible: Bs " & Format$(modBudgetEngine.SaldoDisponible(CStr(GetV(WS(SH_SOL), rS, "Cod_DA")), CStr(GetV(WS(SH_SOL), rS, "Cod_UE")), L), "#,##0.00")
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdAddLinea_Click()
+    On Error GoTo EH
+    m_nLin = m_nLin + 1
+    ReDim Preserve m_Lineas(1 To m_nLin)
+    m_Lineas(m_nLin) = LeerLinea()
+    With m_Lineas(m_nLin)
+        lstLineas.AddItem .Programa
+        lstLineas.List(lstLineas.ListCount - 1, 1) = .Proyecto: lstLineas.List(lstLineas.ListCount - 1, 2) = .ActObra
+        lstLineas.List(lstLineas.ListCount - 1, 3) = .Fuente: lstLineas.List(lstLineas.ListCount - 1, 4) = .Organismo
+        lstLineas.List(lstLineas.ListCount - 1, 5) = .Partida: lstLineas.List(lstLineas.ListCount - 1, 6) = Format$(.Importe, "#,##0.00")
+    End With
+    Exit Sub
+EH: m_nLin = m_nLin - 1: Aviso Err
+End Sub
+
+Private Sub cmdEmitirC31_Click()
+    Dim nro As String, msg As String
+    On Error GoTo EH
+    If m_nLin = 0 Then Err.Raise vbObjectError + 706, , "Agregue al menos una linea de imputacion."
+    nro = modBudgetEngine.EmitirC31(SolActiva(), m_Lineas)
+    txtNroC31.Text = nro
+    IniciarLista lstLineas, "Prog.;Proy.;Act.;Fte.;Org.;Partida;Importe (Bs)"
+    m_nLin = 0
+    MsgBox "Preventivo interno emitido: " & nro & vbLf & "Registre el C-31 en SIGEP y asocie su numero.", vbInformation
+    Refrescar
+    Exit Sub
+EH:
+    msg = Err.Description
+    IniciarLista lstLineas, "Prog.;Proy.;Act.;Fte.;Org.;Partida;Importe (Bs)"
+    m_nLin = 0                            ' evita duplicar lineas al reintentar
+    MsgBox msg & vbLf & vbLf & "(Las lineas se limpiaron; vuelva a ingresarlas.)", vbExclamation, "SIC-MUNI"
+End Sub
+
+Private Sub cmdAsociar_Click()
+    On Error GoTo EH
+    modBudgetEngine.AsociarC31SIGEP Trim$(txtNroC31.Text), txtNroSigep.Text
+    MsgBox "C-31 SIGEP asociado.", vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdRevParcial_Click()
+    On Error GoTo EH
+    If Not IsNumeric(txtLineaRev.Text) Or Not IsNumeric(txtMontoRev.Text) Then Err.Raise vbObjectError + 707, , "Linea y monto numericos."
+    modBudgetEngine.RevertirParcial Trim$(txtNroC31.Text), CLng(txtLineaRev.Text), CDbl(txtMontoRev.Text), txtMotivoRev.Text
+    MsgBox "Reversion parcial registrada.", vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdRevTotal_Click()
+    On Error GoTo EH
+    If MsgBox("Revertir TOTALMENTE el preventivo " & txtNroC31.Text & "?", vbYesNo + vbQuestion) = vbNo Then Exit Sub
+    modBudgetEngine.RevertirTotal Trim$(txtNroC31.Text), txtMotivoRev.Text
+    MsgBox "Reversion total registrada.", vbInformation
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdDocC31_Click()
+    On Error GoTo EH
+    MsgBox "PDF generado:" & vbLf & modDocumentAutomation.GenerarPreventivoC31(Trim$(txtNroC31.Text)), vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+'-------------------------- P5 Orden --------------------------
+Private Sub cmdGenOrden_Click()
+    Dim nro As String
+    On Error GoTo EH
+    If Not IsNumeric(txtPlazo.Text) Then Err.Raise vbObjectError + 708, , "Plazo numerico (dias)."
+    nro = modBudgetEngine.GenerarOrden(SolActiva(), cboTipo.Text, txtCUCE.Text, CLng(txtPlazo.Text), txtLugar.Text)
+    lblNroOrden.Caption = nro
+    MsgBox "Orden emitida: " & nro, vbInformation
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdDocOrden_Click()
+    On Error GoTo EH
+    MsgBox "PDF generado:" & vbLf & modDocumentAutomation.GenerarDocOrden(lblNroOrden.Caption), vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdRecepcion_Click()
+    Dim nro As String
+    On Error GoTo EH
+    If Len(lblNroOrden.Caption) = 0 Then Err.Raise vbObjectError + 709, , "La solicitud no tiene Orden vigente."
+    If Not IsDate(txtFechaRec.Text) Then Err.Raise vbObjectError + 710, , "Fecha de recepcion invalida."
+    nro = modPostAward.RegistrarRecepcion(lblNroOrden.Caption, CDate(txtFechaRec.Text), chkConforme.Value, txtObsRec.Text)
+    lblNroActa.Caption = nro
+    MsgBox "Recepcion registrada: " & nro, vbInformation
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdActa_Click()
+    On Error GoTo EH
+    MsgBox "PDF generado:" & vbLf & modDocumentAutomation.GenerarActaRecepcion(lblNroActa.Caption), vbInformation
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdAnularOrden_Click()
+    On Error GoTo EH
+    If Len(lblNroOrden.Caption) = 0 Then Err.Raise vbObjectError + 711, , "No hay Orden vigente."
+    If MsgBox("Anular la Orden " & lblNroOrden.Caption & "?", vbYesNo + vbQuestion) = vbNo Then Exit Sub
+    modPostAward.AnularOrden lblNroOrden.Caption, txtMotivoAnu.Text
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cmdAnularSol_Click()
+    On Error GoTo EH
+    If MsgBox("Anular la solicitud " & SolActiva() & "?", vbYesNo + vbQuestion) = vbNo Then Exit Sub
+    modPostAward.AnularSolicitud SolActiva(), txtMotivoAnu.Text
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub

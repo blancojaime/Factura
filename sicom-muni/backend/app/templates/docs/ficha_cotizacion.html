@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+{{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("Objeto", ctx.tramite.objeto),
+  ("Plazo de entrega / ejecución", ctx.tramite.plazo_dias ~ " días calendario"), ("Lugar", ctx.tramite.lugar_entrega),
+  ("N° Formulario 110 SICOES", ctx.tramite.formulario_110),
+  ("Fecha límite de presentación", ctx.tramite.fecha_limite_ofertas | fechahora)]) }}
+{% if ctx.destinatarios %}<h2>Dirigida a</h2><p>{% for d in ctx.destinatarios %}{{ d.razon_social }}{% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+<h2>Especificaciones requeridas</h2><p>{{ ctx.tramite.especificaciones }}</p>
+{{ m.tabla_items(ctx, False, False) }}
+<h2>Oferta del proveedor</h2>
+<table class="datos">
+<tr><td class="k">Razón social</td><td>&nbsp;</td></tr><tr><td class="k">NIT / CI</td><td>&nbsp;</td></tr>
+<tr><td class="k">Monto total ofertado (Bs)</td><td>&nbsp;</td></tr><tr><td class="k">Plazo ofertado (días calendario)</td><td>&nbsp;</td></tr>
+<tr><td class="k">Registro Pro-Bolivia / MyPE</td><td>&nbsp;</td></tr><tr><td class="k">Validez de la oferta</td><td>&nbsp;</td></tr></table>
+<p class="nota">La oferta debe cubrir la totalidad de los ítems y cumplir las especificaciones técnicas. No se admiten ofertas parciales.</p>
+{{ m.firmas(["Responsable de contrataciones", "Proveedor (firma y sello)"]) }}
+{% endblock %}
