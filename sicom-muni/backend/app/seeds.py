@@ -77,8 +77,9 @@ def cargar(db: Session, gestion: int | None = None, password: str = PASSWORD_DEM
 
 
 if __name__ == "__main__":  # python -m app.seeds  (idempotente)
-    from app.database import SessionLocal
+    from app.database import SessionLocal, preparar_sqlite
 
+    preparar_sqlite()
     with SessionLocal() as _db:
         cargar(_db)
         _db.commit()

@@ -306,6 +306,8 @@ def descargar(cid: uuid.UUID, doc_id: uuid.UUID, db: Session = Depends(get_db), 
     d = next((x for x in c.documentos if x.id == doc_id), None)
     if d is None:
         raise HTTPException(404, "Documento no encontrado")
-    pdf = get_storage().get(d.ruta_archivo)
-    return Response(pdf, media_type="application/pdf",
-                    headers={"Content-Disposition": f'inline; filename="{c.correlativo_interno}_{d.tipo_doc}_v{d.version}.pdf"'})
+    contenido = get_storage().get(d.ruta_archivo)
+    ext = d.ruta_archivo.rsplit(".", 1)[-1].lower()
+    mime = "text/html; charset=utf-8" if ext == "html" else "application/pdf"
+    return Response(contenido, media_type=mime,
+                    headers={"Content-Disposition": f'inline; filename="{c.correlativo_interno}_{d.tipo_doc}_v{d.version}.{ext}"'})

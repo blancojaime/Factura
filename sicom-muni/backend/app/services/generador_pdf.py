@@ -21,7 +21,12 @@ import qrcode
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
-from weasyprint import HTML, URLFetcher
+try:  # WeasyPrint necesita librerias del sistema (pango); si faltan se guarda el documento en HTML imprimible
+    from weasyprint import HTML, URLFetcher
+    PDF_DISPONIBLE = True
+except (ImportError, OSError):  # pragma: no cover - depende del equipo
+    HTML = URLFetcher = None  # type: ignore[assignment,misc]
+    PDF_DISPONIBLE = False
 
 from ..config import get_settings
 from ..enums import Estado, MetodoFormalizacion, TipoDoc
@@ -89,13 +94,18 @@ def _env() -> Environment:
     return env
 
 
-class _SoloImagenesEmbebidas(URLFetcher):
-    """Defensa en profundidad: solo se admiten recursos data: (evita peticiones externas / SSRF)."""
+if PDF_DISPONIBLE:
+    class _SoloImagenesEmbebidas(URLFetcher):
+        """Defensa en profundidad: solo se admiten recursos data: (evita peticiones externas / SSRF)."""
 
-    def fetch(self, url, headers=None):
-        if not str(url).startswith("data:"):
-            raise ValueError(f"Recurso externo bloqueado: {url}")
-        return super().fetch(url, headers)
+        def fetch(self, url, headers=None):
+            if not str(url).startswith("data:"):
+                raise ValueError(f"Recurso externo bloqueado: {url}")
+            return super().fetch(url, headers)
+
+AVISO_HTML = ('<style>@media print{.aviso-html{display:none}}</style><div class="aviso-html" style="background:#fff4ce;'
+              'border:1px solid #e0c36a;padding:8px;font:13px sans-serif;margin:0 0 8px">Vista HTML (modo de prueba sin motor PDF). '
+              'Para obtener un PDF use Ctrl+P y elija «Guardar como PDF».</div>')
 
 
 def qr_data_uri(texto: str) -> str:
@@ -232,10 +242,13 @@ def generar_documento(db: Session, c: ContratacionMenor, tipo: TipoDoc, usuario:
         hash_contenido=h_contenido, qr=qr_data_uri(url_verificacion(params, doc_id)),
         url_verificacion=url_verificacion(params, doc_id), generado=datetime.now(timezone.utc).strftime("%d/%m/%Y %H:%M UTC"),
         generado_por=usuario.nombre_completo if usuario else "Sistema")
-    pdf = HTML(string=html, url_fetcher=_SoloImagenesEmbebidas()).write_pdf()
+    if PDF_DISPONIBLE:
+        pdf, ext, mime = HTML(string=html, url_fetcher=_SoloImagenesEmbebidas()).write_pdf(), "pdf", "application/pdf"
+    else:
+        pdf, ext, mime = html.replace("<body>", "<body>" + AVISO_HTML, 1).encode("utf-8"), "html", "text/html"
     h_archivo = hashlib.sha256(pdf).hexdigest()
-    clave = f"expedientes/{c.correlativo_interno}/{tipo.value}_v{version}_{doc_id}.pdf"
-    get_storage().put(clave, pdf)
+    clave = f"expedientes/{c.correlativo_interno}/{tipo.value}_v{version}_{doc_id}.{ext}"
+    get_storage().put(clave, pdf, mime)
     doc = DocumentoExpediente(
         id=doc_id, contratacion=c, tipo_doc=tipo.value, ruta_archivo=clave, hash_sha256=h_archivo,
         hash_contenido=h_contenido, version=version, estado_tramite=c.estado,

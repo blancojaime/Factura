@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from .config import get_settings
-from .database import engine
+from .database import engine, preparar_sqlite
 from .errors import EstadoInvalidoError, NoEncontradoError, ReglaNegocioError
 from .routers import admin, auth, catalogos, contrataciones, reportes, verificacion
 
@@ -17,6 +17,7 @@ API = "/api/v1"
 
 def crear_app() -> FastAPI:
     s = get_settings()
+    preparar_sqlite()
     app = FastAPI(title="SICOM-MUNI", version="1.0.0",
                   description="Sistema Integrado de Contratación Menor Municipal",
                   docs_url="/api/docs", openapi_url="/api/openapi.json", redoc_url=None)

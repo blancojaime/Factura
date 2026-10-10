@@ -36,6 +36,7 @@ cd frontend && npm ci && npx tsc --noEmit && npm run lint && npm run build
 - [Guía de prueba para principiantes (Word, paso a paso)](docs/GUIA_PRUEBA_PARA_PRINCIPIANTES.docx)
 - [Manual de Implementación y Prueba (Word, con capturas)](docs/MANUAL_IMPLEMENTACION_SICOM-MUNI.docx)
 - [Manual de Implementación](docs/MANUAL_IMPLEMENTACION.md)
+- [Puesta en producción (uso oficial)](docs/PUESTA_EN_PRODUCCION.md)
 - [Manual de Usuario](docs/MANUAL_USUARIO.md)
 - [Casos de prueba de validación](docs/CASOS_PRUEBA.md) (Bs 18.500 bienes; Bs 32.000 servicio)
 
@@ -47,3 +48,9 @@ cd frontend && npm ci && npx tsc --noEmit && npm run lint && npm run build
    el hash del archivo final se guarda en la base y se compara en la página pública de verificación (`/verificar/{id}`).
 3. El sistema **no se conecta al SIGEP ni al SICOES**: genera el bloque de captura para copiar y pegar y registra los números
    (C-31, F110, CUCE) que el operador obtiene allí.
+
+## Modo de prueba sin Docker (Windows)
+
+Si Docker no funciona en su PC: doble clic en `INICIAR-SIN-DOCKER.bat` (instala Python y Node con winget, usa SQLite y abre
+`http://localhost:3000`). Para apagar: `DETENER-SIN-DOCKER.bat`. Es **solo para pruebas**: guarda los datos en `.local/` y, si no
+están las librerías gráficas de Windows, muestra los documentos como HTML imprimible (opcional: `INSTALAR-SOPORTE-PDF.bat`).

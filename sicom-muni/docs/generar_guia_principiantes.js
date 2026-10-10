@@ -112,6 +112,33 @@ TABLE(['Qué ve', 'Qué hacer'], [
   ['Mensaje de «puerto 3000 en uso»', 'Cierre otros programas que usen internet local o reinicie el computador.'],
   ['Sigue sin funcionar', 'Haga una captura de pantalla de la ventana negra y envíela a quien le dio el sistema.']], [3600, 5760]);
 
+H1('ALTERNATIVA — Probar sin Docker');
+P('Use esta opción **si Docker no funciona en su computador** (por ejemplo el error «Virtual Machine Platform not enabled» o «No virtualization available»). Es **solo para pruebas**: los datos se guardan en un archivo dentro de la carpeta y no tiene toda la protección de un servidor oficial.');
+H2('Qué hace por usted');
+B(['Instala **Python** y **Node.js** si no los tiene (los descarga con Windows, usando el programa «winget»).', 'Prepara el sistema y crea una base de datos de prueba con los usuarios de demostración.', 'Lo enciende y abre el navegador en `http://localhost:3000`.']);
+H2('Paso a paso');
+N(['Descargue y extraiga el sistema como en el **Paso 1.2** de esta guía (carpeta `C:\\SICOM`, luego `sicom-muni`). (No necesita Docker.)',
+  'En la carpeta `sicom-muni` haga **doble clic** en **INICIAR-SIN-DOCKER.bat**. Si aparece «Windows protegió su PC», pulse **Más información → Ejecutar de todas formas**.',
+  'Se abre una ventana azul con 6 etapas: `1/6` Python, `2/6` Node, `3/6` servidor, `4/6` pantalla web, `5/6` encendido, `6/6` espera. **No la cierre.**',
+  'Si Windows pide **permiso de administrador** para instalar Python o Node, pulse **Sí**. Después de instalarlos, el programa continúa solo; si la ventana se cierra, vuelva a hacer doble clic en el mismo archivo.',
+  'La **primera vez tarda entre 10 y 25 minutos** (descargas y compilación). Las siguientes veces tarda menos de 1 minuto.',
+  'Cuando aparezca el cuadro verde **LISTO**, se abre el navegador. Entre con `solicitante` y `Sicom#2026Demo` y continúe en la **PARTE 2** de esta guía.']);
+IMGF('01-login.png', 'Si ve esta pantalla, el sistema está funcionando', 4.6, 4.2);
+H2('Apagar y volver a encender');
+B(['**Apagar:** doble clic en **DETENER-SIN-DOCKER.bat**.', '**Encender:** doble clic en **INICIAR-SIN-DOCKER.bat** (los datos de prueba se conservan en la carpeta `.local`).']);
+H2('Diferencias con la versión Docker');
+TABLE(['Tema', 'Modo sin Docker'], [
+  ['Base de datos', 'Archivo SQLite local (no PostgreSQL). Suficiente para probar.'],
+  ['Documentos PDF', 'Si el equipo no tiene las librerías gráficas, los documentos se muestran como **página HTML imprimible**: se abre en el navegador y con **Ctrl + P → Guardar como PDF** se obtiene el PDF. Opcional: ejecute **INSTALAR-SOPORTE-PDF.bat** para generar PDF reales (puede tardar 10 minutos).'],
+  ['Auditoría inalterable', 'Se registra y se verifica la cadena de huellas, pero **sin** el bloqueo a nivel de base de datos que ofrece PostgreSQL.'],
+  ['Uso oficial', '**No** se recomienda: ver la sección «Cómo se trabajará de forma oficial».']], [2400, 6960]);
+H2('Si algo falla');
+TABLE(['Qué ve', 'Qué hacer'], [
+  ['«Su Windows no tiene winget»', 'Instale a mano **Python 3.12** (python.org, marcando «Add python.exe to PATH») y **Node.js LTS** (nodejs.org) y repita el doble clic.'],
+  ['Error rojo durante la instalación', 'Revise su conexión a internet y repita el doble clic; el programa continúa donde se quedó.'],
+  ['El navegador no abre', 'Escriba `http://localhost:3000` en la barra de direcciones.'],
+  ['Sigue sin funcionar', 'Envíe una captura de la ventana azul y los archivos de la carpeta `sicom-muni\\.local\\logs`.']], [3400, 5960]);
+
 H1('PARTE 2 — Probar el sistema paso a paso');
 P('Va a simular la compra de **material de construcción por Bs 18.500** para la plaza principal. En el sistema participan **seis personas** (usuarios). Usted hará el papel de cada una, **una a la vez**.');
 H2('2.1 Reglas de oro');
@@ -266,6 +293,24 @@ TABLE(['#', 'Qué comprobar', '✔'], [
   ['15', 'Saldo de la partida 25800 final: 14.200,00', '☐']], [500, 8000, 860]);
 H2('Prueba extra: plazo de 20 días');
 P('Cree otra solicitud igual a la del servicio pero con **Plazo = 20**. En la hoja del trámite dirá **Contrato** en lugar de Orden de Servicio. Al llegar a Formalizar (pasos de la Parte 3), el botón será **Formalizar (Contrato)** y se generará un **Contrato Administrativo**.');
+H1('Cómo se trabajará de forma oficial');
+P('Las dos formas de prueba (Docker en su PC y «sin Docker») son para **conocer** el sistema. En el uso real **no se instala en cada computador**: se instala **una sola vez en un servidor** de la entidad y todos los funcionarios entran con su navegador a una dirección propia, por ejemplo `https://sicom.micomuna.gob.bo`.');
+CODE('PC de funcionarios (solo navegador) --HTTPS--> Servidor SICOM-MUNI --> Base de datos PostgreSQL + archivos\n  solicitante, presupuesto, rpa ...               (a cargo del área de Sistemas)        (con respaldo diario)');
+H2('Qué debe hacer la entidad');
+TABLE(['#', 'Qué', 'Quién'], [
+  ['1', 'Conseguir un servidor o máquina virtual (Ubuntu Server, 2 CPU, 4 GB RAM, 50 GB de disco como mínimo). Alternativa: servidor en la nube, previa aprobación legal.', 'Sistemas'],
+  ['2', 'Instalar Docker en ese servidor (allí no hay el problema de virtualización de las PC con Windows) y poner el sistema con `docker compose`.', 'Sistemas'],
+  ['3', 'Configurar **HTTPS** con un certificado, un nombre de dirección oficial y claves nuevas y largas. Cerrar el acceso directo a la base de datos.', 'Sistemas'],
+  ['4', 'Cargar los datos reales: parámetros del GAM y logotipo, partidas presupuestarias de la gestión, catálogo CHB oficial y usuarios reales (y desactivar los usuarios de demostración).', 'Administrador del sistema'],
+  ['5', 'Programar **respaldos diarios** de la base y de los PDF, guardarlos fuera del servidor y probar una restauración cada trimestre.', 'Sistemas'],
+  ['6', '**Validar con la asesoría legal** los topes, plazos, mínimo de cotizaciones, formularios y márgenes de preferencia (se ajustan en el menú «Parámetros del GAM»). Confirmar también si los PDF con QR tienen validez por sí solos o si requieren firma.', 'Asesoría legal'],
+  ['7', 'Aprobar el uso con una **resolución o instructivo interno** y designar responsable técnico y plan de soporte.', 'Autoridad / RPA'],
+  ['8', '**Piloto en paralelo** de 1 a 2 meses (sistema y procedimiento actual) y **capacitación** de cada rol.', 'Contrataciones y Sistemas'],
+  ['9', 'Revisión de seguridad independiente antes de operar con información real.', 'Sistemas / auditoría']], [500, 6760, 2100]);
+NOTE('Todos los pasos técnicos (comandos, ejemplo de HTTPS, respaldos y lista de control) están en el archivo `docs/PUESTA_EN_PRODUCCION.md` del proyecto; entrégueselo a la persona de Sistemas.', 'E8F1FB', 'Documento técnico');
+H2('Lo que el sistema todavía no hace');
+B(['No se conecta al **SIGEP** ni al **SICOES**: el operador copia el bloque de captura y registra allí los números (C-31, F110, CUCE).', 'No incluye **firma digital**, doble verificación al ingresar ni recuperación de contraseña por correo (el administrador restablece las claves).', 'No ha pasado una **prueba de penetración** ni de **carga** realizada por terceros.', 'Las reglas legales **no fueron verificadas** contra la normativa vigente.']);
+
 H1('Aviso importante');
 B(['Esta es una **versión de demostración**: los nombres, empresas, códigos de partida y catálogo son ficticios.',
   'Los topes (Bs 50.000 y Bs 20.000), el plazo de 15 días, el mínimo de 3 cotizaciones y las referencias normativas fueron tomados del encargo y **no se han contrastado con la normativa vigente**. Antes de usarlo oficialmente, su asesoría legal debe validarlos (se pueden cambiar en el menú **Parámetros del GAM**, usuario `admin`).',

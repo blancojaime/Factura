@@ -13,3 +13,4 @@ frontend/out/
 .env
 *.log
 *.tsbuildinfo
+.local/
