@@ -81,8 +81,11 @@ function Cargar-Entorno {
 function Pg-Corriendo {
     $pgctl = Exe-Pg 'pg_ctl'
     if (-not (Test-Path (Join-Path $PgData 'PG_VERSION'))) { return $false }
-    & $pgctl -D $PgData status *> $null
-    return ($LASTEXITCODE -eq 0)
+    $anterior = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'   # PowerShell 5.1 trata la salida de error de un programa como error fatal
+    try { & $pgctl -D $PgData status *> $null; return ($LASTEXITCODE -eq 0) }
+    catch { return $false }
+    finally { $ErrorActionPreference = $anterior }
 }
 
 function Pg-Iniciar {

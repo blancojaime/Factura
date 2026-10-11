@@ -15,7 +15,9 @@ try {
     if ($Proy.Length -gt 60) { Aviso 'La ruta es larga; si hay errores de "ruta demasiado larga", mueva la carpeta a C:\sabsmuni-anpe.' }
     if ($EsWindows) {
         $admin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-        if ($admin) { Falla 'No ejecute este instalador como Administrador (PostgreSQL se niega a funcionar asi). Cierre esta ventana y haga doble clic normal en 1-INSTALAR.bat' }
+        # Muchas PC personales tienen la cuenta con permisos de administrador (o UAC desactivado): es normal.
+        # initdb y pg_ctl reducen ellos mismos sus permisos al arrancar PostgreSQL, asi que solo se avisa.
+        if ($admin) { Aviso 'Esta ventana tiene permisos de administrador. Es solo un aviso: la instalacion continua.' }
         $libre = (Get-PSDrive -Name ($Proy.Substring(0,1)) -ErrorAction SilentlyContinue).Free
         if ($libre -and $libre -lt 4GB) { Falla 'Hay menos de 4 GB libres en el disco. Libere espacio e intente de nuevo.' }
     }
