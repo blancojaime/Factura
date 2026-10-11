@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+{{ m.datos([
+  ("N° de trámite", ctx.tramite.correlativo), ("Unidad solicitante", ctx.tramite.unidad_solicitante),
+  ("Solicitante", ctx.solicitante.nombre ~ " — " ~ ctx.solicitante.cargo),
+  ("Objeto de la contratación", ctx.tramite.objeto), ("Tipo de objeto", ctx.tramite.tipo_objeto | replace('_', ' ')),
+  ("Plazo de entrega / ejecución", ctx.tramite.plazo_dias ~ " días calendario"),
+  ("Lugar de entrega / ejecución", ctx.tramite.lugar_entrega),
+  ("Modalidad por cuantía", ctx.tramite.modalidad | replace('_', ' ')),
+  ("Formalización prevista", ctx.tramite.metodo | replace('_', ' '))]) }}
+<h2>Justificación de la necesidad</h2><p>{{ ctx.tramite.justificacion }}</p>
+<h2>Especificaciones técnicas / Términos de referencia</h2><p>{{ ctx.tramite.especificaciones }}</p>
+<h2>Detalle de ítems</h2>
+{{ m.tabla_items(ctx, True, True) }}
+<h2>Declaración</h2>
+<p class="nota">El servidor público solicitante declara que el requerimiento responde a una necesidad institucional,
+que las especificaciones técnicas no direccionan la contratación hacia un proveedor determinado, que se consultó el
+Catálogo "Compro Hecho en Bolivia" (D.S. 4505) y que no se encuentra comprendido en causales de impedimento ni conflicto de intereses.</p>
+{{ m.firmas([ctx.solicitante.nombre ~ " — Solicitante", "Jefe de la unidad solicitante"]) }}
+{% endblock %}

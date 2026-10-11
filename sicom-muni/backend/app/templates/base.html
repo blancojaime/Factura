@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>{{ titulo }}</title>
+<style>
+  @page { size: letter; margin: 3.6cm 2cm 3.3cm 2cm;
+          @top-center { content: element(membrete); width: 100%; vertical-align: top; }
+          @bottom-center { content: element(pie); width: 100%; vertical-align: top; } }
+  body { font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif; font-size: 9.5pt; color: #111; line-height: 1.35; }
+  header.membrete { position: running(membrete); border-bottom: 2px solid #1f4e79; padding-bottom: 4px; }
+  header.membrete table { width: 100%; border-collapse: collapse; }
+  header.membrete td { vertical-align: middle; border: 0; padding: 0; }
+  header.membrete .gam { font-size: 12pt; font-weight: bold; color: #1f4e79; text-transform: uppercase; }
+  header.membrete .sub { font-size: 8pt; color: #555; }
+  header.membrete img.logo { height: 1.9cm; }
+  .marca { position: fixed; top: 9cm; left: 0; right: 0; text-align: center; font-size: 62pt; font-weight: bold;
+           color: rgba(150,150,150,0.16); transform: rotate(-30deg); z-index: -1; text-transform: uppercase; }
+  footer.pie { position: running(pie); border-top: 1px solid #999; font-size: 6.8pt; color: #444; padding-top: 3px; }
+  footer.pie img.qr { float: left; height: 1.9cm; width: 1.9cm; margin-right: 0.3cm; }
+  footer.pie .txt { overflow: hidden; padding-top: 2px; }
+  footer.pie .hash { font-family: "DejaVu Sans Mono", monospace; word-break: break-all; }
+  h1 { font-size: 13pt; color: #1f4e79; margin: 0 0 6px 0; text-align: center; }
+  h2 { font-size: 10.5pt; color: #1f4e79; border-bottom: 1px solid #c9d6e4; margin: 14px 0 6px 0; padding-bottom: 2px; }
+  table.datos { width: 100%; border-collapse: collapse; margin: 4px 0 8px 0; }
+  table.datos td { border: 1px solid #b8c4d2; padding: 3px 6px; vertical-align: top; }
+  table.datos td.k { width: 26%; background: #eef3f8; font-weight: bold; }
+  table.lista { width: 100%; border-collapse: collapse; margin: 4px 0 8px 0; font-size: 8.8pt; }
+  table.lista th { background: #1f4e79; color: #fff; padding: 4px 5px; border: 1px solid #1f4e79; text-align: left; }
+  table.lista td { border: 1px solid #b8c4d2; padding: 3px 5px; vertical-align: top; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  tr.destacada td { background: #e6f4ea; font-weight: bold; }
+  tr.excluida td { color: #8a8a8a; background: #f5f5f5; }
+  .literal { font-style: italic; margin: 2px 0 8px 0; }
+  .firmas { margin-top: 38px; width: 100%; border-collapse: collapse; page-break-inside: avoid; }
+  .firmas td { width: 33%; text-align: center; font-size: 8.5pt; padding: 0 8px; vertical-align: bottom; border: 0; }
+  .firmas .linea { border-top: 1px solid #333; padding-top: 3px; }
+  .nota { font-size: 8.5pt; color: #444; }
+  p { margin: 4px 0; text-align: justify; }
+  ol.clausulas li { margin-bottom: 5px; text-align: justify; }
+</style>
+</head>
+<body>
+<div class="marca">{{ estado }}</div>
+<header class="membrete">
+  <table><tr>
+    {% if ctx.gam.logo %}<td style="width:2.4cm"><img class="logo" src="{{ ctx.gam.logo }}"></td>{% endif %}
+    <td><div class="gam">{{ ctx.gam.nombre }}</div>
+        <div class="sub">DA {{ ctx.gam.da }} · UE {{ ctx.gam.ue }}{% if ctx.gam.ciudad %} · {{ ctx.gam.ciudad }}{% endif %}</div>
+        <div class="sub">Contratación Menor · N° {{ ctx.tramite.correlativo }}</div></td>
+    <td style="text-align:right;font-size:8pt;color:#555">Versión {{ version }}<br>{{ ctx.fecha_emision | fecha }}</td>
+  </tr></table>
+</header>
+<footer class="pie">
+  <img class="qr" src="{{ qr }}">
+  <div class="txt">
+    <div>Verificación de autenticidad: <b>{{ url_verificacion }}</b></div>
+    <div>SHA-256 del contenido:</div>
+    <div class="hash">{{ hash_contenido }}</div>
+    <div>Generado el {{ generado }} por {{ generado_por }} · Estado del trámite: {{ estado }}</div>
+  </div>
+</footer>
+<main>
+<h1>{{ titulo }}</h1>
+{% block cuerpo %}{% endblock %}
+</main>
+</body>
+</html>

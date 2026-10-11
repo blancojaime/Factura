@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+{{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("Objeto", ctx.tramite.objeto),
+  ("Proveedor adjudicado", ctx.adjudicatario.razon_social), ("NIT / CI", ctx.adjudicatario.nit_ci),
+  ("Monto adjudicado (Bs)", ctx.adjudicatario.monto | bs), ("Plazo", ctx.adjudicatario.plazo ~ " días calendario")]) }}
+<p class="literal">{{ ctx.adjudicatario.monto_literal }}</p>
+<h2>Resolución</h2>
+<p>El Responsable del Proceso de Contratación (RPA), considerando el Cuadro Comparativo de Ofertas y el Acta de Calificación,
+<b>ADJUDICA</b> la contratación del objeto señalado a <b>{{ ctx.adjudicatario.razon_social }}</b> por el monto de
+Bs {{ ctx.adjudicatario.monto | bs }}, con un plazo de {{ ctx.adjudicatario.plazo }} días calendario.</p>
+{% if ctx.motivo_adjudicacion %}<h2>Fundamentación</h2><p>{{ ctx.motivo_adjudicacion }}</p>{% endif %}
+<p>Se formalizará mediante {{ (ctx.tramite.metodo or '') | replace('_', ' ') | lower }}.</p>
+{{ m.firmas(["Responsable del proceso de contratación (RPA)"]) }}
+{% endblock %}

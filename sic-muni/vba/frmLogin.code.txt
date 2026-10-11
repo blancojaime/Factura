@@ -1,0 +1,38 @@
+' Codigo de frmLogin (se inyecta con modUIBuilder; o pegar en el editor del formulario).
+' Controles: lblTitulo, lblUsuario, txtUsuario, lblClave, txtPassword (PasswordChar="*"),
+'            lblMsg, cmdIngresar (Default=True), cmdCancelar (Cancel=True)
+
+Private Sub UserForm_Initialize()
+    Me.Caption = "SIC-MUNI - Inicio de sesion"
+    txtPassword.PasswordChar = "*"
+    lblMsg.Caption = ""
+End Sub
+
+Private Sub UserForm_Activate()
+    On Error Resume Next
+    txtUsuario.SetFocus
+End Sub
+
+Private Sub cmdIngresar_Click()
+    Dim msg As String
+    On Error GoTo EH
+    If Len(Trim$(txtUsuario.Text)) = 0 Or Len(txtPassword.Text) = 0 Then
+        lblMsg.Caption = "Ingrese usuario y contrasena."
+        Exit Sub
+    End If
+    If modSecurity.Login(txtUsuario.Text, txtPassword.Text, msg) Then
+        txtPassword.Text = ""
+        Unload Me
+    Else
+        lblMsg.Caption = msg
+        txtPassword.Text = ""
+        txtPassword.SetFocus
+    End If
+    Exit Sub
+EH:
+    lblMsg.Caption = "Error: " & Err.Description
+End Sub
+
+Private Sub cmdCancelar_Click()
+    Unload Me
+End Sub

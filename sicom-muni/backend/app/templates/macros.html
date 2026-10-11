@@ -1,0 +1,29 @@
+{% macro datos(pares) %}
+<table class="datos">
+{% for k, v in pares %}<tr><td class="k">{{ k }}</td><td>{{ v if v not in (None, '') else '—' }}</td></tr>{% endfor %}
+</table>
+{% endmacro %}
+
+{% macro tabla_items(ctx, con_precios=True, con_chb=False) %}
+<table class="lista">
+<tr><th>N°</th><th>UNSPSC</th><th>Partida</th><th>Descripción específica</th><th>Unid.</th><th class="num">Cant.</th>
+{% if con_precios %}<th class="num">P. unit. ref. (Bs)</th><th class="num">Subtotal (Bs)</th>{% endif %}
+{% if con_chb %}<th>CHB</th>{% endif %}</tr>
+{% for i in ctx['items'] %}
+<tr><td>{{ i.numero }}</td><td>{{ i.codigo_unspsc or '—' }}</td><td>{{ i.partida }}</td><td>{{ i.descripcion }}</td>
+<td>{{ i.unidad }}</td><td class="num">{{ i.cantidad }}</td>
+{% if con_precios %}<td class="num">{{ i.precio | bs }}</td><td class="num">{{ i.subtotal | bs }}</td>{% endif %}
+{% if con_chb %}<td>{{ i.estado_chb | replace('_', ' ') }}</td>{% endif %}</tr>
+{% endfor %}
+{% if con_precios %}
+<tr><td colspan="7" class="num"><b>TOTAL REFERENCIAL (Bs)</b></td><td class="num"><b>{{ ctx.tramite.monto_referencial | bs }}</b></td></tr>
+{% endif %}
+</table>
+{% if con_precios %}<p class="literal">{{ ctx.tramite.monto_literal }}</p>{% endif %}
+{% endmacro %}
+
+{% macro firmas(roles) %}
+<table class="firmas"><tr>
+{% for r in roles %}<td><div class="linea">{{ r }}</div></td>{% endfor %}
+</tr></table>
+{% endmacro %}

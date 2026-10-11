@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+{{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("N° de preventivo C-31 (SIGEP)", ctx.tramite.c31),
+  ("Objeto", ctx.tramite.objeto), ("Monto certificado (Bs)", ctx.tramite.monto_referencial | bs)]) }}
+<h2>Pre-compromiso por partida</h2>
+<table class="lista"><tr><th>Partida</th><th>Descripción</th><th class="num">Importe (Bs)</th><th>Estado</th></tr>
+{% for p in ctx.preventivos %}<tr><td>{{ p.partida }}</td><td>{{ p.descripcion }}</td><td class="num">{{ p.importe | bs }}</td><td>{{ p.estado }}</td></tr>{% endfor %}
+</table>
+<h2>Bloque de captura SIGEP (comprobante C-31)</h2>
+<table class="lista"><tr>{% for h in ctx.sigep.encabezado %}<th{% if h == 'IMPORTE' %} class="num"{% endif %}>{{ h }}</th>{% endfor %}</tr>
+{% for f in ctx.sigep.filas %}<tr>{% for v in f %}<td{% if loop.last %} class="num"{% endif %}>{{ v | bs if loop.last else v }}</td>{% endfor %}</tr>{% endfor %}
+<tr><td colspan="8" class="num"><b>TOTAL</b></td><td class="num"><b>{{ ctx.sigep.total | bs }}</b></td></tr></table>
+<p class="nota">Documento de apoyo con los datos espejo para el registro del comprobante C-31 en el SIGEP; el comprobante oficial es el registrado y aprobado en dicho sistema.</p>
+{{ m.firmas(["Responsable de presupuesto", "Director administrativo-financiero"]) }}
+{% endblock %}
