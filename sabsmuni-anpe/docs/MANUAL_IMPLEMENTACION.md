@@ -1,5 +1,8 @@
 # Manual de implementación
 
+> **¿Sin Docker o sin conocimientos técnicos?** Use el instalador de Windows (`windows/1-INSTALAR.bat`) y el manual
+> paso a paso con capturas: `Manual_Implementacion_SABSMUNI-ANPE.docx`. Este documento cubre el despliegue técnico con Docker.
+
 ## 1. Requisitos del servidor
 
 | Recurso | Mínimo | Recomendado (≈ 20 usuarios, 500 procesos/año) |

@@ -24,6 +24,7 @@ async function bootstrap() {
     const doc = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle('SABSMUNI-ANPE API').setDescription('Gestión y documentación de contrataciones ANPE (NB-SABS D.S. 0181)').setVersion('1.0').addCookieAuth('access_token').addBearerAuth().build());
     SwaggerModule.setup('api/docs', app, doc);
   }
-  await app.listen(Number(process.env.PORT ?? 4000), '0.0.0.0');
+  // HOST=127.0.0.1 en instalaciones de prueba locales (sin Docker); 0.0.0.0 dentro de contenedores.
+  await app.listen(Number(process.env.PORT ?? 4000), process.env.HOST ?? '0.0.0.0');
 }
 if (require.main === module) bootstrap();

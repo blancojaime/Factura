@@ -1,0 +1,18 @@
+SABSMUNI-ANPE - Instalacion de prueba en Windows (sin Docker)
+==============================================================
+
+1) Mueva la carpeta "sabsmuni-anpe" a   C:\sabsmuni-anpe   (sin espacios ni tildes en la ruta).
+2) Doble clic en  1-INSTALAR.bat   (una sola vez; 15 a 40 minutos; necesita internet).
+   - NO use "Ejecutar como administrador".
+   - Si Windows avisa "protegio su PC": Mas informacion -> Ejecutar de todas formas.
+3) Doble clic en  2-INICIAR.bat    (abre http://localhost:3000)
+4) Ingrese con:  solicitante@gam.bo | presupuesto@gam.bo | contrataciones@gam.bo | rpa@gam.bo | admin@gam.bo
+   Clave de todos: AnpePrueba2026   (solo para esta prueba local)
+5) Al terminar: 3-DETENER.bat
+
+Otros: 4-RESPALDAR.bat (copia de seguridad), 5-RESTAURAR.bat, 6-BORRAR-DATOS-DE-PRUEBA.bat
+
+Si algo falla: vuelva a ejecutar el mismo .bat (retoma donde quedo) y, si persiste, envie
+windows\datos\logs\instalacion.log.
+
+Manual completo con capturas: docs\Manual_Implementacion_SABSMUNI-ANPE.docx

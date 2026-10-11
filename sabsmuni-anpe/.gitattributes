@@ -1,0 +1,4 @@
+# Los .bat conservan saltos de linea de Windows (CRLF); los .sh de Linux (LF).
+*.bat -text
+*.sh text eol=lf
+docker-entrypoint.sh text eol=lf

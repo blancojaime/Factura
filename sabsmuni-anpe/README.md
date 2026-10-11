@@ -21,6 +21,12 @@ Abrir <http://localhost:3000>. El contrato de la API está en `docs/openapi.json
 (`/api/docs`) solo se sirve fuera de producción o con `SWAGGER_ENABLED=true`.
 Para capacitación con un usuario por rol, ponga `SEED_DEMO_USERS=true` y `SEED_DEMO_PASSWORD=...` en `.env`.
 
+### Sin Docker (Windows, instalación de prueba)
+
+Carpeta [`windows/`](windows/): `1-INSTALAR.bat` → `2-INICIAR.bat`. Descarga Node.js y PostgreSQL portátiles dentro de la carpeta,
+sin administrador y sin Docker. Guía paso a paso con capturas:
+[`docs/Manual_Implementacion_SABSMUNI-ANPE.docx`](docs/Manual_Implementacion_SABSMUNI-ANPE.docx).
+
 ## Qué automatiza
 
 | Módulo | Qué hace | Código |
