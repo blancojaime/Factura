@@ -60,7 +60,8 @@ button.link { border: 0; background: none; color: var(--primary-2); padding: 0; 
 .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; max-height: 62vh; }
 table.t { border-collapse: collapse; width: 100%; font-size: 13px; }
 table.t th { position: sticky; top: 0; background: var(--primary); color: #fff; text-align: left; padding: 7px 9px; font-weight: 600; white-space: nowrap; z-index: 1; }
-:root[data-theme='dark'] table.t th, :root:not([data-theme='light']) table.t th { color: #0d1620; }
+:root[data-theme='dark'] table.t th { color: #0d1620; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) table.t th { color: #0d1620; } }
 table.t td { padding: 6px 9px; border-top: 1px solid var(--line); vertical-align: top; }
 table.t tr:nth-child(even) td { background: var(--row); }
 table.t tr.sel td { background: #dce9fb !important; color: #0d1620; }
