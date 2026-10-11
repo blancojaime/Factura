@@ -117,7 +117,7 @@ def test_caso1_material_de_construccion_18500(client, tokens, SessionTest):
 
     # --- expediente completo y auditoria integra
     tipos = {x["tipo_doc"] for x in c["documentos"]}
-    assert tipos == {"C1_SOLICITUD", "INFORME_EXCEPCION_CHB", "CERTIFICACION_C31", "CUADRO_COMPARATIVO",
+    assert tipos == {"C1_SOLICITUD", "INFORME_EXCEPCION_CHB", "CERTIFICACION_C31", "CERTIFICACION_POA", "CUADRO_COMPARATIVO",
                      "NOTA_ADJUDICACION", "ORDEN_COMPRA_SERVICIO", "ACTA_RECEPCION_FORM500"}
     v = f.req("GET", "/admin/auditoria/verificar", "admin", 200).json()
     assert v["ok"] is True and v["total"] > 20

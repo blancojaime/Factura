@@ -34,23 +34,28 @@ def main() -> None:
                        q(email), "true", "0"]) + ") ON CONFLICT (username) DO NOTHING;")
     out += ["", "-- Parámetros institucionales"]
     for clave, (valor, desc) in parametros.DEFAULTS.items():
-        v = str(a.gestion) if clave == "gestion" else valor
+        v = str(a.gestion) if clave == "gestion" else seeds.MAE_DEMO.get(clave, valor)
         out.append(f"INSERT INTO parametros_institucionales (clave, valor, descripcion) VALUES ({q(clave)}, {q(v)}, "
                    f"{q(desc)}) ON CONFLICT (clave) DO NOTHING;")
     out += ["", "-- Presupuesto inicial (partidas ilustrativas del clasificador 1xxxx a 4xxxx)"]
     e = seeds.ESTRUCTURA
     for codigo, desc, saldo in seeds.PARTIDAS:
         out.append("INSERT INTO partidas_presupuestarias (id, codigo_partida, descripcion, saldo_disponible, monto_aprobado, "
-                   "gestion, programa, proyecto, actividad, fuente, organismo) VALUES (" + ", ".join([
+                   "gestion, programa, proyecto, actividad, fuente, organismo, descripcion_apertura, monto_ejecutado) VALUES (" + ", ".join([
                        q(seeds._id(f"partida:{codigo}:{a.gestion}")), q(codigo), q(desc), str(saldo), str(saldo),
                        str(a.gestion), q(e["programa"]), q(e["proyecto"]), q(e["actividad"]), q(e["fuente"]),
-                       q(e["organismo"])]) + ") ON CONFLICT ON CONSTRAINT uq_partida_estructura DO NOTHING;")
+                       q(e["organismo"]), q(e["descripcion_apertura"]), "0"]) + ") ON CONFLICT ON CONSTRAINT uq_partida_estructura DO NOTHING;")
     out += ["", "-- Catálogo Compro Hecho en Bolivia (EJEMPLO)"]
     for codigo, desc, unidad, precio in seeds.CATALOGO:
         out.append("INSERT INTO catalogo_chb (id, codigo_unspsc, descripcion_bien, unidad_medida, "
-                   "precio_referencial_nacional, activo) VALUES (" + ", ".join([
-                       q(seeds._id(f"chb:{codigo}")), q(codigo), q(desc), q(unidad), str(precio), "true"]) +
+                   "precio_referencial_nacional, activo, fecha_registro) VALUES (" + ", ".join([
+                       q(seeds._id(f"chb:{codigo}")), q(codigo), q(desc), q(unidad), str(precio), "true", "CURRENT_DATE"]) +
                    ") ON CONFLICT (codigo_unspsc) DO NOTHING;")
+    out += ["", "-- Objetivos del POA por programa (EJEMPLO: relación programa presupuestario - objetivo)"]
+    for n, (prog, denominacion) in enumerate(seeds.PROGRAMAS_POA, start=1):
+        out.append("INSERT INTO objetivos_poa (id, gestion, programa, denominacion_programa, codigo_objetivo, descripcion_objetivo) VALUES ("
+                   + ", ".join([q(seeds._id(f"poa:{a.gestion}:{prog}")), str(a.gestion), q(prog), q(denominacion), q(f"OBJ{n}"),
+                                q(f"OBJETIVO {n}")]) + ") ON CONFLICT ON CONSTRAINT uq_objetivo_poa_programa DO NOTHING;")
     out += ["", "COMMIT;", ""]
     sys.stdout.write("\n".join(out))
 

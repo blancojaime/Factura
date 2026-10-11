@@ -68,6 +68,7 @@ class ParametroIn(BaseModel):
 class PartidaIn(BaseModel):
     codigo_partida: str = Field(pattern=r"^[1-4]\d{4}$")
     descripcion: str = Field(min_length=3, max_length=200)
+    descripcion_apertura: str = Field(default="", max_length=250)
     saldo_disponible: Decimal = Field(ge=0)
     gestion: int = Field(ge=2000, le=2100)
     programa: str = ""
@@ -81,6 +82,8 @@ class PartidaOut(Base):
     id: uuid.UUID
     codigo_partida: str
     descripcion: str
+    descripcion_apertura: str = ""
+    monto_ejecutado: Decimal = Decimal("0")
     saldo_disponible: Decimal
     gestion: int
     programa: str
@@ -98,6 +101,7 @@ class CatalogoOut(Base):
     unidad_medida: str
     precio_referencial_nacional: Decimal | None
     activo: bool
+    fecha_registro: date | None = None
 
 
 class CatalogoIn(BaseModel):
@@ -126,6 +130,8 @@ class ContratacionCreate(BaseModel):
     justificacion: str = ""
     especificaciones_tecnicas: str = ""
     lugar_entrega: str = Field(default="", max_length=200)
+    justificacion_poa: str = ""
+    fecha_publicacion_estimada: date | None = None
 
 
 class ContratacionUpdate(BaseModel):
@@ -138,6 +144,8 @@ class ContratacionUpdate(BaseModel):
     lugar_entrega: str | None = None
     justificacion_excepcion_chb: str | None = None
     codigo_autorizacion_chb: str | None = None
+    justificacion_poa: str | None = None
+    fecha_publicacion_estimada: date | None = None
 
 
 class ItemIn(BaseModel):
@@ -261,6 +269,8 @@ class ContratacionOut(Base):
     ofertas_abiertas: bool
     motivo_cierre: str | None
     ultima_observacion: str | None
+    justificacion_poa: str = ""
+    fecha_publicacion_estimada: date | None = None
     items: list[ItemOut] = []
     cotizaciones: list[CotizacionOut] = []
     documentos: list[DocumentoOut] = []
@@ -291,6 +301,34 @@ class MotivoIn(BaseModel):
 
 class CertificarIn(BaseModel):
     preventivo_c31_nro: str | None = Field(default=None, max_length=30)
+    justificacion_poa: str | None = Field(default=None, max_length=4000)
+
+
+class ObjetivoPoaIn(BaseModel):
+    gestion: int = Field(ge=2000, le=2100)
+    programa: str = Field(min_length=1, max_length=10)
+    denominacion_programa: str = Field(default="", max_length=250)
+    codigo_objetivo: str = Field(min_length=1, max_length=30)
+    descripcion_objetivo: str = Field(min_length=3, max_length=2000)
+
+
+class ObjetivoPoaOut(Base):
+    id: uuid.UUID
+    gestion: int
+    programa: str
+    denominacion_programa: str
+    codigo_objetivo: str
+    descripcion_objetivo: str
+
+
+class ProgramaPoaOut(BaseModel):
+    programa: str
+    denominacion_programa: str
+    partidas: list[str]
+    monto: Decimal
+    codigo_objetivo: str | None
+    descripcion_objetivo: str | None
+    objetivo_registrado: bool
 
 
 class C31NroIn(BaseModel):

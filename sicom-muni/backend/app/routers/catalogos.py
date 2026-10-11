@@ -1,5 +1,6 @@
 """Partidas presupuestarias y Catalogo CHB (consulta obligatoria del solicitante)."""
 import uuid
+from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy import select
@@ -10,7 +11,7 @@ from ..deps import ip_cliente, requiere_roles, usuario_actual
 from ..enums import Rol
 from ..models import CatalogoCHB, PartidaPresupuestaria, Usuario
 from ..schemas import CatalogoIn, CatalogoOut, ConsultaCHBOut, PartidaIn, PartidaOut
-from ..services import auditoria, validador_chb
+from ..services import auditoria, parametros, validador_chb
 
 router = APIRouter(tags=["catalogos"])
 
@@ -19,14 +20,17 @@ router = APIRouter(tags=["catalogos"])
 @router.get("/partidas", response_model=list[PartidaOut])
 def listar_partidas(gestion: int | None = None, q: str | None = None, db: Session = Depends(get_db),
                     _: Usuario = Depends(usuario_actual)):
-    consulta = select(PartidaPresupuestaria).order_by(PartidaPresupuestaria.codigo_partida)
-    if gestion:
-        consulta = consulta.where(PartidaPresupuestaria.gestion == gestion)
+    gestion = gestion or int(parametros.obtener_todos(db)["gestion"])
+    consulta = select(PartidaPresupuestaria).order_by(
+        PartidaPresupuestaria.programa, PartidaPresupuestaria.proyecto, PartidaPresupuestaria.actividad,
+        PartidaPresupuestaria.codigo_partida, PartidaPresupuestaria.fuente, PartidaPresupuestaria.organismo)
+    consulta = consulta.where(PartidaPresupuestaria.gestion == gestion)
     if q:
         from sqlalchemy import func, or_
         consulta = consulta.where(or_(PartidaPresupuestaria.codigo_partida.like(f"{q}%"),
-                                      func.lower(PartidaPresupuestaria.descripcion).like(f"%{q.lower()}%")))
-    return list(db.scalars(consulta.limit(200)))
+                                      func.lower(PartidaPresupuestaria.descripcion).like(f"%{q.lower()}%"),
+                                      func.lower(PartidaPresupuestaria.descripcion_apertura).like(f"%{q.lower()}%")))
+    return list(db.scalars(consulta.limit(3000)))
 
 
 @router.post("/partidas", response_model=PartidaOut, status_code=status.HTTP_201_CREATED)
@@ -67,7 +71,7 @@ def crear_catalogo(datos: CatalogoIn, request: Request, db: Session = Depends(ge
                    u: Usuario = Depends(requiere_roles(Rol.ADMIN))):
     if db.scalar(select(CatalogoCHB).where(CatalogoCHB.codigo_unspsc == datos.codigo_unspsc)):
         raise HTTPException(409, "El código UNSPSC ya existe en el catálogo")
-    c = CatalogoCHB(**datos.model_dump())
+    c = CatalogoCHB(**datos.model_dump(), fecha_registro=date.today())
     db.add(c)
     db.flush()
     auditoria.registrar(db, u.id, "CATALOGO_CHB_CREADO", "catalogo_chb", c.id, None, {"codigo": c.codigo_unspsc}, ip_cliente(request))
@@ -84,6 +88,7 @@ def actualizar_catalogo(cid: uuid.UUID, datos: CatalogoIn, request: Request, db:
     antes = {"descripcion": c.descripcion_bien, "activo": c.activo}
     for k, v in datos.model_dump().items():
         setattr(c, k, v)
+    c.fecha_registro = date.today()
     db.flush()
     auditoria.registrar(db, u.id, "CATALOGO_CHB_ACTUALIZADO", "catalogo_chb", c.id, antes,
                         {"descripcion": c.descripcion_bien, "activo": c.activo}, ip_cliente(request))

@@ -16,10 +16,10 @@ from ..models import (
     ContratacionItem, ContratacionMenor, CotizacionProveedor, PartidaPresupuestaria, Recepcion, Usuario,
 )
 from . import auditoria, bloque_sigep, calculador_modalidad as calc, cifrado, notificaciones, parametros, presupuesto
-from . import validador_chb, workflow
+from . import poa, validador_chb, workflow
 from .evaluador_ofertas import OfertaIn, evaluar as evaluar_ofertas
 from .generador_pdf import generar_documento
-from .secuencias import correlativo
+from .secuencias import correlativo, siguiente
 from .storage import get_storage
 
 CENT = Decimal("0.01")
@@ -123,7 +123,7 @@ def actualizar(db: Session, u: Usuario, c: ContratacionMenor, datos: dict, ip: s
     for k, v in datos.items():
         if k == "tipo_objeto" and v is not None:
             v = TipoObjeto(v).value
-        if v is not None or k in ("justificacion_excepcion_chb", "codigo_autorizacion_chb"):
+        if v is not None or k in ("justificacion_excepcion_chb", "codigo_autorizacion_chb", "fecha_publicacion_estimada"):
             setattr(c, k, v)
     if "tipo_objeto" in datos and datos["tipo_objeto"] is not None:
         # al cambiar de tipo se reevalua el CHB de los items
@@ -219,6 +219,11 @@ def eliminar_item(db: Session, u: Usuario, c: ContratacionMenor, item_id: uuid.U
 
 
 # ------------------------------------------------------------------ solicitud y presupuesto
+def requiere_pac(c: ContratacionMenor, p: dict[str, str]) -> bool:
+    """La nota de solicitud de registro al PAC aplica a compras mayores al tope de compra directa (Bs 20.000)."""
+    return c.monto_referencial_total > parametros.get_decimal(p, "tope_compra_directa")
+
+
 def solicitar(db: Session, u: Usuario, c: ContratacionMenor, ip: str = "") -> ContratacionMenor:
     _solo_creador(c, u)
     antes = _snap(c)
@@ -242,6 +247,9 @@ def solicitar(db: Session, u: Usuario, c: ContratacionMenor, ip: str = "") -> Co
         errores += validador_chb.validar_contratacion_chb(
             c.items, c.justificacion_excepcion_chb, parametros.get_int(p, "chb_min_justificacion"))
         errores += presupuesto.validar_partidas_items(db, c.items, int(p["gestion"]))
+        if requiere_pac(c, p) and not ((p.get("mae_nombre") or "").strip() and (p.get("mae_cargo") or "").strip()):
+            errores.append("Registre en «Parámetros del GAM» el nombre y cargo de la Máxima Autoridad Ejecutiva "
+                           "(destinatario de la nota de solicitud de registro al PAC)")
     if errores:
         raise ReglaNegocioError("La solicitud no puede enviarse", "SOLICITUD_INCOMPLETA", errores)
     _recalcular(db, c)
@@ -251,6 +259,9 @@ def solicitar(db: Session, u: Usuario, c: ContratacionMenor, ip: str = "") -> Co
     generar_documento(db, c, TipoDoc.C1_SOLICITUD, u)
     if c.requiere_excepcion_chb:
         generar_documento(db, c, TipoDoc.INFORME_EXCEPCION_CHB, u)
+    if requiere_pac(c, p):  # compras mayores al tope de compra directa: nota de solicitud de registro al PAC (sin aprobación)
+        cite = f"{p.get('cite_prefijo_pac') or 'SOL-PAC'}-{siguiente(db, 'cite-pac-' + p['gestion']):03d}/{p['gestion']}"
+        generar_documento(db, c, TipoDoc.NOTA_SOLICITUD_PAC, u, {"cite": cite})
     _audit(db, u, "SOLICITUD_ENVIADA", c, antes, _snap(c), ip)
     return c
 
@@ -264,10 +275,14 @@ def devolver(db: Session, u: Usuario, c: ContratacionMenor, motivo: str, ip: str
     return c
 
 
-def certificar(db: Session, u: Usuario, c: ContratacionMenor, nro_c31: str | None, ip: str = "") -> ContratacionMenor:
+def certificar(db: Session, u: Usuario, c: ContratacionMenor, nro_c31: str | None, ip: str = "",
+               justificacion_poa: str | None = None) -> ContratacionMenor:
     antes = _snap(c)
     if c.estado != Estado.SOLICITADO.value:  # validacion previa para no tocar saldos en un estado invalido
         raise EstadoInvalidoError(f"La acción 'certificar' no es válida con la contratación en estado {c.estado}")
+    if justificacion_poa is not None and justificacion_poa.strip():
+        c.justificacion_poa = justificacion_poa.strip()
+    poa.validar_certificacion(db, c, int(_params(db)["gestion"]), c.justificacion_poa)  # objetivo POA y justificación
     presupuesto.certificar(db, c)
     workflow.aplicar(c, "certificar", u.rol)
     if nro_c31:
@@ -275,6 +290,7 @@ def certificar(db: Session, u: Usuario, c: ContratacionMenor, nro_c31: str | Non
     c.ultima_observacion = None
     db.flush()
     generar_documento(db, c, TipoDoc.CERTIFICACION_C31, u)
+    generar_documento(db, c, TipoDoc.CERTIFICACION_POA, u, {"certifica": {"nombre": u.nombre_completo, "cargo": u.cargo}})
     _audit(db, u, "PRESUPUESTO_CERTIFICADO", c, antes, {**_snap(c), "c31": c.preventivo_c31_nro}, ip)
     return c
 

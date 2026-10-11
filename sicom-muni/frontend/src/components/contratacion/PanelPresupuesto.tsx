@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Alert, Badge, Button, Card, CardBody, CardHeader, CardTitle, Dialog, Field, Input, Tabla, Td, Textarea, Th } from "@/components/ui";
 import { api } from "@/lib/api";
 import { bs } from "@/lib/format";
-import type { BloqueSigep, Contratacion, Partida } from "@/lib/tipos";
+import type { BloqueSigep, Contratacion, Partida, ProgramaPoa } from "@/lib/tipos";
 import { ErrorApi, useAccion } from "./comun";
 
 /** Verificacion presupuestaria, panel de captura rapida SIGEP (C-31), certificacion, devolucion y devengado. */
@@ -17,6 +17,8 @@ export default function PanelPresupuesto({ c, recargar, puedeOperar }: { c: Cont
   const [c31, setC31] = useState(c.preventivo_c31_nro ?? "");
   const [devolver, setDevolver] = useState(false);
   const [motivo, setMotivo] = useState("");
+  const [programas, setProgramas] = useState<ProgramaPoa[]>([]);
+  const [justPoa, setJustPoa] = useState(c.justificacion_poa ?? "");
 
   useEffect(() => {
     api.get<Partida[]>("/partidas").then(setPartidas).catch(() => undefined);
@@ -25,6 +27,11 @@ export default function PanelPresupuesto({ c, recargar, puedeOperar }: { c: Cont
     api.get<BloqueSigep>(`/contrataciones/${c.id}/bloque-sigep`).then(setBloque).catch(() => setBloque(null));
   }, [c.id, c.estado, c.preventivos.length]);
   useEffect(() => setC31(c.preventivo_c31_nro ?? ""), [c.preventivo_c31_nro]);
+  useEffect(() => {
+    api.get<ProgramaPoa[]>(`/contrataciones/${c.id}/poa`).then(setProgramas).catch(() => setProgramas([]));
+  }, [c.id, c.estado]);
+  useEffect(() => setJustPoa(c.justificacion_poa ?? ""), [c.justificacion_poa]);
+  const faltanObjetivos = programas.some((p) => !p.objetivo_registrado);
 
   const requerido = useMemo(() => {
     const m = new Map<string, number>();
@@ -97,6 +104,29 @@ export default function PanelPresupuesto({ c, recargar, puedeOperar }: { c: Cont
         </CardBody>
       </Card>
 
+      <Card>
+        <CardHeader><CardTitle>Certificación del POA — programa y objetivo</CardTitle>
+          {c.documentos.some((d) => d.tipo_doc === "CERTIFICACION_POA") && <Badge className="bg-emerald-100 text-emerald-800 ring-emerald-300">Certificación POA emitida</Badge>}</CardHeader>
+        <CardBody className="space-y-3">
+          <Tabla aria-label="Programas y objetivos del POA">
+            <thead><tr><Th>Programa</Th><Th>Denominación</Th><Th>Partidas</Th><Th>Objetivo POA</Th><Th className="text-right">Monto (Bs)</Th></tr></thead>
+            <tbody>{programas.map((p) => (
+              <tr key={p.programa}><Td className="num">{p.programa}</Td><Td>{p.denominacion_programa}</Td><Td className="num">{p.partidas.join(", ")}</Td>
+                <Td>{p.objetivo_registrado ? <><b>{p.codigo_objetivo}</b> — {p.descripcion_objetivo}</> : <Badge className="bg-red-100 text-red-800 ring-red-300">Sin objetivo registrado</Badge>}</Td>
+                <Td className="num text-right">{bs(p.monto)}</Td></tr>
+            ))}</tbody>
+          </Tabla>
+          {faltanObjetivos && <Alert tipo="error">Hay programas sin objetivo del POA: regístrelo o impórtelo en el menú «Objetivos POA» antes de certificar.</Alert>}
+          {verificable && puedeOperar ? (
+            <Field label="Justificación del apoyo de la compra al logro del objetivo del POA" hint="Mínimo 20 caracteres. Se imprime en la Certificación del POA">
+              <Textarea value={justPoa} onChange={(e) => setJustPoa(e.target.value)} className="min-h-[90px]" />
+            </Field>
+          ) : (
+            <div><p className="text-xs font-medium text-slate-500">Justificación del apoyo al objetivo del POA</p><p className="whitespace-pre-line text-sm">{c.justificacion_poa || "—"}</p></div>
+          )}
+        </CardBody>
+      </Card>
+
       {puedeOperar && (
         <Card>
           <CardHeader><CardTitle>Acciones de Presupuesto</CardTitle></CardHeader>
@@ -114,8 +144,8 @@ export default function PanelPresupuesto({ c, recargar, puedeOperar }: { c: Cont
             )}
             {verificable && (
               <div className="flex flex-wrap gap-3">
-                <Button variant="success" cargando={cargando === "certificar"}
-                  onClick={() => { limpiar(); void ejecutar("certificar", () => api.post(`/contrataciones/${c.id}/certificar`, { preventivo_c31_nro: c31.trim() || null }), "Presupuesto certificado y saldo descontado"); }}>
+                <Button variant="success" disabled={faltanObjetivos} cargando={cargando === "certificar"}
+                  onClick={() => { limpiar(); void ejecutar("certificar", () => api.post(`/contrataciones/${c.id}/certificar`, { preventivo_c31_nro: c31.trim() || null, justificacion_poa: justPoa.trim() || null }), "Presupuesto certificado y saldo descontado"); }}>
                   Certificar presupuesto
                 </Button>
                 <Button variant="outline" onClick={() => { limpiar(); setDevolver(true); }}>Devolver a la unidad solicitante</Button>

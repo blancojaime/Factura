@@ -10,11 +10,12 @@ from ..deps import ip_cliente, requiere_roles, usuario_actual
 from ..enums import Rol
 from ..models import ContratacionMenor, Usuario
 from ..schemas import (
+    ProgramaPoaOut,
     AdjudicarIn, BloqueSigepOut, C31NroIn, CertificarIn, ContratacionCreate, ContratacionOut, ContratacionResumen,
     ContratacionUpdate, CotizacionCalificacion, CotizacionIn, CotizacionOut, DashboardOut, DocumentoOut, FichasIn,
     FormalizarIn, Formulario110In, ItemIn, ItemOut, MotivoIn, PreventivoOut, RecepcionIn, RecepcionOut, ReglaOut,
 )
-from ..services import calculador_modalidad as calc, tramite
+from ..services import calculador_modalidad as calc, parametros, poa, tramite
 from ..services.storage import get_storage
 
 router = APIRouter(prefix="/contrataciones", tags=["contrataciones"])
@@ -144,9 +145,17 @@ def devolver(cid: uuid.UUID, datos: MotivoIn, request: Request, db: Session = De
 @router.post("/{cid}/certificar", response_model=ContratacionOut)
 def certificar(cid: uuid.UUID, datos: CertificarIn, request: Request, db: Session = Depends(get_db),
                u: Usuario = Depends(requiere_roles(R.PRESUPUESTO))):
-    c = tramite.certificar(db, u, _cargar(db, cid, u), datos.preventivo_c31_nro, ip_cliente(request))
+    c = tramite.certificar(db, u, _cargar(db, cid, u), datos.preventivo_c31_nro, ip_cliente(request), datos.justificacion_poa)
     db.commit()
     return serializar(db, c, u)
+
+
+@router.get("/{cid}/poa", response_model=list[ProgramaPoaOut])
+def programas_poa(cid: uuid.UUID, db: Session = Depends(get_db), u: Usuario = Depends(usuario_actual)):
+    """Programas presupuestarios de la contratación y el objetivo del POA registrado para cada uno."""
+    c = _cargar(db, cid, u, False)
+    gestion = int(parametros.obtener_todos(db)["gestion"])
+    return [ProgramaPoaOut(**p) for p in poa.programas_de_contratacion(db, c, gestion)]
 
 
 @router.put("/{cid}/c31", response_model=ContratacionOut)

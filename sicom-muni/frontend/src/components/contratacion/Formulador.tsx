@@ -88,6 +88,8 @@ export default function Formulador({ c, recargar }: { c: Contratacion; recargar:
       justificacion: String(f.get("justificacion")).trim(), especificaciones_tecnicas: String(f.get("et")).trim(),
       justificacion_excepcion_chb: String(f.get("exc") ?? c.justificacion_excepcion_chb ?? "").trim() || null,
       codigo_autorizacion_chb: String(f.get("autorizacion") ?? "").trim() || null,
+      justificacion_poa: String(f.get("poa") ?? "").trim(),
+      fecha_publicacion_estimada: f.get("publicacion") ? `${String(f.get("publicacion"))}-01` : null,
     }), "Datos guardados");
   }
 
@@ -106,6 +108,14 @@ export default function Formulador({ c, recargar }: { c: Contratacion; recargar:
             <Field label="Unidad solicitante"><Input name="unidad" defaultValue={c.unidad_solicitante} required /></Field>
             <Field label="Lugar de entrega / ejecución"><Input name="lugar" defaultValue={c.lugar_entrega} required /></Field>
             <Field label="Justificación de la necesidad"><Textarea name="justificacion" defaultValue={c.justificacion} required /></Field>
+            <Field label="¿Cómo apoya la compra al logro del objetivo del POA?" hint="Se usa en la Certificación del POA que emite Presupuesto" className="sm:col-span-2">
+              <Textarea name="poa" defaultValue={c.justificacion_poa} placeholder="Ej.: La compra permite mantener operativos los equipos que sostienen la atención al público…" />
+            </Field>
+            {Number(c.monto_referencial_total) > 20000 && (
+              <Field label="Mes estimado de publicación (PAC)" hint="Compras mayores a Bs 20.000: se emite la nota de solicitud de registro al PAC dirigida a la Máxima Autoridad Ejecutiva">
+                <Input name="publicacion" type="month" defaultValue={c.fecha_publicacion_estimada?.slice(0, 7) ?? ""} />
+              </Field>
+            )}
             <div className="space-y-2 sm:col-span-2">
               <Alert tipo="info" titulo={guia.titulo}>
                 <ul className="list-inside list-disc">{guia.puntos.map((p) => <li key={p}><Lightbulb className="mr-1 inline h-3 w-3" aria-hidden />{p}</li>)}</ul>
@@ -165,7 +175,7 @@ export default function Formulador({ c, recargar }: { c: Contratacion; recargar:
             <Field label="Partida presupuestaria" className="sm:col-span-4">
               <Select value={form.partida_id} onChange={(e) => setForm({ ...form, partida_id: e.target.value })} required>
                 <option value="">Seleccione…</option>
-                {partidas.map((p) => <option key={p.id} value={p.id}>{p.codigo_partida} · {p.descripcion} (saldo Bs {bs(p.saldo_disponible)})</option>)}
+                {partidas.map((p) => <option key={p.id} value={p.id}>{p.codigo_partida} · {p.descripcion} · Apertura {p.programa}-{p.proyecto}-{p.actividad} · Fte {p.fuente}/Org {p.organismo} (saldo Bs {bs(p.saldo_disponible)})</option>)}
               </Select>
             </Field>
 

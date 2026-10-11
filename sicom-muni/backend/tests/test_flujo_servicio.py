@@ -25,7 +25,7 @@ def preparar_en_cotizacion(f: Flujo, plazo: int):
     assert d["items"][0]["estado_chb"] == "NO_APLICA"
     c = f.accion(cid, "solicitar", "solicitante").json()
     assert c["estado"] == "SOLICITADO" and c["requiere_excepcion_chb"] is False
-    assert {x["tipo_doc"] for x in c["documentos"]} == {"C1_SOLICITUD"}  # sin informe CHB: no es un bien
+    assert {x["tipo_doc"] for x in c["documentos"]} == {"C1_SOLICITUD", "NOTA_SOLICITUD_PAC"}  # sin informe CHB (no es un bien); nota PAC por monto > 20.000
     f.accion(cid, "certificar", "presupuesto", json={"preventivo_c31_nro": "C31-2026-00456"})
     c = f.accion(cid, "aprobar-inicio", "rpa").json()
     assert c["estado"] == "EN_COTIZACION"

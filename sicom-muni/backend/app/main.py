@@ -9,7 +9,7 @@ from sqlalchemy import text
 from .config import get_settings
 from .database import engine, preparar_sqlite
 from .errors import EstadoInvalidoError, NoEncontradoError, ReglaNegocioError
-from .routers import admin, auth, catalogos, contrataciones, reportes, verificacion
+from .routers import admin, auth, catalogos, contrataciones, importaciones, reportes, verificacion
 
 log = logging.getLogger("sicom")
 API = "/api/v1"
@@ -52,7 +52,8 @@ def crear_app() -> FastAPI:
             con.execute(text("SELECT 1"))
         return {"estado": "ok"}
 
-    for r in (auth.router, admin.router, catalogos.router, contrataciones.router, reportes.router, verificacion.router):
+    for r in (auth.router, admin.router, catalogos.router, importaciones.router, contrataciones.router, reportes.router,
+              verificacion.router):
         app.include_router(r, prefix=API)
     return app
 

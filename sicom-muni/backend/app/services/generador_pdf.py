@@ -34,7 +34,7 @@ from ..errors import ReglaNegocioError
 from ..models import (
     ContratacionMenor, CotizacionProveedor, DocumentoExpediente, PartidaPresupuestaria, Recepcion, Usuario,
 )
-from . import bloque_sigep, parametros
+from . import bloque_sigep, parametros, poa
 from .evaluador_ofertas import OfertaIn
 from .evaluador_ofertas import evaluar as evaluar_ofertas
 from .numeros_letras import monto_literal
@@ -53,7 +53,21 @@ TITULOS = {
     TipoDoc.ORDEN_COMPRA_SERVICIO: "Orden",
     TipoDoc.CONTRATO_ADMINISTRATIVO: "Contrato Administrativo de Contratación Menor",
     TipoDoc.ACTA_RECEPCION_FORM500: "Acta de Recepción Definitiva — Formulario 500 SICOES",
+    TipoDoc.CERTIFICACION_POA: "Certificación del Programa Operativo Anual (POA)",
+    TipoDoc.NOTA_SOLICITUD_PAC: "Nota de Solicitud de Registro al PAC",
 }
+
+MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+MODALIDAD_TXT = {"COMPRA_DIRECTA": "Contratación Menor — Compra Directa",
+                 "CONSULTA_PRECIOS_SICOES": "Contratación Menor — Consulta de Precios (SICOES)"}
+
+
+def fecha_larga(d: date) -> str:
+    return f"{d.day} de {MESES[d.month - 1]} de {d.year}"
+
+
+def mes_anio(d: date) -> str:
+    return f"{MESES[d.month - 1].capitalize()} de {d.year}"
 
 
 def _bs(x) -> str:
@@ -176,6 +190,28 @@ def construir_contexto(db: Session, c: ContratacionMenor, tipo: TipoDoc, params:
         ctx["preventivos"] = [{
             "partida": p.partida.codigo_partida, "descripcion": p.partida.descripcion, "importe": str(p.importe),
             "estado": p.estado, "saldo_actual": str(p.partida.saldo_disponible)} for p in c.preventivos]
+    elif tipo == TipoDoc.CERTIFICACION_POA:
+        gestion = int(params["gestion"])
+        ctx["poa"] = {
+            "gestion": gestion, "justificacion": c.justificacion_poa,
+            "programas": [{**p, "monto": str(p["monto"])} for p in poa.programas_de_contratacion(db, c, gestion)],
+            "certifica": extra.get("certifica", {"nombre": "", "cargo": ""})}
+    elif tipo == TipoDoc.NOTA_SOLICITUD_PAC:
+        partidas = [db.get(PartidaPresupuestaria, i.partida_id) for i in c.items if i.partida_id]
+        hoy = date.today()
+        if c.fecha_publicacion_estimada:
+            publicacion = mes_anio(c.fecha_publicacion_estimada)
+        else:  # por defecto: el mes siguiente a la solicitud
+            siguiente = date(hoy.year + (hoy.month // 12), hoy.month % 12 + 1, 1)
+            publicacion = mes_anio(siguiente) + " (estimada)"
+        ctx["pac"] = {
+            "cite": extra.get("cite", ""), "mae": {"nombre": params.get("mae_nombre", ""), "cargo": params.get("mae_cargo", "")},
+            "fecha_texto": (f"{params['ciudad']}, " if params.get("ciudad") else "") + fecha_larga(hoy),
+            "ref": f"Solicitud de Inclusión/Registro en el Plan Anual de Contrataciones (PAC) – {c.objeto_contratacion}",
+            "fuente": ", ".join(sorted({p.fuente for p in partidas if p})) or "—",
+            "organismo": ", ".join(sorted({p.organismo for p in partidas if p})) or "—",
+            "modalidad": MODALIDAD_TXT.get(c.modalidad_cuantia or "", c.modalidad_cuantia or ""),
+            "fecha_publicacion": publicacion}
     elif tipo == TipoDoc.FICHA_COTIZACION:
         ctx["destinatarios"] = extra.get("destinatarios", [])
     elif tipo == TipoDoc.CUADRO_COMPARATIVO:

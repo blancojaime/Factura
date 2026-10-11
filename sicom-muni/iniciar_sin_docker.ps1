@@ -109,11 +109,10 @@ try {
 
     $primeraVez = -not (Test-Path (Join-Path $local 'sicom.db'))
     Push-Location (Join-Path $root 'backend')
-    if ($primeraVez) {
-        Write-Host 'Creando la base de datos y cargando los usuarios de demostracion...'
-        & $venvpy -m app.seeds
-        if ($LASTEXITCODE -ne 0) { Pop-Location; throw 'Fallo la carga de datos de demostracion.' }
-    }
+    # Crea/actualiza la base de datos y carga (sin duplicar) los datos de demostracion; actualiza bases de versiones anteriores
+    Write-Host 'Preparando la base de datos y los datos de demostracion...'
+    & $venvpy -m app.seeds
+    if ($LASTEXITCODE -ne 0) { Pop-Location; throw 'Fallo la preparacion de la base de datos.' }
     & $venvpy -c "import weasyprint" 2>$null
     if ($LASTEXITCODE -ne 0) {
         Write-Host 'AVISO: no se encontro el motor de PDF (WeasyPrint). Los documentos se mostraran como paginas HTML imprimibles (Ctrl+P > Guardar como PDF).' -ForegroundColor Yellow

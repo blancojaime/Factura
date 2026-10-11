@@ -23,7 +23,8 @@ class Flujo:
                  "unidad_solicitante": "Unidad de Obras Públicas",
                  "justificacion": "Atención de la necesidad institucional programada en el POA.",
                  "especificaciones_tecnicas": "Cumplir las especificaciones técnicas detalladas para cada ítem solicitado.",
-                 "lugar_entrega": "Almacén municipal, calle Bolívar N° 123"}
+                 "lugar_entrega": "Almacén municipal, calle Bolívar N° 123",
+                 "justificacion_poa": "La compra apoya el logro del objetivo de gestión al dotar a la unidad de los insumos programados."}
         datos.update(extra)
         return self.req("POST", "/contrataciones", "solicitante", 201, json=datos).json()
 

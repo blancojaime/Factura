@@ -26,8 +26,9 @@ export const NAV: NavItem[] = [
   { href: "/contrataciones", etiqueta: "Contrataciones" },
   { href: "/contrataciones/nueva", etiqueta: "Nueva solicitud", roles: ["ROL_SOLICITANTE"] },
   { href: "/presupuesto", etiqueta: "Presupuesto", roles: ["ROL_PRESUPUESTO", "ROL_RPA", "ROL_ADMIN", "ROL_CONTRATACIONES"] },
+  { href: "/poa", etiqueta: "Objetivos POA", roles: ["ROL_PRESUPUESTO", "ROL_ADMIN"] },
   { href: "/admin/usuarios", etiqueta: "Usuarios", roles: ["ROL_ADMIN"] },
   { href: "/admin/parametros", etiqueta: "Parámetros del GAM", roles: ["ROL_ADMIN"] },
-  { href: "/admin/catalogo", etiqueta: "Catálogo CHB", roles: ["ROL_ADMIN"] },
+  { href: "/admin/catalogo", etiqueta: "Catálogo CHB", roles: ["ROL_ADMIN", "ROL_CONTRATACIONES"] },
   { href: "/admin/auditoria", etiqueta: "Auditoría", roles: ["ROL_ADMIN"] },
 ];

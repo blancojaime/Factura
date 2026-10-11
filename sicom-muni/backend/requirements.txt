@@ -13,3 +13,4 @@ WeasyPrint>=67,<71
 qrcode[pil]>=8.0
 boto3>=1.35
 python-multipart>=0.0.12
+openpyxl>=3.1

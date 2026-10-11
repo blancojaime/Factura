@@ -20,6 +20,9 @@ DEFAULTS: dict[str, tuple[str, str]] = {
     "min_cotizaciones_consulta": ("3", "Cotizaciones mínimas con consulta de precios (supuesto; verificar)"),
     "min_cotizaciones_directa": ("1", "Cotizaciones mínimas en compra directa"),
     "chb_min_justificacion": ("80", "Longitud mínima de la justificación de excepción CHB"),
+    "mae_nombre": ("", "Nombre de la Máxima Autoridad Ejecutiva (destinatario de la nota de solicitud de registro al PAC)"),
+    "mae_cargo": ("", "Cargo de la Máxima Autoridad Ejecutiva (p. ej. Alcalde Municipal)"),
+    "cite_prefijo_pac": ("SOL-PAC", "Prefijo del CITE de la nota de solicitud de registro al PAC"),
     "url_publica": ("", "URL pública base para los QR de verificación (si vacío, usa PUBLIC_BASE_URL)"),
 }
 

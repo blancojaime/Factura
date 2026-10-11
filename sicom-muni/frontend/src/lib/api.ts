@@ -84,6 +84,7 @@ export const api = {
   put: <T>(p: string, d?: unknown) => json<T>(p, { method: "PUT", body: body(d) }),
   patch: <T>(p: string, d?: unknown) => json<T>(p, { method: "PATCH", body: body(d) }),
   del: <T>(p: string) => json<T>(p, { method: "DELETE" }),
+  subir: <T>(p: string, datos: FormData) => json<T>(p, { method: "POST", body: datos }),
   async blob(p: string): Promise<Blob> {
     const r = await peticion(p);
     if (!r.ok) throw parseError(r.status, await r.json().catch(() => null));
@@ -115,4 +116,15 @@ export async function logout(): Promise<void> {
 
 export function mensajeError(e: unknown): string {
   return e instanceof ApiError ? e.message : "Error de conexión con el servidor";
+}
+
+/** Descarga una plantilla Excel de importacion. */
+export async function descargarPlantilla(tipo: "presupuesto" | "chb" | "poa"): Promise<void> {
+  const blob = await api.blob(`/plantillas/${tipo}`);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `plantilla_${tipo}.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
 }

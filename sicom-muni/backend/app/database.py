@@ -1,7 +1,9 @@
 """Motor SQLAlchemy 2.0 y sesion por peticion."""
 from collections.abc import Iterator
 
-from sqlalchemy import create_engine
+from decimal import Decimal
+
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -40,3 +42,30 @@ def preparar_sqlite() -> None:
     if engine.url.get_backend_name() == "sqlite" and engine.url.database not in (None, "", ":memory:"):
         from . import models  # noqa: F401  (registra las tablas)
         Base.metadata.create_all(engine)
+        _agregar_columnas_faltantes()
+
+
+def _literal(valor) -> str:
+    if isinstance(valor, bool):
+        return "1" if valor else "0"
+    if isinstance(valor, int | float | Decimal):
+        return str(valor)
+    return "'" + str(valor).replace("'", "''") + "'"
+
+
+def _agregar_columnas_faltantes() -> None:
+    """SQLite local: agrega las columnas nuevas a bases creadas con una version anterior (sin Alembic)."""
+    insp = inspect(engine)
+    with engine.begin() as con:
+        for tabla in Base.metadata.sorted_tables:
+            if not insp.has_table(tabla.name):
+                continue
+            existentes = {c["name"] for c in insp.get_columns(tabla.name)}
+            for col in tabla.columns:
+                if col.name in existentes:
+                    continue
+                ddl = f'ALTER TABLE "{tabla.name}" ADD COLUMN "{col.name}" {col.type.compile(engine.dialect)}'
+                if not col.nullable:
+                    arg = col.default.arg if col.default is not None and getattr(col.default, "is_scalar", False) else None
+                    ddl += f" DEFAULT {_literal(arg if arg is not None else '')}"
+                con.execute(text(ddl))

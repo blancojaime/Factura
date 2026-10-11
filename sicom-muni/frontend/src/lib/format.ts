@@ -70,6 +70,7 @@ export const TIPO_DOC_LABEL: Record<string, string> = {
   CUADRO_COMPARATIVO: "Cuadro comparativo", NOTA_ADJUDICACION: "Nota de adjudicación",
   ORDEN_COMPRA_SERVICIO: "Orden de compra / servicio", CONTRATO_ADMINISTRATIVO: "Contrato administrativo",
   ACTA_RECEPCION_FORM500: "Acta de recepción (Form. 500)",
+  CERTIFICACION_POA: "Certificación del POA", NOTA_SOLICITUD_PAC: "Nota de solicitud de registro al PAC",
 };
 
 export const CHB_LABEL: Record<string, string> = {

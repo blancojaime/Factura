@@ -99,6 +99,22 @@ class PartidaPresupuestaria(Base):
     fuente: Mapped[str] = mapped_column(String(10), default="")
     organismo: Mapped[str] = mapped_column(String(10), default="")
     monto_aprobado: Mapped[Decimal] = mapped_column(Money, default=Decimal("0"))
+    # (+) datos de la apertura programatica importados del Excel de presupuesto
+    descripcion_apertura: Mapped[str] = mapped_column(String(250), default="")
+    monto_ejecutado: Mapped[Decimal] = mapped_column(Money, default=Decimal("0"))
+
+
+class ObjetivoPOA(Base):
+    """(+) Objetivo de gestion del POA asociado a un programa presupuestario (para la Certificacion POA)."""
+    __tablename__ = "objetivos_poa"
+    __table_args__ = (UniqueConstraint("gestion", "programa", name="uq_objetivo_poa_programa"),)
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=_uuid)
+    gestion: Mapped[int] = mapped_column(Integer)
+    programa: Mapped[str] = mapped_column(String(10))
+    denominacion_programa: Mapped[str] = mapped_column(String(250), default="")
+    codigo_objetivo: Mapped[str] = mapped_column(String(30))
+    descripcion_objetivo: Mapped[str] = mapped_column(Text, default="")
 
 
 class CatalogoCHB(Base):
@@ -110,6 +126,7 @@ class CatalogoCHB(Base):
     unidad_medida: Mapped[str] = mapped_column(String(40), default="")
     precio_referencial_nacional: Mapped[Decimal | None] = mapped_column(Money, nullable=True)
     activo: Mapped[bool] = mapped_column(Boolean, default=True)
+    fecha_registro: Mapped[date | None] = mapped_column(Date, nullable=True)  # fecha de la ultima importacion
 
 
 class ContratacionMenor(Base):
@@ -156,6 +173,9 @@ class ContratacionMenor(Base):
     ultima_observacion: Mapped[str | None] = mapped_column(Text, nullable=True)  # p. ej. motivo de devolucion
     fecha_adjudicacion: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     fecha_formalizacion: Mapped[date | None] = mapped_column(Date, nullable=True)
+    # (+) Certificacion POA y nota de solicitud de registro al PAC
+    justificacion_poa: Mapped[str] = mapped_column(Text, default="")
+    fecha_publicacion_estimada: Mapped[date | None] = mapped_column(Date, nullable=True)
 
     items: Mapped[list["ContratacionItem"]] = relationship(
         back_populates="contratacion", cascade="all, delete-orphan", order_by="ContratacionItem.numero")

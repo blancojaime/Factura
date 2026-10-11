@@ -24,7 +24,7 @@ def ejecucion_presupuestaria(gestion: int | None = None, db: Session = Depends(g
     filas = []
     for p in db.scalars(consulta):
         comprometido = Decimal(activos.get(p.id) or 0)
-        filas.append({"codigo_partida": p.codigo_partida, "descripcion": p.descripcion, "gestion": p.gestion,
+        filas.append({"id": str(p.id), "codigo_partida": p.codigo_partida, "descripcion": p.descripcion, "gestion": p.gestion,
                       "aprobado": str(p.monto_aprobado), "saldo_disponible": str(p.saldo_disponible),
                       "preventivo_activo": str(comprometido)})
     return filas

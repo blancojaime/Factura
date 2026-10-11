@@ -48,6 +48,7 @@ export interface Contratacion {
   especificaciones_tecnicas: string; lugar_entrega: string; modalidad_cuantia: string | null;
   nro_formulario_110: string | null; fecha_limite_ofertas: string | null; ofertas_abiertas: boolean;
   motivo_cierre: string | null; ultima_observacion: string | null;
+  justificacion_poa: string; fecha_publicacion_estimada: string | null;
   items: Item[]; cotizaciones: Cotizacion[]; documentos: Documento[]; recepciones: Recepcion[];
   preventivos: Preventivo[]; acciones: string[]; mensaje_cuantia: string;
 }
@@ -59,11 +60,12 @@ export type Resumen = Pick<Contratacion,
 export interface Partida {
   id: string; codigo_partida: string; descripcion: string; saldo_disponible: string; gestion: number;
   programa: string; proyecto: string; actividad: string; fuente: string; organismo: string; monto_aprobado: string;
+  descripcion_apertura: string; monto_ejecutado: string;
 }
 
 export interface Catalogo {
   id: string; codigo_unspsc: string; descripcion_bien: string; unidad_medida: string;
-  precio_referencial_nacional: string | null; activo: boolean;
+  precio_referencial_nacional: string | null; activo: boolean; fecha_registro: string | null;
 }
 
 export interface ConsultaCHB {
@@ -96,4 +98,19 @@ export interface Parametro { clave: string; valor: string; descripcion: string }
 export interface AuditoriaFila {
   secuencia: number; usuario_id: string | null; accion: string; tabla_afectada: string; registro_id: string;
   datos_previos: unknown; datos_nuevos: unknown; ip: string; timestamp: string; hash_registro: string;
+}
+
+export interface ResultadoImportacion {
+  tipo: string; aplicado: boolean; total_filas: number; nuevas: number; actualizadas: number; omitidas: number;
+  errores: { fila: number; mensaje: string }[]; advertencias: string[]; muestra: Record<string, string>[];
+  fecha_registro?: string;
+}
+
+export interface ObjetivoPoa {
+  id: string; gestion: number; programa: string; denominacion_programa: string; codigo_objetivo: string; descripcion_objetivo: string;
+}
+
+export interface ProgramaPoa {
+  programa: string; denominacion_programa: string; partidas: string[]; monto: string;
+  codigo_objetivo: string | null; descripcion_objetivo: string | null; objetivo_registrado: boolean;
 }

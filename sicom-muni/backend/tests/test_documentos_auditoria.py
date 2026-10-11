@@ -16,7 +16,7 @@ def test_pdfs_con_hash_qr_y_verificacion_publica(client, tokens, SessionTest):
     f = Flujo(client, tokens)
     cid = preparar_en_cotizacion(f, plazo=12)
     docs = f.detalle(cid)["documentos"]
-    assert {d["tipo_doc"] for d in docs} == {"C1_SOLICITUD", "CERTIFICACION_C31"}
+    assert {d["tipo_doc"] for d in docs} == {"C1_SOLICITUD", "NOTA_SOLICITUD_PAC", "CERTIFICACION_C31", "CERTIFICACION_POA"}
     for d in docs:
         r = f.req("GET", f"/contrataciones/{cid}/documentos/{d['id']}/descargar", "rpa", 200)
         pdf = r.content

@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from . import security
 from .enums import Rol
-from .models import CatalogoCHB, ParametroInstitucional, PartidaPresupuestaria, Usuario
+from .models import CatalogoCHB, ObjetivoPOA, ParametroInstitucional, PartidaPresupuestaria, Usuario
 from .services import parametros
 
 PASSWORD_DEMO = "Sicom#2026Demo"
@@ -39,7 +39,28 @@ PARTIDAS = [
     ("25800", "Mantenimiento y reparación de inmuebles y equipos", Decimal("45000.00")),
     ("43100", "Equipo de oficina y muebles", Decimal("60000.00")),
 ]
-ESTRUCTURA = {"programa": "01", "proyecto": "0000", "actividad": "001", "fuente": "20", "organismo": "230"}
+MAE_DEMO = {"mae_nombre": "Lic. Carlos Alberto Rojas Mamani", "mae_cargo": "Alcalde Municipal"}
+
+# Programas del POA y su objetivo de gestion (relacion programa presupuestario - objetivo; objetivos de EJEMPLO)
+PROGRAMAS_POA = [
+    ("0", "FUNCIONAMIENTO ÓRGANO EJECUTIVO"), ("1", "FUNCIONAMIENTO ÓRGANO DELIBERATIVO"), ("002", "ADMINISTRACIÓN CENTRAL"),
+    ("100", "PROMOCIÓN Y FOMENTO A LA PRODUCCIÓN AGROPECUARIA"), ("110", "SANEAMIENTO BÁSICO"),
+    ("120", "CONSTRUCCIÓN Y MANTENIMIENTO DE RIEGO Y/O MICRORIEGO"), ("130", "DESARROLLO Y PRESERVACIÓN DEL MEDIO AMBIENTE"),
+    ("140", "ASEO URBANO, MANEJO Y TRATAMIENTO DE RESIDUOS SÓLIDOS"), ("150", "FUENTES DE ENERGÍA Y APOYO A LA ELECTRIFICACIÓN"),
+    ("160", "SERVICIO DE ALUMBRADO PÚBLICO"), ("170", "INFRAESTRUCTURA URBANA Y RURAL"), ("180", "GESTIÓN DE CAMINOS VECINALES"),
+    ("190", "SERVICIO DE CATASTRO URBANO Y RURAL"), ("200", "GESTIÓN DE SALUD"), ("210", "GESTIÓN DE EDUCACIÓN"),
+    ("220", "DESARROLLO Y PROMOCIÓN DEL DEPORTE"), ("230", "PROMOCIÓN Y CONSERVACIÓN DE CULTURA Y PATRIMONIO"),
+    ("240", "DESARROLLO Y FOMENTO DEL TURISMO"), ("250", "PROMOCIÓN Y POLÍTICAS PARA GRUPOS VULNERABLES Y DE LA MUJER"),
+    ("251", "PREVENCIÓN CONTRA LA VIOLENCIA HACIA LA MUJER"), ("260", "DEFENSA Y PROTECCIÓN DE LA NIÑEZ Y ADOLESCENCIA"),
+    ("270", "VIALIDAD Y TRANSPORTE PÚBLICO"), ("280", "DEFENSA DEL CONSUMIDOR"), ("290", "SERVICIO DE FAENADO DE GANADO"),
+    ("300", "SERVICIO DE INHUMACIÓN, EXHUMACIÓN, CREMACIÓN Y TRASLADO DE RESTOS"), ("310", "GESTIÓN DE RIESGOS"),
+    ("320", "RECURSOS HÍDRICOS"), ("330", "SERVICIOS DE SEGURIDAD CIUDADANA"), ("340", "FORTALECIMIENTO INSTITUCIONAL"),
+    ("350", "FOMENTO AL DESARROLLO ECONOMICO LOCAL Y PROMOCION DEL EMPLEO"), ("360", "OTROS PROGRAMAS ESPECÍFICOS"),
+    ("97", "PARTIDAS NO ASIGNABLES A PROGRAMAS – ACTIVOS FINANCIEROS (Grupo 50000 y otras previsiones)"),
+    ("98", "PARTIDAS NO ASIGNABLES A PROGRAMAS – TRANSFERENCIAS (Grupo 70000)"),
+    ("99", "PARTIDAS NO ASIGNABLES A PROGRAMAS – DEUDAS (Grupo 60000)"),
+]
+ESTRUCTURA = {"descripcion_apertura": "FUNCIONAMIENTO ÓRGANO DELIBERATIVO - Gestión administrativa", "programa": "01", "proyecto": "0000", "actividad": "001", "fuente": "20", "organismo": "230"}
 
 # (codigo_unspsc, descripcion, unidad, precio_referencial) - catalogo CHB de EJEMPLO
 CATALOGO = [
@@ -61,11 +82,17 @@ def cargar(db: Session, gestion: int | None = None, password: str = PASSWORD_DEM
                            cargo=cargo, rol=rol.value, email=email))
     for clave, (valor, desc) in parametros.DEFAULTS.items():
         if db.get(ParametroInstitucional, clave) is None:
-            v = str(gestion) if clave == "gestion" else valor
+            v = str(gestion) if clave == "gestion" else MAE_DEMO.get(clave, valor)
             db.add(ParametroInstitucional(clave=clave, valor=v, descripcion=desc))
+    for n, (prog, denominacion) in enumerate(PROGRAMAS_POA, start=1):
+        if db.scalar(select(ObjetivoPOA).where(ObjetivoPOA.gestion == gestion, ObjetivoPOA.programa == prog)) is None:
+            db.add(ObjetivoPOA(id=_id(f"poa:{gestion}:{prog}"), gestion=gestion, programa=prog, denominacion_programa=denominacion,
+                               codigo_objetivo=f"OBJ{n}", descripcion_objetivo=f"OBJETIVO {n}"))
     for codigo, desc, saldo in PARTIDAS:
         existe = db.scalar(select(PartidaPresupuestaria).where(
             PartidaPresupuestaria.codigo_partida == codigo, PartidaPresupuestaria.gestion == gestion))
+        if existe is not None and not existe.descripcion_apertura:
+            existe.descripcion_apertura = ESTRUCTURA["descripcion_apertura"]  # bases creadas antes de la importacion
         if existe is None:
             db.add(PartidaPresupuestaria(id=_id(f"partida:{codigo}:{gestion}"), codigo_partida=codigo, descripcion=desc,
                                          saldo_disponible=saldo, monto_aprobado=saldo, gestion=gestion, **ESTRUCTURA))
