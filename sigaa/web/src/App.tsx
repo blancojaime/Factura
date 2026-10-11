@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { useAuth } from './auth';
 import { useAction, useUi, Field } from './ui';
+import { rolInfo, colorPrincipal, moduloDeRuta } from './roles';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Catalogos from './pages/Catalogos';
@@ -17,7 +18,7 @@ const NAV: { grupo: string; mod?: string; items: [string, string][] }[] = [
   { grupo: 'Combustible', mod: 'com', items: [['/combustible/tablero', 'Tablero de control'], ['/combustible/recepcion', 'Recepción de vales'], ['/combustible/emitir', 'Emitir vales'], ['/combustible/descargo', 'Descargo de vales'], ['/combustible/movimientos', 'Devolución / baja de vales'], ['/combustible/turriles', 'Turriles'], ['/combustible/viajes', 'Viajes y fondos en avance'], ['/combustible/conciliacion', 'Conciliación'], ['/combustible/cronograma', 'Cronograma'], ['/combustible/vales', 'Registro de vales']] },
   { grupo: 'Activos fijos', mod: 'af', items: [['/activos/ingresos', 'Ingreso a almacén'], ['/activos/codificar', 'Codificación'], ['/activos/fichas', 'Fichas técnicas'], ['/activos/solicitudes', 'Solicitudes'], ['/activos/asignar', 'Asignación y entrega'], ['/activos/movimientos', 'Devolución / transferencia / baja'], ['/activos/etiquetas', 'Etiquetas (stickers)'], ['/activos/consulta', 'Consulta y kardex']] },
   { grupo: 'Información', items: [['/reportes', 'Reportes y documentos']] },
-  { grupo: 'Administración', items: [['/catalogos', 'Catálogos y bases de datos'], ['/admin', 'Configuración y usuarios']] },
+  { grupo: 'Administración', mod: 'adm', items: [['/catalogos', 'Catálogos y bases de datos'], ['/admin', 'Configuración y usuarios']] },
 ];
 
 function CambiarClave() {
@@ -60,18 +61,19 @@ function Shell() {
         <div className="brand"><svg width="34" height="34" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#2d5a94" /><path d="M14 24l18-10 18 10v18L32 52 14 42z" fill="none" stroke="#fff" strokeWidth="4" strokeLinejoin="round" /><path d="M14 24l18 10 18-10M32 34v18" fill="none" stroke="#9fc6f5" strokeWidth="4" strokeLinejoin="round" /></svg><div><b>SIGAA</b><small>Almacenes · Combustible<br />Activos Fijos</small></div></div>
         {NAV.map((g) => (
           <div key={g.grupo}>
-            <h4>{g.grupo}{g.mod && !puede(g.mod as any) ? ' (solo lectura)' : ''}</h4>
-            {g.items.map(([to, label]) => <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => (isActive ? 'active' : '')}>{label}</NavLink>)}
+            <h4 className={g.mod ? 'g-' + g.mod : ''}>{g.grupo}{g.mod && g.mod !== 'adm' && !puede(g.mod as any) ? ' (solo lectura)' : ''}</h4>
+            {g.items.map(([to, label]) => <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => (g.mod ? 'm-' + g.mod + ' ' : '') + (isActive ? 'active' : '')}>{label}</NavLink>)}
           </div>
         ))}
       </aside>
-      <div className="main">
-        <header className="top no-print">
+      <div className="main" data-mod={moduloDeRuta(loc.pathname) || undefined}>
+        <header className="top no-print" style={moduloDeRuta(loc.pathname) ? undefined : { borderBottom: `4px solid ${colorPrincipal(usuario?.roles ?? [])}` }}>
           <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menú">☰</button>
           <div className="muted">Gestión <b>{gestion}</b></div>
           <div className="who">
             <button className="sm" onClick={() => setTema(tema === 'dark' ? 'light' : 'dark')} title="Cambiar tema">{tema === 'dark' ? '☀' : '☾'}</button>
-            <span>{usuario?.nombre} · <small>{usuario?.roles.join(', ')}</small></span>
+            <span>{usuario?.nombre}</span>
+            {usuario?.roles.map((r) => <span key={r} className="rol-chip" style={{ background: rolInfo(r)?.color }} title={rolInfo(r)?.nombre}>{rolInfo(r)?.nombre ?? r}</span>)}
             <button className="sm" onClick={logout}>Salir</button>
           </div>
         </header>

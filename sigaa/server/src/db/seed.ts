@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import type { Knex } from 'knex';
 import { createSchema } from './schema.js';
 import { DEFAULT_CONFIG } from './defaults.js';
-import { asegurarAdmin } from '../core/auth.js';
+import { asegurarAdmin, asegurarUsuariosDemo } from '../core/auth.js';
 import { registrarNro } from '../core/services.js';
 
 type Row = Record<string, any>;
@@ -179,4 +179,5 @@ export async function seedAll(db: Knex, opts: { demo?: boolean } = {}) {
     }
   }
   await asegurarAdmin(db);
+  if (opts.demo !== false) await asegurarUsuariosDemo(db);
 }

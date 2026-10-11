@@ -69,6 +69,18 @@ export async function crearUsuario(db: Db, d: { usuario: string; nombre: string;
   });
 }
 
+/** Usuarios de ejemplo (uno por rol) para el piloto con datos demo. Deben cambiar su clave al ingresar. */
+export const USUARIOS_DEMO = [
+  { usuario: 'almacen', nombre: 'Encargado de Almacenes (demo)', roles: ['ALMACEN'], clave: 'Almacen2026' },
+  { usuario: 'combustible', nombre: 'Encargado de Combustible (demo)', roles: ['COMBUSTIBLE'], clave: 'Combustible2026' },
+  { usuario: 'activos', nombre: 'Encargado de Activos Fijos (demo)', roles: ['ACTIVOS'], clave: 'Activos2026' },
+  { usuario: 'consulta', nombre: 'Usuario de consulta (demo)', roles: ['CONSULTA'], clave: 'Consulta2026' },
+];
+
+export async function asegurarUsuariosDemo(db: Db) {
+  for (const u of USUARIOS_DEMO) if (!(await db('core_usuarios').where({ usuario: u.usuario }).first())) await crearUsuario(db, u);
+}
+
 /** Garantiza que exista el usuario administrador inicial (clave por defecto que debe cambiarse al ingresar). */
 export async function asegurarAdmin(db: Db) {
   const n = await db('core_usuarios').count({ n: '*' }).first();

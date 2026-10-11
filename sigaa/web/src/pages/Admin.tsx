@@ -3,7 +3,9 @@ import { get, post, put, urlConToken, fmtDate } from '../api';
 import { useAuth } from '../auth';
 import { Card, DataTable, Field, Modal, PageHead, SelectField, Tabs, TextField, useAction, useLoad, Badge } from '../ui';
 
-const ROLES = ['ADMIN', 'ALMACEN', 'COMBUSTIBLE', 'ACTIVOS', 'CONSULTA'];
+import { ROLES_INFO, rolInfo } from '../roles';
+
+const Chip = ({ r }: { r: string }) => <span className="rol-chip sm" style={{ background: rolInfo(r)?.color }}>{rolInfo(r)?.nombre ?? r}</span>;
 
 function Config() {
   const { data, reload } = useLoad<any[]>(() => get('/config'));
@@ -33,8 +35,9 @@ function Usuarios() {
   const [run, busy] = useAction();
   return (
     <Card title="Usuarios del sistema" right={<button className="primary" onClick={() => setM({ nuevo: true, roles: ['CONSULTA'] })}>+ Nuevo usuario</button>}>
-      <DataTable rows={data ?? []} onRow={(r) => setM({ ...r, roles: String(r.roles).split(',') })} cols={[{ key: 'usuario', header: 'Usuario' }, { key: 'nombre', header: 'Nombre' }, { key: 'roles', header: 'Roles' }, { key: 'estado', header: 'Estado', badge: true }, { key: 'ultimo_acceso', header: 'Último acceso' }]} />
-      <small className="muted">Roles: ADMIN (todo), ALMACEN, COMBUSTIBLE, ACTIVOS (escriben en su módulo) y CONSULTA (solo lectura). Un usuario puede tener varios roles.</small>
+      <DataTable rows={data ?? []} onRow={(r) => setM({ ...r, roles: String(r.roles).split(',') })} cols={[{ key: 'usuario', header: 'Usuario' }, { key: 'nombre', header: 'Nombre' }, { key: 'roles', header: 'Roles', render: (r: any) => <span className="row" style={{ gap: 4 }}>{String(r.roles).split(',').map((x) => <Chip key={x} r={x} />)}</span> }, { key: 'estado', header: 'Estado', badge: true }, { key: 'ultimo_acceso', header: 'Último acceso' }]} />
+      <div className="rol-leyenda" style={{ margin: '10px 0 4px' }}>{ROLES_INFO.map((r) => <span key={r.codigo} className="rol-chip" style={{ background: r.color }} title={r.descripcion}>{r.nombre}</span>)}</div>
+      <small className="muted">Cada rol tiene su color. Un usuario puede tener varios roles; Consulta solo ve y descarga.</small>
       {m && (
         <Modal title={m.nuevo ? 'Nuevo usuario' : `Usuario ${m.usuario}`} onClose={() => setM(null)} footer={<><button onClick={() => setM(null)}>Cancelar</button><button className="primary" disabled={busy} onClick={() => run(async () => {
           if (m.nuevo) await post('/usuarios', { usuario: m.usuario, nombre: m.nombre, roles: m.roles, clave: m.clave });
@@ -44,7 +47,7 @@ function Usuarios() {
           <div className="grid c2">
             {m.nuevo && <TextField label="Usuario" req value={m.usuario} onChange={(v) => setM({ ...m, usuario: v })} />}
             <TextField label="Nombre" req value={m.nombre} onChange={(v) => setM({ ...m, nombre: v })} />
-            <Field label="Roles"><div className="row">{ROLES.map((r) => <label key={r} className="row" style={{ gap: 4 }}><input type="checkbox" checked={m.roles.includes(r)} onChange={(e) => setM({ ...m, roles: e.target.checked ? [...m.roles, r] : m.roles.filter((x: string) => x !== r) })} />{r}</label>)}</div></Field>
+            <div className="span-all"><Field label="Roles (marque uno o varios)">{<div>{ROLES_INFO.map((r) => { const on = m.roles.includes(r.codigo); return <div key={r.codigo} className={'rol-card' + (on ? ' on' : '')} style={{ ['--rc' as any]: r.color }}><label><input type="checkbox" checked={on} onChange={(e) => setM({ ...m, roles: e.target.checked ? [...m.roles, r.codigo] : m.roles.filter((x: string) => x !== r.codigo) })} /><span><b style={{ color: r.color }}>{r.nombre}</b><small>{r.descripcion}</small></span></label></div>; })}</div>}</Field></div>
             {!m.nuevo && <SelectField label="Estado" blank={false} value={m.estado} onChange={(v) => setM({ ...m, estado: v })} options={['ACTIVO', 'INACTIVO']} />}
             <TextField label={m.nuevo ? 'Clave inicial' : 'Nueva clave (opcional, restablece)'} req={m.nuevo} value={m.clave} onChange={(v) => setM({ ...m, clave: v })} hint="Mínimo 8 caracteres con letras y números. El usuario deberá cambiarla al ingresar." />
           </div>

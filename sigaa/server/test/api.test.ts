@@ -2,7 +2,6 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { FastifyInstance } from 'fastify';
 import { dbDemo } from './helpers.js';
 import { buildApp } from '../src/app.js';
-import { crearUsuario } from '../src/core/auth.js';
 
 let app: FastifyInstance;
 let db: Awaited<ReturnType<typeof dbDemo>>;
@@ -17,8 +16,6 @@ async function login(usuario: string, clave: string) {
 beforeAll(async () => {
   db = await dbDemo();
   app = await buildApp({ db, jwtSecret: 'test-secret', webDir: '/nonexistent' });
-  await crearUsuario(db, { usuario: 'consulta', nombre: 'Consulta', roles: ['CONSULTA'], clave: 'Consulta2026' });
-  await crearUsuario(db, { usuario: 'almacen', nombre: 'Almacén', roles: ['ALMACEN'], clave: 'Almacen2026' });
 });
 afterAll(async () => {
   await app.close();

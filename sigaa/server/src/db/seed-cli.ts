@@ -11,5 +11,5 @@ if (force) {
 }
 await seedAll(db, { demo: !sinDemo });
 console.log(`Base de datos lista (${sinDemo ? 'solo configuración y administrador' : 'con datos demo'}).`);
-console.log('Usuario inicial: admin / Admin2026 (se exige cambiar la clave al ingresar).');
+console.log('Usuario inicial: admin / Admin2026 (se exige cambiar la clave al ingresar).\nCon datos demo también se crean: almacen / Almacen2026, combustible / Combustible2026, activos / Activos2026, consulta / Consulta2026.');
 await db.destroy();
