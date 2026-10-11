@@ -23,6 +23,11 @@ docker compose --profile seed run --rm seed   # usuarios y datos demo (opcional)
 Usuarios demo (clave `Sicom#2026Demo`): `solicitante`, `presupuesto`, `contrataciones`, `rpa`, `recepcion`, `admin`.
 **Cambie las claves antes de usar datos reales.**
 
+## Novedades de la última versión
+- **Importación desde Excel** (validación previa, todo o nada): presupuesto por apertura programática, catálogo CHB (reemplaza códigos repetidos y registra la fecha) y objetivos del POA por programa. Archivos de ejemplo en `docs/ejemplos/`.
+- **Certificación del POA** al certificar el presupuesto (programa → objetivo + justificación del apoyo de la compra).
+- **Nota de solicitud de registro al PAC** para compras mayores a Bs 20.000, dirigida a la MAE registrada en Parámetros.
+
 ## Pruebas
 
 ```bash

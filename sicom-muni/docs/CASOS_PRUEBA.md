@@ -48,5 +48,21 @@ usuarios demo (clave `Sicom#2026Demo`). Partidas demo: 34200 (Bs 80.000) y 25800
 
 **Variante (plazo 20 días):** metodo de formalización calculado = **Contrato Administrativo**; intentar Orden de Compra/Servicio devuelve `FORMALIZACION_CONTRATO_OBLIGATORIO`; se genera el **Contrato** y no la orden.
 
+## Caso 3 — Funciones nuevas: POA, PAC e importación desde Excel (Bs 25.000)
+
+Archivos de ejemplo en `docs/ejemplos/`: `ejemplo_objetivos_poa.xlsx`, `ejemplo_presupuesto.xlsx`, `ejemplo_presupuesto_con_errores.xlsx`, `ejemplo_catalogo_chb.xlsx`.
+
+| Paso | Usuario | Acción | Resultado esperado |
+|---|---|---|---|
+| 1 | presupuesto | *Objetivos POA* → importar `ejemplo_objetivos_poa.xlsx` | 34 programas; «2» y «002» son el mismo |
+| 2 | presupuesto | *Presupuesto* → importar el archivo **con errores** | Se listan 3 filas con error; no se puede confirmar |
+| 3 | presupuesto | Importar `ejemplo_presupuesto.xlsx` y confirmar; repetir | 6 nuevas, 1 omitida (52100); al repetir: 0 nuevas, 6 actualizadas |
+| 4 | contrataciones | *Catálogo CHB* → importar `ejemplo_catalogo_chb.xlsx` | Cemento «REEMPLAZA» (nuevo precio); fecha de registro = hoy |
+| 5 | admin | *Parámetros*: `mae_nombre`, `mae_cargo` | Guardados |
+| 6 | solicitante | Bien «equipos de computación», 5 × Bs 5.000 (partida 43100, apertura 002-0000-001), excepción CHB, justificación POA y mes de publicación; enviar | SOLICITADO; documentos: C-1, Informe CHB y **Nota de solicitud de registro al PAC** (`SOL-PAC-001/2026`) |
+| 7 | presupuesto | Tarjeta *Certificación del POA* (programa 002 → OBJ3); certificar con `C31-2026-00555` | CERTIFICADO; se suman **Certificación C-31** y **Certificación del POA** |
+| 8 | presupuesto | Variante: eliminar el objetivo del programa o vaciar la justificación y certificar | `POA_INCOMPLETO`; el saldo no se descuenta |
+| 9 | solicitante | Variante: solicitud de Bs 18.000 | No se genera nota PAC |
+
 ## Supuestos del sistema (no verificados con la norma)
 Mínimo de 3 cotizaciones en consulta de precios (1 en compra directa); una oferta elegible debe ser ≤ monto referencial y ofrecer plazo ≤ el solicitado; desempate por la primera propuesta recibida. Todos son parámetros ajustables.

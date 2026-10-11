@@ -63,12 +63,19 @@ node .next/standalone/server.js        # (copie .next/static y public junto a st
 ## 6. Pruebas
 ```bash
 cd backend && pip install -r requirements-dev.txt
-pytest                                  # 62 pruebas, SQLite en memoria
+pytest                                  # 72 pruebas (+1 solo PostgreSQL), SQLite en memoria
 TEST_DATABASE_URL=postgresql+psycopg://sicom:sicom@127.0.0.1:5433/sicom_test pytest   # PostgreSQL real (trigger de auditoría incluido)
 cd ../frontend && npx tsc --noEmit && npm run lint && npm run build
 ```
 Cobertura: reglas de negocio unitarias (cuantía, formalización, CHB, evaluador, preferencias), flujo completo de bienes (Bs 18.500),
 flujo de servicio (Bs 32.000), autenticación/RBAC, casos negativos, generación de PDF y cadena de auditoría. Ver `CASOS_PRUEBA.md`.
+
+## 6.1 Importaciones desde Excel, Certificación POA y nota PAC
+- **Endpoints:** `POST /api/v1/partidas/importar` (Presupuesto/Admin), `POST /api/v1/catalogo-chb/importar` (Contrataciones/Admin), `POST /api/v1/poa/objetivos/importar` (Presupuesto/Admin); todos aceptan `?confirmar=true` (sin él solo validan). `GET /api/v1/plantillas/{presupuesto|chb|poa}` descarga la plantilla. CRUD de objetivos: `GET/PUT /api/v1/poa/objetivos`, `DELETE /api/v1/poa/objetivos/{id}`; `GET /api/v1/contrataciones/{id}/poa`.
+- **Reglas:** archivo .xlsx ≤ 5 MB; encabezado detectado en las primeras 40 filas; todo o nada (con errores no se guarda); CHB reemplaza por código y fija `fecha_registro`; presupuesto actualiza por (apertura, partida, fuente, organismo) y omite partidas fuera de 10000–49999.
+- **Migración:** `alembic upgrade head` aplica la revisión `0002` (columnas `descripcion_apertura`, `monto_ejecutado`, `fecha_registro`, `justificacion_poa`, `fecha_publicacion_estimada`; tabla `objetivos_poa`; nuevos tipos de documento). En el modo SQLite local las columnas nuevas se agregan automáticamente.
+- **Parámetros nuevos:** `mae_nombre`, `mae_cargo`, `cite_prefijo_pac`. Montos > `tope_compra_directa` exigen la MAE para enviar la solicitud y generan la nota PAC.
+- **Datos demo:** `python -m app.seeds` / `db/seeds.sql` cargan los 34 programas POA y una MAE ficticia. **Antes de operar**, importe sus datos reales.
 
 ## 7. Seguridad
 - Contraseñas con **Argon2id**; política ≥ 10 caracteres con mayúscula, minúscula y número; bloqueo tras 5 intentos fallidos (HTTP 423).

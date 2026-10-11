@@ -178,7 +178,7 @@ PASO('A4', 'solicitante', 'Probar que el sistema bloquea una compra irregular', 
 PASO('A5', 'solicitante', 'Registrar la excepción justificada', [
   '1) En la tabla de ítems, en la fila del **Cemento**, pulse el ícono del **lápiz**. Marque la casilla **«Se compra fuera del catálogo por incompatibilidad (requiere justificación)»** y pulse **Actualizar**. Haga lo mismo con el **Ladrillo**.',
   '2) Suba a la zona amarilla **«Justificación de compra fuera del Catálogo CHB»**. En **Justificación técnico-legal** escriba (debe tener al menos 80 caracteres): «Los proveedores del catálogo CHB no pueden entregar los materiales en el plazo de obra de 10 días ni en la cantidad requerida por la unidad; se fundamenta la compra directa en el mercado local.»',
-  '3) En **Código de autorización CHB** escriba `MDPyEP-AUT-0391`. Pulse **Guardar datos**.',
+  '3) En **Código de autorización CHB** escriba `MDPyEP-AUT-0391`. En el campo **«¿Cómo apoya la compra al logro del objetivo del POA?»** escriba: «La compra de materiales permite ejecutar el mantenimiento de la plaza principal, apoyando el objetivo de gestión de conservación de la infraestructura urbana.» Pulse **Guardar datos**.',
   '4) Baje y pulse **Enviar solicitud a Presupuesto**.',
   '**Resultado esperado:** el estado cambia a **Solicitado**. En la pestaña **Documentos** aparecen dos PDF: **Formulario C-1 (Solicitud)** y el **Informe de Excepción CHB**. Pulse **Ver PDF** en uno para abrirlo: tiene membrete, marca de agua, un código QR y una huella (hash) al pie.']);
 IMGF('04-documentos-c1.png', 'Pestaña Documentos con los dos PDF generados', 5.6, 4.4);
@@ -188,7 +188,8 @@ H2('ETAPA B — El dinero  (usuario: presupuesto)');
 PASO('B1', 'presupuesto', 'Entrar y abrir el trámite', ['Entre con `presupuesto`. En «Pendientes de mi atención» aparece su trámite con «Qué debe hacer». Pulse **Abrir →**, y luego la pestaña **Presupuesto y SIGEP**.']);
 IMGF('05-presupuesto-sigep.png', 'Pestaña Presupuesto y SIGEP antes de certificar', 5.6, 5);
 PASO('B2', 'presupuesto', 'Certificar el presupuesto', ['En **N° de comprobante C-31 (SIGEP)** escriba `C31-2026-00123` y pulse **Certificar presupuesto**.',
-  '**Resultado esperado:** estado **Presupuesto certificado**. El **Panel de captura rápida SIGEP** muestra una fila con DA 01, UE 001, Programa 01, Proyecto 0000, Actividad 001, Fte 20, Org 230, Partida 34200 e Importe 18.500,00. Pulse **Copiar Bloque SIGEP** (copia esa línea para pegarla en el SIGEP real; aquí solo se comprueba que aparece el aviso de copiado).',
+  'Antes de certificar fíjese en la tarjeta **«Certificación del POA — programa y objetivo»**: muestra el programa **01** con su objetivo **OBJ2** y la justificación del solicitante.',
+  '**Resultado esperado:** estado **Presupuesto certificado** y dos documentos nuevos (Certificación C-31 y **Certificación del POA**). El **Panel de captura rápida SIGEP** muestra una fila con DA 01, UE 001, Programa 01, Proyecto 0000, Actividad 001, Fte 20, Org 230, Partida 34200 e Importe 18.500,00. Pulse **Copiar Bloque SIGEP** (copia esa línea para pegarla en el SIGEP real; aquí solo se comprueba que aparece el aviso de copiado).',
   '**Comprobación del dinero:** en el menú izquierdo pulse **Presupuesto**: la partida 34200 ahora tiene saldo **80.000 − 18.500 = 61.500,00**.']);
 IMGF('06-bloque-sigep-certificado.png', 'Bloque SIGEP listo para copiar', 5.6, 5);
 P('Pulse **Salir**.');
@@ -229,7 +230,7 @@ H2('ETAPA G — Cierre del dinero  (usuario: presupuesto)');
 PASO('G1', 'presupuesto', 'Registrar el devengado', ['Entre con `presupuesto`, abra el trámite. Verá un aviso con el botón **Registrar devengado**: púlselo. Estado: **Devengado** (último paso).',
   '**Comprobación final del dinero:** menú **Presupuesto**: la partida 34200 muestra **62.100,00**. Explicación: se reservaron 18.500, pero se compró en 17.900; los **600** de diferencia se devolvieron al saldo (80.000 − 18.500 + 600 = 62.100).']);
 IMGF('14-resumen-devengado.png', 'Trámite terminado (estado Devengado)', 5.4, 6.4);
-IMGF('15-documentos-expediente.png', 'Expediente final: siete documentos PDF', 5.4, 5.5);
+IMGF('15-documentos-expediente.png', 'Expediente final: ocho documentos PDF', 5.4, 5.5);
 
 H2('ETAPA H — Comprobar que los documentos son auténticos');
 PASO('H1', 'cualquiera', 'Verificar un PDF', ['En la pestaña **Documentos** pulse **Ver PDF** en el **Acta de recepción**: se abre o descarga un PDF (guárdelo en el Escritorio si el navegador solo lo muestra). Abajo a la derecha tiene un **código QR** y una huella al pie.',
@@ -249,7 +250,7 @@ TABLE(['Quién', 'Qué hace'], [
   ['`solicitante`', 'Nueva solicitud: Objeto «Mantenimiento correctivo de las instalaciones eléctricas del edificio municipal»; Tipo de objeto **Servicio general**; plazo **12**; lugar «Edificio municipal»; justificación y redacción cualquiera (más de 20 letras). Un ítem: Descripción «Mantenimiento correctivo de instalaciones eléctricas (mano de obra y materiales)», Unidad «Global», Cantidad 1, Precio 32000, Partida **25800**. Pulse **Enviar solicitud a Presupuesto**.'],
   ['`presupuesto`', 'Comprobante `C31-2026-00456` → **Certificar presupuesto**. (Saldo de la partida 25800: 45.000 → 13.000).'],
   ['`rpa`', '**Aprobar inicio del proceso**.']], [1700, 7660]);
-P('Observe en la hoja del trámite: **Consulta de precios SICOES (Bs 20.001 a 50.000)** y **Orden de Servicio**.');
+P('Observe en la hoja del trámite: **Consulta de precios SICOES (Bs 20.001 a 50.000)** y **Orden de Servicio**. Como el monto supera Bs 20.000, en **Documentos** aparece además la **Nota de solicitud de registro al PAC** y, tras certificar, la **Certificación del POA**.');
 H2('3.2 Formulario 110 y ofertas (usuario: contrataciones)');
 PASO(1, 'contrataciones', 'Ver que el F110 es obligatorio', ['Pestaña **Cotizaciones y adjudicación**. Se muestra un aviso: falta el Formulario 110. Aún no puede registrar ofertas.']);
 IMGF('17-f110-requerido.png', 'Sin Formulario 110 no se puede cotizar', 5.4, 5);
@@ -284,15 +285,66 @@ TABLE(['#', 'Qué comprobar', '✔'], [
   ['6', 'La oferta de Bs 17.900 queda primera y recomendada', '☐'],
   ['7', 'Recepción con faltante marcada como conforme es rechazada', '☐'],
   ['8', 'Al devengar, el saldo de 34200 queda en 62.100,00', '☐'],
-  ['9', 'El expediente tiene 7 PDF y la página de verificación dice «auténtico»', '☐'],
+  ['9', 'El expediente tiene 8 PDF (incluida la Certificación del POA) y la página de verificación dice «auténtico»', '☐'],
   ['10', 'Auditoría: «Cadena íntegra»', '☐'],
   ['11', 'Servicio de Bs 32.000: no se puede cotizar sin Formulario 110', '☐'],
   ['12', 'No se puede abrir ofertas antes del plazo', '☐'],
   ['13', 'La oferta MyPE (29.260) queda 1.ª y la más barata que no cumple queda excluida', '☐'],
   ['14', 'Sin CUCE no se puede formalizar; con plazo 12 días se emite Orden de Servicio', '☐'],
-  ['15', 'Saldo de la partida 25800 final: 14.200,00', '☐']], [500, 8000, 860]);
+  ['15', 'Saldo de la partida 25800 final: 14.200,00', '☐'],
+  ['16', 'Importar presupuesto con errores: lista las filas y no deja confirmar', '☐'],
+  ['17', 'Importar presupuesto correcto y repetirlo: no duplica filas', '☐'],
+  ['18', 'Importar catálogo CHB: cemento «REEMPLAZA» y fecha de registro de hoy', '☐'],
+  ['19', 'Solicitud de Bs 25.000: se genera la Nota PAC dirigida a la autoridad registrada', '☐'],
+  ['20', 'Al certificar se genera la Certificación del POA con programa y objetivo', '☐'],
+  ['21', 'Sin objetivo o sin justificación POA: no se puede certificar', '☐']], [500, 8000, 860]);
 H2('Prueba extra: plazo de 20 días');
 P('Cree otra solicitud igual a la del servicio pero con **Plazo = 20**. En la hoja del trámite dirá **Contrato** en lugar de Orden de Servicio. Al llegar a Formalizar (pasos de la Parte 3), el botón será **Formalizar (Contrato)** y se generará un **Contrato Administrativo**.');
+H1('PARTE 5 — Funciones nuevas: importar desde Excel, POA y nota PAC');
+P('Esta parte prueba lo último que se agregó al sistema: **cargar datos desde Excel** (presupuesto, catálogo «Compro Hecho en Bolivia» y objetivos del POA), la **Certificación del POA** y la **Nota de solicitud de registro al PAC**. No necesita escribir comandos: todo se hace con botones.');
+H2('5.1 Archivos de ejemplo');
+P('En la carpeta `sicom-muni\\docs\\ejemplos` hay cuatro archivos Excel listos para probar:');
+TABLE(['Archivo', 'Qué contiene', 'Quién lo importa'], [
+  ['`ejemplo_objetivos_poa.xlsx`', 'Los 34 programas y su objetivo del POA (la tabla que usted envió)', 'Presupuesto'],
+  ['`ejemplo_presupuesto.xlsx`', 'Dos aperturas programáticas con sus partidas, fuente, organismo, presupuesto, ejecutado y saldo', 'Presupuesto'],
+  ['`ejemplo_presupuesto_con_errores.xlsx`', 'Lo mismo pero con 3 errores a propósito, para ver cómo avisa el sistema', 'Presupuesto'],
+  ['`ejemplo_catalogo_chb.xlsx`', '8 productos con código UNSPSC, descripción y precio', 'Contrataciones']], [3300, 4260, 1800]);
+NOTE('Para usar **sus propios datos**, descargue la plantilla desde el botón «Descargar plantilla de ejemplo» de cada ventana de importación, copie sus datos en ella y guárdela como **.xlsx**. Los nombres de las columnas deben ser los de la plantilla (no importan mayúsculas ni tildes).', 'E8F1FB', 'Consejo');
+H2('5.2 Importar los objetivos del POA (usuario: presupuesto)');
+N(['Entre con `presupuesto`. En el menú izquierdo pulse **Objetivos POA**.', 'Pulse **Importar desde Excel**.', 'Pulse **Choose File / Elegir archivo** y busque `ejemplo_objetivos_poa.xlsx`.', 'Pulse **Validar archivo**. Debe aparecer un cuadro azul «Archivo válido (aún no se guardó nada)». *Todavía no se ha guardado nada.*'.replace('*Todavía no se ha guardado nada.*','Todavía no se ha guardado nada.'), 'Pulse el botón verde **Confirmar importación**. Aparece «Importación realizada». Pulse **Cerrar**.', 'La tabla muestra cada programa con su objetivo. También puede agregar o corregir uno con **Registrar objetivo** o **Editar**.']);
+IMGF('35-poa-importar-valido.png', 'Validación del archivo de objetivos POA', 5.2, 5.4);
+H2('5.3 Importar el presupuesto por apertura programática (usuario: presupuesto)');
+N(['En el menú pulse **Presupuesto** y luego **Importar desde Excel**.', '**Primero la prueba con errores:** elija `ejemplo_presupuesto_con_errores.xlsx` y pulse **Validar archivo**. El sistema muestra un cuadro **rojo** con la lista de errores (fila 3: código de apertura inválido; fila 4: partida de 4 dígitos; fila 5: monto negativo) y el botón **Confirmar importación** queda **apagado**: no deja guardar datos malos.', 'Ahora elija `ejemplo_presupuesto.xlsx` y pulse **Validar archivo**: «6 nuevas, 0 existentes que se actualizarán, 1 omitida». (La omitida es una partida 52100: el sistema solo usa partidas de 10000 a 49999.)', 'Pulse **Confirmar importación** y **Cerrar**.', 'La tabla ahora muestra **Apertura (Prog-Proy-Act)**, descripción de la apertura, partida, fuente/organismo, **Presupuesto, Ejecutado, Preventivo activo y Saldo**.', 'Pruebe repetir la importación del mismo archivo: dirá «0 nuevas, 6 existentes que se actualizarán»: no se duplica nada.']);
+IMGF('31-presupuesto-importar-errores.png', 'El sistema lista los errores y no deja confirmar', 5.2, 5.4);
+IMGF('33-presupuesto-tabla.png', 'Presupuesto por apertura programática', 5.2, 5.8);
+H2('5.4 Importar el catálogo CHB (usuario: contrataciones)');
+N(['Entre con `contrataciones`. En el menú pulse **Catálogo CHB**.', 'Pulse **Importar desde Excel**, elija `ejemplo_catalogo_chb.xlsx`, **Validar archivo**.', 'Verá en la vista previa el cemento (30111505) como **REEMPLAZA** (ya existía: se actualiza su precio) y los demás como **NUEVO**. Pulse **Confirmar importación**.', 'En la lista aparece la columna **Fecha de registro** con la fecha de hoy. Cada vez que importe, los códigos repetidos se reemplazan (nuevo precio y fecha); los que no vengan en el archivo se conservan.']);
+IMGF('38-chb-importar-valido.png', 'Catálogo CHB: REEMPLAZA / NUEVO', 5.2, 5.4);
+H2('5.5 Registrar la Máxima Autoridad Ejecutiva (usuario: admin)');
+N(['Entre con `admin`. Menú **Parámetros del GAM**.', 'Busque las filas `mae_nombre` y `mae_cargo`. Escriba el nombre y el cargo de su autoridad (en la demostración ya aparecen datos ficticios) y pulse **Guardar** en cada una.', 'Esa persona será la destinataria de la **Nota de solicitud de registro al PAC**.']);
+IMGF('41-parametros-mae.png', 'Parámetros con la Máxima Autoridad Ejecutiva', 4.8, 5.4);
+H2('5.6 Ejemplo 3: compra de computadoras por Bs 25.000');
+P('Es la compra de la nota modelo («equipos de computación, 25.000 Bs»). Como supera Bs 20.000 se emite la **nota PAC**, y al certificar se emite la **Certificación del POA**.');
+PASO('P1', 'solicitante', 'Crear y enviar la solicitud', ['Entre con `solicitante` → **Nueva solicitud**. Objeto: «Adquisición de equipos de computación (computadoras de escritorio) para la Unidad de Sistemas». Tipo **Bien**, plazo **10**, unidad «Unidad de Sistemas», lugar «Unidad de Sistemas, edificio municipal», justificación «renovar los equipos obsoletos de la unidad y garantizar la continuidad operativa del personal», redacción cualquiera (más de 20 letras). Pulse **Guardar borrador y continuar**.',
+  'Agregue el ítem: código `43211500`, **Partida** la que dice `43100 … Apertura 002-0000-001 · Fte 20/Org 230`, descripción «Computadora de escritorio completa (CPU, monitor, teclado y mouse)», unidad `Unidad`, cantidad `5`, precio `5000`. Pulse **Agregar**. Como la computadora está en el catálogo CHB, marque la excepción (lápiz → casilla «Se compra fuera del catálogo…» → **Actualizar**) y escriba la justificación de 80 letras o más y el código `MDPyEP-AUT-0412`.',
+  'Complete los dos campos nuevos: **«¿Cómo apoya la compra al logro del objetivo del POA?»** (escriba: «La adquisición permite que la Unidad de Sistemas mantenga operativa la plataforma institucional, apoyando el logro del objetivo de gestión de eficiencia administrativa de la entidad.») y **«Mes estimado de publicación (PAC)»** (elija noviembre de 2026). Pulse **Guardar datos** y luego **Enviar solicitud a Presupuesto**.']);
+IMGF('42-formulador-poa-pac.png', 'Los dos campos nuevos del formulador', 5.0, 8);
+P('**Resultado esperado:** estado **Solicitado**. En la pestaña **Documentos** aparecen **tres** PDF: el C-1, el Informe de excepción CHB y la **Nota de solicitud de registro al PAC** (con un número CITE como `SOL-PAC-001/2026`, dirigida a la autoridad que registró en 5.5). Ábrala con **Ver PDF**. No necesita aprobación: solo debe existir.');
+IMGF('43-documentos-nota-pac.png', 'La nota PAC aparece en el expediente', 5.2, 4.5);
+IMGF('pdf-pac-1.png', 'La Nota de solicitud de registro al PAC', 3.8, 5.6);
+PASO('P2', 'presupuesto', 'Certificar: ahora también certifica el POA', ['Entre con `presupuesto`, abra el trámite → **Presupuesto y SIGEP**. Baje a la tarjeta **«Certificación del POA — programa y objetivo»**: muestra el programa **002 — ADMINISTRACIÓN CENTRAL**, su objetivo **OBJ3** y la justificación que escribió el solicitante (puede corregirla). Escriba el comprobante `C31-2026-00555` y pulse **Certificar presupuesto**.',
+  '**Resultado esperado:** en **Documentos** hay ahora cinco PDF; los nuevos son la **Certificación C-31** y la **Certificación del Programa Operativo Anual (POA)**.']);
+IMGF('44-presupuesto-poa.png', 'Tarjeta de la Certificación del POA', 5.0, 8);
+IMGF('45-documentos-cert-poa.png', 'Expediente con la Certificación del POA', 5.2, 4.8);
+IMGF('pdf-poa-1.png', 'La Certificación del POA', 3.8, 5.6);
+H2('5.7 Pruebas de seguridad de las funciones nuevas');
+TABLE(['Prueba', 'Qué hacer', 'Qué debe pasar'], [
+  ['Programa sin objetivo', 'Como `presupuesto`, en **Objetivos POA** elimine el objetivo de un programa y pulse **Certificar presupuesto** en una solicitud de ese programa', 'El botón está apagado y la tarjeta dice «Sin objetivo registrado»'],
+  ['Falta la justificación', 'Borre el texto de la justificación del POA en la tarjeta y certifique', 'Error rojo: «Justifique cómo la contratación apoya el logro del objetivo del POA»'],
+  ['Sin autoridad (MAE)', 'Como `admin` deje `mae_nombre` vacío y, como `solicitante`, envíe una solicitud de más de Bs 20.000', 'Error: «Registre … la Máxima Autoridad Ejecutiva»'],
+  ['Compra de hasta Bs 20.000', 'Envíe una solicitud de Bs 18.500', 'No se genera nota PAC'],
+  ['Permisos', 'Como `solicitante`, abra el menú: no aparece «Objetivos POA»', 'Solo Presupuesto y Administrador lo ven']], [2200, 4200, 2960]);
+
 H1('Cómo se trabajará de forma oficial');
 P('Las dos formas de prueba (Docker en su PC y «sin Docker») son para **conocer** el sistema. En el uso real **no se instala en cada computador**: se instala **una sola vez en un servidor** de la entidad y todos los funcionarios entran con su navegador a una dirección propia, por ejemplo `https://sicom.micomuna.gob.bo`.');
 CODE('PC de funcionarios (solo navegador) --HTTPS--> Servidor SICOM-MUNI --> Base de datos PostgreSQL + archivos\n  solicitante, presupuesto, rpa ...               (a cargo del área de Sistemas)        (con respaldo diario)');

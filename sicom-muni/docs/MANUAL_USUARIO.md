@@ -12,8 +12,8 @@ BORRADOR → SOLICITADO → CERTIFICADO_PRESUPUESTO → EN_COTIZACION → EVALUA
 | Rol | Qué hace |
 |---|---|
 | Solicitante | Crea y envía la solicitud (C-1) con ítems y especificaciones técnicas |
-| Presupuesto | Certifica el preventivo (C-31), copia el bloque SIGEP, devenga, administra partidas |
-| Contrataciones | Registra F110, emite fichas, carga cotizaciones, abre ofertas, califica y evalúa |
+| Presupuesto | Importa el presupuesto y los objetivos del POA, certifica el preventivo (C-31) y el POA, copia el bloque SIGEP, devenga |
+| Contrataciones | Importa el catálogo CHB, registra F110, emite fichas, carga cotizaciones, abre ofertas, califica y evalúa |
 | RPA | Aprueba el inicio, adjudica, declara desierto, formaliza |
 | Recepción | Registra la recepción/conformidad |
 | Administrador | Usuarios, parámetros, catálogo CHB, auditoría |
@@ -24,18 +24,26 @@ BORRADOR → SOLICITADO → CERTIFICADO_PRESUPUESTO → EN_COTIZACION → EVALUA
    monto total, **modalidad** (Compra directa ≤ 20.000; Consulta de Precios SICOES hasta 50.000; sobre 50.000 se bloquea y se indica derivar a ANPE),
    **método de formalización** (Orden hasta 15 días; Contrato desde 16) y el estado CHB de cada ítem.
 3. Si un bien existe en el catálogo CHB, es **compra obligatoria** y no podrá enviar. Para exceptuarlo marque el ítem «fuera de catálogo», escriba la justificación (mín. 80 caracteres) y el código de autorización; el sistema generará el **Informe de Excepción**.
-4. **Enviar solicitud**: se genera el PDF **C-1**. Presupuesto puede devolverla con observaciones (vuelve a BORRADOR).
+4. Complete **«¿Cómo apoya la compra al logro del objetivo del POA?»** (se imprime en la Certificación del POA) y, si el monto supera Bs 20.000, el **mes estimado de publicación (PAC)**.
+5. **Enviar solicitud**: se genera el PDF **C-1** y, si el monto supera Bs 20.000, la **Nota de solicitud de registro al PAC** dirigida a la Máxima Autoridad Ejecutiva (no requiere aprobación). Presupuesto puede devolverla con observaciones (vuelve a BORRADOR).
 
 ## 3. Presupuesto
 1. Abra el trámite → pestaña **Presupuesto**: vea saldo por partida y el **bloque SIGEP** previsto.
-2. **Copiar Bloque SIGEP** y péguelo en el SIGEP; registre el N.° de preventivo C-31 y pulse **Certificar** (descuenta el saldo de todas las partidas o ninguna). Se genera la **Certificación presupuestaria**.
-3. Al final, **Devengar**: libera la diferencia entre lo reservado y lo adjudicado.
-4. Menú **Presupuesto**: lista de partidas y **Registrar partida**.
+2. Revise la tarjeta **Certificación del POA — programa y objetivo** (programa de cada partida, su objetivo del POA y la justificación; puede corregirla). Si un programa no tiene objetivo, regístrelo en **Objetivos POA**.
+3. **Copiar Bloque SIGEP** y péguelo en el SIGEP; registre el N.° de preventivo C-31 y pulse **Certificar** (descuenta el saldo de todas las partidas o ninguna). Se generan la **Certificación presupuestaria C-31** y la **Certificación del POA**.
+4. Al final, **Devengar**: libera la diferencia entre lo reservado y lo adjudicado.
+5. Menú **Presupuesto**: aperturas programáticas y partidas con presupuesto, ejecutado, preventivo activo y saldo; **Importar desde Excel** y **Registrar partida**.
+
+### 3.1 Importar desde Excel (Presupuesto y Objetivos POA)
+Botón **Importar desde Excel** en *Presupuesto* y en *Objetivos POA*. Descargue la **plantilla**, complete sus datos (.xlsx), pulse **Validar archivo** (no guarda nada, muestra errores por fila y vista previa) y luego **Confirmar importación** (solo si no hay errores).
+- **Presupuesto:** columnas *Código (apertura programática)* como Programa-Proyecto-Actividad (ej. `002-0000-001`), *Descripción apertura*, *Partida*, *Fuente*, *Organismo*, *Presupuesto*, *Ejecutado*, *Saldo*. Reimportar actualiza las filas existentes.
+- **Objetivos POA:** columnas *PROG*, *DENOMINACIÓN DEL PROGRAMA*, *COD OBJ*, *DESCRIPCIÓN OBJETIVO* (un objetivo por programa; «2» y «002» son el mismo programa). También puede registrar o editar uno por uno.
 
 ## 4. RPA: aprobar el inicio
 En el trámite certificado, la tarjeta **Aprobar inicio** pasa el trámite a cotización.
 
 ## 5. Contrataciones: cotizar y evaluar
+0. **Catálogo CHB:** menú *Catálogo CHB* → **Importar desde Excel** (columnas *Código UNSPSC*, *Descripción código*, *Precio*): cada importación **reemplaza** los códigos repetidos y registra la fecha de importación.
 1. **Compra directa (≤ 20.000)**: cargue la(s) cotización(es). **Consulta de precios (> 20.000)**: primero registre el **N.° de Formulario 110** y la **fecha límite de ofertas**.
 2. **Fichas de cotización**: genere la ficha PDF y envíela por **Impreso, WhatsApp (enlace) o Correo** (si SMTP está configurado).
 3. **Cargar cotización**: NIT/CI, razón social, monto, plazo. Los montos quedan **sellados** y no se ven hasta abrirlos; un NIT no puede repetirse.
@@ -59,7 +67,7 @@ El botón **Anular** (con motivo) cierra el trámite y libera el presupuesto res
 
 ## 10. Administrador
 - **Usuarios**: crear, activar/desactivar, restablecer clave (≥ 10 caracteres con mayúscula, minúscula y número).
-- **Parámetros del GAM**: nombre, ciudad, DA/UE, logotipo y topes/plazos/mínimos.
+- **Parámetros del GAM**: nombre, ciudad, DA/UE, logotipo, topes/plazos/mínimos y la **Máxima Autoridad Ejecutiva** (`mae_nombre`, `mae_cargo`) y el prefijo del CITE de la nota PAC (`cite_prefijo_pac`).
 - **Catálogo CHB**: buscar y agregar bienes (código UNSPSC de 8 dígitos).
 - **Auditoría**: registros inalterables y botón **Verificar integridad de la cadena**.
 
@@ -71,4 +79,7 @@ El botón **Anular** (con motivo) cierra el trámite y libera el presupuesto res
 | «FORMULARIO_110_REQUERIDO» | Registre el N.° F110 en Cotizaciones |
 | «PLAZO_VIGENTE» | Espere el vencimiento de la fecha límite para abrir ofertas |
 | «COTIZACIONES_INSUFICIENTES» | Cargue más cotizaciones |
+| «POA_INCOMPLETO» | Registre el objetivo del programa en *Objetivos POA* y/o escriba la justificación del apoyo al POA (mín. 20 caracteres) |
+| «Registre … la Máxima Autoridad Ejecutiva» | El administrador debe completar `mae_nombre` y `mae_cargo` en *Parámetros del GAM* |
+| «No se encontró la fila de encabezados» (importación) | Use la plantilla descargable y guarde como .xlsx |
 | «FORMALIZACION_CONTRATO_OBLIGATORIO» | Con plazo > 15 días solo corresponde Contrato |
