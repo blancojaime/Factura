@@ -4,3 +4,8 @@ storage/logs/*
 storage/backups/*
 storage/installed.lock
 !storage/*/.gitkeep
+runtime/
+instalador/descargas/
+instalador/*.log
+respaldos/
+CLAVES_TEMPORALES.csv

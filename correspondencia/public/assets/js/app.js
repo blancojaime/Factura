@@ -60,7 +60,25 @@
       q.clipboard.dangerouslyPasteHTML(ta.value);
       form.addEventListener('submit', function () { ta.value = q.getText().trim() === '' ? '' : q.root.innerHTML; });
     }
-    // Gráficos
+    // Gráficos (Chart.js si está disponible; si no, un dibujo propio sin internet)
+    function barras(c, d) {
+      var H = Math.max(parseInt(c.getAttribute('height'), 10) || 200, 230), W = c.parentNode.clientWidth || 600;
+      c.width = W; c.height = H; c.style.width = '100%';
+      var x = c.getContext('2d'), col = ['#2b6cb0', '#c0392b', '#2f9e44'], n = d.labels.length, m = d.datasets.length, top = 10, bot = 70, left = 30;
+      var max = 1; d.datasets.forEach(function (s) { s.data.forEach(function (v) { if (v > max) max = v; }); });
+      var gw = (W - left - 10) / Math.max(n, 1), bw = Math.min(26, (gw - 8) / m);
+      x.font = '11px sans-serif'; x.fillStyle = '#6b7785'; x.strokeStyle = '#d5dce6';
+      var st = Math.min(4, max); for (var g = 0; g <= st; g++) { var yy = top + (H - top - bot) * (1 - g / st); x.beginPath(); x.moveTo(left, yy); x.lineTo(W - 5, yy); x.stroke(); x.fillText(String(Math.round(max * g / st)), 4, yy + 4); }
+      d.labels.forEach(function (lb, i) {
+        d.datasets.forEach(function (s, j) {
+          var h = (H - top - bot) * (s.data[i] / max), bx = left + i * gw + (gw - bw * m) / 2 + j * bw;
+          x.fillStyle = col[j % 3]; x.fillRect(bx, H - bot - h, bw - 2, h);
+        });
+        x.save(); x.translate(left + i * gw + gw / 2, H - bot + 8); x.rotate(-0.6); x.fillStyle = '#1d2733'; x.textAlign = 'right'; x.fillText(String(lb).slice(0, 14), 0, 4); x.restore();
+      });
+      d.datasets.forEach(function (s, j) { var lx = left + j * Math.max(95, (W - left) / m); x.fillStyle = col[j % 3]; x.fillRect(lx, H - 14, 10, 10); x.fillStyle = '#1d2733'; x.font = '10px sans-serif'; x.fillText(s.label.replace('Pendientes oficiales', 'Pend. oficiales').replace('Copias pendientes', 'Copias pend.'), lx + 14, H - 5); });
+    }
+    if (!window.Chart) { $('canvas[data-chart]').forEach(function (c) { barras(c, JSON.parse(c.getAttribute('data-chart'))); }); }
     if (window.Chart) {
       var colores = ['#2b6cb0', '#c0392b', '#2f9e44'];
       $('canvas[data-chart]').forEach(function (c) {

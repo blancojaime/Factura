@@ -8,9 +8,14 @@ final class Config
 
     public static function load(): void
     {
-        $f = ROOT . '/config/config.php';
+        $f = self::archivo();
         self::$c = is_file($f) ? (require $f) : [];
     }
+
+    /** Ruta del archivo de configuración (CORR_CONFIG permite varias instalaciones de prueba). */
+    public static function archivo(): string { return getenv('CORR_CONFIG') ?: ROOT . '/config/config.php'; }
+
+    public static function lockFile(): string { return getenv('CORR_CONFIG') ? getenv('CORR_CONFIG') . '.lock' : ROOT . '/storage/installed.lock'; }
 
     public static function installed(): bool { return self::$c !== []; }
 

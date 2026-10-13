@@ -44,9 +44,9 @@ final class Installer
                 'max_upload_mb' => 10, 'dias_alerta_amarillo' => 3, 'dias_alerta_rojo' => 6, 'debug' => false,
             ];
             $php = "<?php\n// Generado por el instalador. No compartir este archivo.\nreturn " . var_export($cfg, true) . ";\n";
-            if (file_put_contents(ROOT . '/config/config.php', $php) === false) throw new \RuntimeException('No se pudo escribir config/config.php (revise permisos).');
-            @chmod(ROOT . '/config/config.php', 0640);
-            file_put_contents(ROOT . '/storage/installed.lock', ahora());
+            if (file_put_contents(Config::archivo(), $php) === false) throw new \RuntimeException('No se pudo escribir config/config.php (revise permisos).');
+            @chmod(Config::archivo(), 0640);
+            file_put_contents(Config::lockFile(), ahora());
         }
     }
 }

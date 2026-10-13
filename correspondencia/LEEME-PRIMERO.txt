@@ -1,0 +1,16 @@
+SISTEMA DE CORRESPONDENCIA DIGITAL - INSTALACION RAPIDA (WINDOWS)
+================================================================
+
+1. Extraiga TODO el ZIP (clic derecho > Extraer todo...) a una carpeta sencilla,
+   por ejemplo:  C:\Correspondencia
+2. Haga doble clic en  INSTALAR.bat
+   - Necesita internet solo esta primera vez (se descargan ~120 MB).
+   - Responda las preguntas que aparecen en la ventana negra.
+3. Al terminar se abre el navegador. Cada dia use el icono "Correspondencia"
+   del Escritorio (o INICIAR.bat). Para apagar: DETENER.bat.
+4. Copia de seguridad: RESPALDAR.bat
+
+El manual completo, con imagenes y todos los casos, esta en:
+   docs\Manual_Implementacion_Correspondencia.docx
+
+Si algo falla, envie el archivo  instalador\instalacion.log  y una captura de pantalla.

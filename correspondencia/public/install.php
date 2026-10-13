@@ -2,7 +2,7 @@
 declare(strict_types=1);
 require dirname(__DIR__) . '/app/bootstrap.php';
 
-if (is_file(ROOT . '/storage/installed.lock') || App\Core\Config::installed()) {
+if (is_file(App\Core\Config::lockFile()) || App\Core\Config::installed()) {
     http_response_code(403);
     exit('El sistema ya está instalado. Elimine public/install.php por seguridad.');
 }
