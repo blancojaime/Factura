@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest>=8
+dbfread>=2.0.7
+pyinstaller>=6.6

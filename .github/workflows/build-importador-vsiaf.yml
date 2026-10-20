@@ -1,0 +1,46 @@
+name: Importador VSIAF (Windows)
+
+on:
+  push:
+    branches: [ "claude/gracious-knuth-wkbtf5" ]
+    paths: [ "vsiaf-importador/**", ".github/workflows/build-importador-vsiaf.yml" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: vsiaf-importador
+        shell: cmd
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          architecture: x64
+      - name: Dependencias
+        run: python -m pip install -r requirements-dev.txt
+      - name: Pruebas
+        run: python -m pytest -q tests
+      - name: Ejecutable (PyInstaller)
+        run: pyinstaller packaging\ImportadorVSIAF.spec --noconfirm
+      - name: Documentos
+        run: |
+          mkdir dist\docs
+          python -m vsiaf_importer plantilla dist\docs\plantilla_importacion_vsiaf.xlsx
+          python -m vsiaf_importer plantilla dist\docs\plantilla_con_ejemplos.xlsx --ejemplos
+          copy GUIA_DE_USO.md dist\docs\
+          if exist GUIA_DE_USO.docx copy GUIA_DE_USO.docx dist\docs\
+      - name: Prueba de humo del .exe (consola)
+        run: dist\ImportadorVSIAF\ImportadorVSIAF-consola.exe plantilla %RUNNER_TEMP%\humo.xlsx --ejemplos
+      - name: Instalador (Inno Setup)
+        run: '"%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" packaging\instalador.iss'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Setup_ImportadorVSIAF
+          path: vsiaf-importador/dist/Setup_ImportadorVSIAF_*.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ImportadorVSIAF_portable
+          path: vsiaf-importador/dist/ImportadorVSIAF
