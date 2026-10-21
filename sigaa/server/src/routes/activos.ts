@@ -4,7 +4,7 @@ import type { Ctx } from '../app.js';
 import { sendFile } from '../app.js';
 import { fail, NotFound } from '../core/errors.js';
 import {
-  activosDeFuncionario, buscarActivos, codificarActivos, disponiblesParaAsignar, generarAsignacion, guardarFicha, guardarFoto, guardarIngresoAF, guardarSolicitud, indicadoresAF, kardexActivo, listarAsignaciones, listarIngresosAF,
+  activosDeFuncionario, buscarActivos, codificarActivos, disponiblesParaAsignar, generarAsignacion, guardarFicha, copiarFicha, guardarFoto, guardarIngresoAF, guardarSolicitud, indicadoresAF, kardexActivo, listarAsignaciones, listarIngresosAF,
   listarSolicitudes, marcarEtiquetas, obtenerActivo, obtenerAsignacion, obtenerIngresoAF, obtenerSolicitud, pendientesCodificar, procesarMovimientoAF, solicitudSinExistencia, TIPOS_INGRESO_AF,
 } from '../modules/activos/service.js';
 import { FOTOS_DIR, stickersPdf } from '../docs/activos.js';
@@ -38,6 +38,19 @@ export async function registerActivos({ db, app, w }: Ctx) {
   });
   app.get(`${P}/activos/:codigo`, async (req) => obtenerActivo(db, (req.params as any).codigo));
   app.put(`${P}/activos/:codigo`, W, async (req) => guardarFicha(db, req.usuario, (req.params as any).codigo, body(req)));
+  // Copia la ficha técnica de un activo a otros (lote de bienes iguales). Las fotografías se copian como archivos propios.
+  app.post(`${P}/activos/:codigo/copiar-ficha`, W, async (req) => {
+    const copiarArchivo = (archivo: string, destino: string, n: number) => {
+      const src = path.join(FOTOS_DIR(), path.basename(archivo));
+      if (!fs.existsSync(src)) return null;
+      const ext = path.extname(src) || '.jpg';
+      const nuevo = `${destino}_${n}${ext}`;
+      fs.mkdirSync(FOTOS_DIR(), { recursive: true });
+      fs.copyFileSync(src, path.join(FOTOS_DIR(), nuevo));
+      return nuevo;
+    };
+    return copiarFicha(db, req.usuario, { ...body(req), origen: (req.params as any).codigo }, copiarArchivo);
+  });
   app.get(`${P}/activos/:codigo/kardex`, async (req) => kardexActivo(db, (req.params as any).codigo));
 
   // Fotografías (hasta 4 por activo): se suben como imagen binaria.

@@ -253,6 +253,67 @@ export async function guardarFicha(db: Db, u: Usuario, codigo: string, d: { desc
   return { codigo };
 }
 
+/** Datos de la ficha técnica que se pueden copiar de un activo a otros. */
+export const CAMPOS_COPIABLES = ['descripcion', 'marca', 'modelo', 'color', 'serie', 'estado', 'valor', 'observaciones', 'caracteristicas', 'fotos'] as const;
+export type CampoCopiable = (typeof CAMPOS_COPIABLES)[number];
+/** Lo que se copia si no se indica otra cosa: lo propio del lote (no la serie, el valor ni la descripción). */
+export const COPIA_POR_DEFECTO: CampoCopiable[] = ['marca', 'modelo', 'color', 'observaciones', 'caracteristicas'];
+
+/**
+ * Copia la ficha técnica de un activo a uno o varios activos (p. ej. 100 pupitres de la misma compra).
+ * - `solo_vacios` (por defecto): solo completa lo que el destino aún no tiene; con `false` reemplaza.
+ * - Las características técnicas de la cuenta (c01–c13) solo se copian a activos de la MISMA cuenta.
+ * - `copiarArchivo(origen, destino)`: copia física de cada fotografía (las fotos no se comparten entre activos).
+ */
+export async function copiarFicha(
+  db: Db, u: Usuario,
+  d: { origen: string; destinos: string[]; copiar?: string[]; solo_vacios?: boolean },
+  copiarArchivo?: (archivoOrigen: string, codigoDestino: string, n: number) => string | null,
+) {
+  const origen = await db('af_activos').where({ codigo: d.origen }).first();
+  if (!origen) throw new NotFound(`No existe el activo ${d.origen}.`);
+  const destinos = [...new Set((d.destinos ?? []).map((x) => txt(x)).filter((x) => x && x !== d.origen))];
+  if (!destinos.length) fail('Seleccione al menos un activo de destino.');
+  if (destinos.length > 2000) fail('Puede copiar a un máximo de 2.000 activos por vez.');
+  const campos = ((d.copiar?.length ? d.copiar : COPIA_POR_DEFECTO) as string[]);
+  for (const c of campos) if (!(CAMPOS_COPIABLES as readonly string[]).includes(c)) fail(`Dato desconocido para copiar: ${c}.`);
+  const vacios = d.solo_vacios !== false;
+  const vacio = (v: unknown) => v === null || v === undefined || String(v).trim() === '';
+  const omitidos: { codigo: string; motivo: string }[] = [];
+  let copiados = 0;
+  let sinCaracteristicas = 0;
+  const campoNros = (await db('af_campos').where({ id_cta: origen.id_cta })).map((c: any) => 'c' + String(c.nro).padStart(2, '0'));
+  await db.transaction(async (trx) => {
+    for (const codigo of destinos) {
+      const a = await trx('af_activos').where({ codigo }).first();
+      if (!a) { omitidos.push({ codigo, motivo: 'No existe.' }); continue; }
+      if (a.situacion === SIT_BAJA) { omitidos.push({ codigo, motivo: 'Está dado de baja.' }); continue; }
+      const upd: Record<string, unknown> = {};
+      const poner = (col: string, v: unknown) => { if (!vacios || vacio(a[col])) upd[col] = v ?? null; };
+      for (const c of ['descripcion', 'marca', 'modelo', 'color', 'serie', 'observaciones']) if (campos.includes(c)) poner(c, origen[c]);
+      if (campos.includes('valor')) poner('valor', origen.valor);
+      if (campos.includes('estado') && (!vacios || vacio(a.estado))) upd.estado = origen.estado;
+      if (campos.includes('caracteristicas')) {
+        if (a.id_cta !== origen.id_cta) sinCaracteristicas++;
+        else for (const col of campoNros) poner(col, origen[col]);
+      }
+      if (campos.includes('fotos') && copiarArchivo) {
+        for (let n = 1; n <= 4; n++) {
+          const f = origen['foto' + n];
+          if (!f || (vacios && !vacio(a['foto' + n]))) continue;
+          const nuevo = copiarArchivo(f, codigo, n);
+          if (nuevo) upd['foto' + n] = nuevo;
+        }
+      }
+      if (Object.keys(upd).length) await trx('af_activos').where({ codigo }).update(upd);
+      if (upd.estado && upd.estado !== a.estado) await movimiento(trx, u, today(), codigo, 'CAMBIO DE ESTADO', '', a.estado, String(upd.estado), `Copia de ficha técnica de ${d.origen}`);
+      copiados++;
+    }
+    await audit(trx, u, 'COPIA DE FICHA TÉCNICA', d.origen, `a ${copiados} activo(s): ${campos.join(', ')}${vacios ? ' (solo vacíos)' : ' (reemplazando)'}`);
+  });
+  return { origen: d.origen, copiados, omitidos, sin_caracteristicas: sinCaracteristicas };
+}
+
 export async function guardarFoto(db: Db, u: Usuario, codigo: string, n: number, archivo: string | null) {
   if (n < 1 || n > 4) fail('Las fotografías van del 1 al 4.');
   const a = await db('af_activos').where({ codigo }).first();

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { Knex } from 'knex';
 import { dbDemo, admin } from './helpers.js';
 import {
-  guardarIngresoAF, codificarActivos, guardarSolicitud, disponiblesParaAsignar, generarAsignacion, procesarMovimientoAF, guardarFicha, obtenerActivo, indicadoresAF, armarCodigo, solicitudSinExistencia, depreciacion, obtenerSolicitud,
+  guardarIngresoAF, codificarActivos, guardarSolicitud, disponiblesParaAsignar, generarAsignacion, procesarMovimientoAF, guardarFicha, copiarFicha, obtenerActivo, indicadoresAF, armarCodigo, solicitudSinExistencia, depreciacion, obtenerSolicitud,
 } from '../src/modules/activos/service.js';
 import { BusinessError } from '../src/core/errors.js';
 
@@ -93,5 +93,69 @@ describe('ingreso → codificación → solicitud → asignación → devolució
     const i = await indicadoresAF(db);
     expect(i.total).toBeGreaterThan(48);
     expect(depreciacion(1000, 5, '2024-10-02', '2026-10-02').neto).toBeCloseTo(600, 0);
+  });
+});
+
+describe('copiar ficha técnica a otros activos', () => {
+  let origen = '';
+  let dest: string[] = [];
+  beforeAll(async () => {
+    // lote de 5 pupitres iguales: ingreso + codificación directa en el edificio 1
+    const ing = await guardarIngresoAF(db, admin, { fecha: '2026-10-01', tipo_doc: 'ORDEN DE COMPRA', nro_doc: 'OC-777/2026', proveedor: 'COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)', items: [{ id_cta: 3, id_aux: 7, descripcion: 'Pupitre unipersonal de madera', unidad: 'PZA', cantidad: 5, precio_unit: 250 }] } as any);
+    const r = await codificarActivos(db, admin, { nro_ingreso: ing.nro, fecha: '2026-10-01', estado: 'Nuevo', filas: [{ item: 1, id_cta: 3, id_aux: 7, descripcion: 'Pupitre unipersonal de madera', cod_edif: 1, cod_amb: 0, cantidad: 5, valor: 250 }] } as any);
+    origen = r.generados[0].codigo;
+    dest = r.generados.slice(1).map((g: any) => g.codigo);
+    const a = await obtenerActivo(db, origen);
+    await guardarFicha(db, admin, origen, { descripcion: a.descripcion, marca: 'CARPINTERÍA ORURO', modelo: 'P-2026', serie: 'S-0001', color: 'CAFÉ', estado: 'Nuevo', observaciones: 'Madera de pino, tapa 60 x 45 cm', campos: { '1': 'MADERA', '2': 'CAFÉ' } });
+  });
+
+  it('copia marca, modelo, color, observaciones y características a todos los destinos, sin la serie', async () => {
+    const r = await copiarFicha(db, admin, { origen, destinos: dest });
+    expect(r.copiados).toBe(4);
+    expect(r.omitidos).toEqual([]);
+    for (const c of dest) {
+      const a = await obtenerActivo(db, c);
+      expect(a.marca).toBe('CARPINTERÍA ORURO');
+      expect(a.modelo).toBe('P-2026');
+      expect(a.color).toBe('CAFÉ');
+      expect(a.observaciones).toBe('Madera de pino, tapa 60 x 45 cm');
+      expect(a.serie ?? '').toBe('');
+      expect(a.campos[0].valor).toBe('MADERA');
+    }
+  });
+  it('solo completa vacíos por defecto y reemplaza si se pide', async () => {
+    await guardarFicha(db, admin, dest[0], { descripcion: 'Pupitre unipersonal de madera', marca: 'OTRA MARCA', estado: 'Nuevo' });
+    await copiarFicha(db, admin, { origen, destinos: [dest[0]] });
+    expect((await obtenerActivo(db, dest[0])).marca).toBe('OTRA MARCA');
+    await copiarFicha(db, admin, { origen, destinos: [dest[0]], solo_vacios: false });
+    expect((await obtenerActivo(db, dest[0])).marca).toBe('CARPINTERÍA ORURO');
+  });
+  it('copia la serie, el valor y el estado solo si se pide', async () => {
+    await copiarFicha(db, admin, { origen, destinos: [dest[1]], copiar: ['serie', 'valor'], solo_vacios: false });
+    const a = await obtenerActivo(db, dest[1]);
+    expect(a.serie).toBe('S-0001');
+  });
+  it('no copia características a un activo de otra cuenta y omite inexistentes y dados de baja', async () => {
+    const otro = (await db('af_activos').whereNot({ id_cta: 3 }).where({ situacion: 'EN ALMACEN' }).first())?.codigo ?? (await db('af_activos').whereNot({ id_cta: 3 }).first()).codigo;
+    const r = await copiarFicha(db, admin, { origen, destinos: [otro, 'NO-EXISTE'], copiar: ['marca', 'caracteristicas'] });
+    expect(r.sin_caracteristicas).toBe(1);
+    expect(r.omitidos.map((o) => o.codigo)).toContain('NO-EXISTE');
+    await db('af_activos').where({ codigo: dest[2] }).update({ situacion: 'BAJA' });
+    const r2 = await copiarFicha(db, admin, { origen, destinos: [dest[2]] });
+    expect(r2.copiados).toBe(0);
+    expect(r2.omitidos[0].motivo).toMatch(/baja/);
+  });
+  it('valida origen, destinos y datos desconocidos', async () => {
+    await rechaza(copiarFicha(db, admin, { origen: 'XXX', destinos: ['a'] }), /No existe/);
+    await rechaza(copiarFicha(db, admin, { origen, destinos: [] }), /al menos un activo/);
+    await rechaza(copiarFicha(db, admin, { origen, destinos: [origen] }), /al menos un activo/);
+    await rechaza(copiarFicha(db, admin, { origen, destinos: dest, copiar: ['sueldo'] }), /desconocido/);
+  });
+  it('copia las fotografías como archivos propios de cada activo', async () => {
+    await db('af_activos').where({ codigo: origen }).update({ foto1: `${origen}_1.png` });
+    const hechas: string[] = [];
+    await copiarFicha(db, admin, { origen, destinos: [dest[3]], copiar: ['fotos'], solo_vacios: false }, (f, c, n) => { hechas.push(`${f}->${c}_${n}`); return `${c}_${n}.png`; });
+    expect(hechas).toEqual([`${origen}_1.png->${dest[3]}_1`]);
+    expect((await obtenerActivo(db, dest[3])).foto1).toBe(`${dest[3]}_1.png`);
   });
 });

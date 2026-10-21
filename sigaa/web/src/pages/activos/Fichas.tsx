@@ -3,6 +3,7 @@ import { abrirDocumento, del, get, put, subirFoto, urlConToken } from '../../api
 import { useAuth } from '../../auth';
 import { Badge, Card, DataTable, Field, NumField, PageHead, SelectField, TextField, AreaField, useAction, useLoad } from '../../ui';
 import { useAfMeta } from './common';
+import CopiarFicha from './CopiarFicha';
 
 export default function AfFichas() {
   const { puede } = useAuth();
@@ -13,6 +14,7 @@ export default function AfFichas() {
   const [f, setF] = useState<any>({});
   const [run, busy] = useAction();
   const fileRef = useRef<HTMLInputElement>(null);
+  const [copiar, setCopiar] = useState(false);
   const [slot, setSlot] = useState(1);
   const cargar = (codigo: string) => run(async () => {
     const d = await get(`/af/activos/${encodeURIComponent(codigo)}`);
@@ -64,10 +66,12 @@ export default function AfFichas() {
             <div className="row">
               {editable && <button className="primary" disabled={busy} onClick={() => run(async () => { await put(`/af/activos/${encodeURIComponent(a.codigo)}`, f); await cargar(a.codigo); }, 'Ficha guardada.')}>Guardar ficha</button>}
               <button onClick={() => abrirDocumento('af-ficha', a.codigo)}>Imprimir ficha (PDF)</button>
+              {editable && <button className="ok" onClick={() => setCopiar(true)}>Copiar esta ficha a otros activos…</button>}
             </div>
           </div>
         ) : <Card><div className="empty">Busque un activo y selecciónelo de la lista.</div></Card>}
       </div>
+      {copiar && a && <CopiarFicha origen={a} onClose={() => setCopiar(false)} onDone={() => cargar(a.codigo)} />}
     </>
   );
 }

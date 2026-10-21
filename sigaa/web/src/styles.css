@@ -45,7 +45,7 @@ input, select, textarea { font: inherit; padding: 7px 9px; border: 1px solid var
 input:focus, select:focus, textarea:focus { outline: 2px solid var(--focus); outline-offset: -1px; }
 input[readonly], input:disabled, select:disabled, textarea:disabled { background: var(--row); color: var(--muted); }
 textarea { resize: vertical; min-height: 60px; }
-input[type='checkbox'] { width: auto; }
+input[type='checkbox'], input[type='radio'] { width: auto; }
 
 button, .btn { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink); padding: 7px 14px; border-radius: 6px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
 button:hover:not(:disabled), .btn:hover { background: var(--row); }
