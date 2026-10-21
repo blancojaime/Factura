@@ -24,14 +24,14 @@ async function nombreAux(db: Db, cta: number, aux: number): Promise<string> {
   return txt((await db('af_auxiliares').where({ id_cta: cta, id_aux: aux }).first('auxiliar'))?.auxiliar);
 }
 
-async function movimiento(db: Db, u: Usuario, fecha: string, codigo: string, tipo: string, doc: string, origen: string, destino: string, detalle: string) {
-  await db('af_movimientos').insert({ fecha, codigo, tipo, documento: doc, origen, destino, detalle, usuario: u.usuario, fecha_reg: nowIso() });
+async function movimiento(db: Db, u: Usuario, fecha: string, codigo: string, tipo: string, doc: string, origen: string, destino: string, detalle: string, extra: { resolucion?: string | null; motivo_cod?: number | null } = {}) {
+  await db('af_movimientos').insert({ fecha, codigo, tipo, documento: doc, origen, destino, detalle, usuario: u.usuario, fecha_reg: nowIso(), resolucion: extra.resolucion ?? null, motivo_cod: extra.motivo_cod ?? null });
 }
 
 // ───────────── INGRESO ─────────────
 export interface IngresoAFInput {
   nro?: string; fecha: string; tipo_doc: string; nro_doc?: string; preventivo?: string; proveedor?: string; factura?: string; nro_memo?: string;
-  comision1?: string; comision2?: string; unidad?: string; fuente_fin?: string; observaciones?: string;
+  comision1?: string; comision2?: string; unidad?: string; fuente_fin?: string; org_fin?: string; observaciones?: string;
   items: { item?: number; id_cta: number; id_aux: number; descripcion?: string; unidad?: string; cantidad: number; precio_unit: number }[];
 }
 
@@ -43,6 +43,7 @@ export async function guardarIngresoAF(db: Db, u: Usuario, d: IngresoAFInput) {
     e.add(!txt(d.nro_doc), 'Registre el Nº de Orden de Compra o Contrato.');
     e.add(!txt(d.proveedor), 'Seleccione el proveedor.');
   }
+  e.add(!!txt(d.org_fin) && !/^\d{3}$/.test(txt(d.org_fin)), 'El organismo financiador es un código de 3 dígitos del clasificador (por ejemplo 111, 113; 000 = no corresponde).');
   e.throwIfAny('Ingreso incompleto:');
   const minimo = await cfgNum(db, 'ValorMinimo', 500);
   return db.transaction(async (trx) => {
@@ -70,7 +71,7 @@ export async function guardarIngresoAF(db: Db, u: Usuario, d: IngresoAFInput) {
     const pr = prov ? await trx('core_proveedores').where({ razon_social: prov }).first('nit') : null;
     const cab = {
       fecha: d.fecha, tipo_doc: d.tipo_doc, nro_doc: txt(d.nro_doc), preventivo: txt(d.preventivo), proveedor: prov, nit: txt(pr?.nit), factura: txt(d.factura), nro_memo: txt(d.nro_memo),
-      comision1: txt(d.comision1), comision2: txt(d.comision2), unidad: txt(d.unidad), fuente_fin: txt(d.fuente_fin), observaciones: txt(d.observaciones), total: round(total, 2),
+      comision1: txt(d.comision1), comision2: txt(d.comision2), unidad: txt(d.unidad), fuente_fin: txt(d.fuente_fin), org_fin: txt(d.org_fin) || null, observaciones: txt(d.observaciones), total: round(total, 2),
     };
     let nro = txt(d.nro);
     if (nro) {
@@ -476,7 +477,7 @@ export async function listarAsignaciones(db: Db) {
 // ───────────── DEVOLUCIÓN · TRANSFERENCIA · BAJA ─────────────
 export async function procesarMovimientoAF(
   db: Db, u: Usuario,
-  d: { tipo: 'DEVOLUCIÓN' | 'TRANSFERENCIA' | 'BAJA'; fecha: string; origen?: string; destino?: string; cod_edif?: number | null; cod_amb?: number | null; estado?: string; motivo?: string; codigos: string[] },
+  d: { tipo: 'DEVOLUCIÓN' | 'TRANSFERENCIA' | 'BAJA'; fecha: string; origen?: string; destino?: string; cod_edif?: number | null; cod_amb?: number | null; estado?: string; motivo?: string; codigos: string[]; resolucion?: string; motivo_cod?: number | null },
 ) {
   const e = new Errores();
   e.add(!['DEVOLUCIÓN', 'TRANSFERENCIA', 'BAJA'].includes(d.tipo), 'Seleccione el tipo de movimiento: DEVOLUCIÓN, TRANSFERENCIA o BAJA.');
@@ -487,7 +488,11 @@ export async function procesarMovimientoAF(
     e.add(!txt(d.origen) || !txt(d.destino), 'Seleccione el funcionario ORIGEN y el funcionario DESTINO.');
     e.add(norm(d.origen) === norm(d.destino) && !!txt(d.origen), 'El funcionario origen y destino no pueden ser el mismo.');
   }
-  if (d.tipo === 'BAJA') e.add(!txt(d.motivo), 'Registre el motivo de la baja (obsolescencia, siniestro, robo, deterioro, etc.).');
+  if (d.tipo === 'BAJA') {
+    e.add(!txt(d.motivo), 'Registre el motivo de la baja (obsolescencia, siniestro, robo, deterioro, etc.).');
+    e.add([...txt(d.resolucion)].length > 16, 'La resolución o disposición de respaldo admite como máximo 16 caracteres (límite del VSIAF).');
+    e.add(d.motivo_cod !== undefined && d.motivo_cod !== null && !(Number.isInteger(Number(d.motivo_cod)) && Number(d.motivo_cod) >= 1 && Number(d.motivo_cod) <= 9), 'El código de motivo de baja del VSIAF va del 1 al 9.');
+  }
   e.throwIfAny('No se puede procesar el movimiento:');
   return db.transaction(async (trx) => {
     const prefijo = d.tipo === 'DEVOLUCIÓN' ? 'DEV' : d.tipo === 'TRANSFERENCIA' ? 'TRF' : 'BAJ';
@@ -528,7 +533,7 @@ export async function procesarMovimientoAF(
       if (d.cod_edif && d.tipo !== 'BAJA') Object.assign(upd, { edif_actual: d.cod_edif, amb_actual: d.cod_amb ?? 0 });
       if (d.estado) upd.estado = d.estado;
       await trx('af_activos').where({ codigo: c }).update(upd);
-      await movimiento(trx, u, d.fecha, c, d.tipo, nro, origen, destinoTxt, `${txt(d.motivo)}${d.estado ? ' | Estado: ' + d.estado : ''}${ubic ? ' | Ubicación: ' + ubic : ''}`.trim());
+      await movimiento(trx, u, d.fecha, c, d.tipo, nro, origen, destinoTxt, `${txt(d.motivo)}${d.estado ? ' | Estado: ' + d.estado : ''}${ubic ? ' | Ubicación: ' + ubic : ''}`.trim(), d.tipo === 'BAJA' ? { resolucion: txt(d.resolucion) || null, motivo_cod: d.motivo_cod ? Number(d.motivo_cod) : null } : {});
     }
     await audit(trx, u, d.tipo, nro, `${new Set(d.codigos).size} activos${d.motivo ? ': ' + d.motivo : ''}`);
     return { nro, cantidad: new Set(d.codigos).size };

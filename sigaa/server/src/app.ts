@@ -14,6 +14,7 @@ import { isPg } from './db/connect.js';
 import { registerAlmacenes } from './routes/almacenes.js';
 import { registerCombustible } from './routes/combustible.js';
 import { registerActivos } from './routes/activos.js';
+import { registerVsiaf } from './routes/vsiaf.js';
 import { registerCatalogos } from './routes/catalogos.js';
 import { dashboardAlm } from './modules/almacenes/dashboard.js';
 import { tablero } from './modules/combustible/otros.js';
@@ -186,6 +187,7 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
   await registerAlmacenes(ctx);
   await registerCombustible(ctx);
   await registerActivos(ctx);
+  await registerVsiaf(ctx);
 
   // ── Aplicación web (SPA) ──
   const webDir = path.resolve(opts.webDir ?? path.resolve(process.cwd(), '../web/dist'));

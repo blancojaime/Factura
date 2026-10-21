@@ -776,6 +776,7 @@ export const TABLES: Record<string, Builder> = {
     t.string('unidad', 160);
     t.string('fuente_fin', 120);
     t.text('observaciones');
+    t.string('org_fin', 3); // organismo financiador (código de 3 dígitos del clasificador; lo exige el VSIAF)
     money(t, 'total');
     t.string('estado', 16).defaultTo('REGISTRADO'); // REGISTRADO|PARCIAL|CODIFICADO
     t.string('fecha_reg', 30);
@@ -883,16 +884,63 @@ export const TABLES: Record<string, Builder> = {
     t.text('detalle');
     t.string('usuario', 60);
     t.string('fecha_reg', 30);
+    t.string('resolucion', 40); // baja: resolución / disposición legal (el VSIAF admite 16 caracteres)
+    t.integer('motivo_cod'); // baja: motivo 1-9 del VSIAF
     t.index(['codigo']);
   },
 };
 
+// ───────────── Envío de activos al VSIAF (Ministerio de Economía y Finanzas Públicas) ─────────────
+TABLES.af_vsiaf_equiv = (t) => {
+  t.increments('id');
+  t.string('tipo', 20).notNullable(); // grupo|estado|org_fin|unidad|motivo_baja|oficina|resp_nombre|resp_cargo|auxiliar
+  t.string('clave', 240).notNullable();
+  t.string('valor', 240).notNullable();
+  t.unique(['tipo', 'clave']);
+};
+TABLES.af_vsiaf_lotes = (t) => {
+  t.increments('id');
+  t.string('fecha', 30).notNullable();
+  t.string('usuario', 60);
+  t.string('destino', 300);
+  t.string('unidad', 5);
+  t.string('estado_registro', 12);
+  t.text('resumen'); // JSON: conteos, totales, incidencias
+  t.string('respaldo', 400);
+  t.string('resultado', 20); // IMPORTADO|ERROR
+  t.text('mensaje');
+};
+TABLES.af_vsiaf_envios = (t) => {
+  t.increments('id');
+  t.integer('lote').notNullable();
+  t.string('tipo', 14).notNullable(); // ACTIVO|TRANSFERENCIA|BAJA
+  t.string('codigo', 20).notNullable(); // código SIGAA del activo
+  t.string('unidad', 5);
+  t.string('codigo_vsiaf', 15);
+  t.string('oficina', 120); // estado enviado (para detectar cambios de responsable)
+  t.string('responsable', 120);
+  t.string('fecha', 30);
+  t.string('usuario', 60);
+  t.index(['codigo']);
+  t.index(['lote']);
+};
+
 export const TABLE_ORDER = Object.keys(TABLES);
+
+/** Columnas agregadas después de la primera versión: se crean en bases que ya existen. */
+const COLUMNAS_NUEVAS: [tabla: string, columna: string, def: (t: Knex.AlterTableBuilder) => void][] = [
+  ['af_movimientos', 'resolucion', (t) => t.string('resolucion', 40)],
+  ['af_movimientos', 'motivo_cod', (t) => t.integer('motivo_cod')],
+  ['af_ingresos', 'org_fin', (t) => t.string('org_fin', 3)],
+];
 
 export async function createSchema(knex: Knex): Promise<void> {
   for (const name of TABLE_ORDER) {
     if (!(await knex.schema.hasTable(name))) {
       await knex.schema.createTable(name, TABLES[name]);
     }
+  }
+  for (const [tabla, columna, def] of COLUMNAS_NUEVAS) {
+    if ((await knex.schema.hasTable(tabla)) && !(await knex.schema.hasColumn(tabla, columna))) await knex.schema.alterTable(tabla, def);
   }
 }

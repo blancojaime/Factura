@@ -66,7 +66,7 @@ export const avisos = (r: Resultado) => r.incidencias.filter((i) => i.nivel === 
 export class ImportacionAbortada extends Error {}
 
 type Reg = Record<string, any>;
-type Op = { tipo: 'unidad' | 'oficina' | 'resp' | 'aux' | 'actual_new' | 'reval' | 'trasfe' | 'baja'; d: any };
+type Op = { tipo: 'unidad' | 'oficina' | 'resp' | 'aux' | 'actual_new' | 'reval' | 'trasfe' | 'baja'; d: any; ref: number | string };
 
 // ───────────── contexto de fila ─────────────
 class Ctx {
@@ -266,7 +266,7 @@ export class Importador {
       if (c.ok && this.estado.unidades.has(u)) { c.warn('unidad', `La unidad ${u} ya existe: se omite.`); continue; }
       if (!c.ok) { this.omitir('UNIDADES'); continue; }
       this.estado.unidades.set(u, { unidad: u, descripcion: desc, ciudad, estado: 1, nueva: true });
-      this.ops.push({ tipo: 'unidad', d: { ENTIDAD: this.estado.entidad, UNIDAD: u, DESCRIP: desc, CIUDAD: ciudad, ESTADOUNI: 1 } });
+      this.ops.push({ ref: f.ref, tipo: 'unidad', d: { ENTIDAD: this.estado.entidad, UNIDAD: u, DESCRIP: desc, CIUDAD: ciudad, ESTADOUNI: 1 } });
     }
   }
 
@@ -282,7 +282,7 @@ export class Importador {
       const cod = this.estado.siguienteOficina(unidad);
       this.estado.oficinas.set(k2(unidad, cod), { nom, api: 1, nueva: true });
       this.estado.ofPorNombre.set(k2(unidad, norm(nom)), cod);
-      this.ops.push({ tipo: 'oficina', d: { ENTIDAD: this.estado.entidad, UNIDAD: unidad, CODOFIC: cod, NOMOFIC: nom, OBSERV: obs || null, FEULT: this.opt.hoy, USUAR: this.opt.usuario, API_ESTADO: 1 } });
+      this.ops.push({ ref: f.ref, tipo: 'oficina', d: { ENTIDAD: this.estado.entidad, UNIDAD: unidad, CODOFIC: cod, NOMOFIC: nom, OBSERV: obs || null, FEULT: this.opt.hoy, USUAR: this.opt.usuario, API_ESTADO: 1 } });
     }
   }
 
@@ -307,7 +307,7 @@ export class Importador {
       const cod = this.estado.siguienteResp(unidad, ofic);
       this.estado.resp.set(k3(unidad, ofic, cod), { nom, api: 1, nueva: true });
       this.estado.respPorNombre.set(k3(unidad, ofic, norm(nom)), cod);
-      this.ops.push({ tipo: 'resp', d: { ENTIDAD: this.estado.entidad, UNIDAD: unidad, CODOFIC: ofic, CODRESP: cod, NOMRESP: nom, CARGO: cargo, OBSERV: obs || null, CI: ci, FEULT: this.opt.hoy, USUAR: this.opt.usuario, COD_EXP: codExp, API_ESTADO: 1 } });
+      this.ops.push({ ref: f.ref, tipo: 'resp', d: { ENTIDAD: this.estado.entidad, UNIDAD: unidad, CODOFIC: ofic, CODRESP: cod, NOMRESP: nom, CARGO: cargo, OBSERV: obs || null, CI: ci, FEULT: this.opt.hoy, USUAR: this.opt.usuario, COD_EXP: codExp, API_ESTADO: 1 } });
     }
   }
 
@@ -325,7 +325,7 @@ export class Importador {
       if (cod > 999) { c.err('auxiliar', `El grupo ${g.codcont} ya tiene 999 auxiliares: no caben más.`); this.omitir('AUXILIARES'); continue; }
       this.estado.aux.set(k3(unidad, g.codcont, cod), nom);
       this.estado.auxPorNombre.set(k3(unidad, g.codcont, norm(nom)), cod);
-      this.ops.push({ tipo: 'aux', d: { ENTIDAD: this.estado.entidad, UNIDAD: unidad, CODCONT: g.codcont, CODAUX: cod, NOMAUX: nom, OBSERV: obs || null, FEULT: this.opt.hoy, USUAR: this.opt.usuario } });
+      this.ops.push({ ref: f.ref, tipo: 'aux', d: { ENTIDAD: this.estado.entidad, UNIDAD: unidad, CODCONT: g.codcont, CODAUX: cod, NOMAUX: nom, OBSERV: obs || null, FEULT: this.opt.hoy, USUAR: this.opt.usuario } });
     }
   }
 
@@ -420,7 +420,7 @@ export class Importador {
         CODIGOSEC: codSec, BANDERAS: banderas, USU_MOD: '',
       };
       this.estado.activos.set(k2(unidad, codigo), { ...rec, _new: true, _src: f.ref });
-      this.ops.push({ tipo: 'actual_new', d: rec });
+      this.ops.push({ ref: f.ref, tipo: 'actual_new', d: rec });
       try {
         const v = this.valuacion(rec, this.opt.fechaCalculo > inc ? this.opt.fechaCalculo : inc);
         out.push(filaCalculo(f.ref, rec, g.nombre, v, estReg));
@@ -470,7 +470,7 @@ export class Importador {
         DEPACU: v.snapDepacu, ACTUA: v.snapActua, DEPGESTION: v.depGestion, USU_MOD: '',
       };
       const upd = { DIA: partes(nuevaBase).d, MES: partes(nuevaBase).m, ANO: partes(nuevaBase).y, B_REV: true, COSTO: costoN, VIDAUTIL: g.depreciar ? vidaN : 0, DEPACU: 0 };
-      this.ops.push({ tipo: 'reval', d: { row: rv, key, unidad, codigo, update: upd } });
+      this.ops.push({ ref: f.ref, tipo: 'reval', d: { row: rv, key, unidad, codigo, update: upd } });
       this.estado.revalKeys.add(k3(unidad, codigo, norm(resol)));
       Object.assign(a, upd);
       out.push({ fila: f.ref, unidad, codigo, fecha_revaluo: fecha, costo_anterior: rv.COSTO, vida_anterior: rv.VIDAUTIL, valor_actualizado: v.valorActualizado, dep_gestion: v.depGestion,
@@ -505,7 +505,7 @@ export class Importador {
       }
       if (!c.ok || ofic === null || resp === null) { this.omitir('TRANSFERENCIAS'); continue; }
       if (dest === unidad && ofic === a.CODOFIC && resp === a.CODRESP) { c.warn('codigo', 'La oficina y el responsable de destino son los mismos que los actuales: se omite.'); continue; }
-      this.ops.push({ tipo: 'trasfe', d: { key, codigo, update: { CODOFIC: ofic, CODRESP: resp, UNIDAD: dest, CODAUX: codAux },
+      this.ops.push({ ref: f.ref, tipo: 'trasfe', d: { key, codigo, update: { CODOFIC: ofic, CODRESP: resp, UNIDAD: dest, CODAUX: codAux },
         row: { ENTIDAD: this.estado.entidad, UNIDAD: dest, CODIGO: codigo, CODOFIC: ofic, CODRESP: resp, FEULT: this.opt.hoy, USUAR: this.opt.usuario, UNIDADINI: unidad } } });
       this.estado.activos.delete(key);
       Object.assign(a, { UNIDAD: dest, CODOFIC: ofic, CODRESP: resp, CODAUX: codAux });
@@ -558,7 +558,7 @@ export class Importador {
         B_REV: !!a.B_REV, VIDAUTIL: a.VIDAUTIL, RESOLUCION: resol, OBSERV: DADO_DE_BAJA, MOTIVO: obs, DEPACU: v.snapDepacu, ACTUA: v.snapActua, DEPGESTION: v.depGestion,
         COSBAJINI: v.valorActualizadoIni, COSDAINI: v.depAcumuladaIni, COSACTBAJ: v.valorActualizado, ACTDABAJ: v.actualizacionDep, USUAR: this.opt.usuario, FEULT: this.opt.hoy, USU_MOD: '',
       };
-      this.ops.push({ tipo: 'baja', d: { row: bj, key, unidad, codigo } });
+      this.ops.push({ ref: f.ref, tipo: 'baja', d: { row: bj, key, unidad, codigo } });
       this.estado.activos.delete(key);
       this.estado.codigosBaja.add(key);
       out.push({ fila: f.ref, unidad, codigo, fecha_baja: fecha, motivo: this.motivos.get(codBaja), costo: a.COSTO, costo_actualizado: v.valorActualizado, dep_gestion: v.depGestion,
@@ -572,6 +572,9 @@ export class Importador {
     const libro: Libro = 'libro' in entrada ? entrada.libro : entrada;
     for (const p of ('libro' in entrada ? entrada.problemas ?? [] : [])) {
       this.res.incidencias.push({ hoja: '(estructura)', ref: 0, columna: '', nivel: /falta la columna|ninguna hoja/.test(p) ? ERROR : AVISO, mensaje: p });
+    }
+    if (this.ufv.origen.toLowerCase().endsWith('.csv')) {
+      this.res.incidencias.push({ hoja: '(UFV)', ref: 0, columna: '', nivel: AVISO, mensaje: 'No se encontró tipocambio.app en la instalación: se usan las UFV incluidas en SIGAA, que son aproximadas desde 2021. La vista previa de cálculo puede diferir del VSIAF; las fechas sin UFV también se rechazan.' });
     }
     const dias = this.ufv.diasDesdeUltimoCambio(this.opt.fechaCalculo);
     if (dias !== null && dias > 75) {
@@ -590,6 +593,12 @@ export class Importador {
     const tipos: Record<Op['tipo'], string> = { unidad: 'UNIDADES', oficina: 'OFICINAS', resp: 'RESPONSABLES', aux: 'AUXILIARES', actual_new: 'ACTIVOS', reval: 'REVALUOS', trasfe: 'TRANSFERENCIAS', baja: 'BAJAS' };
     for (const o of this.ops) this.res.conteos[tipos[o.tipo]] = (this.res.conteos[tipos[o.tipo]] ?? 0) + 1;
     return this.res;
+  }
+
+  /** Operaciones planificadas (para registrar qué filas de origen se importaron). */
+  planificadas(): { hoja: Hoja; ref: number | string }[] {
+    const hojas: Record<Op['tipo'], Hoja> = { unidad: 'UNIDADES', oficina: 'OFICINAS', resp: 'RESPONSABLES', aux: 'AUXILIARES', actual_new: 'ACTIVOS', reval: 'REVALUOS', trasfe: 'TRANSFERENCIAS', baja: 'BAJAS' };
+    return this.ops.map((o) => ({ hoja: hojas[o.tipo], ref: o.ref }));
   }
 
   // ------------------------------------------------------------------ aplicar
