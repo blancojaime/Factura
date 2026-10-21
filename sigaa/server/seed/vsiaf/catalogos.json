@@ -1,0 +1,1093 @@
+{
+ "grupos": [
+  {
+   "codcont": 1,
+   "nombre": "EDIFICACIONES",
+   "vida_util": 40,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 2,
+   "nombre": "MUEBLES Y ENSERES DE OFICINA",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 3,
+   "nombre": "MAQUINARIA EN GENERAL",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 4,
+   "nombre": "EQUIPO MEDICO Y DE LABORATORIO",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 5,
+   "nombre": "EQUIPO DE COMUNICACIONES",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 6,
+   "nombre": "EQUIPO EDUCACIONAL Y RECREATIVO",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 7,
+   "nombre": "BARCOS Y LANCHAS EN GENERAL",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 8,
+   "nombre": "VEHICULOS AUTOMOTORES",
+   "vida_util": 5,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 9,
+   "nombre": "AVIONES",
+   "vida_util": 5,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 10,
+   "nombre": "MAQUINARIA PARA LA CONSTRUCCION",
+   "vida_util": 5,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 11,
+   "nombre": "MAQUINARIA AGRICOLA",
+   "vida_util": 4,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 12,
+   "nombre": "ANIMALES DE TRABAJO",
+   "vida_util": 4,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 13,
+   "nombre": "HERRAMIENTAS EN GENERAL",
+   "vida_util": 4,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 14,
+   "nombre": "REPRODUCTORES Y HEMBRAS DE PEDIGREE",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 15,
+   "nombre": "EQUIPOS DE COMPUTACION",
+   "vida_util": 4,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 16,
+   "nombre": "CANALES DE REGADIO Y POZOS",
+   "vida_util": 20,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 17,
+   "nombre": "ESTANQUES, BAÑADEROS Y ABREVADEROS",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 18,
+   "nombre": "ALAMBRADOS, TRANQUERAS Y VALLAS",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 19,
+   "nombre": "VIVIENDAS PARA EL PERSONAL",
+   "vida_util": 20,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 20,
+   "nombre": "MUEBLES Y ENSERES EN VIVIENDAS DE PERSONAL",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 21,
+   "nombre": "SILOS, ALMACENES Y GALPONES",
+   "vida_util": 20,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 22,
+   "nombre": "TINGLADOS Y COBERTIZOS DE MADERA",
+   "vida_util": 5,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 23,
+   "nombre": "TINGLADOS Y COBERTIZOS DE METAL",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 24,
+   "nombre": "INSTALACION DE ELECTRIFICACION Y TELEFONIA RURAL",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 25,
+   "nombre": "CAMINOS INTERIORES",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 26,
+   "nombre": "CAÑA DE AZUCAR",
+   "vida_util": 5,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 27,
+   "nombre": "VIDES",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 28,
+   "nombre": "FRUTALES",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 29,
+   "nombre": "LINEAS DE RECOLECCION DE LA INDUSTRIA PETROLERA",
+   "vida_util": 5,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 30,
+   "nombre": "POZOS PETROLEROS",
+   "vida_util": 5,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 31,
+   "nombre": "EQUIPOS DE CAMPO DE LA INDUSTRIA PETROLERA",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 32,
+   "nombre": "PLANTA DE PROCESAMIENTO DE LA INDUSTRIA PETROLERA",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 33,
+   "nombre": "DUCTOS DE LA INDUSTRIA PETROLERA",
+   "vida_util": 10,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 34,
+   "nombre": "TERRENOS",
+   "vida_util": 0,
+   "depreciar": false,
+   "actualizar": true
+  },
+  {
+   "codcont": 36,
+   "nombre": "OTROS ACTIVOS FIJOS",
+   "vida_util": 0,
+   "depreciar": false,
+   "actualizar": false
+  },
+  {
+   "codcont": 37,
+   "nombre": "ACTIVOS INTANGIBLES",
+   "vida_util": 5,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 38,
+   "nombre": "EQUIPO E INSTALACIONES",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 39,
+   "nombre": "OTRAS PLANTACIONES",
+   "vida_util": 8,
+   "depreciar": true,
+   "actualizar": true
+  },
+  {
+   "codcont": 40,
+   "nombre": "ACTIVOS MUSEOLOGICOS Y CULTURALES",
+   "vida_util": 0,
+   "depreciar": false,
+   "actualizar": false
+  }
+ ],
+ "estados": [
+  {
+   "codigo": 1,
+   "nombre": "Bueno"
+  },
+  {
+   "codigo": 2,
+   "nombre": "Regular"
+  },
+  {
+   "codigo": 3,
+   "nombre": "Malo"
+  }
+ ],
+ "motivos_baja": [
+  {
+   "codigo": 1,
+   "nombre": "Disposición definitiva de bienes"
+  },
+  {
+   "codigo": 2,
+   "nombre": "Hurto, robo o perdida fortuita"
+  },
+  {
+   "codigo": 3,
+   "nombre": "Mermas"
+  },
+  {
+   "codigo": 4,
+   "nombre": "Vencimiento, descomposiciones, alteraciones y deterioros"
+  },
+  {
+   "codigo": 5,
+   "nombre": "Inutilización"
+  },
+  {
+   "codigo": 6,
+   "nombre": "Obsolescensia"
+  },
+  {
+   "codigo": 7,
+   "nombre": "Desmantelamiento total o parcial de edificaciones, excepto el terreno que no será dado"
+  },
+  {
+   "codigo": 8,
+   "nombre": "Siniestros"
+  },
+  {
+   "codigo": 9,
+   "nombre": "ERROR DE TRANSCRIPCION"
+  }
+ ],
+ "organismos_financiadores": [
+  {
+   "codigo": "000",
+   "nombre": "NC",
+   "sigla": "NC"
+  },
+  {
+   "codigo": "111",
+   "nombre": "Tesoro General de la Nación",
+   "sigla": "TGN"
+  },
+  {
+   "codigo": "112",
+   "nombre": "Tesoro General de la Nación - Papeles",
+   "sigla": "TGN-P"
+  },
+  {
+   "codigo": "113",
+   "nombre": "Tesoro General de la Nación - Coparticipación Tributaria",
+   "sigla": "TGN-CT"
+  },
+  {
+   "codigo": "114",
+   "nombre": "Recursos de Contravalor",
+   "sigla": "RECON"
+  },
+  {
+   "codigo": "115",
+   "nombre": "Donaciones - HIPC II",
+   "sigla": "DON-HIPC"
+  },
+  {
+   "codigo": "116",
+   "nombre": "T.G.N. - Fondo de Compensación Departamental",
+   "sigla": "TGN-FCOMP"
+  },
+  {
+   "codigo": "117",
+   "nombre": "T.G.N.-Impuesto Especial a los Hidrocarburos y sus Derivados",
+   "sigla": "TGN-IEHD"
+  },
+  {
+   "codigo": "119",
+   "nombre": "T.G.N. - Impuesto Directo a los Hidrocarburos",
+   "sigla": "TGN - IDH"
+  },
+  {
+   "codigo": "120",
+   "nombre": "T.G.N. - Impuesto a la Participación en Juegos",
+   "sigla": "TGN - IPJ"
+  },
+  {
+   "codigo": "129",
+   "nombre": "Otros Organismos Financiadores del Gobierno",
+   "sigla": "OT-GOB"
+  },
+  {
+   "codigo": "210",
+   "nombre": "Rec.Específ. de Municipalidades e Indígena Originario Campes",
+   "sigla": "RECESPMUN"
+  },
+  {
+   "codigo": "220",
+   "nombre": "Regalías",
+   "sigla": "REG"
+  },
+  {
+   "codigo": "230",
+   "nombre": "Otros Recursos Específicos",
+   "sigla": "OTPRO"
+  },
+  {
+   "codigo": "311",
+   "nombre": "Asociación Latinoamericana de Integración",
+   "sigla": "ALADI"
+  },
+  {
+   "codigo": "312",
+   "nombre": "Centro Interamericano de Agricultura Tropical",
+   "sigla": "CIAT"
+  },
+  {
+   "codigo": "313",
+   "nombre": "Comisión Económica para América Latina",
+   "sigla": "CEPAL"
+  },
+  {
+   "codigo": "314",
+   "nombre": "Corporación Andina de Fomento",
+   "sigla": "CAF"
+  },
+  {
+   "codigo": "315",
+   "nombre": "Fondo Andino de Reserva",
+   "sigla": "FAR"
+  },
+  {
+   "codigo": "316",
+   "nombre": "Instituto Interamericano de Cooperación Agrícola",
+   "sigla": "IICA"
+  },
+  {
+   "codigo": "317",
+   "nombre": "Comunidad Andina de Naciones",
+   "sigla": "CAN"
+  },
+  {
+   "codigo": "318",
+   "nombre": "Organización de los Estados Americanos",
+   "sigla": "OEA"
+  },
+  {
+   "codigo": "319",
+   "nombre": "Organización Latinoamericana de Energía",
+   "sigla": "OLADE"
+  },
+  {
+   "codigo": "321",
+   "nombre": "Organización Panamericana de Salud",
+   "sigla": "OPS"
+  },
+  {
+   "codigo": "322",
+   "nombre": "Sistema Económico Latinoamericano",
+   "sigla": "SELA"
+  },
+  {
+   "codigo": "323",
+   "nombre": "Fondo de Des.de Pueblos Indígenas de América Lat.y El Caribe",
+   "sigla": "FPDPI"
+  },
+  {
+   "codigo": "341",
+   "nombre": "Centro NN.UU. para los Asentamientos Humanos",
+   "sigla": "HABITAT"
+  },
+  {
+   "codigo": "342",
+   "nombre": "Conferencia de las NN.UU. sobre Comercio y Desarrollo",
+   "sigla": "UNCTAD"
+  },
+  {
+   "codigo": "343",
+   "nombre": "Departamento de Cooperación Técnica para el Desarrollo",
+   "sigla": "DTCD"
+  },
+  {
+   "codigo": "344",
+   "nombre": "Fondo de las NN.UU. para la Infancia",
+   "sigla": "UNICEF"
+  },
+  {
+   "codigo": "345",
+   "nombre": "Fondo NN.UU. para la Actividad en Materia de Población",
+   "sigla": "UNFPA"
+  },
+  {
+   "codigo": "346",
+   "nombre": "Fondo Internacional de Desarrollo Agrícola",
+   "sigla": "FIDA"
+  },
+  {
+   "codigo": "347",
+   "nombre": "Inst. de NNUU para Formación Profesional e Investigación",
+   "sigla": "UNITAR"
+  },
+  {
+   "codigo": "348",
+   "nombre": "Organización de Aviación Civil Internacional",
+   "sigla": "OACI"
+  },
+  {
+   "codigo": "349",
+   "nombre": "Organización de las NN.UU. para el Desarrollo Industrial",
+   "sigla": "ONUDI"
+  },
+  {
+   "codigo": "351",
+   "nombre": "Org. de las NN.UU. para la Agricultura y la Alimentación",
+   "sigla": "FAO"
+  },
+  {
+   "codigo": "352",
+   "nombre": "Org. de las NN.UU. para la Educación, Ciencia y la Cultura",
+   "sigla": "UNESCO"
+  },
+  {
+   "codigo": "353",
+   "nombre": "Organización Internacional de Energía Atómica",
+   "sigla": "OIEA"
+  },
+  {
+   "codigo": "354",
+   "nombre": "Organización Internacional del Trabajo",
+   "sigla": "OIT"
+  },
+  {
+   "codigo": "355",
+   "nombre": "Organización Mundial de la Salud",
+   "sigla": "OMS"
+  },
+  {
+   "codigo": "356",
+   "nombre": "Organización Mundial de Meteorología",
+   "sigla": "OMM"
+  },
+  {
+   "codigo": "357",
+   "nombre": "Programa de las NN.UU. para el Desarrollo",
+   "sigla": "PNUD"
+  },
+  {
+   "codigo": "358",
+   "nombre": "Programa de NN.UU. para el Medio Ambiente",
+   "sigla": "PNUMA"
+  },
+  {
+   "codigo": "359",
+   "nombre": "Unión Internacional de Telecomunicaciones",
+   "sigla": "UIT"
+  },
+  {
+   "codigo": "361",
+   "nombre": "Unión Postal Universal",
+   "sigla": "UPU"
+  },
+  {
+   "codigo": "362",
+   "nombre": "Universidad de las Naciones Unidas",
+   "sigla": "UNU"
+  },
+  {
+   "codigo": "371",
+   "nombre": "Unión Europea",
+   "sigla": "UE"
+  },
+  {
+   "codigo": "372",
+   "nombre": "Consejo de Asistencia Mutua Económica",
+   "sigla": "CAME"
+  },
+  {
+   "codigo": "373",
+   "nombre": "Organization of the Petroleum Exporting Countries",
+   "sigla": "OPEC"
+  },
+  {
+   "codigo": "374",
+   "nombre": "Programa Mundial de Alimentos",
+   "sigla": "PMA"
+  },
+  {
+   "codigo": "375",
+   "nombre": "Organización Internacional para las Migraciones",
+   "sigla": "OIM"
+  },
+  {
+   "codigo": "376",
+   "nombre": "Fondo de NNUU para el Desarrollo y la Capitalización",
+   "sigla": "FNUDC"
+  },
+  {
+   "codigo": "377",
+   "nombre": "Prog. de las NNUU para la Fiscalización Internal. de Drogas",
+   "sigla": "UNDCP"
+  },
+  {
+   "codigo": "378",
+   "nombre": "Fondo de las NNUU para el Desarrollo de la Mujer",
+   "sigla": "UNIFEM"
+  },
+  {
+   "codigo": "379",
+   "nombre": "Fondo Rotativo de las NNUU para la Exploración de Rec. Nat.",
+   "sigla": "UNRFNRE"
+  },
+  {
+   "codigo": "381",
+   "nombre": "Fondo de Ayuda al Desarrollo (España)",
+   "sigla": "FAD"
+  },
+  {
+   "codigo": "382",
+   "nombre": "Fondo de Ayuda al Equipamiento (España)",
+   "sigla": "FAE"
+  },
+  {
+   "codigo": "383",
+   "nombre": "Fondo de Integración y Desarrollo Bolivia-Argentina",
+   "sigla": "FIDAB"
+  },
+  {
+   "codigo": "384",
+   "nombre": "Fondo Nórdico para el Desarrollo",
+   "sigla": "NFD"
+  },
+  {
+   "codigo": "386",
+   "nombre": "Organización Internacional de Maderas Tropicales",
+   "sigla": "OIMT"
+  },
+  {
+   "codigo": "411",
+   "nombre": "Banco Interamericano de Desarrollo",
+   "sigla": "BID"
+  },
+  {
+   "codigo": "412",
+   "nombre": "Banco Internacional de Reconstrucción y Fomento",
+   "sigla": "BIRF"
+  },
+  {
+   "codigo": "413",
+   "nombre": "Fondo Financiero para el Desarrollo de la Cuenca del Plata",
+   "sigla": "FONPLATA"
+  },
+  {
+   "codigo": "414",
+   "nombre": "Fondo Monetario Internacional",
+   "sigla": "FMI"
+  },
+  {
+   "codigo": "415",
+   "nombre": "Agencia Internacional de Fomento (BM)",
+   "sigla": "AIF"
+  },
+  {
+   "codigo": "416",
+   "nombre": "Banco Interamericano de Ahorro - Préstamo",
+   "sigla": "BIAPE"
+  },
+  {
+   "codigo": "417",
+   "nombre": "Banco de Importaciones - Exportaciones Japón",
+   "sigla": "EXIMBANK-J"
+  },
+  {
+   "codigo": "418",
+   "nombre": "Banco de Importaciones - Exportaciones Corea",
+   "sigla": "EXIMBANK-K"
+  },
+  {
+   "codigo": "419",
+   "nombre": "Banco de Importaciones - Exportaciones (EE. UU.)",
+   "sigla": "EXIMBANK-U"
+  },
+  {
+   "codigo": "420",
+   "nombre": "Corporación Financiera Internacional  (BM)",
+   "sigla": "CFI"
+  },
+  {
+   "codigo": "421",
+   "nombre": "Organismo Multilateral de Garantía de Inversiones  (BM)",
+   "sigla": "OMGI"
+  },
+  {
+   "codigo": "511",
+   "nombre": "Agencia Canadiense para el Desarrollo Internacional",
+   "sigla": "ACDI"
+  },
+  {
+   "codigo": "512",
+   "nombre": "Agencia de Cooperación Internacional del Japón",
+   "sigla": "JICA"
+  },
+  {
+   "codigo": "513",
+   "nombre": "Agencia de los EE.UU. para el Desarrollo",
+   "sigla": "USAID"
+  },
+  {
+   "codigo": "514",
+   "nombre": "Asistencia Internacional Danesa para el Desarrollo",
+   "sigla": "DANIDA"
+  },
+  {
+   "codigo": "515",
+   "nombre": "Agencia  Suiza para el  Desarrollo y la Cooperación",
+   "sigla": "COSUDE"
+  },
+  {
+   "codigo": "516",
+   "nombre": "Instituto Alemán de Crédito para la Reconstrucción",
+   "sigla": "KFW"
+  },
+  {
+   "codigo": "517",
+   "nombre": "Agencia de Cooperación Técnica de la República Alemana",
+   "sigla": "GTZ"
+  },
+  {
+   "codigo": "518",
+   "nombre": "Banco de Cooperación Internacional del Japón",
+   "sigla": "JBIC"
+  },
+  {
+   "codigo": "519",
+   "nombre": "Dir.Gen. de Cooperación Internacional /Coop. Técnica Belga",
+   "sigla": "DGCI -CTB"
+  },
+  {
+   "codigo": "520",
+   "nombre": "Agencia  Sueca para el Desarrollo Internacional",
+   "sigla": "ASDI"
+  },
+  {
+   "codigo": "521",
+   "nombre": "Corporación Internacional de Desarrollo",
+   "sigla": "CID"
+  },
+  {
+   "codigo": "522",
+   "nombre": "Fondo Multilateral de Inversiones (BID)",
+   "sigla": "FOMIN"
+  },
+  {
+   "codigo": "523",
+   "nombre": "Agencia Canadiense para el Desarrollo Internacional Regional",
+   "sigla": "CIID"
+  },
+  {
+   "codigo": "524",
+   "nombre": "Fondo Global del Medio Ambiente (BM)",
+   "sigla": "GEF"
+  },
+  {
+   "codigo": "525",
+   "nombre": "Instituto de Cooperación Iberoamericana",
+   "sigla": "ICI"
+  },
+  {
+   "codigo": "526",
+   "nombre": "Fondo Institucional de Desarrollo",
+   "sigla": "IDF"
+  },
+  {
+   "codigo": "527",
+   "nombre": "Agencia Noruega para el Desarrollo Internacional",
+   "sigla": "NORAD"
+  },
+  {
+   "codigo": "528",
+   "nombre": "Agencia Española de Cooperacion Internacional",
+   "sigla": "AECI"
+  },
+  {
+   "codigo": "529",
+   "nombre": "Corporación de Créditos de Mercaderías (EE.UU.)",
+   "sigla": "CCC"
+  },
+  {
+   "codigo": "530",
+   "nombre": "Export Development Corporación (CANADA)",
+   "sigla": "EDC"
+  },
+  {
+   "codigo": "541",
+   "nombre": "República Federal de Alemania",
+   "sigla": "ALEM"
+  },
+  {
+   "codigo": "542",
+   "nombre": "Argentina",
+   "sigla": "ARG"
+  },
+  {
+   "codigo": "543",
+   "nombre": "Bélgica",
+   "sigla": "BEL"
+  },
+  {
+   "codigo": "544",
+   "nombre": "Brasil",
+   "sigla": "BRA"
+  },
+  {
+   "codigo": "545",
+   "nombre": "Canadá",
+   "sigla": "CANADA"
+  },
+  {
+   "codigo": "546",
+   "nombre": "República de Corea",
+   "sigla": "COR"
+  },
+  {
+   "codigo": "548",
+   "nombre": "República Popular China",
+   "sigla": "CHINA"
+  },
+  {
+   "codigo": "549",
+   "nombre": "República China Nacionalista - Taiwán",
+   "sigla": "CH-TAI"
+  },
+  {
+   "codigo": "551",
+   "nombre": "Dinamarca",
+   "sigla": "DIN"
+  },
+  {
+   "codigo": "552",
+   "nombre": "España",
+   "sigla": "ESP"
+  },
+  {
+   "codigo": "553",
+   "nombre": "Estados Unidos de América",
+   "sigla": "USA"
+  },
+  {
+   "codigo": "554",
+   "nombre": "Francia",
+   "sigla": "FRA"
+  },
+  {
+   "codigo": "555",
+   "nombre": "Gran Bretaña",
+   "sigla": "G-BR"
+  },
+  {
+   "codigo": "556",
+   "nombre": "Holanda",
+   "sigla": "HOL"
+  },
+  {
+   "codigo": "557",
+   "nombre": "Hungría",
+   "sigla": "HUN"
+  },
+  {
+   "codigo": "558",
+   "nombre": "Israel",
+   "sigla": "ISR"
+  },
+  {
+   "codigo": "559",
+   "nombre": "Italia",
+   "sigla": "ITA"
+  },
+  {
+   "codigo": "561",
+   "nombre": "Japón",
+   "sigla": "JAP"
+  },
+  {
+   "codigo": "562",
+   "nombre": "Noruega",
+   "sigla": "NOR"
+  },
+  {
+   "codigo": "563",
+   "nombre": "Perú",
+   "sigla": "PERU"
+  },
+  {
+   "codigo": "564",
+   "nombre": "Rumania",
+   "sigla": "RUM"
+  },
+  {
+   "codigo": "565",
+   "nombre": "Suecia",
+   "sigla": "SUE"
+  },
+  {
+   "codigo": "566",
+   "nombre": "Suiza",
+   "sigla": "SUI"
+  },
+  {
+   "codigo": "567",
+   "nombre": "Federación de Rusia",
+   "sigla": "RUSIA"
+  },
+  {
+   "codigo": "568",
+   "nombre": "República Bolivariana de Venezuela",
+   "sigla": "VEN"
+  },
+  {
+   "codigo": "569",
+   "nombre": "Polonia",
+   "sigla": "POL"
+  },
+  {
+   "codigo": "571",
+   "nombre": "Austria",
+   "sigla": "AUST"
+  },
+  {
+   "codigo": "572",
+   "nombre": "Sudáfrica",
+   "sigla": "SUDAF"
+  },
+  {
+   "codigo": "573",
+   "nombre": "Panamá",
+   "sigla": "PAN"
+  },
+  {
+   "codigo": "574",
+   "nombre": "Portugal",
+   "sigla": "PORT"
+  },
+  {
+   "codigo": "575",
+   "nombre": "República de Chile",
+   "sigla": "CHI"
+  },
+  {
+   "codigo": "576",
+   "nombre": "México",
+   "sigla": "MEX"
+  },
+  {
+   "codigo": "577",
+   "nombre": "República Oriental del Uruguay",
+   "sigla": "URU"
+  },
+  {
+   "codigo": "578",
+   "nombre": "Paraguay",
+   "sigla": "PARA"
+  },
+  {
+   "codigo": "579",
+   "nombre": "Filipinas",
+   "sigla": "FILIP"
+  },
+  {
+   "codigo": "580",
+   "nombre": "Colombia",
+   "sigla": "COL"
+  },
+  {
+   "codigo": "581",
+   "nombre": "Ecuador",
+   "sigla": "ECU"
+  },
+  {
+   "codigo": "582",
+   "nombre": "Cuba",
+   "sigla": "CU"
+  },
+  {
+   "codigo": "639",
+   "nombre": "Otros Gobiernos Extranjeros",
+   "sigla": "OT-G-EXT"
+  },
+  {
+   "codigo": "641",
+   "nombre": "Care",
+   "sigla": "CARE"
+  },
+  {
+   "codigo": "642",
+   "nombre": "Caritas",
+   "sigla": "CARITAS"
+  },
+  {
+   "codigo": "643",
+   "nombre": "Plan Internacional",
+   "sigla": "PLAN-INTER"
+  },
+  {
+   "codigo": "644",
+   "nombre": "Fundación Amigos de la Naturaleza",
+   "sigla": "FAN"
+  },
+  {
+   "codigo": "669",
+   "nombre": "Otros Organismos no Gubernamentales",
+   "sigla": "OT-NOGUB"
+  },
+  {
+   "codigo": "671",
+   "nombre": "Bancos Privados",
+   "sigla": "BAN-PRI"
+  },
+  {
+   "codigo": "672",
+   "nombre": "Proveedores",
+   "sigla": "PROV"
+  },
+  {
+   "codigo": "719",
+   "nombre": "Organismos Financiadores Externos no Determinados",
+   "sigla": "ND-EXT"
+  },
+  {
+   "codigo": "720",
+   "nombre": "Basket Funding",
+   "sigla": "BASK-FUN"
+  },
+  {
+   "codigo": "729",
+   "nombre": "Otros Organismos Financiadores Externos",
+   "sigla": "OT-EXT"
+  },
+  {
+   "codigo": "997",
+   "nombre": "Otros Organismos Financiadores Multilaterales",
+   "sigla": "OT-MUL"
+  },
+  {
+   "codigo": "998",
+   "nombre": "Otros Organismos Financiadores Bilaterales",
+   "sigla": "OT-BIL"
+  }
+ ],
+ "departamentos": [
+  {
+   "codigo": 1,
+   "nombre": "CHUQUISACA",
+   "sigla": "CHQ"
+  },
+  {
+   "codigo": 2,
+   "nombre": "LA PAZ",
+   "sigla": "LPZ"
+  },
+  {
+   "codigo": 3,
+   "nombre": "COCHABAMBA",
+   "sigla": "CBB"
+  },
+  {
+   "codigo": 4,
+   "nombre": "ORURO",
+   "sigla": "ORU"
+  },
+  {
+   "codigo": 5,
+   "nombre": "POTOSI",
+   "sigla": "PTS"
+  },
+  {
+   "codigo": 6,
+   "nombre": "TARIJA",
+   "sigla": "TAR"
+  },
+  {
+   "codigo": 7,
+   "nombre": "SANTA CRUZ",
+   "sigla": "SCZ"
+  },
+  {
+   "codigo": 8,
+   "nombre": "BENI",
+   "sigla": "BEN"
+  },
+  {
+   "codigo": 9,
+   "nombre": "PANDO",
+   "sigla": "PAN"
+  },
+  {
+   "codigo": 10,
+   "nombre": "OTROS",
+   "sigla": "OTR"
+  }
+ ]
+}
