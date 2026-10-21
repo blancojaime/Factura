@@ -10,13 +10,13 @@ import Reportes from './pages/Reportes';
 import Admin from './pages/Admin';
 import { AlmCatalogo, AlmExistencias, AlmIngresos, AlmSalidas, AlmInventarios, AlmBajas, AlmTransferencias, AlmReposicion, AlmSeguridad, AlmCierre } from './pages/almacenes';
 import { ComTablero, ComRecepcion, ComEmitir, ComDescargo, ComMovimientos, ComTurriles, ComViajes, ComConciliacion, ComCronograma, ComVales } from './pages/combustible';
-import { AfIngresos, AfCodificar, AfFichas, AfSolicitudes, AfAsignar, AfMovimientos, AfEtiquetas, AfConsulta } from './pages/activos';
+import { AfIngresos, AfCodificar, AfFichas, AfSolicitudes, AfAsignar, AfMovimientos, AfEtiquetas, AfConsulta, AfVsiaf } from './pages/activos';
 
 const NAV: { grupo: string; mod?: string; items: [string, string][] }[] = [
   { grupo: 'General', items: [['/', 'Tablero general']] },
   { grupo: 'Almacenes', mod: 'alm', items: [['/almacenes/catalogo', 'Catálogo de ítems'], ['/almacenes/existencias', 'Existencias y kardex'], ['/almacenes/ingresos', 'Ingresos (CGI)'], ['/almacenes/salidas', 'Salidas (vales)'], ['/almacenes/inventarios', 'Inventario físico'], ['/almacenes/bajas', 'Bajas'], ['/almacenes/transferencias', 'Transferencias'], ['/almacenes/reposicion', 'Reposición'], ['/almacenes/seguridad', 'Seguridad e higiene'], ['/almacenes/cierre', 'Cierre de gestión']] },
   { grupo: 'Combustible', mod: 'com', items: [['/combustible/tablero', 'Tablero de control'], ['/combustible/recepcion', 'Recepción de vales'], ['/combustible/emitir', 'Emitir vales'], ['/combustible/descargo', 'Descargo de vales'], ['/combustible/movimientos', 'Devolución / baja de vales'], ['/combustible/turriles', 'Turriles'], ['/combustible/viajes', 'Viajes y fondos en avance'], ['/combustible/conciliacion', 'Conciliación'], ['/combustible/cronograma', 'Cronograma'], ['/combustible/vales', 'Registro de vales']] },
-  { grupo: 'Activos fijos', mod: 'af', items: [['/activos/ingresos', 'Ingreso a almacén'], ['/activos/codificar', 'Codificación'], ['/activos/fichas', 'Fichas técnicas'], ['/activos/solicitudes', 'Solicitudes'], ['/activos/asignar', 'Asignación y entrega'], ['/activos/movimientos', 'Devolución / transferencia / baja'], ['/activos/etiquetas', 'Etiquetas (stickers)'], ['/activos/consulta', 'Consulta y kardex']] },
+  { grupo: 'Activos fijos', mod: 'af', items: [['/activos/ingresos', 'Ingreso a almacén'], ['/activos/codificar', 'Codificación'], ['/activos/fichas', 'Fichas técnicas'], ['/activos/solicitudes', 'Solicitudes'], ['/activos/asignar', 'Asignación y entrega'], ['/activos/movimientos', 'Devolución / transferencia / baja'], ['/activos/etiquetas', 'Etiquetas (stickers)'], ['/activos/consulta', 'Consulta y kardex'], ['/activos/vsiaf', 'Enviar al VSIAF']] },
   { grupo: 'Información', items: [['/reportes', 'Reportes y documentos']] },
   { grupo: 'Administración', mod: 'adm', items: [['/catalogos', 'Catálogos y bases de datos'], ['/admin', 'Configuración y usuarios']] },
 ];
@@ -108,6 +108,7 @@ function Shell() {
             <Route path="/activos/movimientos" element={<AfMovimientos />} />
             <Route path="/activos/etiquetas" element={<AfEtiquetas />} />
             <Route path="/activos/consulta" element={<AfConsulta />} />
+            <Route path="/activos/vsiaf" element={<AfVsiaf />} />
             <Route path="/reportes" element={<Reportes />} />
             <Route path="/catalogos" element={<Catalogos />} />
             <Route path="/admin" element={<Admin />} />

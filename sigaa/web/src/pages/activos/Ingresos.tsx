@@ -5,7 +5,7 @@ import { useAuth } from '../../auth';
 import { AreaField, Badge, Card, DataTable, DateField, ItemsGrid, PageHead, SelectField, TextField, useAction, useLoad, useUi } from '../../ui';
 import { nroUrl, optsAux, optsCta, useAfMeta } from './common';
 
-const vacio = () => ({ nro: '', fecha: hoy(), tipo_doc: '', nro_doc: '', preventivo: '', proveedor: '', factura: '', nro_memo: '', comision1: '', comision2: '', unidad: '', fuente_fin: '', observaciones: '', estado: '', total: 0 });
+const vacio = () => ({ nro: '', fecha: hoy(), tipo_doc: '', nro_doc: '', preventivo: '', proveedor: '', factura: '', nro_memo: '', comision1: '', comision2: '', unidad: '', fuente_fin: '', org_fin: '', observaciones: '', estado: '', total: 0 });
 const lin = () => ({ id_cta: '', id_aux: '', descripcion: '', unidad: 'PIEZA', cantidad: '', precio_unit: '', cant_codif: 0 });
 
 export default function AfIngresos() {
@@ -52,6 +52,7 @@ export default function AfIngresos() {
               <SelectField label="Comisión de recepción 2" value={h.comision2} onChange={(v) => setH({ ...h, comision2: v })} disabled={!editable} options={(meta?.funcionarios ?? []).map((f) => f.nombre)} />
               <SelectField label="Unidad" value={h.unidad} onChange={(v) => setH({ ...h, unidad: v })} disabled={!editable} options={(meta?.unidades ?? []).map((u) => u.nombre)} />
               <TextField label="Fuente de financiamiento" value={h.fuente_fin} onChange={(v) => setH({ ...h, fuente_fin: v })} disabled={!editable} />
+              <TextField label="Organismo financiador (3 dígitos)" value={h.org_fin ?? ''} onChange={(v) => setH({ ...h, org_fin: v.replace(/\D/g, '').slice(0, 3) })} disabled={!editable} hint="Clasificador del VSIAF, p. ej. 111, 113; 000 = no corresponde." />
               <AreaField className="span-all" label="Observaciones" value={h.observaciones} onChange={(v) => setH({ ...h, observaciones: v })} disabled={!editable} />
             </div>
           </Card>

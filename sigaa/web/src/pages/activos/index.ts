@@ -6,3 +6,4 @@ export { default as AfAsignar } from './Asignar';
 export { default as AfMovimientos } from './Movimientos';
 export { default as AfEtiquetas } from './Etiquetas';
 export { default as AfConsulta } from './Consulta';
+export { default as AfVsiaf } from './Vsiaf';
