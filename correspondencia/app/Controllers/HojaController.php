@@ -51,18 +51,29 @@ final class HojaController extends Controller
         redirect('hoja/derivar', ['id' => $d['hoja_id'] ?? 0]);
     }
 
+    /** Formulario: imprimir la hoja de ruta de un trámite (registrada o en blanco) con hojas anexas. */
+    public function blanco(): void
+    {
+        $this->pag('hoja/blanco', 'Imprimir hoja de ruta (con anexas o en blanco)', ['modo' => $this->in('modo', 'blanco'), 'nur' => $this->in('nur'), 'anexas' => $this->in('anexas', '2')]);
+    }
+
     public function imprimir(): void
     {
         $u = Auth::user();
         $nur = $this->in('nur');
         $id = $this->inInt('id');
-        if (!$id && $nur === '') { $this->pag('hoja/imprimir_form', 'Imprimir hoja de ruta'); return; }
-        $hoja = $id ? C::hoja($id) : DB::one('SELECT * FROM hojas_ruta WHERE nur=?', [$nur]);
+        if (!$id && $nur === '') { $this->blanco(); return; }
+        $hoja = $id ? C::hoja($id) : DB::one('SELECT * FROM hojas_ruta WHERE nur=?', [strtoupper($nur)]);
         if (!$hoja) throw new \RuntimeException("No existe la hoja de ruta «$nur».");
         if (!C::puedeVer($u, (int)$hoja['id'])) throw new \RuntimeException('No tiene acceso a esta hoja de ruta.');
+        $modo = $this->in('modo') === 'blanco' ? 'blanco' : 'registrado';
+        $anexas = max(0, min(20, $this->inInt('anexas')));
+        $doc = DB::one('SELECT d.*, t.nombre AS tipo, o.nombre AS oficina FROM documentos d JOIN tipos_documento t ON t.id=d.tipo_id JOIN oficinas o ON o.id=d.oficina_id WHERE d.hoja_id=? ORDER BY d.id LIMIT 1', [$hoja['id']]);
+        $seg = $modo === 'blanco' ? [] : C::seguimiento((int)$hoja['id']);
+        // Si hay más derivaciones que bloques disponibles, se agregan anexas automáticamente.
+        $necesarias = max(0, (int)ceil((count($seg) - 3) / 4));
         $this->view('hoja/imprimir', [
-            'hoja' => $hoja, 'seg' => C::seguimiento((int)$hoja['id']),
-            'docs' => DB::all('SELECT d.*, t.nombre AS tipo FROM documentos d JOIN tipos_documento t ON t.id=d.tipo_id WHERE d.hoja_id=? ORDER BY d.id', [$hoja['id']]),
+            'hoja' => $hoja, 'doc' => $doc, 'seg' => $seg, 'modo' => $modo, 'anexas' => max($anexas, $necesarias), 'solicitadas' => $anexas, 'titulo' => 'Hoja de ruta ' . $hoja['nur'],
         ], 'layout_print');
     }
 }

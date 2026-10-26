@@ -58,7 +58,7 @@ function csrf_field(): string { return App\Core\Csrf::field(); }
 
 function acciones(): array
 {
-    return ['Acción Necesaria', 'Para su conocimiento', 'Preparar respuesta', 'Elaborar informe', 'Revisar y opinar', 'Coordinar', 'Atender y devolver', 'Archivar'];
+    return ['Para su consideración', 'Elaborar informe', 'Elaborar respuesta', 'Para su conocimiento', 'Para VoBo', 'Archivar', 'Otro'];
 }
 
 /** Semáforo de antigüedad de una correspondencia pendiente. */

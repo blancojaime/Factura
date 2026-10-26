@@ -3,17 +3,45 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\{Audit, Auth, Controller, DB};
-use App\Services\ImportadorCargos;
+use App\Services\{Ajustes, ImportadorCargos};
 
 final class AdminController extends Controller
 {
-    protected array $roles = ['importar' => ['admin'], 'importar_confirmar' => ['admin'], 'credenciales' => ['admin'], 'credenciales_cerrar' => ['admin'], 'nombres' => ['admin'], 'oficinas' => ['admin'], 'oficina' => ['admin'], 'usuarios' => ['admin'], 'usuario' => ['admin'], 'tipos' => ['admin'], 'tipo' => ['admin'], 'auditoria' => ['admin']];
+    protected array $roles = ['entidad' => ['admin'], 'importar' => ['admin'], 'importar_confirmar' => ['admin'], 'credenciales' => ['admin'], 'credenciales_cerrar' => ['admin'], 'nombres' => ['admin'], 'oficinas' => ['admin'], 'oficina' => ['admin'], 'usuarios' => ['admin'], 'usuario' => ['admin'], 'tipos' => ['admin'], 'tipo' => ['admin'], 'auditoria' => ['admin']];
 
     private function pag(string $tpl, string $titulo, array $d = []): void
     {
         $this->view($tpl, $d + ['menu' => 'admin', 'titulo' => $titulo]);
     }
 
+
+    /** Nombre oficial de la entidad y logo (se imprimen en hojas de ruta, etiquetas y cargos). */
+    public function entidad(): void
+    {
+        if ($this->esPost()) {
+            Ajustes::set('entidad_nombre', mb_substr($this->in('nombre'), 0, 150));
+            Ajustes::set('entidad_superior', mb_substr($this->in('superior'), 0, 150));
+            $dir = ROOT . '/storage/uploads/entidad';
+            if ($this->in('quitar_logo') === '1' && ($p = Ajustes::logoPath())) { @unlink($p); Ajustes::set('logo', ''); }
+            $f = $_FILES['logo'] ?? null;
+            if ($f && $f['error'] !== UPLOAD_ERR_NO_FILE) {
+                if ($f['error'] !== UPLOAD_ERR_OK) throw new \RuntimeException('No se pudo subir el logo.');
+                if ($f['size'] > 1048576) throw new \RuntimeException('El logo no debe superar 1 MB.');
+                $info = @getimagesize($f['tmp_name']);
+                $ext = [IMAGETYPE_PNG => 'png', IMAGETYPE_JPEG => 'jpg'][$info[2] ?? 0] ?? null;
+                if (!$ext) throw new \RuntimeException('El logo debe ser una imagen PNG o JPG.');
+                if (!is_dir($dir)) mkdir($dir, 0750, true);
+                if ($old = Ajustes::logoPath()) @unlink($old);
+                $nombre = 'logo_' . bin2hex(random_bytes(4)) . '.' . $ext;
+                if (!move_uploaded_file($f['tmp_name'], "$dir/$nombre")) throw new \RuntimeException('No se pudo guardar el logo.');
+                Ajustes::set('logo', $nombre);
+            }
+            Audit::log('datos_entidad', 'ajustes', null);
+            flash('Datos de la entidad guardados.');
+            redirect('admin/entidad');
+        }
+        $this->pag('admin/entidad', 'Datos de la entidad', ['nombre' => Ajustes::entidad(), 'superior' => Ajustes::superior(), 'logo' => Ajustes::logoUrl()]);
+    }
 
     public function importar(): void
     {

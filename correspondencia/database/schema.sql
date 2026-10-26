@@ -56,6 +56,8 @@ CREATE TABLE IF NOT EXISTS hojas_ruta (
   ext_institucion VARCHAR(150) NULL,
   ext_fojas VARCHAR(30) NULL,
   ext_documento VARCHAR(120) NULL,
+  ext_anexos VARCHAR(80) NULL,
+  ext_celular VARCHAR(30) NULL,
   codigo_consulta VARCHAR(10) NOT NULL,
   creado_en DATETIME NOT NULL,
   FOREIGN KEY (creada_por) REFERENCES usuarios(id),
@@ -168,4 +170,9 @@ CREATE TABLE IF NOT EXISTS intentos_login (
   ok TINYINT(1) NOT NULL,
   fecha DATETIME NOT NULL,
   KEY (fecha)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ajustes (
+  clave VARCHAR(60) NOT NULL PRIMARY KEY,
+  valor TEXT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

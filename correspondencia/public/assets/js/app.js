@@ -42,13 +42,21 @@
       clearTimeout(t);
       t = setTimeout(function () {
         if (inp.value.length < 2) return;
-        fetch(window.URL_HOJAS + '&q=' + encodeURIComponent(inp.value), { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (rows) {
+        fetch(window.URL_HOJAS + '&q=' + encodeURIComponent(inp.value) + (inp.getAttribute('data-todas') ? '&todas=1' : ''), { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (rows) {
           dl.innerHTML = '';
           rows.forEach(function (r) { var o = document.createElement('option'); o.value = r.nur; o.label = r.referencia; dl.appendChild(o); });
         }).catch(function () {});
       }, 250);
     });
   });
+
+  // Códigos QR (se dibujan en el navegador, sin internet)
+  if (window.qrcode) {
+    $('[data-qr]').forEach(function (el) {
+      try { var q = qrcode(0, 'M'); q.addData(el.getAttribute('data-qr')); q.make(); el.innerHTML = q.createSvgTag({ scalable: true, margin: 0 }); }
+      catch (e) { el.textContent = 'QR no disponible'; }
+    });
+  }
 
   // Editor enriquecido (si Quill carga; si no, queda el textarea)
   window.addEventListener('load', function () {

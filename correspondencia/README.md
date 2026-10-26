@@ -41,6 +41,14 @@ Guía para quien no sabe de informática (instalación en Windows con XAMPP y pr
 
 Requisitos PHP: `pdo_mysql`, `mbstring`, `fileinfo`, `dom` (y `zip` para el respaldo). Se recomienda HTTPS.
 
+## Hoja de ruta con QR, hojas en blanco y recepción (v1.1)
+
+* **Hoja de ruta** (`Hojas de Ruta → Imprimir / en blanco / anexas`): tamaño **Carta vertical**, cabecera con logo, entidad, **QR con los datos de origen** y número de trámite; bloques de derivación (3 en la primera hoja, 4 por anexa). Se puede imprimir **en blanco** (para llenar a mano) o con las derivaciones ya registradas, y elegir **cuántas hojas anexas** (0 a 20); cada anexa lleva arriba el CITE y el NUR.
+* **Ventanilla**: al registrar correspondencia externa se capturan tipo de entrada, fojas, anexos y celular; se imprime una Carta con el **cargo de recepción (con QR)** y **etiquetas** (logo, código NUR, QR, fecha/hora) para pegar en el documento. El QR sigue el formato `CODIGO DE CONTROL / TIPO DE ENTRADA / FECHA/HORA DE REGISTRO / REFERENCIA / FOJAS / ANEXOS / CELULAR CONTACTO`.
+* **Logo y nombre oficial**: `Administración → Datos de la entidad (logo)`.
+* Los QR se dibujan en el navegador (biblioteca `qrcode-generator`, MIT, incluida en `public/assets/vendor/`), sin internet.
+* Bases ya instaladas: ejecutar `database/migrations/003_recepcion_y_ajustes.sql`.
+
 ## Operación
 
 * **NUR**: `SIGLA/AÑO-00001`, correlativo anual por entidad. **CITE**: `INF/SIGLA/OFICINA Nº 0001/AÑO`, correlativo por tipo, oficina y año. Se asignan dentro de transacciones (sin duplicados).

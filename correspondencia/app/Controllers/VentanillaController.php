@@ -34,7 +34,7 @@ final class VentanillaController extends Controller
                 [$docId, $hojaId] = C::crearDocumento($u, $tipoExt, [
                     'destinatario_nombre' => $dest['nombre'], 'destinatario_cargo' => $dest['cargo'], 'referencia' => $this->in('referencia'), 'contenido' => $contenido,
                 ]);
-                DB::update('hojas_ruta', $hojaId, ['origen' => 'externo', 'ext_remitente' => mb_substr($remitente, 0, 150), 'ext_institucion' => mb_substr($institucion, 0, 150), 'ext_fojas' => mb_substr($this->in('fojas'), 0, 30), 'ext_documento' => mb_substr($this->in('documento'), 0, 120)]);
+                DB::update('hojas_ruta', $hojaId, ['origen' => 'externo', 'ext_remitente' => mb_substr($remitente, 0, 150), 'ext_institucion' => mb_substr($institucion, 0, 150), 'ext_fojas' => mb_substr($this->in('fojas'), 0, 30), 'ext_documento' => mb_substr($this->in('documento'), 0, 120), 'ext_anexos' => mb_substr($this->in('anexos'), 0, 80), 'ext_celular' => mb_substr($this->in('celular'), 0, 30)]);
                 $files = $_FILES['archivos'] ?? null;
                 if ($files && is_array($files['name'])) {
                     foreach ($files['name'] as $i => $nombre) {
@@ -53,11 +53,16 @@ final class VentanillaController extends Controller
         $this->view('ventanilla/nueva', ['menu' => 'ventanilla', 'titulo' => 'Registrar correspondencia externa']);
     }
 
+    /** Cargo de recepción (para quien entrega) + etiqueta con logo, código y QR (para pegar en el documento). */
     public function cargo(): void
     {
         $h = C::hoja($this->inInt('id'));
         if ($h['origen'] !== 'externo') throw new \RuntimeException('Esta hoja no es de correspondencia externa.');
-        $der = DB::one("SELECT d.*, au.nombre, au.cargo, ao.nombre AS oficina FROM derivaciones d JOIN usuarios au ON au.id=d.a_usuario_id JOIN oficinas ao ON ao.id=au.oficina_id WHERE d.hoja_id=? AND d.estado<>'cancelado' ORDER BY d.id LIMIT 1", [$h['id']]);
-        $this->view('ventanilla/cargo', ['h' => $h, 'der' => $der], 'layout_print');
+        $der = DB::one("SELECT d.*, au.nombre, au.cargo, ao.nombre AS oficina, ru.nombre AS registrador, ru.cargo AS registrador_cargo FROM derivaciones d
+            JOIN usuarios au ON au.id=d.a_usuario_id JOIN oficinas ao ON ao.id=au.oficina_id JOIN usuarios ru ON ru.id=d.de_usuario_id
+            WHERE d.hoja_id=? AND d.estado<>'cancelado' ORDER BY d.id LIMIT 1", [$h['id']]);
+        $solo = in_array($this->in('solo'), ['cargo', 'etiqueta'], true) ? $this->in('solo') : '';
+        $copias = max(1, min(12, $this->inInt('copias') ?: ($solo === 'etiqueta' ? 6 : 2)));
+        $this->view('ventanilla/cargo', ['h' => $h, 'der' => $der, 'solo' => $solo, 'copias' => $copias, 'titulo' => 'Recepción ' . $h['nur']], 'layout_print');
     }
 }

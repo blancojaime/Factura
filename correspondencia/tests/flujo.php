@@ -104,5 +104,16 @@ ok(DB::val("SELECT rol FROM usuarios WHERE login='u435'") === 'ventanilla', 'Res
 ok((int)DB::val("SELECT COUNT(*) FROM usuarios u JOIN oficinas o ON o.id=u.oficina_id WHERE o.sigla LIKE 'SMOP%'") === 6, 'Fila 151 unida a Obras Públicas (6 cargos)');
 ok((int)DB::val("SELECT COUNT(*) FROM usuarios WHERE cambiar_clave=1") === 46 && password_verify($cred[0]['clave'], DB::val("SELECT password_hash FROM usuarios WHERE login=?", [$cred[0]['login']])), 'Clave temporal válida y cambio obligatorio');
 
+echo "== Textos QR y ajustes\n";
+$hojaT = DB::one('SELECT * FROM hojas_ruta WHERE id=?', [$h1]);
+$docT = DB::one('SELECT d.*, t.nombre AS tipo, o.nombre AS oficina FROM documentos d JOIN tipos_documento t ON t.id=d.tipo_id JOIN oficinas o ON o.id=d.oficina_id WHERE d.hoja_id=? ORDER BY d.id LIMIT 1', [$h1]);
+$qr = App\Services\TextoQr::hojaRuta($hojaT, $docT);
+ok(str_contains($qr, "HOJA DE RUTA: $nur1") && str_contains($qr, 'CITE ORIGINAL: INF/GAMP/ALC No 0001/') && !preg_match('/[^\x20-\x7E\n]/', $qr), 'QR de hoja de ruta: campos y solo ASCII');
+DB::update('hojas_ruta', $h1, ['origen' => 'externo', 'ext_remitente' => 'Comunidad Ñandú', 'ext_documento' => 'Carta', 'ext_fojas' => '3', 'ext_anexos' => '1 folder', 'ext_celular' => '70000000']);
+$qr2 = App\Services\TextoQr::recepcion(DB::one('SELECT * FROM hojas_ruta WHERE id=?', [$h1]));
+ok(str_contains($qr2, "CODIGO DE CONTROL: $nur1") && str_contains($qr2, 'REMITENTE: Comunidad Nandu') && str_contains($qr2, 'ANEXOS: 1 folder') && str_contains($qr2, 'CELULAR CONTACTO: 70000000'), 'QR de recepción: código, remitente, anexos y celular');
+App\Services\Ajustes::set('entidad_nombre', 'Municipio X');
+ok(App\Services\Ajustes::entidad() === 'Municipio X' && App\Services\Ajustes::logoUrl() === null, 'Ajustes: nombre de entidad y sin logo');
+
 echo $fallos ? "\n$fallos FALLO(S)\n" : "\nTODO OK\n";
 exit($fallos ? 1 : 0);

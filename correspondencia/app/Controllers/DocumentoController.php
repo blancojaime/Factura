@@ -134,11 +134,18 @@ final class DocumentoController extends Controller
         readfile($path);
     }
 
-    /** Autocompletado de NUR propios (JSON). */
+    /** Autocompletado de NUR (JSON): propios o, con todas=1, los que el usuario puede ver. */
     public function hojas(): void
     {
+        $u = Auth::user();
         $q = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $this->in('q'));
-        $r = DB::all('SELECT nur, referencia FROM hojas_ruta WHERE creada_por=? AND nur LIKE ? ORDER BY id DESC LIMIT 15', [Auth::id(), "%$q%"]);
+        if ($this->in('todas') === '1') {
+            $vis = $u['rol'] === 'admin' ? '1=1' : 'h.creada_por=? OR EXISTS (SELECT 1 FROM derivaciones d JOIN usuarios x ON x.id IN (d.de_usuario_id, d.a_usuario_id) WHERE d.hoja_id=h.id AND d.estado<>"cancelado" AND (x.id=? OR x.oficina_id=?)) OR EXISTS (SELECT 1 FROM documentos d2 WHERE d2.hoja_id=h.id AND d2.oficina_id=?)';
+            $p = $u['rol'] === 'admin' ? [] : [$u['id'], $u['id'], $u['oficina_id'], $u['oficina_id']];
+            $r = DB::all("SELECT h.nur, h.referencia FROM hojas_ruta h WHERE h.nur LIKE ? AND ($vis) ORDER BY h.id DESC LIMIT 15", array_merge(["%$q%"], $p));
+        } else {
+            $r = DB::all('SELECT nur, referencia FROM hojas_ruta WHERE creada_por=? AND nur LIKE ? ORDER BY id DESC LIMIT 15', [$u['id'], "%$q%"]);
+        }
         $this->json($r);
     }
 }
