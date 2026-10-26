@@ -47,7 +47,7 @@ Requisitos PHP: `pdo_mysql`, `mbstring`, `fileinfo`, `dom` (y `zip` para el resp
 * **Ventanilla**: al registrar correspondencia externa se capturan tipo de entrada, fojas, anexos y celular; se imprime una Carta con el **cargo de recepción (con QR)** y **etiquetas** (logo, código NUR, QR, fecha/hora) para pegar en el documento. El QR sigue el formato `CODIGO DE CONTROL / TIPO DE ENTRADA / FECHA/HORA DE REGISTRO / REFERENCIA / FOJAS / ANEXOS / CELULAR CONTACTO`.
 * **Logo y nombre oficial**: `Administración → Datos de la entidad (logo)`.
 * Los QR se dibujan en el navegador (biblioteca `qrcode-generator`, MIT, incluida en `public/assets/vendor/`), sin internet.
-* Bases ya instaladas: ejecutar `database/migrations/003_recepcion_y_ajustes.sql`.
+* **Actualizar una instalación existente:** con `INSTALAR.bat` use `ACTUALIZAR.bat` (copia de seguridad, copia de archivos y migración). Con XAMPP/hosting basta copiar `app`, `public`, `database` y `bin`: la base de datos se actualiza sola en la primera visita (`bin/migrar.php` también lo hace por consola).
 
 ## Operación
 

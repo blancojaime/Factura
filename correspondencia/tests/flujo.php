@@ -115,5 +115,13 @@ ok(str_contains($qr2, "CODIGO DE CONTROL: $nur1") && str_contains($qr2, 'REMITEN
 App\Services\Ajustes::set('entidad_nombre', 'Municipio X');
 ok(App\Services\Ajustes::entidad() === 'Municipio X' && App\Services\Ajustes::logoUrl() === null, 'Ajustes: nombre de entidad y sin logo');
 
+echo "== Migraciones repetibles\n";
+DB::exec('DROP TABLE IF EXISTS migraciones'); DB::exec('DROP TABLE IF EXISTS ajustes');
+DB::exec('ALTER TABLE hojas_ruta DROP COLUMN ext_anexos'); DB::exec('ALTER TABLE hojas_ruta DROP COLUMN ext_celular');
+$m1 = App\Services\Migrador::aplicar(); $m2 = App\Services\Migrador::aplicar();
+ok(in_array('003_recepcion_y_ajustes', $m1, true) && $m2 === [], 'Migración aplicada una vez y repetible sin error: ' . implode(',', $m1));
+ok(App\Services\Migrador::alDia(), 'alDia() es verdadero tras migrar');
+ok((bool)DB::val("SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='hojas_ruta' AND COLUMN_NAME='ext_celular'") && (bool)DB::val("SELECT 1 FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='ajustes'"), 'Columnas y tabla ajustes recreadas');
+
 echo $fallos ? "\n$fallos FALLO(S)\n" : "\nTODO OK\n";
 exit($fallos ? 1 : 0);

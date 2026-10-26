@@ -24,6 +24,7 @@ final class Installer
             $pdo->exec($sql);
         }
         DB::reset();
+        \App\Services\Migrador::marcarTodas();
         if ((int)DB::val('SELECT COUNT(*) FROM usuarios') > 0) throw new \RuntimeException('La base de datos ya tiene usuarios; instalación cancelada.');
         DB::tx(function () use ($entidad, $sigla, $admin) {
             $of = DB::insert('oficinas', ['nombre' => $entidad . ' - Administración del sistema', 'sigla' => 'ADM', 'activa' => 1]);

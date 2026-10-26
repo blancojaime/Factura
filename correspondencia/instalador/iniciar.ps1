@@ -4,6 +4,9 @@ try {
     if (-not (Test-Path $Puertos)) { Fallo 'El sistema no está instalado. Ejecute INSTALAR.bat primero.'; exit 1 }
     Escribir 'Iniciando el sistema de correspondencia...' 'Cyan'
     Db-Iniciar
+    Push-Location $Raiz
+    & (Php-Exe) -c (Join-Path $PhpDir 'php.ini') 'bin\migrar.php'
+    Pop-Location
     if ($Red) { Web-Iniciar -Red } else { Web-Iniciar }
     $cfg = Leer-Json $Puertos
     Ok "Listo: http://localhost:$($cfg.web)/"

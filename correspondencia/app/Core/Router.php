@@ -16,6 +16,8 @@ final class Router
             exit;
         }
         Auth::start();
+        // Al copiar una versión nueva (XAMPP/hosting) la base se actualiza sola en la primera visita.
+        try { if (!\App\Services\Migrador::alDia()) \App\Services\Migrador::aplicar(); } catch (\Throwable $e) { error_log('Migración: ' . $e->getMessage()); }
 
         $r = (string)($_GET['r'] ?? '');
         if ($r === '') $r = Auth::user() ? 'dashboard/index' : 'auth/login';
