@@ -30,7 +30,7 @@ Namespace Domain
         Public Property Id As Integer
         ''' <summary>C = compras, V = ventas</summary>
         Public Property Libro As String = "C"
-        Public Property Fecha As Date = Date.Today
+        Public Property Fecha As Date = Date.MinValue
         Public Property NroFactura As String = ""
         Public Property Autorizacion As String = ""
         Public Property CodControl As String = ""

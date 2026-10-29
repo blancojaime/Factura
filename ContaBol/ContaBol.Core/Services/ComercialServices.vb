@@ -465,7 +465,7 @@ Namespace Services
                                    Dim f As FacturaDto = d.Factura
                                    f.Libro = "C"
                                    f.TerceroId = d.TerceroId
-                                   If f.Fecha = Date.MinValue OrElse f.Fecha = Date.Today AndAlso d.Fecha <> Date.Today Then f.Fecha = d.Fecha
+                                   If f.Fecha = Date.MinValue Then f.Fecha = d.Fecha
                                    If f.Nit = "" Then f.Nit = prov.Nit
                                    If f.RazonSocial = "" Then f.RazonSocial = prov.Nombre
                                    f.ImporteTotal = t.Subtotal + t.Recargo

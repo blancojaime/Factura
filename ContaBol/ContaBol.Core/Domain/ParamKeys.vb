@@ -53,6 +53,8 @@ Namespace Domain
 
         ' Activos fijos
         Public Const CtaAjusteAf As String = "CTA_AJUSTE_AF"
+        Public Const CtaBajaAf As String = "CTA_BAJA_AF"
+        Public Const CtaAcreedores As String = "CTA_ACREEDORES"
 
         ' Planillas
         Public Const Smn As String = "SMN"

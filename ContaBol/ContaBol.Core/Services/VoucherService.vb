@@ -188,6 +188,7 @@ Namespace Services
                                    Dim fs As New FacturaService(_ctx)
                                    For Each f As FacturaDto In v.Facturas
                                        f.ComprobanteId = id
+                                       If f.Fecha = Date.MinValue Then f.Fecha = v.Fecha
                                        If f.Id = 0 Then fs.RegistrarInterno(f)
                                    Next
                                End If

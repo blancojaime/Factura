@@ -314,6 +314,8 @@ Namespace Seed
             p("CTA_MOD") = "5.2.1.01.002"
             p("CTA_CIF") = "5.2.1.01.003"
             p("CTA_AJUSTE_AF") = "4.2.1.01.005"
+            p("CTA_BAJA_AF") = "5.6.1.01.002"
+            p("CTA_ACREEDORES") = "2.1.1.03.001"
             p("CTA_SUELDOS") = "5.3.1.01.001"
             p("CTA_BONO_ANTIG") = "5.3.1.01.002"
             p("CTA_HEXTRAS") = "5.3.1.01.003"

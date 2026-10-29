@@ -41,6 +41,7 @@ Namespace Services
         Private Sub Validar(f As FacturaDto)
             If f.Libro <> "C" AndAlso f.Libro <> "V" Then Throw New ArgumentException("Libro inválido.")
             If String.IsNullOrWhiteSpace(f.NroFactura) Then Throw New ArgumentException("Ingrese el número de factura.")
+            If f.Fecha = Date.MinValue Then Throw New ArgumentException("Ingrese la fecha de la factura.")
             If f.Fecha.Date < _ctx.Gestion.FechaInicio.Date OrElse f.Fecha.Date > _ctx.Gestion.FechaFin.Date Then
                 Throw New ArgumentException("La fecha de la factura está fuera de la gestión.")
             End If
