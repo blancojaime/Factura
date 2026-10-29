@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ContaBol.App</RootNamespace>
+    <AssemblyName>ContaBol</AssemblyName>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
+    <StartupObject>Sub Main</StartupObject>
+    <OptionStrict>On</OptionStrict>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionInfer>On</OptionInfer>
+    <LangVersion>latest</LangVersion>
+    <ApplicationIcon>Resources\contabol.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <Company>ContaBol</Company>
+    <Product>ContaBol - Sistema Contable Integrado</Product>
+    <NoWarn>$(NoWarn);BC42016;BC42020;BC42021;BC42022;BC40008;BC42353;BC42354;BC42355;WFO1000</NoWarn>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ImportedNamespaces>System.Data=False,System.Drawing=False,System.Windows.Forms=False</ImportedNamespaces>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ContaBol.Core\ContaBol.Core.vbproj" />
+  </ItemGroup>
+
+</Project>

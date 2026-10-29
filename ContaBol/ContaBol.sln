@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ContaBol.Core", "ContaBol.Core\ContaBol.Core.vbproj", "{A40978AF-4FAB-40B1-BFE3-47FE8BC4B020}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ContaBol.Tests", "ContaBol.Tests\ContaBol.Tests.vbproj", "{F7617EC0-4D7C-458C-A918-F3D8FC51FE83}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A40978AF-4FAB-40B1-BFE3-47FE8BC4B020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A40978AF-4FAB-40B1-BFE3-47FE8BC4B020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A40978AF-4FAB-40B1-BFE3-47FE8BC4B020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A40978AF-4FAB-40B1-BFE3-47FE8BC4B020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7617EC0-4D7C-458C-A918-F3D8FC51FE83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7617EC0-4D7C-458C-A918-F3D8FC51FE83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7617EC0-4D7C-458C-A918-F3D8FC51FE83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7617EC0-4D7C-458C-A918-F3D8FC51FE83}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
