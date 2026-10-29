@@ -79,6 +79,9 @@ Namespace Domain
         Public Property OrigenId As Integer
         Public Property Observacion As String = ""
         Public Property UsuarioId As Integer
+        ''' <summary>Solo para importaciones: fuerza el número (y mes) del comprobante en lugar de asignarlo automáticamente.</summary>
+        Public Property NumeroFijo As Integer
+        Public Property MesFijo As Integer
         Public ReadOnly Property Lines As New List(Of VoucherLine)
         Public ReadOnly Property Facturas As New List(Of FacturaDto)
 

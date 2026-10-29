@@ -150,7 +150,13 @@ Namespace Services
                                Dim totDebU As Decimal = v.Lines.Sum(Function(l) l.DebeUsd)
                                Dim totHabU As Decimal = v.Lines.Sum(Function(l) l.HaberUsd)
                                If id = 0 Then
-                                   Dim num As Integer = Db.ScalarInt("SELECT MAX(Numero) FROM Comprobante WHERE TipoId=@t AND Mes=@m", "t", tipoId, "m", mes) + 1
+                                   If v.NumeroFijo > 0 Then
+                                       If _ctx.Gestion.CorrelativoMensual AndAlso v.MesFijo > 0 Then mes = v.MesFijo
+                                       If Db.ScalarInt("SELECT COUNT(*) FROM Comprobante WHERE TipoId=@t AND Mes=@m AND Numero=@n", "t", tipoId, "m", mes, "n", v.NumeroFijo) > 0 Then
+                                           Throw New InvalidOperationException("Ya existe el comprobante " & v.TipoCodigo & "-" & v.NumeroFijo & ".")
+                                       End If
+                                   End If
+                                   Dim num As Integer = If(v.NumeroFijo > 0, v.NumeroFijo, Db.ScalarInt("SELECT MAX(Numero) FROM Comprobante WHERE TipoId=@t AND Mes=@m", "t", tipoId, "m", mes) + 1)
                                    id = Db.Insert(
                                        "INSERT INTO Comprobante (TipoId, Numero, Mes, Fecha, TC, Moneda, Glosa, Referencia, Cheque, Banco, Estado, Origen, OrigenId, UsuarioId, Creado, Modificado, DebeBs, HaberBs, DebeUsd, HaberUsd, Observacion) " &
                                        "VALUES (@t, @n, @m, @f, @tc, @mo, @g, @r, @ch, @b, 'V', @o, @oi, @u, @cr, @cr, @d, @h, @du, @hu, @ob)",
