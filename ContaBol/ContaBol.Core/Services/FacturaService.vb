@@ -140,7 +140,7 @@ Namespace Services
             Dim dt As DataTable = Listar(libro, desde, hasta)
             Dim b As Decimal, i As Decimal, t As Decimal
             For Each r As DataRow In dt.Rows
-                If r.GetS("Estado") = "A" AndAlso libro = "C" Then Continue For
+                If r.GetS("Estado") = "A" Then Continue For
                 b += r.GetD("BaseCf") : i += r.GetD("Impuesto") : t += r.GetD("ImporteTotal")
             Next
             Return Tuple.Create(b, i, t)

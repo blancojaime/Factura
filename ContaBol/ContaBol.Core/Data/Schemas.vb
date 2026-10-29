@@ -146,6 +146,10 @@ Namespace Data
                 Int("ComprobanteItId", True).Dt("Vencimiento").Int("UsuarioId", True).Dt("Creado", True).
                 Uniq("Tipo", "Numero").Idx("Fecha").Idx("ClienteId")
 
+            s.Table("Aplicacion").
+                Int("ComprobanteId", True).Txt("Clase", 3, True).Int("DocId", True).Dt("Fecha", True).Mon("Monto").
+                Flag("Vigente").Idx("ComprobanteId").Idx("Clase", "DocId")
+
             s.Table("VentaDet").
                 Ref("VentaId", "Venta").Int("Linea", True).Ref("ItemId", "Item").Txt("Descripcion", 150).
                 Dbl("Cantidad").Dbl("PrecioUnit").Mon("ImporteBs").Dbl("CostoUnitBs").Idx("VentaId")
