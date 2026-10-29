@@ -6,8 +6,8 @@
     <AssemblyName>ContaBol</AssemblyName>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <MyType>WindowsFormsWithCustomSubMain</MyType>
-    <StartupObject>Sub Main</StartupObject>
+    <MyType>Empty</MyType>
+    <StartupObject>ContaBol.App.Program</StartupObject>
     <OptionStrict>On</OptionStrict>
     <OptionExplicit>On</OptionExplicit>
     <OptionInfer>On</OptionInfer>
@@ -16,12 +16,26 @@
     <Version>1.0.0</Version>
     <Company>ContaBol</Company>
     <Product>ContaBol - Sistema Contable Integrado</Product>
+    <Description>Sistema contable comercial y de costos para Bolivia (multiempresa, multigestión)</Description>
     <NoWarn>$(NoWarn);BC42016;BC42020;BC42021;BC42022;BC40008;BC42353;BC42354;BC42355;WFO1000</NoWarn>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <ImportedNamespaces>System.Data=False,System.Drawing=False,System.Windows.Forms=False</ImportedNamespaces>
+    <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
+    <SatelliteResourceLanguages>es</SatelliteResourceLanguages>
   </PropertyGroup>
 
   <ItemGroup>
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="ContaBol.Core.Common" />
+    <Import Include="ContaBol.Core.Domain" />
+    <Import Include="ContaBol.Core.Services" />
+    <Import Include="ContaBol.Core.Reports" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\contabol.png" />
     <ProjectReference Include="..\ContaBol.Core\ContaBol.Core.vbproj" />
   </ItemGroup>
 
