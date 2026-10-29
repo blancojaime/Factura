@@ -59,6 +59,8 @@ Namespace Services
                 TipoCambioService.Convertir(l.Haber, v.Moneda, v.TC, bs, usd)
                 l.HaberBs = bs
                 l.HaberUsd = usd
+                If l.DebeUsdFijo.HasValue Then l.DebeUsd = l.DebeUsdFijo.Value
+                If l.HaberUsdFijo.HasValue Then l.HaberUsd = l.HaberUsdFijo.Value
             Next
             AjustarRedondeo(v, False)
             AjustarRedondeo(v, True)

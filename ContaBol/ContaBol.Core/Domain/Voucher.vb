@@ -15,6 +15,9 @@ Namespace Domain
         Public Property HaberBs As Decimal
         Public Property DebeUsd As Decimal
         Public Property HaberUsd As Decimal
+        ''' <summary>Si se informan, se usan tal cual como importes en dólares (ej. asiento de apertura con saldos exactos en USD).</summary>
+        Public Property DebeUsdFijo As Decimal?
+        Public Property HaberUsdFijo As Decimal?
 
         Public Shared Function Deb(cuentaId As Integer, monto As Decimal, Optional glosa As String = "") As VoucherLine
             Return New VoucherLine With {.CuentaId = cuentaId, .Debe = monto, .Glosa = glosa}

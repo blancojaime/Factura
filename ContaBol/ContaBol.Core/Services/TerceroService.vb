@@ -170,6 +170,10 @@ Namespace Services
         ''' <summary>Registra el saldo inicial (deuda o anticipo) de un cliente o proveedor y opcionalmente su asiento contable.</summary>
         Public Function SaldoInicial(terceroId As Integer, clase As String, fecha As Date, monto As Decimal, contracuentaId As Integer, generarAsiento As Boolean, Optional detalle As String = "Saldo inicial") As Integer
             _ctx.Requiere("COM.TERCEROS")
+            Return SaldoInicialInterno(terceroId, clase, fecha, monto, contracuentaId, generarAsiento, detalle)
+        End Function
+
+        Friend Function SaldoInicialInterno(terceroId As Integer, clase As String, fecha As Date, monto As Decimal, contracuentaId As Integer, generarAsiento As Boolean, detalle As String) As Integer
             _ctx.RequiereGestionAbierta()
             If monto = 0D Then Throw New ArgumentException("Ingrese el saldo.")
             Dim t As TerceroDto = Obtener(terceroId)

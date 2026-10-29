@@ -264,6 +264,11 @@ Namespace Services
             Return Path.Combine(RutaDatos, g.Archivo)
         End Function
 
+        Public Sub CambiarEstadoGestion(gestionId As Integer, estado As String)
+            If estado <> "A" AndAlso estado <> "C" Then Throw New ArgumentException("Estado inválido.")
+            Db.Execute("UPDATE Gestion SET Estado=@e, FechaCierre=@f WHERE Id=@i", "e", estado, "f", If(estado = "C", CObj(Date.Now), CObj(DBNull.Value)), "i", gestionId)
+        End Sub
+
         ''' <summary>Marca empresa y gestión predeterminadas (inician directamente al abrir el sistema).</summary>
         Public Sub MarcarDefecto(empresaId As Integer, gestionId As Integer)
             Db.InTx(Sub()
