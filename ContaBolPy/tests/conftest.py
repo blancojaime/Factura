@@ -54,3 +54,21 @@ BANCO = "1.1.1.02.001"
 CAPITAL = "3.1.1.01.001"
 VENTAS = "4.1.1.01.001"
 GASTO_LUZ = "5.3.1.02.001"
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """Libera los objetos Qt antes de que el intérprete se cierre (evita abortos al salir)."""
+    try:
+        from PySide6.QtWidgets import QApplication
+        import gc
+        app = QApplication.instance()
+        if app is not None:
+            for w in app.topLevelWidgets():
+                w.close()
+                w.deleteLater()
+            app.processEvents()
+            gc.collect()
+            app.processEvents()
+            app.quit()
+    except Exception:  # noqa: BLE001
+        pass
