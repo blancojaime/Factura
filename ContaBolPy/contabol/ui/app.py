@@ -31,7 +31,37 @@ def configurar_log(raiz: str) -> None:
     logging.getLogger().setLevel(logging.INFO)
 
 
+def autoprueba() -> int:
+    """Verificación rápida del paquete instalado (sin intervención del usuario): crea datos temporales, abre la ventana y genera un PDF/Excel."""
+    import tempfile
+    from ..demo import crear_empresa_demo
+    from ..reports import catalogo, excel, pdf
+    raiz = tempfile.mkdtemp(prefix="contabol_autoprueba_")
+    app = QApplication(sys.argv)
+    tema.aplicar(app)
+    sis = Sistema(raiz)
+    u = sis.autenticar("admin", "admin")
+    e, g = crear_empresa_demo(sis, u, 2025, "AUTO")
+    ctx = sis.abrir_contexto(u, e, g)
+    from .ventana import VentanaPrincipal
+    w = VentanaPrincipal(sis, u, ctx)
+    w.show()
+    app.processEvents()
+    rep = catalogo.ejecutar(ctx, "estados_financieros", {})
+    assert len(pdf.generar_bytes(rep)) > 5000
+    excel.exportar(rep, os.path.join(raiz, "prueba.xlsx"))
+    assert ctx.estados.balance_general(ctx.fin)["cuadra"]
+    w.accion_salida = "cambiar"
+    w.close()
+    ctx.cerrar()
+    sis.close()
+    print("AUTOPRUEBA OK")
+    return 0
+
+
 def main() -> int:
+    if "--autoprueba" in sys.argv:
+        return autoprueba()
     raiz = carpeta_datos()
     os.makedirs(raiz, exist_ok=True)
     configurar_log(raiz)

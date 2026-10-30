@@ -219,9 +219,9 @@ class SelectorEmpresa(QDialog):
         if self.sis.db.scalar("SELECT COUNT(*) FROM empresa WHERE codigo='DEMO'", (), 0):
             aviso(self, "Ya existe la empresa de demostración (código DEMO).")
             return
-        if not confirmar(self, "Se creará la empresa ficticia «Distribuidora Andina S.R.L.» con un año completo de operaciones para practicar y ver los estados financieros. ¿Continuar?"):
+        if not confirmar(self, "Se creará la empresa ficticia «Distribuidora Andina S.R.L.» con la gestión 2025 completa para practicar y ver los estados financieros. ¿Continuar?"):
             return
-        ok, r = intentar(self, crear_empresa_demo, self.sis, self.usuario, date.today().year - 1 if date.today().month < 6 else date.today().year)
+        ok, r = intentar(self, crear_empresa_demo, self.sis, self.usuario, 2025)
         if ok:
             self.cargar(r[0])
 

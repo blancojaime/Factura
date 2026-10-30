@@ -321,14 +321,34 @@ class EstadosService:
             else:
                 k = "OTROS_PAS"
             filas_ind[k] += aporte
+        # transacciones de inversión/financiamiento SIN efectivo (p. ej. aportes en especie, compras de activos a crédito): se excluyen de ambas actividades
+        nocash_inv = nocash_fin = 0.0
+        cuentas = {c["id"]: c for c in self._plan()}
+        sin_efectivo: dict[int, list] = {}
+        for r in self.db.query("SELECT d.comprobante_id, d.cuenta_id, d.debe_bs, d.haber_bs FROM comp_det d JOIN comprobante c ON c.id=d.comprobante_id "
+                               "WHERE c.estado='V' AND c.origen NOT IN ('CIERRE','APERTURA') AND c.fecha BETWEEN ? AND ?", (d.isoformat(), h.isoformat())):
+            sin_efectivo.setdefault(r["comprobante_id"], []).append(r)
+        for lineas in sin_efectivo.values():
+            if any(cuentas[x["cuenta_id"]]["flujo"] == "EFECTIVO" for x in lineas):
+                continue
+            for x in lineas:
+                fl = cuentas[x["cuenta_id"]]["flujo"]
+                if fl == "INV":
+                    nocash_inv += -(x["debe_bs"] - x["haber_bs"])
+                elif fl == "FIN":
+                    nocash_fin += -(x["debe_bs"] - x["haber_bs"])
+        filas_ind["INV"] -= nocash_inv
+        filas_ind["FIN"] -= nocash_fin
+        ajuste_sin_efectivo = r2(nocash_inv + nocash_fin)
         v = {k: r2(x) for k, x in filas_ind.items()}
-        op = r2(ni + v["NOCASH"] + v["CXC"] + v["INVENT"] + v["OTROS_ACT"] + v["CXP"] + v["IMPUESTOS"] + v["LABORAL"] + v["OTROS_PAS"])
+        op = r2(ni + ajuste_sin_efectivo + v["NOCASH"] + v["CXC"] + v["INVENT"] + v["OTROS_ACT"] + v["CXP"] + v["IMPUESTOS"] + v["LABORAL"] + v["OTROS_PAS"])
         variacion = r2(op + v["INV"] + v["FIN"])
         ini, fin_ef = self._efectivo_inicial(d), self._efectivo(h)
         filas = [
             _f("ACTIVIDADES DE OPERACIÓN", None, 0, "titulo"),
             _f("Resultado neto del período", ni, 1),
             _f("Ajustes por partidas que no requieren efectivo (depreciaciones, amortizaciones y otras)", v["NOCASH"], 1),
+            _f("Menos: variaciones originadas en transacciones de inversión y financiamiento sin efectivo", ajuste_sin_efectivo, 1) if abs(ajuste_sin_efectivo) >= 0.005 else None,
             _f("Cambios en activos y pasivos operativos:", None, 1, "grupo"),
             _f("(Aumento) disminución en cuentas por cobrar y anticipos de clientes", v["CXC"], 2),
             _f("(Aumento) disminución en inventarios", v["INVENT"], 2),
@@ -347,6 +367,9 @@ class EstadosService:
             _f("VARIACIÓN NETA DEL EFECTIVO Y EQUIVALENTES", variacion, 0, "total"),
             _f("Efectivo y equivalentes al inicio del período", ini, 0), _f("Efectivo y equivalentes al final del período", r2(ini + variacion), 0, "total"),
         ]
+        filas = [f for f in filas if f is not None]
+        if abs(ajuste_sin_efectivo) >= 0.005 or abs(nocash_inv) + abs(nocash_fin) >= 0.005:
+            filas.append(_f("Información complementaria: transacciones de inversión y financiamiento que no afectaron el efectivo", r2(nocash_inv + nocash_fin), 0, "grupo"))
         return {"titulo": "ESTADO DE FLUJO DE EFECTIVO - MÉTODO INDIRECTO", "desde": d.isoformat(), "hasta": h.isoformat(), "filas": filas, "operacion": op,
                 "inversion": v["INV"], "financiamiento": v["FIN"], "variacion": variacion, "efectivo_inicial": ini, "efectivo_final": fin_ef,
                 "cuadra": abs(ini + variacion - fin_ef) < 0.05}

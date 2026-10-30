@@ -6,3 +6,4 @@ build/
 dist/
 *.spec.bak
 datos_demo/
+*.spec.bak

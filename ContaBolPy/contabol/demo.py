@@ -1,16 +1,44 @@
 """Datos de demostración: empresa comercial ficticia con un año de operaciones (para aprender el sistema y para el manual)."""
 from __future__ import annotations
 
-import random
 from datetime import date, timedelta
 
 from .sistema import Sistema
 from .util import fin_de_mes
 
 
+class _Azar:
+    """Generador congruencial determinista: produce SIEMPRE los mismos datos de demostración en cualquier versión de Python."""
+
+    def __init__(self, semilla: int):
+        self.e = semilla
+
+    def _sig(self) -> float:
+        self.e = (self.e * 6364136223846793005 + 1442695040888963407) % (1 << 64)
+        return (self.e >> 11) / float(1 << 53)
+
+    def random(self) -> float:
+        return self._sig()
+
+    def randint(self, a: int, b: int) -> int:
+        return a + int(self._sig() * (b - a + 1))
+
+    def uniform(self, a: float, b: float) -> float:
+        return a + (b - a) * self._sig()
+
+    def choice(self, seq):
+        return seq[int(self._sig() * len(seq))]
+
+    def sample(self, seq, k: int):
+        pool, out = list(seq), []
+        for _ in range(k):
+            out.append(pool.pop(int(self._sig() * len(pool))))
+        return out
+
+
 def crear_empresa_demo(sis: Sistema, usuario: dict, anio: int | None = None, codigo: str = "DEMO") -> tuple[int, int]:
-    anio = anio or date.today().year
-    rnd = random.Random(42)
+    anio = anio or 2025
+    rnd = _Azar(42)
     eid, gid = sis.crear_empresa({"codigo": codigo, "razon_social": "Distribuidora Andina S.R.L.", "nombre_comercial": "Andina", "nit": "1023456022",
                                   "direccion": "Av. 6 de Agosto Nº 2170, Edif. Torre Azul", "ciudad": "La Paz", "telefono": "2-2445566", "email": "contabilidad@andina.com.bo",
                                   "actividad": "Venta al por mayor y menor de abarrotes y productos de consumo masivo", "rep_legal": "María Fernanda Quispe Mamani",
@@ -23,7 +51,7 @@ def crear_empresa_demo(sis: Sistema, usuario: dict, anio: int | None = None, cod
     return eid, gid
 
 
-def _poblar(c, anio: int, rnd: random.Random) -> None:
+def _poblar(c, anio: int, rnd: _Azar) -> None:
     cta = lambda cod: c.cuentas.por_codigo(cod)["id"]  # noqa: E731
     for m in range(1, 13):
         c.tc.guardar(date(anio, m, 1), 6.96, round(2.46 + 0.012 * m, 5))

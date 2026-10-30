@@ -64,3 +64,20 @@ def test_notas(env):
     assert len(n) == 14 and n[2]["tabla"]["filas"]
     total_disp = n[2]["tabla"]["filas"][-1][2]
     assert total_disp == env.ctx.estados._efectivo("2025-03-31")
+
+
+def test_transacciones_sin_efectivo_no_distorsionan_secciones(env):
+    """Aporte de capital en especie (inventario): no debe aparecer como financiamiento ni como variación operativa; directo e indirecto coinciden por sección."""
+    ctx = env.ctx
+    env.asiento("2025-01-01", CAJA, CAPITAL, 10000, "Aporte en efectivo")
+    alm = ctx.db.scalar("SELECT id FROM almacen LIMIT 1")
+    it = ctx.inventario.guardar_item({"codigo": "X1", "nombre": "Mercadería aportada"})
+    ctx.inventario.registrar({"tipo": "INI", "fecha": "2025-01-02", "almacen_id": alm, "items": [{"item_id": it, "cantidad": 10, "costo_unit": 100.0}],
+                              "generar_asiento": True, "contra_cuenta": CAPITAL})
+    env.asiento("2025-01-03", "1.2.1.01.007", "2.1.1.01.001", 5000, "Equipo comprado a crédito")
+    d = ctx.estados.flujo_directo("2025-01-01", "2025-03-31")
+    i = ctx.estados.flujo_indirecto("2025-01-01", "2025-03-31")
+    assert d["cuadra"] and i["cuadra"]
+    assert d["financiamiento"] == i["financiamiento"] == 10000.0
+    assert d["inversion"] == i["inversion"] == 0.0
+    assert d["operacion"] == pytest.approx(i["operacion"], abs=0.01) == 0.0

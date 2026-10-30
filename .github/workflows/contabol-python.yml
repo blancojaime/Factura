@@ -30,6 +30,8 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - name: Ejecutable (PyInstaller)
         run: pyinstaller contabol.spec --noconfirm
+      - name: Autoprueba del paquete
+        run: dist\ContaBol\ContaBol.exe --autoprueba
       - name: Instalador (Inno Setup)
         shell: cmd
         run: |
