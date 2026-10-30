@@ -21,11 +21,11 @@ cd ContaBol
 dotnet test ContaBol.Tests          # 57 pruebas deben pasar
 publicar.bat x64                    # o x86 si su Office/ACE es de 32 bits
 ```
-Resultado: `publicar\win-x64\ContaBol.App.exe` (autocontenido, no requiere instalar .NET). Copie la carpeta completa al equipo destino (ej. `C:\ContaBol`).
+Resultado: `publicar\win-x64\ContaBol.exe` (autocontenido, no requiere instalar .NET). Copie la carpeta completa al equipo destino (ej. `C:\ContaBol`).
 
 ## 4. Instalación en el equipo
 1. Instale Access Database Engine con la misma arquitectura que la aplicación. Si hay Office de 32 bits y necesita ACE de 64, instale con `AccessDatabaseEngine_X64.exe /quiet`.
-2. Copie la carpeta publicada. Cree un acceso directo a `ContaBol.App.exe`.
+2. Copie la carpeta publicada. Cree un acceso directo a `ContaBol.exe`.
 3. Al primer arranque se crea la carpeta de datos (por defecto en el perfil del usuario; se muestra en *Ayuda > Acerca de*). Para red, configure una carpeta compartida en `AppSettings` (ruta de datos) con permiso de lectura/escritura para todos los usuarios.
 4. Ingrese con `admin` / `admin` y cambie la clave (se exige).
 
