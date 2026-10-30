@@ -6,6 +6,9 @@ on:
     tags: [ 'v*' ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   pruebas:
     runs-on: ubuntu-latest
@@ -45,8 +48,16 @@ jobs:
         with:
           name: ContaBol_portable
           path: ContaBolPy/dist/ContaBol
-      - name: Publicar en Releases (etiquetas v*)
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Portable (zip)
+        shell: pwsh
+        run: Compress-Archive -Path dist\ContaBol\* -DestinationPath dist\ContaBol_portable.zip
+      - name: Publicar en Releases (siempre la última versión)
         uses: softprops/action-gh-release@v2
         with:
-          files: ContaBolPy/dist/ContaBol_Setup_*.exe
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'ultima-version' }}
+          name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'ContaBol - última versión' }}
+          prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
+          body: "Descargue **ContaBol_Setup_2.0.0.exe** (instalador) o **ContaBol_portable.zip** (sin instalar). Windows 10/11 de 64 bits."
+          files: |
+            ContaBolPy/dist/ContaBol_Setup_*.exe
+            ContaBolPy/dist/ContaBol_portable.zip
