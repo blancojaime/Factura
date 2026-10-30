@@ -1,0 +1,41 @@
+name: Compilar e instalador
+
+on:
+  push:
+    branches: [ main, 'claude/**' ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        arq: [ x64, x86 ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Pruebas
+        if: matrix.arq == 'x64'
+        working-directory: ContaBol
+        run: dotnet test ContaBol.Tests -c Release
+      - name: Publicar
+        working-directory: ContaBol
+        run: dotnet publish ContaBol.App -c Release -r win-${{ matrix.arq }} --self-contained true -o publicar/win-${{ matrix.arq }}
+      - name: Instalador (Inno Setup)
+        working-directory: ContaBol
+        shell: cmd
+        run: |
+          choco install innosetup -y --no-progress
+          "%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" /DArq=${{ matrix.arq }} /DOrigen=..\publicar\win-${{ matrix.arq }} instalador\ContaBol.iss
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ContaBol_Setup_${{ matrix.arq }}
+          path: ContaBol/instalador/salida/ContaBol_Setup_${{ matrix.arq }}.exe
+      - name: Publicar en Releases (solo etiquetas v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ContaBol/instalador/salida/ContaBol_Setup_${{ matrix.arq }}.exe

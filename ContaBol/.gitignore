@@ -6,3 +6,5 @@ publish/
 *.accdb
 *.laccdb
 dist/
+publicar/
+instalador/salida/
