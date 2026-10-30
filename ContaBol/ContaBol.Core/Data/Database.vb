@@ -41,7 +41,28 @@ Namespace Data
             Return Provider.PrepareCommand(_cn, _tx, sql, args)
         End Function
 
+        ''' <summary>Agrega al error del motor la consulta que lo provocó y el detalle de OLE DB, para poder diagnosticar.</summary>
+        Friend Shared Function Detallar(ex As Exception, sql As String) As Exception
+            Dim sb As New System.Text.StringBuilder(ex.Message)
+            Dim oe As System.Data.OleDb.OleDbException = TryCast(ex, System.Data.OleDb.OleDbException)
+            If oe IsNot Nothing Then
+                For Each e As System.Data.OleDb.OleDbError In oe.Errors
+                    sb.AppendLine().Append("  [OLE DB ").Append(e.NativeError).Append(" ").Append(e.SQLState).Append("] ").Append(e.Message)
+                Next
+            End If
+            sb.AppendLine().Append("SQL: ").Append(If(sql.Length > 400, sql.Substring(0, 400) & "...", sql))
+            Return New DataException(sb.ToString(), ex)
+        End Function
+
         Public Function Query(sql As String, ParamArray args() As Object) As DataTable
+            Try
+                Return QueryInterno(sql, args)
+            Catch ex As DbException
+                Throw Detallar(ex, sql)
+            End Try
+        End Function
+
+        Private Function QueryInterno(sql As String, args As Object()) As DataTable
             Using c As DbCommand = Cmd(sql, args)
                 Using rd As DbDataReader = c.ExecuteReader()
                     Dim dt As New DataTable()
@@ -63,11 +84,15 @@ Namespace Data
         End Function
 
         Public Function Scalar(sql As String, ParamArray args() As Object) As Object
-            Using c As DbCommand = Cmd(sql, args)
-                Dim o As Object = c.ExecuteScalar()
-                If o Is Nothing OrElse o Is DBNull.Value Then Return Nothing
-                Return o
-            End Using
+            Try
+                Using c As DbCommand = Cmd(sql, args)
+                    Dim o As Object = c.ExecuteScalar()
+                    If o Is Nothing OrElse o Is DBNull.Value Then Return Nothing
+                    Return o
+                End Using
+            Catch ex As DbException
+                Throw Detallar(ex, sql)
+            End Try
         End Function
 
         Public Function ScalarDec(sql As String, ParamArray args() As Object) As Decimal
@@ -83,9 +108,13 @@ Namespace Data
         End Function
 
         Public Function Execute(sql As String, ParamArray args() As Object) As Integer
-            Using c As DbCommand = Cmd(sql, args)
-                Return c.ExecuteNonQuery()
-            End Using
+            Try
+                Using c As DbCommand = Cmd(sql, args)
+                    Return c.ExecuteNonQuery()
+                End Using
+            Catch ex As DbException
+                Throw Detallar(ex, sql)
+            End Try
         End Function
 
         ''' <summary>Ejecuta un INSERT y devuelve el Id autonumérico generado.</summary>

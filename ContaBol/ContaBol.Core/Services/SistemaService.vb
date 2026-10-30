@@ -49,6 +49,18 @@ Namespace Services
             Directory.CreateDirectory(Path.Combine(rutaRaiz, "Backups"))
             Dim archivo As String = Path.Combine(rutaRaiz, NombreMaestra & provider.Extension)
             Dim nuevo As Boolean = Not File.Exists(archivo)
+            If Not nuevo Then
+                ' Un intento anterior fallido puede haber dejado un archivo sin tablas: se recrea.
+                Dim incompleto As Boolean
+                Using chk As New Database(provider, archivo)
+                    incompleto = Not chk.TableExists("Usuario")
+                End Using
+                If incompleto Then
+                    provider.ReleasePools()
+                    File.Delete(archivo)
+                    nuevo = True
+                End If
+            End If
             If nuevo Then provider.CreateFile(archivo)
             Dim db As New Database(provider, archivo)
             Dim s As New SistemaService(provider, rutaRaiz, db)

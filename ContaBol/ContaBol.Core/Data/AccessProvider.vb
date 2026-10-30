@@ -88,7 +88,18 @@ Namespace Data
                 If t Is Nothing Then Throw New InvalidOperationException("Componente ADOX no disponible en este equipo.")
                 cat = Activator.CreateInstance(t)
                 Dim d As Object = cat
-                CallByName(d, "Create", CallType.Method, ConnString(DetectProvider(), path) & "Jet OLEDB:Engine Type=6;")
+                Try
+                    Dim conn As Object = CallByName(d, "Create", CallType.Method, ConnString(DetectProvider(), path))
+                    If conn IsNot Nothing Then
+                        Try
+                            CallByName(conn, "Close", CallType.Method)
+                            System.Runtime.InteropServices.Marshal.ReleaseComObject(conn)
+                        Catch
+                        End Try
+                    End If
+                Catch ex As Exception
+                    Throw New InvalidOperationException("No se pudo crear el archivo de base de datos " & path & ": " & ex.Message, ex)
+                End Try
             Finally
                 If cat IsNot Nothing Then
                     Try
