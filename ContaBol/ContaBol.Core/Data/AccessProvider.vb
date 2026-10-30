@@ -82,24 +82,49 @@ Namespace Data
             If File.Exists(path) Then Throw New IOException("El archivo ya existe: " & path)
             Dim dir As String = System.IO.Path.GetDirectoryName(path)
             If Not String.IsNullOrEmpty(dir) Then Directory.CreateDirectory(dir)
+            Dim fallos As New List(Of String)
+            ' 1) ADOX con cada proveedor/versión; 2) DAO (motor ACE), que es la vía más fiable para .accdb.
+            For Each prov As String In Candidatos
+                For Each extra As String In {"", "Jet OLEDB:Engine Type=6;"}
+                    If CrearConAdox(prov, path, extra, fallos) Then Return
+                    BorrarSiExiste(path)
+                Next
+            Next
+            For Each progId As String In {"DAO.DBEngine.120", "DAO.DBEngine.140"}
+                If CrearConDao(progId, path, fallos) Then Return
+                BorrarSiExiste(path)
+            Next
+            Throw New InvalidOperationException("No se pudo crear la base de datos " & path & vbCrLf & String.Join(vbCrLf, fallos))
+        End Sub
+
+        Private Shared Sub BorrarSiExiste(path As String)
+            Try
+                If File.Exists(path) Then File.Delete(path)
+            Catch
+            End Try
+        End Sub
+
+        Private Shared Function CrearConAdox(prov As String, path As String, extra As String, fallos As List(Of String)) As Boolean
             Dim cat As Object = Nothing
             Try
                 Dim t As Type = Type.GetTypeFromProgID("ADOX.Catalog")
-                If t Is Nothing Then Throw New InvalidOperationException("Componente ADOX no disponible en este equipo.")
+                If t Is Nothing Then
+                    fallos.Add("ADOX no disponible")
+                    Return False
+                End If
                 cat = Activator.CreateInstance(t)
-                Dim d As Object = cat
-                Try
-                    Dim conn As Object = CallByName(d, "Create", CallType.Method, ConnString(DetectProvider(), path))
-                    If conn IsNot Nothing Then
-                        Try
-                            CallByName(conn, "Close", CallType.Method)
-                            System.Runtime.InteropServices.Marshal.ReleaseComObject(conn)
-                        Catch
-                        End Try
-                    End If
-                Catch ex As Exception
-                    Throw New InvalidOperationException("No se pudo crear el archivo de base de datos " & path & ": " & ex.Message, ex)
-                End Try
+                Dim conn As Object = CallByName(cat, "Create", CallType.Method, ConnString(prov, path) & extra)
+                If conn IsNot Nothing Then
+                    Try
+                        CallByName(conn, "Close", CallType.Method)
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(conn)
+                    Catch
+                    End Try
+                End If
+                Return File.Exists(path)
+            Catch ex As Exception
+                fallos.Add("ADOX " & prov & " " & extra & ": " & If(ex.InnerException IsNot Nothing, ex.InnerException.Message, ex.Message))
+                Return False
             Finally
                 If cat IsNot Nothing Then
                     Try
@@ -108,7 +133,39 @@ Namespace Data
                     End Try
                 End If
             End Try
-        End Sub
+        End Function
+
+        Private Shared Function CrearConDao(progId As String, path As String, fallos As List(Of String)) As Boolean
+            Dim eng As Object = Nothing
+            Try
+                Dim t As Type = Type.GetTypeFromProgID(progId)
+                If t Is Nothing Then
+                    fallos.Add(progId & " no disponible")
+                    Return False
+                End If
+                eng = Activator.CreateInstance(t)
+                ' dbLangGeneral, dbVersion120 (formato .accdb)
+                Dim bd As Object = CallByName(eng, "CreateDatabase", CallType.Method, path, ";LANGID=0x0409;CP=1252;COUNTRY=0", 128)
+                If bd IsNot Nothing Then
+                    Try
+                        CallByName(bd, "Close", CallType.Method)
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(bd)
+                    Catch
+                    End Try
+                End If
+                Return File.Exists(path)
+            Catch ex As Exception
+                fallos.Add(progId & ": " & If(ex.InnerException IsNot Nothing, ex.InnerException.Message, ex.Message))
+                Return False
+            Finally
+                If eng IsNot Nothing Then
+                    Try
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(eng)
+                    Catch
+                    End Try
+                End If
+            End Try
+        End Function
 
         Public Function ColumnSql(c As ColumnDef) As String Implements IDbProvider.ColumnSql
             Dim t As String
