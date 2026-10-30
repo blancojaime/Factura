@@ -1,6 +1,7 @@
 # ContaBol — Manual de implementación
 
 ## 1. Arquitectura
+
 | Proyecto | Contenido |
 |---|---|
 | `ContaBol.Core` | Datos (Access/ACE), esquema, servicios contables/comerciales, reportes PDF/Excel. Sin dependencias de interfaz. |

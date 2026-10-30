@@ -8,6 +8,7 @@ dotnet test ContaBol.Tests      # esperado: Passed 57, Failed 0
 ```
 
 ## B. Humo (15 min)
+
 | # | Acción | Resultado esperado |
 |---|---|---|
 | B1 | Abrir app, ingresar `admin/admin` | Pide cambio de clave |
@@ -21,10 +22,12 @@ Cargue 01/01: T.C. 6,96 y UFV 2,50000. Esperado: aparecen en el listado y en el 
 
 ## D. Contabilidad — ejemplo de comprobante
 **Ingreso de capital**: Nuevo comprobante (Ctrl+N), tipo Traspaso, glosa "Aporte inicial".
+
 | Cuenta | Debe | Haber |
 |---|---|---|
 | Caja moneda nacional | 50.000,00 | |
 | Capital social | | 50.000,00 |
+
 Esperado: no permite guardar si Debe ≠ Haber; guarda con número 1; el Libro diario y el Balance de sumas y saldos muestran 50.000 en cada lado.
 
 **Prueba negativa**: Debe 100 / Haber 90 → mensaje de comprobante descuadrado, no se guarda.
@@ -32,6 +35,7 @@ Esperado: no permite guardar si Debe ≠ Haber; guarda con número 1; el Libro d
 
 ## E. IVA — ejemplo del manual Orion
 **Venta de Bs 1.000 con factura** (libro de ventas, con cuenta): Esperado en el asiento:
+
 | Cuenta | Debe | Haber |
 |---|---|---|
 | Caja | 1.000,00 | |
@@ -39,6 +43,7 @@ Esperado: no permite guardar si Debe ≠ Haber; guarda con número 1; el Libro d
 | Ventas | | 870,00 |
 | Gasto IT | 30,00 | |
 | IT por pagar | | 30,00 |
+
 **Compra de Bs 500 con factura**: crédito fiscal 65,00 y gasto/compras 435,00. Verificar *Libro de compras*, *Libro de ventas* y *Resumen mensual de IVA e IT* (IVA a pagar = 130 − 65 = 65,00).
 Prueba: NIT y número de autorización/factura duplicados deben ser advertidos.
 
@@ -102,5 +107,6 @@ Para cada módulo abra al menos un reporte y verifique: encabezado (empresa, NIT
 Genere 20.000 comprobantes de prueba (script o importación): el listado debe abrir en < 5 s, el mayor de una cuenta en < 10 s. Revise *Utilitarios > Verificación* para el tamaño del archivo.
 
 ## Registro de resultados
+
 | Caso | Fecha | Probador | ✔/✘ | Observaciones |
 |---|---|---|---|---|
