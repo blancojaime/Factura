@@ -143,3 +143,23 @@ def test_baja_f035_y_licencias(ctx, ids):
     assert a["estado"] == "INACTIVO" and a["fecha_cese"] == "2005-02-01" and a["estado_licencia"] == "CANCELADA"
     ok, _ = security.verify_audit_chain(ctx.db)
     assert ok
+
+
+def test_importar_padron_excel(ctx, tmp_path):
+    from siim.services import importar
+    from openpyxl import load_workbook
+    f = tmp_path / "p.xlsx"
+    importar.plantilla(f)
+    wb = load_workbook(f)
+    c = wb["contribuyentes"]; c.delete_rows(2)
+    c.append(["N", "CI", "9001", "LP", "Rojas", "Apaza", "Luis", None, None, "A", None, "CALLE", "Sucre", "10"])
+    c.append(["N", "CI", "9002", "LP", None, None, None, None, None, "A", None, "CALLE", "X", "1"])          # incompleto → error
+    a = wb["actividades"]; a.delete_rows(2)
+    a.append(["9001", "14", "02", "Ferretería Rojas", None, None, None, "2020-01-15", None, 30, None, "2", None, None, "Sucre", "10"])
+    for h in ("inmuebles", "vehiculos", "publicidad"):
+        wb[h].delete_rows(2)
+    wb.save(f)
+    r = importar.importar_padron(ctx, f, simular=True)
+    assert r["resumen"]["contribuyentes"] == 1 and len(r["errores"]) == 1 and ctx.db.scalar("SELECT COUNT(*) FROM contribuyentes") == 0
+    r = importar.importar_padron(ctx, f, simular=False)
+    assert ctx.db.scalar("SELECT COUNT(*) FROM contribuyentes") == 1 and ctx.db.scalar("SELECT COUNT(*) FROM actividades") == 1

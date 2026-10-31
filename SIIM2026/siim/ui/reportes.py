@@ -178,6 +178,7 @@ class Utilitarios(QWidget):
         t = QTabWidget()
         t.addTab(self._backups(), "Copias de seguridad")
         t.addTab(self._bd(), "Base de datos")
+        t.addTab(self._importar(), "Importar padrón")
         t.addTab(self._bitacora(), "Bitácora")
         t.addTab(self._licencia(), "Licencia / activación")
         l.addWidget(t)
@@ -269,7 +270,7 @@ class Utilitarios(QWidget):
         w = QWidget(); l = QVBoxLayout(w)
         self.bd_info = QPlainTextEdit(); self.bd_info.setReadOnly(True)
         bar = QHBoxLayout()
-        for tx, s in (("Verificar integridad", self.verificar), ("Reorganizar índices", self.reindex), ("Compactar base de datos", self.compactar)):
+        for tx, s in (("Verificar integridad", self.verificar), ("Reorganizar índices", self.reindex), ("Compactar base de datos", self.compactar), ("Cargar datos de demostración…", self.demo)):
             bar.addWidget(btn(tx, s, primary=(tx.startswith("Verificar"))))
         bar.addStretch(1)
         l.addLayout(bar)
@@ -287,6 +288,21 @@ class Utilitarios(QWidget):
                                   f"Cadena de bitácora (anti-manipulación): {'CORRECTA' if okc else f'ALTERADA en el registro {bad}'}\n\nContribuyentes: {self.app.db.scalar('SELECT COUNT(*) FROM contribuyentes')} · Liquidaciones: {self.app.db.scalar('SELECT COUNT(*) FROM liquidaciones')} · Pagos: {self.app.db.scalar('SELECT COUNT(*) FROM pagos')}")
 
     @guarded
+    def demo(self, *_):
+        from ..core import demo
+        if self.app.session.rol != "ADMINISTRADOR":
+            raise ServiceError("Sólo el administrador puede cargar datos de demostración.")
+        if self.app.db.scalar("SELECT COUNT(*) FROM contribuyentes") or self.app.db.scalar("SELECT COUNT(*) FROM liquidaciones"):
+            raise ServiceError("La base ya contiene información. Los datos de demostración sólo pueden cargarse en un sistema vacío (use una instalación de capacitación).")
+        if not confirm(self, "Se cargarán contribuyentes, bienes, cotizaciones y tablas FICTICIAS de la gestión 2004 para capacitación.\nNo use esta opción en el sistema de producción.\n\n¿Continuar?"):
+            return
+        self.app.hacer_backup("antes-demo")
+        demo.cargar_cotizaciones_demo(self.app.db)
+        demo.cargar_padron_demo(self.app.ctx())
+        self.app.ctx().log("DEMO_CARGADA")
+        self.verificar(); info(self, "Datos de demostración cargados (ver Manual de Pruebas y Capacitación).")
+
+    @guarded
     def reindex(self, *_):
         self.app.hacer_backup("antes-reindexar")
         self.app.db.reindex(); self.verificar(); info(self, "Índices reorganizados.")
@@ -295,6 +311,42 @@ class Utilitarios(QWidget):
     def compactar(self, *_):
         self.app.hacer_backup("antes-compactar")
         self.app.db.compact(); self.verificar(); info(self, "Base de datos compactada.")
+
+    def _importar(self):
+        w = QWidget(); l = QVBoxLayout(w)
+        l.addWidget(QLabel("Carga masiva del padrón desde Excel (migración desde otro sistema). Primero descargue la plantilla, llénela y use «Validar»; luego «Importar»."))
+        h = QHBoxLayout()
+        h.addWidget(btn("Descargar plantilla Excel…", self.i_plantilla))
+        h.addWidget(btn("Validar archivo (simulación)…", lambda: self.i_run(True), primary=True))
+        h.addWidget(btn("Importar archivo…", lambda: self.i_run(False)))
+        h.addStretch(1)
+        l.addLayout(h)
+        self.i_tab = DataTable([Col("hoja", "Hoja"), Col("fila", "Fila", "int"), Col("error", "Observación", "text", 5)])
+        l.addWidget(self.i_tab, 1)
+        self.i_lbl = QLabel("")
+        l.addWidget(self.i_lbl)
+        return w
+
+    @guarded
+    def i_plantilla(self, *_):
+        from ..services import importar
+        fn, _ = QFileDialog.getSaveFileName(self, "Plantilla", "plantilla_padron.xlsx", "Excel (*.xlsx)")
+        if fn:
+            importar.plantilla(fn); open_file(fn)
+
+    @guarded
+    def i_run(self, simular):
+        from ..services import importar
+        fn, _ = QFileDialog.getOpenFileName(self, "Archivo del padrón", "", "Excel (*.xlsx)")
+        if not fn:
+            return
+        if not simular:
+            if not confirm(self, "Se importarán los registros válidos al padrón. Se recomienda crear un respaldo antes. ¿Continuar?"):
+                return
+            self.app.hacer_backup("antes-importar")
+        r = importar.importar_padron(self.app.ctx(), fn, simular)
+        self.i_tab.set_data([dict(hoja=a, fila=b, error=c) for a, b, c in r["errores"]])
+        self.i_lbl.setText(("SIMULACIÓN – " if simular else "IMPORTADO – ") + ", ".join(f"{k}: {v}" for k, v in r["resumen"].items() if v) + f" · {len(r['errores'])} con errores")
 
     def _bitacora(self):
         w = QWidget(); l = QVBoxLayout(w)
