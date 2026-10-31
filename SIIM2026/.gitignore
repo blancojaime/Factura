@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+build/
+dist/
+*.db
+*.db-wal
+*.db-shm
+*.siimbak
+license_priv*.pem
+.siim_vendor/

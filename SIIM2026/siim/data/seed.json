@@ -1,0 +1,4249 @@
+{
+"ciiu": [
+[
+"10000",
+"Agricultura, caza, silvicultura y pesca",
+0
+],
+[
+"11000",
+"Agricultura y Caza",
+0
+],
+[
+"11100",
+"Producción Agropecuaria",
+0
+],
+[
+"11100",
+"Producción Agropecuaria",
+1
+],
+[
+"11200",
+"Servicios agrícolas",
+0
+],
+[
+"11200",
+"Servicios agrícolas",
+1
+],
+[
+"11300",
+"Caza ordinaria y mediante trampas, y repoblación de animales",
+0
+],
+[
+"11300",
+"Caza ordinaria y mediante trampas, y repoblación de animales",
+1
+],
+[
+"12000",
+"Silvicultura y Extracción de Madera",
+0
+],
+[
+"12100",
+"Silvicultura",
+0
+],
+[
+"12100",
+"Silvicultura",
+1
+],
+[
+"12200",
+"Extracción de Madera",
+0
+],
+[
+"12200",
+"Extracción de Madera",
+1
+],
+[
+"13000",
+"Pesca",
+0
+],
+[
+"13000",
+"Pesca",
+0
+],
+[
+"13010",
+"Pesca de altura y costera",
+1
+],
+[
+"13020",
+"Pesca, n.e.p.",
+1
+],
+[
+"20000",
+"Explotación de Minas y Canteras",
+0
+],
+[
+"21000",
+"Explotación de Minas de Carbón",
+0
+],
+[
+"21000",
+"Explotación de Minas de Carbón",
+0
+],
+[
+"21000",
+"Explotación de Minas de Carbón",
+1
+],
+[
+"22000",
+"Producción de petróleo crudo y gas",
+0
+],
+[
+"22000",
+"Producción de petróleo crudo y gas",
+0
+],
+[
+"22000",
+"Producción de petróleo crudo y gas",
+1
+],
+[
+"23000",
+"Extracción de Minerales metálicos",
+0
+],
+[
+"23000",
+"Extracción de Minerales metálicos",
+0
+],
+[
+"23010",
+"Extracción de Mineral de hierro",
+1
+],
+[
+"23020",
+"Extracción de Minerales no ferrosos",
+1
+],
+[
+"29000",
+"Extracción de otros minerales",
+0
+],
+[
+"29000",
+"Extracción de otros minerales",
+0
+],
+[
+"29010",
+"Extracción de piedra arcilla y arena",
+1
+],
+[
+"29020",
+"Extracción de minerales para fabricación de abonos y elaboración de productos químicos",
+1
+],
+[
+"29030",
+"Explotación de minas de sal",
+1
+],
+[
+"29090",
+"Extracción de minerales no clasificados en otro parte",
+1
+],
+[
+"30000",
+"Industria Manufactureras",
+0
+],
+[
+"31000",
+"Productos Alimenticios, bebidas y tabaco",
+0
+],
+[
+"31100",
+"Fabricación de productos alimenticios excepto bebidas",
+0
+],
+[
+"31110",
+"Matanza de ganado y preparación y conservación de carne",
+1
+],
+[
+"31120",
+"Fabricación de productos lácteos",
+1
+],
+[
+"31130",
+"Envasado y conservación de frutas y legumbres",
+1
+],
+[
+"31140",
+"Elaboración de pescado, crustáceos y otros productos marinos",
+1
+],
+[
+"31150",
+"Fabricación de aceites y grasa vegetales y animales",
+1
+],
+[
+"31160",
+"Productos de molinería",
+1
+],
+[
+"31170",
+"Fabricación de productos de panadería",
+1
+],
+[
+"31180",
+"Fabricas y refinerias de azúcar",
+1
+],
+[
+"31190",
+"Fabricación de caco, chocolate y articulos de confitería",
+1
+],
+[
+"31200",
+"Fabricación de productos alimenticios excepto bebidas",
+0
+],
+[
+"31210",
+"Elaboración de productos alimenticios diversos",
+1
+],
+[
+"31220",
+"Elaboración de alimentos preparados para animales",
+1
+],
+[
+"31300",
+"Industria de bebidas",
+0
+],
+[
+"31310",
+"Destilación, rectificación y mezcla de bebidas espirituosas",
+1
+],
+[
+"31320",
+"Industrias vinícolas",
+1
+],
+[
+"31330",
+"Bebidas malteadas y malta",
+1
+],
+[
+"31340",
+"Industria de bebidas no alcohólicas y aguas gaseosas",
+1
+],
+[
+"31400",
+"Industria del Tabaco",
+0
+],
+[
+"31400",
+"Industria del Tabaco",
+1
+],
+[
+"32000",
+"Textiles, Prendas de vestir e industrias de Cuero",
+0
+],
+[
+"32100",
+"Fabricación de textiles",
+0
+],
+[
+"32110",
+"Hilado, tejido y acabado de textiles",
+1
+],
+[
+"32120",
+"Articulos confeccionados con materiales textiles, excepto prendas de vestir",
+1
+],
+[
+"32130",
+"Fabrica de tejidos de punto",
+1
+],
+[
+"32140",
+"Fabricación de tapices y alfombras",
+1
+],
+[
+"32150",
+"Cordelería",
+1
+],
+[
+"32190",
+"Fabricación de textiles no clasificados en otra parte",
+1
+],
+[
+"32200",
+"Fabricación de prendas de vestir excepto calzado",
+0
+],
+[
+"32200",
+"Fabricación de prendas de vestir excepto calzado",
+1
+],
+[
+"32300",
+"Industria de cuero y productos de cuero, y sucedáneos de cuero y pieles, excepto el calzad",
+0
+],
+[
+"32310",
+"Curtidurías y talleres de acabado",
+1
+],
+[
+"32320",
+"Industría de la preparación y teñido de pieles",
+1
+],
+[
+"32330",
+"Fabricación de productos de cuero y sucedáneos de cuero, excepto el calzado y otras prenda",
+1
+],
+[
+"32400",
+"Fabricación de calzado, excepto el de caucho vulcanizado o moldeado de plástico",
+0
+],
+[
+"32400",
+"Fabricación de calzado, excepto el de caucho vulcanizado o moldeado de plástico",
+1
+],
+[
+"33000",
+"Industrias de la Madera y productos de la madera, incluidos muebles",
+0
+],
+[
+"33100",
+"Industría de la madera y productos de madera y de corcho, excepto muebles",
+0
+],
+[
+"33110",
+"Aserraderos, talleres de acepilladura y otros talleres para trabajar la madera",
+1
+],
+[
+"33120",
+"Fabricación de envases de madera y de caña y articulos menudos de caña",
+1
+],
+[
+"33190",
+"Fabricación de productos de madera y de corcho, n.e.p.",
+1
+],
+[
+"33200",
+"Fabricación de muebles y accesorios, excepto los que son principalmente metálicos",
+0
+],
+[
+"33200",
+"Fabricación de muebles y accesorios, excepto los que son principalmente metálicos",
+1
+],
+[
+"34000",
+"Fabricación de Papel y Productos de Papel, Imprentas y Editoriales",
+0
+],
+[
+"34100",
+"Fabricación de Papel y Productos de Papel",
+0
+],
+[
+"34110",
+"Fabricación de pulpa de madera, papel y cartón",
+1
+],
+[
+"34120",
+"Fabricación de envases y cajas de papel y de cartón",
+1
+],
+[
+"34190",
+"Fabricación de artículos de pulpa, papel, cartón, n.e.p.",
+1
+],
+[
+"34200",
+"Imprenta, editoriales e industrías conexas",
+0
+],
+[
+"34200",
+"Imprenta, editoriales e industrías conexas",
+1
+],
+[
+"35000",
+"Fabricación de sustancias químicas y de productos químicos, derivados del petróleo y del c",
+0
+],
+[
+"35100",
+"Fabricación de sustancias químicas industriales",
+0
+],
+[
+"35110",
+"Fabricación de sustancias químicas industriales básicas, excepto abonos",
+1
+],
+[
+"35120",
+"Fabricación de abonos y plaguicidas",
+1
+],
+[
+"35130",
+"Fabricación de resinas sintéticas,materias plásticas y fibras artificiales, excepto el vid",
+1
+],
+[
+"35200",
+"Fabricación de otros productos químicos",
+0
+],
+[
+"35210",
+"Fabricación de pinturas, barnices y lacas",
+1
+],
+[
+"35220",
+"Fabricación de productos farmaceúticos y medicamentos",
+1
+],
+[
+"35230",
+"Fabricación de jabones y preparados de limpieza, perfumes, cosméticos y otros productos de",
+1
+],
+[
+"35290",
+"Fabricación de productos químicos n.e.p.",
+1
+],
+[
+"35300",
+"Refinerías de petróleo",
+0
+],
+[
+"35300",
+"Refinerías de petróleo",
+1
+],
+[
+"35400",
+"Fabricación de productos diversos derivados del petróleo y del carbón",
+0
+],
+[
+"35400",
+"Fabricación de productos diversos derivados del petróleo y del carbón",
+1
+],
+[
+"35500",
+"Fabricación de productos de caucho",
+0
+],
+[
+"35510",
+"Industrías de llantas y cámaras",
+1
+],
+[
+"35590",
+"Fabricación de productos de caucho n.e.p.",
+1
+],
+[
+"35600",
+"Fabricación de productos plásticos",
+0
+],
+[
+"35600",
+"Fabricación de productos plásticos n.e.p.",
+1
+],
+[
+"36000",
+"Fabricación de Productos Minerales no Metalicos, exceptuando los derivados del petróleo y",
+0
+],
+[
+"36100",
+"Fabricación de objetos de barro, loza y porcelana",
+0
+],
+[
+"36100",
+"Fabricación de objetos de barro, loza y porcelana",
+1
+],
+[
+"36200",
+"Fabricación de vidrio y productos de vidrio",
+0
+],
+[
+"36200",
+"Fabricación de vidrio y productos de vidrio",
+1
+],
+[
+"36900",
+"Fabricación de otros productos minerales no metálicos",
+0
+],
+[
+"36910",
+"Fabricación de productos de arcilla para construcción",
+1
+],
+[
+"36920",
+"Fabricación de cemento, cal y yeso",
+1
+],
+[
+"36990",
+"Fabricación productos minerales no metálicos n. e. p.",
+1
+],
+[
+"37000",
+"Industrias Metalicas basicas",
+0
+],
+[
+"37100",
+"Industrías básicas de hierro y acero",
+0
+],
+[
+"37100",
+"Industrías básicas de hierro y acero",
+1
+],
+[
+"37200",
+"Industrías básicas de metales no ferrosos",
+0
+],
+[
+"37200",
+"Industrías básicas de metales no ferrosos",
+1
+],
+[
+"38000",
+"Fabricación de Productos Metalicos, maquinaria y Equipo",
+0
+],
+[
+"38100",
+"Fabricación de productos metalicos, exceptuando maquinaria y equipo",
+0
+],
+[
+"38110",
+"Fabricación de cuchillería, herramientas manuales y artículos generales de ferretería",
+1
+],
+[
+"38120",
+"Fabricación de muebles y accesorios principalmente metálicos",
+1
+],
+[
+"38130",
+"Fabricación de productos metálicos estructurales",
+1
+],
+[
+"38190",
+"Fabricación de productos metalicos, n.e.p. exceptuando maquinaria y equipo",
+1
+],
+[
+"38200",
+"Construcción de maquinaria, exceptuando la eléctrica",
+0
+],
+[
+"38210",
+"Construcción de motores y turbinas",
+1
+],
+[
+"38220",
+"Construcción de maquiraria y equipo para la agricultura",
+1
+],
+[
+"38230",
+"Construcción de maquinaria para trabajar los metales y la madera",
+1
+],
+[
+"38240",
+"Construcción de maquinaria y equipos especiales para las industrias, excepto la maquinaria",
+1
+],
+[
+"38250",
+"Construcción de maquinaria de oficina, cálculo y contabilidad",
+1
+],
+[
+"38290",
+"Construcción de maquinaria y equipo, n.e.p., exceptuando la eléctrica",
+1
+],
+[
+"38300",
+"Construcción de maquinaria, aparatos, accesorios y suministros",
+0
+],
+[
+"38310",
+"Construcción de maquinaria y aparatos industriales eléctricos",
+1
+],
+[
+"38320",
+"Construcción de equipos y aparatos de radio, de televisión y de comunicaciones",
+1
+],
+[
+"38330",
+"Construcción de aparatos y accesorios eléctricos de uso doméstico",
+1
+],
+[
+"38390",
+"Construcción de aparatos y suministros eléctricos, n.e.p.",
+1
+],
+[
+"38400",
+"Construcción de material de transporte",
+0
+],
+[
+"38410",
+"Construcciones navales y reparación de barcos",
+1
+],
+[
+"38420",
+"Construcción de equipo ferroviario",
+1
+],
+[
+"38430",
+"Fabricación de vehículos, automóviles",
+1
+],
+[
+"38440",
+"Fabricación de motocicletas y bicicletas",
+1
+],
+[
+"38450",
+"Fabricación de aeronaves",
+1
+],
+[
+"38490",
+"Construcción de material de transporte, n.e.p.",
+1
+],
+[
+"38500",
+"Fabricación de equipo profesional y científico, instrumentos de medida y de control n.e.p.",
+0
+],
+[
+"38510",
+"Fabricación de equipo profesional y científico e instrumentos de medida y de control n.e.p",
+1
+],
+[
+"38520",
+"Fabricación de aparatos fotográficos e instrumentos de óptica",
+1
+],
+[
+"38530",
+"Fabricación de relojes",
+1
+],
+[
+"39000",
+"Otras industrias Manufactureras",
+0
+],
+[
+"39000",
+"Otras industrias Manufactureras",
+0
+],
+[
+"39010",
+"Fabricación de joyas y artículos conexos",
+1
+],
+[
+"39020",
+"Fabricación de instrumentos de música",
+1
+],
+[
+"39030",
+"Fabricación de artículos de deporte y atletismo",
+1
+],
+[
+"39090",
+"Industrías Manufactureras n.e.p.",
+1
+],
+[
+"40000",
+"Electricidad, gas y agua",
+0
+],
+[
+"41000",
+"Electricidad, gas y Vapor",
+0
+],
+[
+"41000",
+"Electricidad, gas y Vapor",
+0
+],
+[
+"41010",
+"Luz y fuerza eléctrica",
+1
+],
+[
+"41020",
+"Producción y distribución de gas",
+1
+],
+[
+"41030",
+"Suministro de vapor y agua caliente",
+1
+],
+[
+"42000",
+"Obras Hidraulicas y suministro de agua",
+0
+],
+[
+"42000",
+"Obras Hidraulicas y suministro de agua",
+0
+],
+[
+"42000",
+"Obras Hidraulicas y suministro de agua",
+1
+],
+[
+"50000",
+"Construcción",
+0
+],
+[
+"50000",
+"Construcción",
+0
+],
+[
+"50000",
+"Construcción",
+1
+],
+[
+"60000",
+"Comercio por mayor y por menor y retaurant y hoteles",
+0
+],
+[
+"61000",
+"Comercio por mayor",
+0
+],
+[
+"61000",
+"Comercio por mayor",
+0
+],
+[
+"61000",
+"Comercio por mayor",
+1
+],
+[
+"62000",
+"Comercio por menor",
+0
+],
+[
+"62000",
+"Comercio por menor",
+0
+],
+[
+"62000",
+"Comercio por menor",
+1
+],
+[
+"63000",
+"Restaurant y Hoteles",
+0
+],
+[
+"63100",
+"Restaurant, cafés y Otros establecimientos que expenden comidas y bebidas",
+0
+],
+[
+"63100",
+"Restaurant, cafés y Otros establecimientos que expenden comidas y bebidas",
+1
+],
+[
+"63110",
+"Centros declub nocturnos, moteles y similares",
+1
+],
+[
+"63200",
+"Hoteles, casas de huéspedes, campamentos y otros lugares de alojamiento",
+0
+],
+[
+"63200",
+"Hoteles, casas de huéspedes, campamentos y otros lugares de alojamiento",
+1
+],
+[
+"70000",
+"Transporte, almacenamiento y comunicaciones",
+0
+],
+[
+"71000",
+"Transporte y almacenamiento",
+0
+],
+[
+"71100",
+"Transporte terrestre",
+0
+],
+[
+"71110",
+"Transporte ferroviario",
+1
+],
+[
+"71120",
+"Transporte urbano, suburbano e interurbano de pasajeros por carretera",
+1
+],
+[
+"71130",
+"Otros Servicios terrestres de transporte de pasajeros",
+1
+],
+[
+"71140",
+"Transporte de de carga por carretera",
+1
+],
+[
+"71150",
+"Transporte por oleoductos o gasoductos",
+1
+],
+[
+"71160",
+"Servicios relacionados con el transporte terrestre",
+1
+],
+[
+"71200",
+"Transporte por agua",
+0
+],
+[
+"71210",
+"Transporte oceánico o de cabotaje",
+1
+],
+[
+"71220",
+"Transporte por vías de navegación interior",
+1
+],
+[
+"71230",
+"Servicios relacionados con el transporte por agua",
+1
+],
+[
+"71300",
+"Transporte aéreo",
+0
+],
+[
+"71310",
+"Empresas de transporte aéreo",
+1
+],
+[
+"71320",
+"Servicios relacionados con el transporte aéreo",
+1
+],
+[
+"71900",
+"Servicios conexos del transporte",
+0
+],
+[
+"71910",
+"Servicos relacionados con el transporte",
+1
+],
+[
+"71920",
+"Depósito y almacenamiento",
+1
+],
+[
+"72000",
+"Comunicaciones",
+0
+],
+[
+"72000",
+"Comunicaciones",
+0
+],
+[
+"72000",
+"Comunicaciones",
+1
+],
+[
+"80000",
+"Establecimiento Financieros, seguros, bienes inmuebles y servicos prestados",
+0
+],
+[
+"81000",
+"Establecimientos financieros",
+0
+],
+[
+"81000",
+"Establecimientos financieros",
+0
+],
+[
+"81010",
+"Instituciones monetarias",
+1
+],
+[
+"81020",
+"otros establecimientos financieros",
+1
+],
+[
+"81030",
+"Servicios financieros",
+1
+],
+[
+"82000",
+"Seguros",
+0
+],
+[
+"82000",
+"Seguros",
+0
+],
+[
+"82000",
+"Seguros",
+1
+],
+[
+"83000",
+"Bienes Inmuebles y servicios prestados a las empresas",
+0
+],
+[
+"83100",
+"Bienes Inmuebles",
+0
+],
+[
+"83100",
+"Bienes Inmuebles",
+1
+],
+[
+"83200",
+"Servicios prestados a las empresas, exceptuando el alquiler y arrendamiento de maquinaria",
+0
+],
+[
+"83210",
+"Servicos jurídicos",
+1
+],
+[
+"83220",
+"Servicios de contabilidad, auditoría, y teneduría de libros",
+1
+],
+[
+"83230",
+"Servicios de elaboración de datos y de tabulación",
+1
+],
+[
+"83240",
+"Servicios técnicos y arquitectónicos",
+1
+],
+[
+"83250",
+"Servicios de publicidad",
+1
+],
+[
+"83260",
+"Servicios prestados a las empresas, n.e.p. exceptuando el alquiler y arrendamiento de maqu",
+1
+],
+[
+"83300",
+"Alquiler y arrendamiento de maquinaria y equipo",
+0
+],
+[
+"83300",
+"Alquiler y arrendamiento de maquinaria y equipo",
+1
+],
+[
+"90000",
+"Servicios Comunales Sociales y Personales",
+0
+],
+[
+"91000",
+"Administración pública y defensa",
+0
+],
+[
+"91000",
+"Administración pública y defensa",
+0
+],
+[
+"91000",
+"Administración pública y defensa",
+1
+],
+[
+"92000",
+"Servicios de saneamiento y similares",
+0
+],
+[
+"92000",
+"Servicios de saneamiento y similares",
+0
+],
+[
+"92000",
+"Servicios de saneamiento y similares",
+1
+],
+[
+"93000",
+"Servicios sociales y otros servicios comunales conexos",
+0
+],
+[
+"93100",
+"Instrucción pública",
+0
+],
+[
+"93100",
+"Instrucción pública",
+1
+],
+[
+"93200",
+"Institutos de investigación y cientificos",
+0
+],
+[
+"93200",
+"Institutos de investigación y cientificos",
+1
+],
+[
+"93300",
+"Servicios médicos y odontológicos; otros servicios de sanidad y veterinaria",
+0
+],
+[
+"93310",
+"Servicios médicos y odontológicos y otros servicios de sanidad",
+1
+],
+[
+"93320",
+"Servicios de veterinaria",
+1
+],
+[
+"93400",
+"Instituciones de Asistencia Social",
+0
+],
+[
+"93400",
+"Instituciones de Asistencia Social",
+1
+],
+[
+"93500",
+"Asociaciones comerciales, profesionales y laborales",
+0
+],
+[
+"93500",
+"Asociaciones comerciales, profesionales y laborales",
+1
+],
+[
+"93900",
+"Otros Servicios Sociales y Servicos Comunales conexos",
+0
+],
+[
+"93910",
+"Organizaciones religiosas",
+1
+],
+[
+"93990",
+"Servicios Sociales y servicios comunales",
+1
+],
+[
+"94000",
+"Servicios de Diversión, Esparcimiento y Servicios culturales",
+0
+],
+[
+"94100",
+"Películas cinematográficas y otros servicios de esparcimiento",
+0
+],
+[
+"94110",
+"Producción de películas cinematográficas",
+1
+],
+[
+"94120",
+"Distribución y exhibición de películas cinematográficas",
+1
+],
+[
+"94130",
+"Emisiones de radio y televisión",
+1
+],
+[
+"94140",
+"Productores tatrales y servicos de esparcimiento",
+1
+],
+[
+"94150",
+"Autores y compositores y otros artistas independientes, n.e.p.",
+1
+],
+[
+"94200",
+"Bibliotecas, museos, jardines botánicos y zoológicos y otros servicios culturales, n.e.p.",
+0
+],
+[
+"94200",
+"Bibliotecas, museos, jardines botánicos y zoológicos y otros servicios culturales, n.e.p.",
+1
+],
+[
+"94900",
+"Servicios de Diversión, Esparcimiento, n.e.p",
+0
+],
+[
+"94900",
+"Servicios de Diversión, Esparcimiento, n.e.p",
+1
+],
+[
+"95000",
+"Servicios Personales y de los Hogares",
+0
+],
+[
+"95100",
+"Servicios de reparación n.e.p",
+0
+],
+[
+"95110",
+"Reparación de calzados y otros artículos de cuero",
+1
+],
+[
+"95120",
+"Talleres de reparación eléctrica",
+1
+],
+[
+"95130",
+"Reparación de automóviles y motocicletas",
+1
+],
+[
+"95140",
+"Reparación de relojes y joyas",
+1
+],
+[
+"95190",
+"Otros servicios de reparación, n.e.p.",
+1
+],
+[
+"95200",
+"Lavanderías y servicios de lavandéria; establecimiento de limpieza y teñido",
+0
+],
+[
+"95200",
+"Lavanderías y servicios de lavandéria; establecimiento de limpieza y teñido",
+1
+],
+[
+"95300",
+"Servicos domésticos",
+0
+],
+[
+"95300",
+"Servicos domésticos",
+1
+],
+[
+"95900",
+"Servicios personales directos",
+0
+],
+[
+"95910",
+"Peluquería y salones de belleza",
+1
+],
+[
+"95920",
+"Estudios fotográficos, incluída la fotográfia comercial",
+1
+],
+[
+"95990",
+"Servicos personales, n.e.p.",
+1
+],
+[
+"96000",
+"Organizaciones internacionales y otros organismos extraterritoriales",
+0
+],
+[
+"96000",
+"Organizaciones internacionales y otros organismos extraterritoriales",
+0
+],
+[
+"96000",
+"Organizaciones internacionales y otros organismos extraterritoriales",
+1
+],
+[
+"99000",
+"Actividades no bien específicadas",
+0
+],
+[
+"99100",
+"Actividades no bien específicadas",
+1
+]
+],
+"historico": {
+"1991": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+15510.0,
+0.0,
+0.5,
+1.0
+],
+[
+2,
+15511.0,
+46640.0,
+77.0,
+1.0,
+15511.0
+],
+[
+3,
+46641.0,
+93390.0,
+385.0,
+2.0,
+46641.0
+],
+[
+4,
+93391.0,
+186890.0,
+1386.0,
+3.0,
+93391.0
+],
+[
+5,
+186891.0,
+null,
+4125.0,
+4.0,
+186891.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 29915.0,
+"JAPON": 32731.0,
+"USA": 33779.0,
+"EUROPA_OCC": 38656.0,
+"EUROPA_OR": 27493.0,
+"LATINOAMERICA": 21003.0,
+"COREA_ASIA": 32731.0
+}
+],
+[
+51,
+{
+"MEXICO": 32105.0,
+"JAPON": 34655.0,
+"USA": 35707.0,
+"EUROPA_OCC": 40957.0,
+"EUROPA_OR": 29109.0,
+"LATINOAMERICA": 24329.0,
+"COREA_ASIA": 34655.0
+}
+],
+[
+52,
+{
+"MEXICO": 34298.0,
+"JAPON": 36930.0,
+"USA": 37807.0,
+"EUROPA_OCC": 43233.0,
+"EUROPA_OR": 31022.0,
+"LATINOAMERICA": 25905.0,
+"COREA_ASIA": 36930.0
+}
+],
+[
+53,
+{
+"MEXICO": 35864.0,
+"JAPON": 38681.0,
+"USA": 39773.0,
+"EUROPA_OCC": 45508.0,
+"EUROPA_OR": 32492.0,
+"LATINOAMERICA": 28054.0,
+"COREA_ASIA": 38681.0
+}
+],
+[
+54,
+{
+"MEXICO": 40877.0,
+"JAPON": 44107.0,
+"USA": 45332.0,
+"EUROPA_OCC": 56009.0,
+"EUROPA_OR": 37050.0,
+"LATINOAMERICA": 30980.0,
+"COREA_ASIA": 44107.0
+}
+],
+[
+55,
+{
+"MEXICO": 46044.0,
+"JAPON": 49534.0,
+"USA": 50934.0,
+"EUROPA_OCC": 63012.0,
+"EUROPA_OR": 41607.0,
+"LATINOAMERICA": 34655.0,
+"COREA_ASIA": 49534.0
+}
+],
+[
+56,
+{
+"MEXICO": 71886.0,
+"JAPON": 77365.0,
+"USA": 79466.0,
+"EUROPA_OCC": 98019.0,
+"EUROPA_OR": 64986.0,
+"LATINOAMERICA": 54084.0,
+"COREA_ASIA": 77365.0
+}
+],
+[
+57,
+{
+"MEXICO": 86139.0,
+"JAPON": 92768.0,
+"USA": 87517.0,
+"EUROPA_OCC": 113771.0,
+"EUROPA_OR": 77926.0,
+"LATINOAMERICA": 74564.0,
+"COREA_ASIA": 92768.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+4445.0
+],
+[
+51,
+5093.0
+],
+[
+52,
+7630.0
+],
+[
+53,
+8349.0
+],
+[
+54,
+9495.0
+],
+[
+55,
+12724.0
+],
+[
+56,
+15909.0
+],
+[
+57,
+22265.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.12,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.5,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+},
+"1992": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+18532.0,
+0.0,
+0.0,
+1.0
+],
+[
+2,
+18533.0,
+55727.0,
+0.0,
+0.5,
+18533.0
+],
+[
+3,
+55728.0,
+111574.0,
+186.0,
+1.5,
+55728.0
+],
+[
+4,
+111575.0,
+223268.0,
+1024.0,
+2.5,
+111575.0
+],
+[
+5,
+223269.0,
+null,
+3816.0,
+3.5,
+223269.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 32707.0,
+"JAPON": 35786.0,
+"USA": 36932.0,
+"EUROPA_OCC": 42264.0,
+"EUROPA_OR": 30059.0,
+"LATINOAMERICA": 22963.0,
+"COREA_ASIA": 28577.0
+}
+],
+[
+51,
+{
+"MEXICO": 35101.0,
+"JAPON": 37809.0,
+"USA": 39040.0,
+"EUROPA_OCC": 44780.0,
+"EUROPA_OR": 31828.0,
+"LATINOAMERICA": 26600.0,
+"COREA_ASIA": 30344.0
+}
+],
+[
+52,
+{
+"MEXICO": 37499.0,
+"JAPON": 40377.0,
+"USA": 41336.0,
+"EUROPA_OCC": 47268.0,
+"EUROPA_OR": 33896.0,
+"LATINOAMERICA": 28323.0,
+"COREA_ASIA": 32414.0
+}
+],
+[
+53,
+{
+"MEXICO": 39211.0,
+"JAPON": 42291.0,
+"USA": 43485.0,
+"EUROPA_OCC": 49755.0,
+"EUROPA_OR": 35525.0,
+"LATINOAMERICA": 30672.0,
+"COREA_ASIA": 36692.0
+}
+],
+[
+54,
+{
+"MEXICO": 44692.0,
+"JAPON": 48224.0,
+"USA": 49563.0,
+"EUROPA_OCC": 61237.0,
+"EUROPA_OR": 40508.0,
+"LATINOAMERICA": 33871.0,
+"COREA_ASIA": 41565.0
+}
+],
+[
+55,
+{
+"MEXICO": 60341.0,
+"JAPON": 54157.0,
+"USA": 55688.0,
+"EUROPA_OCC": 68883.0,
+"EUROPA_OR": 45490.0,
+"LATINOAMERICA": 37889.0,
+"COREA_ASIA": 48557.0
+}
+],
+[
+56,
+{
+"MEXICO": 78595.0,
+"JAPON": 84586.0,
+"USA": 86883.0,
+"EUROPA_OCC": 107167.0,
+"EUROPA_OR": 71051.0,
+"LATINOAMERICA": 59132.0,
+"COREA_ASIA": 72118.0
+}
+],
+[
+57,
+{
+"MEXICO": 94179.0,
+"JAPON": 101426.0,
+"USA": 95685.0,
+"EUROPA_OCC": 124390.0,
+"EUROPA_OR": 85199.0,
+"LATINOAMERICA": 81523.0,
+"COREA_ASIA": 89175.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+4860.0
+],
+[
+51,
+5568.0
+],
+[
+52,
+8342.0
+],
+[
+53,
+9128.0
+],
+[
+54,
+10381.0
+],
+[
+55,
+13912.0
+],
+[
+56,
+17394.0
+],
+[
+57,
+24343.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.1,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.05,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+},
+"1993": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+18532.0,
+0.0,
+0.0,
+1.0
+],
+[
+2,
+18533.0,
+55727.0,
+0.0,
+0.5,
+18533.0
+],
+[
+3,
+55728.0,
+111574.0,
+186.0,
+1.5,
+55728.0
+],
+[
+4,
+111575.0,
+223268.0,
+1024.0,
+2.5,
+111575.0
+],
+[
+5,
+223269.0,
+null,
+3816.0,
+3.5,
+223269.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 35738.0,
+"JAPON": 39103.0,
+"USA": 40355.0,
+"EUROPA_OCC": 46181.0,
+"EUROPA_OR": 32845.0,
+"LATINOAMERICA": 25091.0,
+"COREA_ASIA": 31226.0
+}
+],
+[
+51,
+{
+"MEXICO": 38354.0,
+"JAPON": 41401.0,
+"USA": 42658.0,
+"EUROPA_OCC": 48930.0,
+"EUROPA_OR": 34776.0,
+"LATINOAMERICA": 29065.0,
+"COREA_ASIA": 33156.0
+}
+],
+[
+52,
+{
+"MEXICO": 40975.0,
+"JAPON": 44119.0,
+"USA": 45167.0,
+"EUROPA_OCC": 51649.0,
+"EUROPA_OR": 37061.0,
+"LATINOAMERICA": 30948.0,
+"COREA_ASIA": 35418.0
+}
+],
+[
+53,
+{
+"MEXICO": 42845.0,
+"JAPON": 46211.0,
+"USA": 47515.0,
+"EUROPA_OCC": 54366.0,
+"EUROPA_OR": 38818.0,
+"LATINOAMERICA": 33515.0,
+"COREA_ASIA": 39983.0
+}
+],
+[
+54,
+{
+"MEXICO": 48834.0,
+"JAPON": 52694.0,
+"USA": 54157.0,
+"EUROPA_OCC": 66913.0,
+"EUROPA_OR": 44262.0,
+"LATINOAMERICA": 37010.0,
+"COREA_ASIA": 45417.0
+}
+],
+[
+55,
+{
+"MEXICO": 55007.0,
+"JAPON": 59176.0,
+"USA": 60849.0,
+"EUROPA_OCC": 75278.0,
+"EUROPA_OR": 49706.0,
+"LATINOAMERICA": 41401.0,
+"COREA_ASIA": 50872.0
+}
+],
+[
+56,
+{
+"MEXICO": 85879.0,
+"JAPON": 92426.0,
+"USA": 94936.0,
+"EUROPA_OCC": 117100.0,
+"EUROPA_OR": 77636.0,
+"LATINOAMERICA": 64613.0,
+"COREA_ASIA": 78802.0
+}
+],
+[
+57,
+{
+"MEXICO": 102908.0,
+"JAPON": 110826.0,
+"USA": 104553.0,
+"EUROPA_OCC": 135919.0,
+"EUROPA_OR": 93095.0,
+"LATINOAMERICA": 89079.0,
+"COREA_ASIA": 97440.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+5310.0
+],
+[
+51,
+6084.0
+],
+[
+52,
+9115.0
+],
+[
+53,
+9974.0
+],
+[
+54,
+11343.0
+],
+[
+55,
+15201.0
+],
+[
+56,
+19006.0
+],
+[
+57,
+26599.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.12,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.5,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+},
+"1994": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+19566.0,
+0.0,
+0.0,
+1.0
+],
+[
+2,
+19567.0,
+58837.0,
+0.0,
+0.5,
+19567.0
+],
+[
+3,
+58838.0,
+117800.0,
+196.0,
+1.5,
+58838.0
+],
+[
+4,
+117801.0,
+235727.0,
+1081.0,
+2.5,
+117801.0
+],
+[
+5,
+235728.0,
+null,
+4029.0,
+3.5,
+235728.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 37732.0,
+"JAPON": 41285.0,
+"USA": 42607.0,
+"EUROPA_OCC": 48758.0,
+"EUROPA_OR": 34678.0,
+"LATINOAMERICA": 26491.0,
+"COREA_ASIA": 32969.0
+}
+],
+[
+51,
+{
+"MEXICO": 40494.0,
+"JAPON": 43711.0,
+"USA": 45038.0,
+"EUROPA_OCC": 51660.0,
+"EUROPA_OR": 36717.0,
+"LATINOAMERICA": 30687.0,
+"COREA_ASIA": 35006.0
+}
+],
+[
+52,
+{
+"MEXICO": 43262.0,
+"JAPON": 46581.0,
+"USA": 47687.0,
+"EUROPA_OCC": 54531.0,
+"EUROPA_OR": 39129.0,
+"LATINOAMERICA": 32675.0,
+"COREA_ASIA": 37394.0
+}
+],
+[
+53,
+{
+"MEXICO": 45236.0,
+"JAPON": 48790.0,
+"USA": 50167.0,
+"EUROPA_OCC": 57400.0,
+"EUROPA_OR": 40984.0,
+"LATINOAMERICA": 35385.0,
+"COREA_ASIA": 42214.0
+}
+],
+[
+54,
+{
+"MEXICO": 51559.0,
+"JAPON": 55635.0,
+"USA": 57179.0,
+"EUROPA_OCC": 70647.0,
+"EUROPA_OR": 46732.0,
+"LATINOAMERICA": 39075.0,
+"COREA_ASIA": 47951.0
+}
+],
+[
+55,
+{
+"MEXICO": 58077.0,
+"JAPON": 62478.0,
+"USA": 64245.0,
+"EUROPA_OCC": 79479.0,
+"EUROPA_OR": 52480.0,
+"LATINOAMERICA": 43711.0,
+"COREA_ASIA": 53711.0
+}
+],
+[
+56,
+{
+"MEXICO": 90671.0,
+"JAPON": 97584.0,
+"USA": 100234.0,
+"EUROPA_OCC": 123635.0,
+"EUROPA_OR": 81968.0,
+"LATINOAMERICA": 68219.0,
+"COREA_ASIA": 83199.0
+}
+],
+[
+57,
+{
+"MEXICO": 108651.0,
+"JAPON": 117010.0,
+"USA": 110387.0,
+"EUROPA_OCC": 143504.0,
+"EUROPA_OR": 98290.0,
+"LATINOAMERICA": 94050.0,
+"COREA_ASIA": 102878.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+5606.0
+],
+[
+51,
+6424.0
+],
+[
+52,
+9624.0
+],
+[
+53,
+10531.0
+],
+[
+54,
+11976.0
+],
+[
+55,
+16049.0
+],
+[
+56,
+20067.0
+],
+[
+57,
+28083.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.12,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.5,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+},
+"1995": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+26277.0,
+0.0,
+1.5,
+1.0
+],
+[
+2,
+26278.0,
+78832.0,
+394.0,
+2.0,
+26278.0
+],
+[
+3,
+78833.0,
+157664.0,
+1445.0,
+3.0,
+78833.0
+],
+[
+4,
+157665.0,
+315329.0,
+3810.0,
+4.0,
+157665.0
+],
+[
+5,
+315330.0,
+null,
+10117.0,
+5.0,
+315330.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 40125.0,
+"JAPON": 43904.0,
+"USA": 45399.0,
+"EUROPA_OCC": 51851.0,
+"EUROPA_OR": 36877.0,
+"LATINOAMERICA": 28171.0,
+"COREA_ASIA": 35060.0
+}
+],
+[
+51,
+{
+"MEXICO": 43063.0,
+"JAPON": 46484.0,
+"USA": 47895.0,
+"EUROPA_OCC": 54937.0,
+"EUROPA_OR": 39045.0,
+"LATINOAMERICA": 32633.0,
+"COREA_ASIA": 37226.0
+}
+],
+[
+52,
+{
+"MEXICO": 46005.0,
+"JAPON": 49535.0,
+"USA": 50712.0,
+"EUROPA_OCC": 57990.0,
+"EUROPA_OR": 41611.0,
+"LATINOAMERICA": 34747.0,
+"COREA_ASIA": 39766.0
+}
+],
+[
+53,
+{
+"MEXICO": 48105.0,
+"JAPON": 51884.0,
+"USA": 53348.0,
+"EUROPA_OCC": 61040.0,
+"EUROPA_OR": 43584.0,
+"LATINOAMERICA": 37630.0,
+"COREA_ASIA": 44892.0
+}
+],
+[
+54,
+{
+"MEXICO": 54829.0,
+"JAPON": 59163.0,
+"USA": 60817.0,
+"EUROPA_OCC": 75128.0,
+"EUROPA_OR": 49696.0,
+"LATINOAMERICA": 41554.0,
+"COREA_ASIA": 50993.0
+}
+],
+[
+55,
+{
+"MEXICO": 61760.0,
+"JAPON": 66441.0,
+"USA": 68319.0,
+"EUROPA_OCC": 84520.0,
+"EUROPA_OR": 55808.0,
+"LATINOAMERICA": 46484.0,
+"COREA_ASIA": 57117.0
+}
+],
+[
+56,
+{
+"MEXICO": 96422.0,
+"JAPON": 103773.0,
+"USA": 106591.0,
+"EUROPA_OCC": 131476.0,
+"EUROPA_OR": 87167.0,
+"LATINOAMERICA": 72545.0,
+"COREA_ASIA": 88476.0
+}
+],
+[
+57,
+{
+"MEXICO": 115542.0,
+"JAPON": 124432.0,
+"USA": 117389.0,
+"EUROPA_OCC": 152605.0,
+"EUROPA_OR": 104524.0,
+"LATINOAMERICA": 100015.0,
+"COREA_ASIA": 109403.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+5962.0
+],
+[
+51,
+6831.0
+],
+[
+52,
+10234.0
+],
+[
+53,
+11198.0
+],
+[
+54,
+12736.0
+],
+[
+55,
+17067.0
+],
+[
+56,
+21399.0
+],
+[
+57,
+29865.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.12,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.5,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+},
+"1996": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+27583.0,
+0.0,
+1.5,
+1.0
+],
+[
+2,
+27584.0,
+82750.0,
+414.0,
+2.0,
+27584.0
+],
+[
+3,
+82751.0,
+165501.0,
+1507.0,
+3.0,
+82751.0
+],
+[
+4,
+165502.0,
+331001.0,
+4000.0,
+4.0,
+165502.0
+],
+[
+5,
+331002.0,
+null,
+10620.0,
+5.0,
+331002.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 42119.0,
+"JAPON": 46086.0,
+"USA": 47561.0,
+"EUROPA_OCC": 54428.0,
+"EUROPA_OR": 38710.0,
+"LATINOAMERICA": 29571.0,
+"COREA_ASIA": 36803.0
+}
+],
+[
+51,
+{
+"MEXICO": 45203.0,
+"JAPON": 48794.0,
+"USA": 50275.0,
+"EUROPA_OCC": 57667.0,
+"EUROPA_OR": 40986.0,
+"LATINOAMERICA": 34255.0,
+"COREA_ASIA": 39076.0
+}
+],
+[
+52,
+{
+"MEXICO": 48292.0,
+"JAPON": 51997.0,
+"USA": 53232.0,
+"EUROPA_OCC": 60872.0,
+"EUROPA_OR": 43679.0,
+"LATINOAMERICA": 36474.0,
+"COREA_ASIA": 41742.0
+}
+],
+[
+53,
+{
+"MEXICO": 50496.0,
+"JAPON": 54463.0,
+"USA": 56000.0,
+"EUROPA_OCC": 64074.0,
+"EUROPA_OR": 45750.0,
+"LATINOAMERICA": 39500.0,
+"COREA_ASIA": 47123.0
+}
+],
+[
+54,
+{
+"MEXICO": 57554.0,
+"JAPON": 62104.0,
+"USA": 63828.0,
+"EUROPA_OCC": 78862.0,
+"EUROPA_OR": 52166.0,
+"LATINOAMERICA": 43619.0,
+"COREA_ASIA": 53527.0
+}
+],
+[
+55,
+{
+"MEXICO": 64830.0,
+"JAPON": 69743.0,
+"USA": 71715.0,
+"EUROPA_OCC": 88721.0,
+"EUROPA_OR": 58582.0,
+"LATINOAMERICA": 48794.0,
+"COREA_ASIA": 59956.0
+}
+],
+[
+56,
+{
+"MEXICO": 101214.0,
+"JAPON": 108931.0,
+"USA": 111889.0,
+"EUROPA_OCC": 138011.0,
+"EUROPA_OR": 91499.0,
+"LATINOAMERICA": 76151.0,
+"COREA_ASIA": 92873.0
+}
+],
+[
+57,
+{
+"MEXICO": 121285.0,
+"JAPON": 130616.0,
+"USA": 123223.0,
+"EUROPA_OCC": 160191.0,
+"EUROPA_OR": 109719.0,
+"LATINOAMERICA": 104986.0,
+"COREA_ASIA": 114841.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+6258.0
+],
+[
+51,
+7171.0
+],
+[
+52,
+10743.0
+],
+[
+53,
+11756.0
+],
+[
+54,
+13369.0
+],
+[
+55,
+17915.0
+],
+[
+56,
+22400.0
+],
+[
+57,
+31348.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.12,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.5,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+},
+"1997": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+28733.0,
+0.0,
+1.5,
+1.0
+],
+[
+2,
+28734.0,
+86198.0,
+575.0,
+2.0,
+28734.0
+],
+[
+3,
+86199.0,
+172396.0,
+2011.0,
+3.0,
+86199.0
+],
+[
+4,
+172397.0,
+344793.0,
+5028.0,
+4.0,
+172397.0
+],
+[
+5,
+344794.0,
+null,
+12785.0,
+5.0,
+344794.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 44209.0,
+"JAPON": 48373.0,
+"USA": 49921.0,
+"EUROPA_OCC": 57129.0,
+"EUROPA_OR": 40631.0,
+"LATINOAMERICA": 31038.0,
+"COREA_ASIA": 38629.0
+}
+],
+[
+51,
+{
+"MEXICO": 47446.0,
+"JAPON": 51215.0,
+"USA": 52770.0,
+"EUROPA_OCC": 60528.0,
+"EUROPA_OR": 43020.0,
+"LATINOAMERICA": 35955.0,
+"COREA_ASIA": 41015.0
+}
+],
+[
+52,
+{
+"MEXICO": 50688.0,
+"JAPON": 54577.0,
+"USA": 55873.0,
+"EUROPA_OCC": 63892.0,
+"EUROPA_OR": 45846.0,
+"LATINOAMERICA": 38284.0,
+"COREA_ASIA": 43813.0
+}
+],
+[
+53,
+{
+"MEXICO": 53002.0,
+"JAPON": 57165.0,
+"USA": 58779.0,
+"EUROPA_OCC": 67253.0,
+"EUROPA_OR": 48020.0,
+"LATINOAMERICA": 41460.0,
+"COREA_ASIA": 49461.0
+}
+],
+[
+54,
+{
+"MEXICO": 60410.0,
+"JAPON": 65185.0,
+"USA": 66995.0,
+"EUROPA_OCC": 82775.0,
+"EUROPA_OR": 54754.0,
+"LATINOAMERICA": 45783.0,
+"COREA_ASIA": 56183.0
+}
+],
+[
+55,
+{
+"MEXICO": 68047.0,
+"JAPON": 73204.0,
+"USA": 75273.0,
+"EUROPA_OCC": 93123.0,
+"EUROPA_OR": 61489.0,
+"LATINOAMERICA": 51215.0,
+"COREA_ASIA": 62931.0
+}
+],
+[
+56,
+{
+"MEXICO": 106236.0,
+"JAPON": 114336.0,
+"USA": 117441.0,
+"EUROPA_OCC": 144859.0,
+"EUROPA_OR": 96039.0,
+"LATINOAMERICA": 79929.0,
+"COREA_ASIA": 97481.0
+}
+],
+[
+57,
+{
+"MEXICO": 127303.0,
+"JAPON": 137097.0,
+"USA": 129337.0,
+"EUROPA_OCC": 168139.0,
+"EUROPA_OR": 115163.0,
+"LATINOAMERICA": 110195.0,
+"COREA_ASIA": 120539.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+6569.0
+],
+[
+51,
+7527.0
+],
+[
+52,
+11276.0
+],
+[
+53,
+12339.0
+],
+[
+54,
+14032.0
+],
+[
+55,
+18804.0
+],
+[
+56,
+23511.0
+],
+[
+57,
+32903.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.12,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.5,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+},
+"1998": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+30039.0,
+0.0,
+1.5,
+1.0
+],
+[
+2,
+30040.0,
+90117.0,
+601.0,
+2.0,
+30040.0
+],
+[
+3,
+90118.0,
+180233.0,
+2102.0,
+3.0,
+90118.0
+],
+[
+4,
+180234.0,
+360465.0,
+5257.0,
+4.0,
+180234.0
+],
+[
+5,
+360466.0,
+null,
+13367.0,
+5.0,
+360466.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 46218.0,
+"JAPON": 50572.0,
+"USA": 52190.0,
+"EUROPA_OCC": 59726.0,
+"EUROPA_OR": 42478.0,
+"LATINOAMERICA": 32449.0,
+"COREA_ASIA": 40385.0
+}
+],
+[
+51,
+{
+"MEXICO": 49603.0,
+"JAPON": 53543.0,
+"USA": 55169.0,
+"EUROPA_OCC": 63279.0,
+"EUROPA_OR": 44975.0,
+"LATINOAMERICA": 37589.0,
+"COREA_ASIA": 42879.0
+}
+],
+[
+52,
+{
+"MEXICO": 52992.0,
+"JAPON": 57058.0,
+"USA": 58413.0,
+"EUROPA_OCC": 66796.0,
+"EUROPA_OR": 47930.0,
+"LATINOAMERICA": 40024.0,
+"COREA_ASIA": 45804.0
+}
+],
+[
+53,
+{
+"MEXICO": 55411.0,
+"JAPON": 59763.0,
+"USA": 61451.0,
+"EUROPA_OCC": 70310.0,
+"EUROPA_OR": 50203.0,
+"LATINOAMERICA": 43345.0,
+"COREA_ASIA": 51709.0
+}
+],
+[
+54,
+{
+"MEXICO": 63156.0,
+"JAPON": 68148.0,
+"USA": 70040.0,
+"EUROPA_OCC": 86537.0,
+"EUROPA_OR": 57243.0,
+"LATINOAMERICA": 47864.0,
+"COREA_ASIA": 58737.0
+}
+],
+[
+55,
+{
+"MEXICO": 71140.0,
+"JAPON": 76531.0,
+"USA": 78694.0,
+"EUROPA_OCC": 97356.0,
+"EUROPA_OR": 64284.0,
+"LATINOAMERICA": 53543.0,
+"COREA_ASIA": 65791.0
+}
+],
+[
+56,
+{
+"MEXICO": 111065.0,
+"JAPON": 119533.0,
+"USA": 122779.0,
+"EUROPA_OCC": 151443.0,
+"EUROPA_OR": 100404.0,
+"LATINOAMERICA": 83562.0,
+"COREA_ASIA": 101912.0
+}
+],
+[
+57,
+{
+"MEXICO": 133089.0,
+"JAPON": 143329.0,
+"USA": 135216.0,
+"EUROPA_OCC": 175782.0,
+"EUROPA_OR": 120398.0,
+"LATINOAMERICA": 115204.0,
+"COREA_ASIA": 126018.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+6868.0
+],
+[
+51,
+7869.0
+],
+[
+52,
+11789.0
+],
+[
+53,
+12900.0
+],
+[
+54,
+14670.0
+],
+[
+55,
+19559.0
+],
+[
+56,
+24580.0
+],
+[
+57,
+34399.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.12,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.5,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+},
+"1999": {
+"veh_deprec": [
+[
+0,
+1.0
+],
+[
+1,
+0.8
+],
+[
+2,
+0.64
+],
+[
+3,
+0.512
+],
+[
+4,
+0.409
+],
+[
+5,
+0.327
+],
+[
+6,
+0.262
+],
+[
+7,
+0.209
+],
+[
+8,
+0.168
+]
+],
+"veh_escala": [
+[
+1,
+1.0,
+31868.0,
+0.0,
+1.5,
+1.0
+],
+[
+2,
+31869.0,
+95602.0,
+637.0,
+2.0,
+31869.0
+],
+[
+3,
+95603.0,
+191204.0,
+2230.0,
+3.0,
+95603.0
+],
+[
+4,
+191205.0,
+382407.0,
+5577.0,
+4.0,
+191205.0
+],
+[
+5,
+382408.0,
+null,
+14180.0,
+5.0,
+382408.0
+]
+],
+"veh_valor": [
+[
+50,
+{
+"MEXICO": 49031.0,
+"JAPON": 53650.0,
+"USA": 55367.0,
+"EUROPA_OCC": 63361.0,
+"EUROPA_OR": 45064.0,
+"LATINOAMERICA": 34424.0,
+"COREA_ASIA": 42843.0
+}
+],
+[
+51,
+{
+"MEXICO": 52622.0,
+"JAPON": 56802.0,
+"USA": 58527.0,
+"EUROPA_OCC": 67131.0,
+"EUROPA_OR": 47713.0,
+"LATINOAMERICA": 39877.0,
+"COREA_ASIA": 45489.0
+}
+],
+[
+52,
+{
+"MEXICO": 56218.0,
+"JAPON": 60531.0,
+"USA": 61969.0,
+"EUROPA_OCC": 70862.0,
+"EUROPA_OR": 50847.0,
+"LATINOAMERICA": 42460.0,
+"COREA_ASIA": 48592.0
+}
+],
+[
+53,
+{
+"MEXICO": 58784.0,
+"JAPON": 63401.0,
+"USA": 65191.0,
+"EUROPA_OCC": 74590.0,
+"EUROPA_OR": 53259.0,
+"LATINOAMERICA": 45983.0,
+"COREA_ASIA": 54857.0
+}
+],
+[
+54,
+{
+"MEXICO": 67000.0,
+"JAPON": 72296.0,
+"USA": 74303.0,
+"EUROPA_OCC": 91804.0,
+"EUROPA_OR": 60727.0,
+"LATINOAMERICA": 50777.0,
+"COREA_ASIA": 62312.0
+}
+],
+[
+55,
+{
+"MEXICO": 75470.0,
+"JAPON": 81189.0,
+"USA": 83484.0,
+"EUROPA_OCC": 103282.0,
+"EUROPA_OR": 68197.0,
+"LATINOAMERICA": 56802.0,
+"COREA_ASIA": 69796.0
+}
+],
+[
+56,
+{
+"MEXICO": 117825.0,
+"JAPON": 126809.0,
+"USA": 130253.0,
+"EUROPA_OCC": 160661.0,
+"EUROPA_OR": 106516.0,
+"LATINOAMERICA": 88648.0,
+"COREA_ASIA": 108115.0
+}
+],
+[
+57,
+{
+"MEXICO": 141190.0,
+"JAPON": 152053.0,
+"USA": 143447.0,
+"EUROPA_OCC": 186482.0,
+"EUROPA_OR": 127727.0,
+"LATINOAMERICA": 122216.0,
+"COREA_ASIA": 133689.0
+}
+]
+],
+"moto_valor": [
+[
+50,
+7286.0
+],
+[
+51,
+8348.0
+],
+[
+52,
+12507.0
+],
+[
+53,
+13685.0
+],
+[
+54,
+15563.0
+],
+[
+55,
+20856.0
+],
+[
+56,
+26076.0
+],
+[
+57,
+36493.0
+]
+],
+"veh_correccion": [
+[
+1,
+0.12,
+0.0,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+2,
+0.12,
+0.4,
+0.0,
+0.25,
+0.0,
+0.1
+],
+[
+3,
+0.1,
+0.4,
+1.0,
+0.25,
+0.2,
+0.4
+],
+[
+4,
+0.2,
+0.4,
+1.0,
+0.25,
+1.5,
+2.0
+],
+[
+5,
+0.2,
+0.4,
+1.0,
+0.25,
+1.7,
+2.2
+]
+]
+}
+},
+"act_tipos": [
+[
+"01",
+"Industria en General"
+],
+[
+"02",
+"Industria de Productos específicos (Cerveza, alcohol, azúcar, singani, vino, chica, aguardientes, licores, cigarrillos, otros)"
+],
+[
+"03",
+"Industria de bebidas refrescantes sin alcohol"
+],
+[
+"04",
+"Servicios Financieros"
+],
+[
+"05",
+"Servicios de transporte terrestre ferroviario"
+],
+[
+"06",
+"Servicios de transporte Aéreo Nacional"
+],
+[
+"07",
+"Servicios de transporte Aéreo Internacional"
+],
+[
+"08",
+"Actividad Hotelera"
+],
+[
+"09",
+"Actividad Independiente y Profesional"
+],
+[
+"10",
+"Servicios en general"
+],
+[
+"11",
+"Servicios específicos"
+],
+[
+"12",
+"Comercio Minorista Vivanderos"
+],
+[
+"13",
+"Actividad Minera"
+],
+[
+"14",
+"Comercio en General"
+],
+[
+"15",
+"Artesanos"
+]
+],
+"act_categorias": [
+[
+"01",
+"01",
+"Producción agropecuaria o Actividad de Servicios Agrícolas"
+],
+[
+"01",
+"02",
+"Cría especializada de ganado (granjas de pollos, porcinos, etc.) granjas pequeñas"
+],
+[
+"01",
+"03",
+"Cría especializada de ganado (granjas de pollos, porcinos, etc.) granjas medianas"
+],
+[
+"01",
+"04",
+"Cría especializada de ganado (granjas de pollos, porcinos, etc.) industriales"
+],
+[
+"01",
+"05",
+"Fabricación de productos lácteos (lechería, quesería, etc.)"
+],
+[
+"01",
+"06",
+"Fabricación de productos de panadería"
+],
+[
+"01",
+"07",
+"Fabricación de productos de repostería"
+],
+[
+"01",
+"08",
+"Elaboración de productos alimenticios diversos (heladerías, etc.)"
+],
+[
+"01",
+"09",
+"Elaboración de productos preparados para animales"
+],
+[
+"01",
+"10",
+"Fabricación de prendas de vestir (Sastres y modistas)"
+],
+[
+"01",
+"11",
+"Industrias de cuero y productos de cuero excepto calzados y otras prendas de vestir"
+],
+[
+"01",
+"12",
+"Curtidurías y talleres de acabado"
+],
+[
+"01",
+"13",
+"Aserraderos, barracas y otros talleres pequeños para trabajar la madera"
+],
+[
+"01",
+"14",
+"Aserraderos, barracas y otros talleres medianos para trabajar la madera"
+],
+[
+"01",
+"15",
+"Aserraderos, barracas y otros talleres grandes para trabajar la madera"
+],
+[
+"01",
+"16",
+"Fabricación de muebles y accesorios de madera (Carpinterías, mueblerías, etc.)"
+],
+[
+"01",
+"17",
+"Imprentas y editoriales"
+],
+[
+"01",
+"18",
+"Fabricación de jabones"
+],
+[
+"01",
+"19",
+"Fabricación de objetos de barro"
+],
+[
+"01",
+"20",
+"Fabricación de productos de arcilla para la construcción (ladrillos, baldosas, tuberías, etc.)"
+],
+[
+"01",
+"21",
+"Fabricación de cemento, cal y yeso"
+],
+[
+"01",
+"22",
+"Fabricación de productos minerales no metálicos (Hormigones, piedra tallada, etc.)"
+],
+[
+"01",
+"23",
+"Fabricación de cuchillería y herramientas manuales"
+],
+[
+"01",
+"24",
+"Fabricación de productos metálicos estructurales (puertas, ventanas, marcos, etc.)"
+],
+[
+"01",
+"25",
+"Fabricación de joyas"
+],
+[
+"01",
+"26",
+"Fabricación de instrumentos de música"
+],
+[
+"01",
+"27",
+"Producción y distribución de gas"
+],
+[
+"02",
+"01",
+"Destilación, rectificación  y mezcla de bebidas espirituosas (chicha, singani, aguardiente, etc.) grandes"
+],
+[
+"02",
+"02",
+"Destilación, rectificación  y mezcla de bebidas espirituosas (chicha, singani, aguardiente, etc.) medianos"
+],
+[
+"02",
+"03",
+"Destilación, rectificación  y mezcla de bebidas espirituosas (chicha, singani, aguardiente, etc.) pequeños"
+],
+[
+"02",
+"04",
+"Industrias Vinícolas"
+],
+[
+"03",
+"01",
+"Industria de bebidas (no alcohólicas) y aguas frescas"
+],
+[
+"04",
+"01",
+"Bancos"
+],
+[
+"04",
+"02",
+"Cooperativas de Ahorro y Crédito"
+],
+[
+"04",
+"03",
+"Financieras"
+],
+[
+"05",
+"01",
+"Transporte Ferroviario"
+],
+[
+"05",
+"02",
+"Transporte Interdepartamental"
+],
+[
+"05",
+"03",
+"Transporte Interprovincial"
+],
+[
+"08",
+"01",
+"Hoteles"
+],
+[
+"08",
+"02",
+"Residenciales"
+],
+[
+"08",
+"03",
+"Hostales"
+],
+[
+"08",
+"04",
+"Alojamientos"
+],
+[
+"09",
+"01",
+"Servicios jurídicos"
+],
+[
+"09",
+"02",
+"Servicios de contabilidad, auditoria y teneduría de libros"
+],
+[
+"09",
+"03",
+"Servicios técnicos y arquitectónicos"
+],
+[
+"09",
+"04",
+"Servicios de publicidad (letreros, serigrafías, etc.)"
+],
+[
+"09",
+"05",
+"Notarias"
+],
+[
+"09",
+"06",
+"Servicios odontológicos"
+],
+[
+"09",
+"07",
+"Servicios de veterinaria"
+],
+[
+"09",
+"08",
+"Otros Profesionales"
+],
+[
+"10",
+"01",
+"Servicios de molienda"
+],
+[
+"10",
+"02",
+"Servicios de Peladoras de  Cereales"
+],
+[
+"10",
+"03",
+"Instituciones Particulares Universidades"
+],
+[
+"10",
+"04",
+"Instituciones Particulares Colegios"
+],
+[
+"10",
+"05",
+"Instituciones Particulares Institutos"
+],
+[
+"10",
+"06",
+"Clínicas"
+],
+[
+"10",
+"07",
+"Enfermerías"
+],
+[
+"10",
+"08",
+"Radio emisoras AM"
+],
+[
+"10",
+"09",
+"Radio emisoras FM"
+],
+[
+"10",
+"10",
+"Estaciones de TV"
+],
+[
+"10",
+"11",
+"Estación de gasolina"
+],
+[
+"10",
+"12",
+"Estación de servicios lavadero"
+],
+[
+"10",
+"13",
+"Comunicaciones (Radio comunicaciones, etc.)"
+],
+[
+"10",
+"14",
+"Balnearios"
+],
+[
+"10",
+"15",
+"Gimnasios"
+],
+[
+"10",
+"16",
+"Reparación de calzados y otros artículos de cuero"
+],
+[
+"10",
+"17",
+"Talleres de reparaciones eléctricas (radio técnicos)"
+],
+[
+"10",
+"18",
+"Talleres de reparación  de automotores"
+],
+[
+"10",
+"19",
+"Talleres de reparación eléctricas de automotores"
+],
+[
+"10",
+"20",
+"Servicios de reparación de bicicletas"
+],
+[
+"10",
+"21",
+"Servicios de reparación de motocicletas"
+],
+[
+"10",
+"22",
+"Lavanderías y servicios de lavanderías y tejido Limpieza seco y vapor"
+],
+[
+"11",
+"01",
+"Centros de clubes nocturnos"
+],
+[
+"11",
+"02",
+"Moteles"
+],
+[
+"11",
+"03",
+"Wiskerias y karaokes"
+],
+[
+"12",
+"01",
+"Comercio por menor (Tiendas de barrio)"
+],
+[
+"12",
+"02",
+"Vivanderos"
+],
+[
+"13",
+"01",
+"Empresas Mineras Grandes"
+],
+[
+"13",
+"02",
+"Empresas Mineras Medianas"
+],
+[
+"14",
+"01",
+"Compra venta de maíz al por mayor"
+],
+[
+"14",
+"02",
+"Abarrotes"
+],
+[
+"14",
+"03",
+"Ferreterías"
+],
+[
+"14",
+"04",
+"Agencia (cerveza, refresco, etc.)"
+],
+[
+"14",
+"05",
+"Farmacias"
+],
+[
+"14",
+"06",
+"Vidriería"
+],
+[
+"14",
+"07",
+"Venta de muebles, electrodomésticos, bicicletas y otros"
+],
+[
+"14",
+"08",
+"Bazares, tiendas de regalos, perfumerías y jugueterías"
+],
+[
+"14",
+"09",
+"Micromercados, fríales y almacenes"
+],
+[
+"14",
+"10",
+"Venta de accesorios de automotores y lubricantes"
+],
+[
+"15",
+"01",
+"Artesanías nacionales"
+],
+[
+"15",
+"02",
+"Artesanías Internacionales"
+]
+]
+}
