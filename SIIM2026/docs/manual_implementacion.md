@@ -93,30 +93,63 @@ El SIIM se diseñó con la Ley 843, la Ley 1551 y la Ley de Municipalidades 2028
 - **Importación de tablas** desde Excel/CSV y **copia de tablas** entre gestiones.
 - **Selector de definición legal** de la multa por deberes formales (ver 7.3).
 
-# 4. Instalación
+# 4. Instalación paso a paso
 
-## 4.1 Instalación en el equipo del municipio
+> **Qué descargar.** Vaya a la página de *Releases* del repositorio (etiqueta `siim2026-ultima-version`) y descargue **SIIM2026_Setup_1.0.0.exe** (instalador de un clic) o, si no desea instalar, **SIIM2026_Portable.zip**. Ambos se compilan y autoprueban automáticamente en Windows. **No ejecute nada de una carpeta llamada `build`**: son archivos temporales de compilación y producen el error «Failed to load Python DLL».
 
-1. Ejecute `SIIM2026_Setup_1.0.0.exe` como administrador y siga el asistente (idioma español).
-2. Al terminar, abra **SIIM 2026** desde el escritorio o el menú Inicio.
-3. En el primer arranque aparece la **Configuración inicial**: escriba el nombre del GAM y cree la cuenta del administrador. **No existen contraseñas predeterminadas.** La contraseña debe tener 8 o más caracteres con letras y números.
-4. Aparece la pantalla de **Activación** (capítulo 5). Puede continuar 30 días en modo de prueba.
-5. Ingrese con su usuario.
+## 4.1 Instalación con el instalador (recomendada)
 
-## 4.2 Ejecución desde el código fuente (para soporte)
+1. **Descargue** `SIIM2026_Setup_1.0.0.exe` y haga **doble clic**. Si Windows muestra «Windows protegió su PC» (el instalador aún no está firmado digitalmente), presione **Más información ▸ Ejecutar de todas formas**. Si pide permiso de administrador, presione **Sí**.
+2. Aparece una única ventana del instalador: deje marcada la opción *Crear un icono en el escritorio* y presione **Siguiente/Instalar**. No hay que elegir carpetas ni idiomas.
 
-```
-python -m pip install -r requirements.txt
-python run.py
-```
+![Paso 2: ventana del instalador](img/win_inst_1_instalar.png){w=130}
 
-## 4.3 Compilación del instalador (para el proveedor)
+3. Espere unos segundos a que se copien los archivos y presione **Finalizar** con la opción *Iniciar SIIM 2026* marcada.
 
-1. Instale Python 3.11+ e [Inno Setup 6](https://jrsoftware.org/isinfo.php) en una PC con Windows.
-2. Cree su par de claves de licencias **una sola vez**: `python tools\licencias.py init` (ver capítulo 5).
-3. Ejecute `build_windows.bat`: instala dependencias, corre las pruebas automáticas, genera el ejecutable, lo autoprueba (`SIIM2026.exe --selftest`) y crea `dist\SIIM2026_Setup_1.0.0.exe`.
-4. Alternativa: el flujo de GitHub Actions `Build SIIM 2026 (Windows)` hace lo mismo; guarde la clave **pública** como secreto `SIIM_LICENSE_PUBKEY` del repositorio.
-5. Recomendado: firme el instalador con un certificado de firma de código para evitar avisos de SmartScreen.
+![Paso 3: instalación terminada](img/win_inst_2_finalizar.png){w=130}
+
+4. **Primer uso**: el sistema pide el nombre del municipio y crea la cuenta del administrador (usuario, nombre y contraseña de 8 o más caracteres con letras y números). Anote la contraseña: no existe una predeterminada.
+
+![Paso 4: configuración inicial](img/primer_uso.png){w=130}
+
+5. **Activación**: se muestra su *código de instalación*. Puede presionar **Continuar en modo de prueba** (30 días) o enviar el código a su proveedor para recibir la licencia (capítulo 5).
+
+![Paso 5: activación](img/activacion.png){w=130}
+
+6. **Ingreso**: escriba su usuario y contraseña.
+
+![Paso 6: ingreso al sistema](img/login.png){w=120}
+
+7. Aparece el **Panel de control**. Para practicar, un administrador puede cargar datos de demostración en *Utilitarios ▸ Base de datos* (sólo en una instalación vacía).
+
+![Paso 7: panel de control](img/inicio.png){w=150}
+
+Después de instalar, abra el sistema desde el icono **SIIM 2026** del escritorio o del menú Inicio. Para **desinstalar** use *Configuración ▸ Aplicaciones*; los datos y respaldos de `C:\ProgramData\SIIM2026` se conservan.
+
+## 4.2 Sin instalar (versión portable)
+
+1. Descargue `SIIM2026_Portable.zip`. Clic derecho ▸ **Extraer todo…** a una carpeta, por ejemplo `C:\SIIM2026`. **No abra el .exe desde dentro del zip.**
+2. Abra `SIIM2026.exe` (puede crear un acceso directo al escritorio). Continúe desde el paso 4 de la sección anterior.
+
+## 4.3 Instalar en varias computadoras de escritorio
+
+1. Copie el mismo `SIIM2026_Setup_1.0.0.exe` en un USB e instálelo en cada PC (pasos 1 a 3).
+2. En **cada PC** el sistema muestra un código de instalación distinto: pida **una licencia por cada código** (capítulo 5).
+3. Cada PC tiene su propia base de datos. Si necesita pasar los datos de una PC a otra, use *Utilitarios ▸ Copias de seguridad* (crear respaldo, copiar el archivo `.siimbak` a la otra PC y restaurarlo).
+
+## 4.4 Solución de problemas de instalación
+
+| Mensaje o síntoma | Causa | Solución |
+|---|---|---|
+| *Failed to load Python DLL … build\siim2026\_internal\python312.dll* | Se abrió el `.exe` de la carpeta temporal `build` | Use el instalador o `dist\SIIM2026\SIIM2026.exe`; nunca la carpeta `build` |
+| El `.exe` abre y se cierra, o falta un archivo | Se ejecutó dentro del `.zip` sin extraer | Extraer todo y abrir desde la carpeta extraída |
+| «Windows protegió su PC» | Instalador sin firma de código | Más información ▸ Ejecutar de todas formas (o firmar el instalador) |
+| El antivirus bloquea o elimina el programa | Falso positivo por programa nuevo sin firma | Agregar la carpeta de instalación a las excepciones; solicitar la versión firmada |
+| «No se puede escribir en la carpeta de datos» | Permisos de `C:\ProgramData\SIIM2026` | Ejecutar el instalador como administrador una vez |
+
+## 4.5 Compilación del instalador (sólo para el proveedor)
+
+El instalador se compila automáticamente en Windows con GitHub Actions cada vez que se actualiza el proyecto y se publica en *Releases*. Para compilar localmente: instale Python 3.12 (marcando *Add Python to PATH*) y, opcionalmente, [Inno Setup 6](https://jrsoftware.org/isinfo.php); cree su clave de licencias una vez con `python tools\licencias.py init`, y haga doble clic en `build_windows.bat`. Los archivos finales quedan en la carpeta `dist\`. Se recomienda firmar el instalador con un certificado de firma de código.
 
 # 5. Activación y licenciamiento (método externo)
 
