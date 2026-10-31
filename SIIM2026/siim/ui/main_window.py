@@ -3,7 +3,7 @@ import sys
 from datetime import datetime, timedelta
 
 from PySide6.QtCore import QEvent, QTimer, Qt
-from PySide6.QtWidgets import (QApplication, QFrame, QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QMainWindow, QMessageBox, QStackedWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QDialog, QFrame, QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QMainWindow, QMessageBox, QStackedWidget, QVBoxLayout, QWidget)
 
 from .. import APP_FULL, APP_NAME, __version__
 from ..core import backup as B
@@ -130,7 +130,7 @@ class MainWindow(QMainWindow):
     def bloquear(self):
         self.hide()
         d = Login(self.app.db, "Sesión bloqueada por inactividad", self.app.session.usuario)
-        if d.exec() == Login.Accepted:
+        if d.exec() == QDialog.DialogCode.Accepted:
             self.show(); self.ultimo_input = datetime.now()
         else:
             QApplication.quit()

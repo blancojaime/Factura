@@ -18,7 +18,7 @@ rmdir /s /q build
 echo.
 echo ================================================================
 echo  LISTO. Los archivos finales estan en la carpeta  dist\
-echo    dist\SIIM2026_Setup_1.0.0.exe   (instalador de un clic)
+echo    dist\SIIM2026_Setup_1.0.1.exe   (instalador de un clic)
 echo    dist\SIIM2026_Portable.zip      (sin instalar: descomprimir y ejecutar SIIM2026.exe)
 echo  NO ejecute nada de la carpeta "build": son archivos temporales.
 echo ================================================================

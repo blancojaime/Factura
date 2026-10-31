@@ -1,6 +1,6 @@
 SIIM 2026 - COMO INSTALAR (resumen)
 ===================================
-OPCION A (recomendada): descargue "SIIM2026_Setup_1.0.0.exe" desde la pagina de Releases del repositorio
+OPCION A (recomendada): descargue "SIIM2026_Setup_1.0.1.exe" desde la pagina de Releases del repositorio
    (https://github.com/blancojaime/Factura/releases/tag/siim2026-ultima-version), haga doble clic, presione "Instalar" y "Finalizar".
 OPCION B (sin instalar): descargue "SIIM2026_Portable.zip", DESCOMPRIMA TODO (clic derecho > Extraer todo) y abra SIIM2026.exe.
 

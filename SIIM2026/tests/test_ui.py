@@ -110,3 +110,32 @@ def test_editor_tablas_mantenimiento(win):
     for k in TABLAS:
         e = TableEditor(win.app, k)
         assert e.tabla.columnCount() == len(TABLAS[k]["campos"])
+
+
+def test_arranque_completo_primer_uso(qapp, tmp_path, monkeypatch):
+    """Recorre siim.main.run(): configuración inicial → activación (prueba) → ingreso → ventana principal."""
+    monkeypatch.setenv("SIIM_HOME", str(tmp_path))
+    from PySide6.QtWidgets import QDialog
+    from siim import main as M
+    from siim.core import security
+    from siim.ui import acceso
+
+    vistos = []
+
+    def fake_exec(self):
+        n = type(self).__name__
+        vistos.append(n)
+        if n == "FirstRun":
+            self.datos = ("GAM Prueba", "Admin", "admin", "Clave2026x")
+        elif n == "Login":
+            self.session = security.login(self.db, "admin", "Clave2026x")
+        return QDialog.DialogCode.Accepted
+
+    monkeypatch.setattr(QDialog, "exec", fake_exec)
+    monkeypatch.setattr(QApplication, "exec", lambda *a: 0)
+    monkeypatch.setattr("siim.ui.main_window.MainWindow.show", lambda self: None)
+    monkeypatch.setattr("PySide6.QtWidgets.QApplication.__init__", lambda self, *a, **k: None) if False else None
+    import sys
+    monkeypatch.setattr(sys, "argv", ["siim"])
+    assert M.run() == 0
+    assert "FirstRun" in vistos and "Login" in vistos

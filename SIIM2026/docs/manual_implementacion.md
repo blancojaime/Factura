@@ -25,7 +25,7 @@ Este manual está dirigido al **personal técnico y a los responsables tributari
 | Seguridad | PBKDF2‑SHA256 (600 000 iteraciones), roles, bloqueo por intentos, bitácora con cadena de hashes | Evidencia de manipulación y trazabilidad |
 | Licencias | Firma digital Ed25519 ligada al equipo; herramienta externa del proveedor | Funciona sin Internet y se instala en varios equipos con licencias individuales |
 | Respaldos | API de respaldo de SQLite + ZIP + SHA‑256 + cifrado AES opcional | Respaldo consistente con el sistema en uso, verificado al crearse |
-| Instalador | PyInstaller + Inno Setup | Un único `SIIM2026_Setup_1.0.0.exe` |
+| Instalador | PyInstaller + Inno Setup | Un único `SIIM2026_Setup_1.0.1.exe` |
 
 > **Alcance de red.** SQLite está pensado para **un equipo por base de datos** (o varios usuarios de Windows en el mismo equipo). No se recomienda abrir el archivo de datos desde varias PCs por carpeta compartida: puede corromper la base. Si el municipio necesita varias estaciones de trabajo simultáneas, el diseño (capa de servicios separada de la interfaz) permite migrar a un servidor PostgreSQL; esa extensión no forma parte de esta versión.
 
@@ -95,11 +95,11 @@ El SIIM se diseñó con la Ley 843, la Ley 1551 y la Ley de Municipalidades 2028
 
 # 4. Instalación paso a paso
 
-> **Qué descargar.** Vaya a la página de *Releases* del repositorio (etiqueta `siim2026-ultima-version`) y descargue **SIIM2026_Setup_1.0.0.exe** (instalador de un clic) o, si no desea instalar, **SIIM2026_Portable.zip**. Ambos se compilan y autoprueban automáticamente en Windows. **No ejecute nada de una carpeta llamada `build`**: son archivos temporales de compilación y producen el error «Failed to load Python DLL».
+> **Qué descargar.** Vaya a la página de *Releases* del repositorio (etiqueta `siim2026-ultima-version`) y descargue **SIIM2026_Setup_1.0.1.exe** (instalador de un clic) o, si no desea instalar, **SIIM2026_Portable.zip**. Ambos se compilan y autoprueban automáticamente en Windows. **No ejecute nada de una carpeta llamada `build`**: son archivos temporales de compilación y producen el error «Failed to load Python DLL».
 
 ## 4.1 Instalación con el instalador (recomendada)
 
-1. **Descargue** `SIIM2026_Setup_1.0.0.exe` y haga **doble clic**. Si Windows muestra «Windows protegió su PC» (el instalador aún no está firmado digitalmente), presione **Más información ▸ Ejecutar de todas formas**. Si pide permiso de administrador, presione **Sí**.
+1. **Descargue** `SIIM2026_Setup_1.0.1.exe` y haga **doble clic**. Si Windows muestra «Windows protegió su PC» (el instalador aún no está firmado digitalmente), presione **Más información ▸ Ejecutar de todas formas**. Si pide permiso de administrador, presione **Sí**.
 2. Aparece una única ventana del instalador: deje marcada la opción *Crear un icono en el escritorio* y presione **Siguiente**. No hay que elegir carpetas ni idiomas; el programa se instala solo.
 
 ![Paso 2: instalador (captura real en Windows)](img/inst_paso2.png){w=120}
@@ -133,7 +133,7 @@ Después de instalar, abra el sistema desde el icono **SIIM 2026** del escritori
 
 ## 4.3 Instalar en varias computadoras de escritorio
 
-1. Copie el mismo `SIIM2026_Setup_1.0.0.exe` en un USB e instálelo en cada PC (pasos 1 a 3).
+1. Copie el mismo `SIIM2026_Setup_1.0.1.exe` en un USB e instálelo en cada PC (pasos 1 a 3).
 2. En **cada PC** el sistema muestra un código de instalación distinto: pida **una licencia por cada código** (capítulo 5).
 3. Cada PC tiene su propia base de datos. Si necesita pasar los datos de una PC a otra, use *Utilitarios ▸ Copias de seguridad* (crear respaldo, copiar el archivo `.siimbak` a la otra PC y restaurarlo).
 
@@ -142,6 +142,7 @@ Después de instalar, abra el sistema desde el icono **SIIM 2026** del escritori
 | Mensaje o síntoma | Causa | Solución |
 |---|---|---|
 | *Failed to load Python DLL … build\siim2026\_internal\python312.dll* | Se abrió el `.exe` de la carpeta temporal `build` | Use el instalador o `dist\SIIM2026\SIIM2026.exe`; nunca la carpeta `build` |
+| *Error inesperado: 'FirstRun' object has no attribute 'Accepted'* al primer arranque | Defecto de la versión 1.0.0, corregido en la **1.0.1** | Desinstale e instale `SIIM2026_Setup_1.0.1.exe` (los datos no se pierden); si usa el portable, descargue el zip nuevo |
 | El `.exe` abre y se cierra, o falta un archivo | Se ejecutó dentro del `.zip` sin extraer | Extraer todo y abrir desde la carpeta extraída |
 | «Windows protegió su PC» | Instalador sin firma de código | Más información ▸ Ejecutar de todas formas (o firmar el instalador) |
 | El antivirus bloquea o elimina el programa | Falso positivo por programa nuevo sin firma | Agregar la carpeta de instalación a las excepciones; solicitar la versión firmada |

@@ -48,7 +48,7 @@ def run():
             print("SELFTEST FALLÓ")
             return 1
     from PySide6.QtGui import QFont
-    from PySide6.QtWidgets import QApplication, QMessageBox
+    from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
     from . import APP_NAME
     from .core import license as Lic
     from .core import paths, security
@@ -58,7 +58,7 @@ def run():
     from .ui.acceso import Activacion, FirstRun, Login
     from .ui.main_window import AppState, MainWindow
 
-    app = QApplication(sys.argv)
+    app = QApplication.instance() or QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
     app.setStyleSheet(theme.QSS)
     sys.excepthook = lambda t, v, tb: (traceback.print_exception(t, v, tb), QMessageBox.critical(None, "Error", f"Error inesperado: {v}"))
@@ -73,7 +73,7 @@ def run():
     seed_base(db)
     if not security.has_users(db):
         d = FirstRun()
-        if d.exec() != d.Accepted:
+        if d.exec() != QDialog.DialogCode.Accepted:
             return 0
         mun, nombre, usuario, clave = d.datos
         db.set_param("municipio", mun)
@@ -83,17 +83,17 @@ def run():
     st = lic.status()
     if st.estado in ("VENCIDO", "INVALIDO", "SIN_CONFIG") and not (st.estado == "SIN_CONFIG"):
         d = Activacion(lic, st)
-        if d.exec() != d.Accepted:
+        if d.exec() != QDialog.DialogCode.Accepted:
             return 0
         st = lic.status()
         if not st.ok:
             return 0
     elif st.estado == "PRUEBA" and (st.dias is not None and st.dias <= 10):
         d = Activacion(lic, st, puede_continuar=True)
-        if d.exec() != d.Accepted:
+        if d.exec() != QDialog.DialogCode.Accepted:
             return 0
     login = Login(db, db.param("municipio", ""))
-    if login.exec() != login.Accepted:
+    if login.exec() != QDialog.DialogCode.Accepted:
         return 0
     state = AppState(db, login.session, lic)
     w = MainWindow(state)

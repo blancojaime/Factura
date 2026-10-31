@@ -1,6 +1,6 @@
 ; Inno Setup 6 – instalador de SIIM 2026 para Windows 10/11 (x64)
 #define AppName "SIIM 2026"
-#define AppVersion "1.0.0"
+#define AppVersion "1.0.1"
 [Setup]
 AppId={{6F1B7C52-3E0A-4C57-9D4B-51A4F0C2E126}
 AppName={#AppName}

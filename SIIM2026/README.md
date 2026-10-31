@@ -27,7 +27,7 @@ python run.py --selftest      # autoprueba rápida
 ## Compilar el instalador para Windows
 
 1. `python tools/licencias.py init` (una sola vez; crea su clave de licencias y copia la clave pública al proyecto).
-2. `build_windows.bat` → `dist\SIIM2026_Setup_1.0.0.exe` (PyInstaller + Inno Setup).
+2. `build_windows.bat` → `dist\SIIM2026_Setup_1.0.1.exe` (PyInstaller + Inno Setup).
 3. O use el flujo `.github/workflows/build-windows.yml` (secreto opcional `SIIM_LICENSE_PUBKEY`).
 
 ## Emitir una licencia
