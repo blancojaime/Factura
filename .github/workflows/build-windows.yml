@@ -1,0 +1,31 @@
+name: Build SIIM 2026 (Windows)
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "claude/**", main ]
+    paths: [ "SIIM2026/**", ".github/workflows/build-windows.yml" ]
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults: { run: { working-directory: SIIM2026 } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12", cache: pip }
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Clave pública de licencias (secreto del repositorio SIIM_LICENSE_PUBKEY)
+        shell: bash
+        env: { PUB: "${{ secrets.SIIM_LICENSE_PUBKEY }}" }
+        run: |
+          if [ -n "$PUB" ]; then printf '%s\n' "$PUB" > siim/resources/license_pub.pem; echo "clave pública instalada"; else echo "SIN clave pública: build de prueba"; fi
+      - name: Pruebas
+        shell: bash
+        env: { QT_QPA_PLATFORM: offscreen }
+        run: python -m pytest -q tests
+      - run: pyinstaller --noconfirm --clean siim2026.spec
+      - name: Autoprueba del ejecutable empaquetado
+        run: dist\SIIM2026\SIIM2026.exe --selftest
+      - run: choco install innosetup -y --no-progress
+      - run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\siim2026.iss'
+      - uses: actions/upload-artifact@v4
+        with: { name: SIIM2026-Setup, path: SIIM2026/dist/SIIM2026_Setup_*.exe }

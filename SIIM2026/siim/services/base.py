@@ -62,12 +62,14 @@ def deuda_params(db, persona="N", multa_df=True) -> DeudaParams:
         decimales=int(db.param("redondeo_deuda", "0")), sancion_adm=Decimal(db.param("sancion_administrativa", "0")))
 
 
-def cotizacion(db, fecha):
-    """(dolar, ufv, exacta). Arrastra la última cotización conocida si falta el día (fin de semana/feriado)."""
+def cotizacion(db, fecha, max_atraso=10):
+    """(dolar, ufv, exacta). Arrastra la última cotización conocida (fin de semana/feriado) hasta `max_atraso` días."""
     f = str(fecha)[:10]
     r = db.one("SELECT dolar,ufv,fecha FROM cotizaciones WHERE fecha<=? ORDER BY fecha DESC LIMIT 1", (f,))
     if not r:
         raise ServiceError(f"No hay cotización de dólar/UFV cargada para {f} ni fechas anteriores (Mantenimiento ▸ Cotizaciones).")
+    if (date.fromisoformat(f) - date.fromisoformat(r["fecha"])).days > max_atraso:
+        raise ServiceError(f"La última cotización de dólar/UFV cargada es del {r['fecha']}; cargue las cotizaciones hasta {f} (Mantenimiento ▸ Cotizaciones).")
     return Decimal(str(r["dolar"])), Decimal(str(r["ufv"])), r["fecha"] == f
 
 
