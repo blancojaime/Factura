@@ -100,17 +100,17 @@ El SIIM se diseñó con la Ley 843, la Ley 1551 y la Ley de Municipalidades 2028
 ## 4.1 Instalación con el instalador (recomendada)
 
 1. **Descargue** `SIIM2026_Setup_1.0.0.exe` y haga **doble clic**. Si Windows muestra «Windows protegió su PC» (el instalador aún no está firmado digitalmente), presione **Más información ▸ Ejecutar de todas formas**. Si pide permiso de administrador, presione **Sí**.
-2. Aparece una única ventana del instalador: deje marcada la opción *Crear un icono en el escritorio* y presione **Siguiente/Instalar**. No hay que elegir carpetas ni idiomas.
+2. Aparece una única ventana del instalador: deje marcada la opción *Crear un icono en el escritorio* y presione **Siguiente**. No hay que elegir carpetas ni idiomas; el programa se instala solo.
 
-![Paso 2: ventana del instalador](img/win_inst_1_instalar.png){w=130}
+![Paso 2: instalador (captura real en Windows)](img/inst_paso2.png){w=120}
 
-3. Espere unos segundos a que se copien los archivos y presione **Finalizar** con la opción *Iniciar SIIM 2026* marcada.
+3. Espere unos segundos a que se copien los archivos; aparece «Completando la instalación de SIIM 2026». Presione **Finalizar** con la opción *Iniciar SIIM 2026* marcada.
 
-![Paso 3: instalación terminada](img/win_inst_2_finalizar.png){w=130}
+![Paso 3: instalación terminada (captura real en Windows)](img/inst_paso3.png){w=120}
 
 4. **Primer uso**: el sistema pide el nombre del municipio y crea la cuenta del administrador (usuario, nombre y contraseña de 8 o más caracteres con letras y números). Anote la contraseña: no existe una predeterminada.
 
-![Paso 4: configuración inicial](img/primer_uso.png){w=130}
+![Paso 4: configuración inicial (captura real en Windows)](img/inst_paso4.png){w=130}
 
 5. **Activación**: se muestra su *código de instalación*. Puede presionar **Continuar en modo de prueba** (30 días) o enviar el código a su proveedor para recibir la licencia (capítulo 5).
 
