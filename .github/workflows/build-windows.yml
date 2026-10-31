@@ -52,6 +52,8 @@ jobs:
           gh release create siim2026-ultima-version SIIM2026/dist/SIIM2026_Setup_1.0.0.exe SIIM2026/dist/SIIM2026_Portable.zip SIIM2026/LEEME_INSTALACION.txt \
             --target "${GITHUB_SHA}" --title "SIIM 2026 – última versión" --notes "Instalador de un clic (Setup) y versión portable (zip). Compilado y autoprobado en Windows por GitHub Actions." --prerelease
       - uses: actions/upload-artifact@v4
-        with: { name: SIIM2026-Setup, path: |
+        with:
+          name: SIIM2026-Setup
+          path: |
             SIIM2026/dist/SIIM2026_Setup_*.exe
-            SIIM2026/dist/SIIM2026_Portable.zip }
+            SIIM2026/dist/SIIM2026_Portable.zip
