@@ -114,14 +114,28 @@ public class ComexDb(Microsoft.EntityFrameworkCore.DbContextOptions<ComexDb> o) 
     public Microsoft.EntityFrameworkCore.DbSet<LiquidacionGuardada> Liquidaciones => Set<LiquidacionGuardada>();
     public Microsoft.EntityFrameworkCore.DbSet<Documento> Documentos => Set<Documento>();
     public Microsoft.EntityFrameworkCore.DbSet<EventoBitacora> Bitacora => Set<EventoBitacora>();
+    public Microsoft.EntityFrameworkCore.DbSet<PartidaCatalogo> Partidas => Set<PartidaCatalogo>();
 
     protected override void OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder b)
     {
         b.Entity<Operacion>().HasIndex(x => x.Carpeta).IsUnique();
+        b.Entity<PartidaCatalogo>().HasKey(x => x.Codigo);
         b.Entity<Operacion>().HasMany(x => x.Items).WithOne().HasForeignKey(x => x.OperacionId);
         b.Entity<Operacion>().HasMany(x => x.Etapas).WithOne().HasForeignKey(x => x.OperacionId);
         b.Entity<Operacion>().HasMany(x => x.Liquidaciones).WithOne().HasForeignKey(x => x.OperacionId);
         b.Entity<Operacion>().HasMany(x => x.Documentos).WithOne().HasForeignKey(x => x.OperacionId);
         b.Entity<Operacion>().HasMany(x => x.Bitacora).WithOne().HasForeignKey(x => x.OperacionId);
     }
+}
+
+public class PartidaCatalogo
+{
+    public string Codigo { get; set; } = "";           // PK, 10 dígitos
+    public string Descripcion { get; set; } = "";
+    public decimal AlicuotaGA { get; set; }
+    public string Unidad { get; set; } = "";
+    public bool Prohibida { get; set; }
+    public string Autorizaciones { get; set; } = "";   // separadas por '|'
+    public string Fuente { get; set; } = "";
+    public string Version { get; set; } = "";
 }
