@@ -1,14 +1,14 @@
 ---
-title: "ContaBol 2.0 — Manual de Implementación"
+title: "CONTA JB 2.1 — Manual de Implementación"
 subtitle: "Instalación, configuración, puesta en marcha, operación y mantenimiento"
 lang: es
 ---
 
 # 1. Visión general
 
-**ContaBol 2.0** es un sistema contable integrado para Bolivia (sector comercial y de costos), de escritorio para Windows. Está construido en **Python 3** con **PySide6 (Qt 6)** para la interfaz y **SQLite** como base de datos, elegidos por su estabilidad, su larga trayectoria y porque **no requieren instalar servidores ni motores adicionales**: el instalador incluye todo.
+**CONTA JB 2.1** es un sistema contable integrado para Bolivia (sector comercial y de costos), de escritorio para Windows. Está construido en **Python 3** con **PySide6 (Qt 6)** para la interfaz y **SQLite** como base de datos, elegidos por su estabilidad, su larga trayectoria y porque **no requieren instalar servidores ni motores adicionales**: el instalador incluye todo.
 
-![Tablero de inicio](img/04_inicio.png){width=100%}
+![Tablero de inicio con el logotipo y la barra de accesos rápidos](img/04_inicio.png){width=100%}
 
 ## 1.1 Qué incluye
 
@@ -53,14 +53,15 @@ lang: es
 
 ![Flujo de implementación](img/flujo_implementacion.png){width=100%}
 
-## 3.1 Instalación con el instalador (recomendada)
+## 3.1 Instalación con el instalador (un solo clic)
 
-1. Copie `ContaBol_Setup_2.0.0.exe` al equipo y ejecútelo como administrador.
-2. Siga el asistente (carpeta por defecto `C:\Program Files\ContaBol`; marque el acceso directo del escritorio).
-3. Abra ContaBol. La primera vez se crea la carpeta de datos del usuario:
+1. Descargue **`ContaJB_Setup.exe`** de la página de *Releases* del repositorio (https://github.com/blancojaime/Factura/releases/tag/ultima-version).
+2. Haga doble clic. Si Windows muestra «Windows protegió su PC» (el instalador no está firmado digitalmente), pulse *Más información* → *Ejecutar de todas formas*.
+3. Pulse **Instalar**. El asistente es deliberadamente sencillo: **sin preguntas**, sin elegir carpetas ni componentes y **sin pedir permisos de administrador** (se instala solo para el usuario actual en `%LOCALAPPDATA%\Programs\ContaJB`). Crea el acceso directo **CONTA JB** en el escritorio y en el menú Inicio.
+4. Pulse **Finalizar** para abrir CONTA JB. La primera vez se crea la carpeta de datos del usuario:
 
 ```
-%LOCALAPPDATA%\ContaBol\
+%LOCALAPPDATA%\ContaJB\
     sistema.db          (usuarios, empresas, normativa, auditoría)
     datos\<EMPRESA>\<AÑO>.db   (contabilidad de cada gestión)
     backups\            (copias .cbk)
@@ -68,11 +69,11 @@ lang: es
     logs\contabol.log   (registro de errores)
 ```
 
-Para usar **otra carpeta de datos** (otro disco o una ruta de red de un solo usuario), cree antes de abrir la aplicación la variable de entorno `CONTABOL_DATOS` con la ruta deseada.
+Para usar **otra carpeta de datos** (otro disco), cree antes de abrir la aplicación la variable de entorno `CONTABOL_DATOS` con la ruta deseada.
 
 ## 3.2 Ejecutable portátil
 
-La carpeta `dist\ContaBol\` generada por la compilación puede copiarse a un pendrive o a otro equipo y ejecutarse con `ContaBol.exe`, sin instalación.
+La carpeta `dist\ContaJB\` generada por la compilación puede copiarse a un pendrive o a otro equipo y ejecutarse con `ContaJB.exe`, sin instalación.
 
 ## 3.3 Ejecución desde el código fuente (equipos técnicos)
 
@@ -93,15 +94,15 @@ En un equipo Windows con Python 3.10+ e Inno Setup 6:
 scripts\compilar.bat
 ```
 
-El script crea un entorno virtual, instala dependencias, **ejecuta todas las pruebas**, genera `dist\ContaBol\ContaBol.exe` con PyInstaller y compila `dist\ContaBol_Setup_2.0.0.exe` con Inno Setup. Alternativamente, el flujo de GitHub Actions `.github/workflows/contabol-python.yml` hace lo mismo automáticamente en cada cambio y publica el instalador como artefacto o en *Releases* al crear una etiqueta `v2.0.0`.
+El script crea un entorno virtual, instala dependencias, **ejecuta todas las pruebas**, genera `dist\ContaJB\ContaJB.exe` con PyInstaller y compila `dist\ContaJB_Setup.exe` con Inno Setup. Alternativamente, el flujo de GitHub Actions `.github/workflows/contabol-python.yml` hace lo mismo automáticamente en cada cambio y publica el instalador como artefacto o en *Releases* al crear una etiqueta `v2.1.0`.
 
 ## 3.5 Verificación posterior a la instalación
 
-Ejecute `ContaBol.exe --autoprueba` desde una consola: debe imprimir **AUTOPRUEBA OK** (crea datos temporales, abre la ventana, genera el paquete de estados financieros en PDF y Excel y comprueba que el balance cuadra).
+Ejecute `ContaJB.exe --autoprueba` desde una consola: debe imprimir **AUTOPRUEBA OK** (crea datos temporales, abre la ventana, genera el paquete de estados financieros en PDF y Excel y comprueba que el balance cuadra).
 
 ## 3.6 Actualización y desinstalación
 
-Para **actualizar**, ejecute el nuevo instalador sobre el existente: conserva sus datos, que están fuera de la carpeta del programa. Haga antes una copia de seguridad. Al **desinstalar** desde *Configuración > Aplicaciones* los datos de `%LOCALAPPDATA%\ContaBol` **no se eliminan**.
+Para **actualizar**, ejecute el nuevo instalador sobre el existente: conserva sus datos, que están fuera de la carpeta del programa. Haga antes una copia de seguridad. Al **desinstalar** desde *Configuración > Aplicaciones* los datos de `%LOCALAPPDATA%\ContaJB` **no se eliminan**.
 
 # 4. Puesta en marcha de una empresa
 
@@ -109,11 +110,11 @@ Para **actualizar**, ejecute el nuevo instalador sobre el existente: conserva su
 
 Usuario inicial: `admin` / `admin`; el sistema obliga a cambiar la contraseña en el primer ingreso.
 
-![Ingreso](img/01_login.png){width=50%}
+![Ingreso con el logotipo de Jaime Blanco](img/01_login.png){width=50%}
 
 ## 4.2 Crear la empresa
 
-En *Seleccionar empresa y gestión* pulse **Nueva empresa…** y complete código, razón social, NIT, dirección, ciudad, actividad, representante legal y el **año de la primera gestión**. Se crean el archivo de la gestión y el **plan de cuentas boliviano base** (más de 260 cuentas con estructura 1.1.1.01.001), los tipos de comprobante (Ingreso, Egreso, Traspaso, Apertura, Ajuste, Cierre), los grupos de activos del D.S. 24051, un almacén, unidades de medida y centros de costo.
+Tras ingresar, en *Seleccionar empresa y gestión* pulse **Nueva empresa…** y complete código, razón social, NIT, dirección, ciudad, actividad, representante legal y el **año de la primera gestión**. Se crean el archivo de la gestión y el **plan de cuentas boliviano base** (más de 260 cuentas con estructura 1.1.1.01.001), los tipos de comprobante (Ingreso, Egreso, Traspaso, Apertura, Ajuste, Cierre), los grupos de activos del D.S. 24051, un almacén, unidades de medida y centros de costo.
 
 ![Selección de empresa y gestión](img/03_selector_empresa.png){width=80%}
 
@@ -123,16 +124,16 @@ En *Seleccionar empresa y gestión* pulse **Nueva empresa…** y complete códig
 
 | Paso | Dónde | Qué hacer |
 |---|---|---|
-| 1 | *Administración > Parámetros > Empresa* | Revisar razón social, NIT, domicilio, representante legal |
+| 1 | *Administración > Datos de la empresa y parámetros* | Revisar razón social, NIT, domicilio, representante legal |
 | 2 | *Contabilidad > Tipos de cambio y UFV* | Cargar tipo de cambio del dólar y UFV (al menos al inicio y al cierre de la gestión) |
-| 3 | *Administración > Parámetros > Cuentas* | Verificar las cuentas de caja, IVA, IT, clientes, proveedores, inventario, ventas, costo, sueldos y aportes |
-| 4 | *Administración > Parámetros > Reglas* | IT sin factura, stock negativo, control de presupuesto, provisión de IUE, notas de contingencias y hechos posteriores |
-| 5 | *Administración > Parámetros > Normativa* | Verificar SMN, aportes, ANS y demás parámetros legales vigentes |
+| 3 | *Administración > Datos de la empresa y parámetros* | Revisar los **puntos clave** (IVA, IT, IUE, salario mínimo) y las cuentas importantes por grupo (impuestos, clientes/proveedores, ventas/inventario, sueldos y aportes, cierre) |
+| 4 | Misma pantalla, sección *Reglas de operación* | IT sin factura, stock negativo, control de presupuesto, provisión de IUE, notas de contingencias y hechos posteriores |
+| 5 | Pestaña *Normativa vigente (todas)* | Verificar SMN, aportes, ANS y demás parámetros legales vigentes |
 | 6 | *Administración > Usuarios y permisos* | Crear usuarios con su rol y permisos |
 | 7 | Saldos iniciales | Asiento de apertura (traspaso), stock inicial, clientes y proveedores, activos fijos, empleados |
 | 8 | *Administración > Copias de seguridad* | Hacer una primera copia y definir la política de respaldo |
 
-![Parámetros — cuentas de las operaciones automáticas](img/32_parametros_cuentas.png){width=100%}
+![Datos de la empresa: puntos clave resaltados y cuentas por grupo](img/31_datos_empresa.png){width=100%}
 
 ## 4.4 Migración de saldos iniciales
 
@@ -141,6 +142,18 @@ En *Seleccionar empresa y gestión* pulse **Nueva empresa…** y complete códig
 - **Clientes y proveedores:** registre cada documento pendiente como nota de venta/compra a crédito con su fecha original, o utilice la apertura de una nueva gestión que los traslada automáticamente.
 - **Activos fijos:** alta con fecha original y *depreciación acumulada previa*.
 - **Empleados:** alta con fecha de ingreso real para el cálculo correcto del bono de antigüedad.
+
+# 4 bis. Registro de comprobantes y libros de compras y ventas
+
+El **comprobante contable** es la fuente de los estados financieros. El formulario de registro (versión 2.1) tiene la cabecera ordenada —tipo, **número automático**, fecha, mes, moneda, **T.C.**, **UFV**, **banco**, **Nº de cheque o depósito**, glosa, «cancelado a / recibido de» y Nº de documento—, botones de **Calculadora** y **Plan de cuentas**, y una grilla donde **cada celda es un campo editable** (sin botones para agregar o quitar filas: se llena la última y aparece otra).
+
+![Registro de comprobantes](img/40_comprobante_nuevo.png){width=100%}
+
+**Relación con los libros de compras y ventas.** Al grabar un **Egreso** o un **Ingreso** el sistema pregunta **«¿Existe factura?»**. Si la respuesta es *Sí*, se piden los datos de la factura (o del DUI en importaciones), se calcula el crédito/débito fiscal del 13 %, se agrega al asiento la línea de IVA (si no la tenía) y la factura se registra en el **Libro de Compras** (egresos) o en el **Libro de Ventas** (ingresos), **vinculada** al comprobante. Si el comprobante se anula, su factura se anula también. Las ventas y compras registradas desde sus propias notas ya generan su libro automáticamente.
+
+![Pregunta «¿Existe factura?»](img/40b_comprobante_existe_factura.png){width=70%}
+
+La **UFV** escrita en el comprobante se guarda para esa fecha (5 decimales) y se usa en liquidaciones, activos fijos y ajustes.
 
 # 5. Usuarios, roles y permisos
 
@@ -157,7 +170,7 @@ Los permisos se asignan **por empresa** y se pueden personalizar opción por opc
 
 # 6. Normativa y parámetros legales
 
-Los parámetros legales **no están escritos en el código**: se guardan en la tabla `normativa` con **fecha de vigencia** y fuente, y pueden consultarse y ampliarse en *Administración > Parámetros > Normativa vigente*. Cuando una norma cambia, se agrega un nuevo valor con su fecha de inicio: los períodos anteriores siguen calculándose con el valor que regía entonces.
+Los parámetros legales **no están escritos en el código**: se guardan en la tabla `normativa` con **fecha de vigencia** y fuente, y pueden consultarse y ampliarse en *Administración > Datos de la empresa y parámetros > Normativa vigente*. Cuando una norma cambia, se agrega un nuevo valor con su fecha de inicio: los períodos anteriores siguen calculándose con el valor que regía entonces.
 
 ![Normativa vigente](img/33_parametros_normativa.png){width=100%}
 
@@ -195,7 +208,7 @@ Ciclo de cierre: registrar todo → diferencia de cambio → asiento de cierre �
 SQLite está diseñado para **un escritor a la vez**. Recomendaciones:
 
 - **Un solo equipo** (recomendado): la carpeta de datos local; es la configuración más rápida y segura.
-- **Varios usuarios en turnos** o por escritorio remoto: instale ContaBol en un servidor Windows con *Escritorio remoto* y deje que cada usuario ingrese a su propia sesión sobre la misma carpeta de datos; las escrituras se serializan sin riesgo de corrupción.
+- **Varios usuarios en turnos** o por escritorio remoto: instale CONTA JB en un servidor Windows con *Escritorio remoto* y deje que cada usuario ingrese a su propia sesión sobre la misma carpeta de datos; las escrituras se serializan sin riesgo de corrupción.
 - **No** coloque la carpeta de datos en una unidad de red compartida para acceso simultáneo desde varias PC: el bloqueo de archivos en red puede fallar y dañar la base de datos.
 
 La estructura por servicios permite sustituir en el futuro la capa de datos por un servidor (por ejemplo PostgreSQL) sin reescribir las reglas contables.
@@ -226,7 +239,7 @@ La estructura por servicios permite sustituir en el futuro la capa de datos por 
 
 # 12. Seguridad de la información
 
-- Restrinja con permisos de Windows la carpeta `%LOCALAPPDATA%\ContaBol` al usuario operador.
+- Restrinja con permisos de Windows la carpeta `%LOCALAPPDATA%\ContaJB` al usuario operador.
 - Cambie la contraseña inicial, use contraseñas distintas por persona y active el bloqueo de pantalla.
 - Cifre las copias de seguridad que salgan del local (BitLocker, 7-Zip con contraseña).
 - Revise periódicamente *Auditoría del sistema*.
@@ -242,7 +255,7 @@ El proyecto incluye **pruebas automáticas** (`python -m pytest`) que cubren las
 
 - Aplicación de escritorio de **un equipo a la vez** por carpeta de datos (ver capítulo 9).
 - Las normas tributarias y laborales cambian con frecuencia: los valores incluidos deben ser verificados por el contador de la empresa.
-- La emisión de **facturas electrónicas** se realiza en los sistemas del SIN; ContaBol registra las facturas en los libros LCV y exporta su detalle, pero no las firma ni las transmite.
+- La emisión de **facturas electrónicas** se realiza en los sistemas del SIN; CONTA JB registra las facturas en los libros LCV y exporta su detalle, pero no las firma ni las transmite.
 - El ajuste por inflación con UFV está disponible pero suspendido contablemente desde 2020; su uso es decisión de la empresa.
 - El cálculo de finiquito es referencial.
 
@@ -251,7 +264,7 @@ El proyecto incluye **pruebas automáticas** (`python -m pytest`) que cubren las
 | Campo | Contenido |
 |---|---|
 | Empresa / usuario | |
-| Versión (Ayuda > Acerca de) | 2.0.0 |
+| Versión (Ayuda > Acerca de) | 2.1.0 |
 | Pasos para reproducir | |
 | Resultado obtenido / esperado | |
 | Adjuntos | Captura, `contabol.log`, copia de seguridad si procede |

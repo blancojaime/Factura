@@ -1,5 +1,5 @@
 ---
-title: "ContaBol 2.0 — Manual de Pruebas de Aceptación"
+title: "CONTA JB 2.1 — Manual de Pruebas de Aceptación"
 subtitle: "Guía paso a paso con datos de ejemplo, resultados esperados y capturas reales del aplicativo"
 lang: es
 ---
@@ -8,7 +8,7 @@ lang: es
 
 ## 1.1 Objetivo
 
-Este manual permite a un **contador, auditor o responsable de TI** comprobar, de forma ordenada y repetible, que ContaBol:
+Este manual permite a un **contador, auditor o responsable de TI** comprobar, de forma ordenada y repetible, que CONTA JB:
 
 1. se instala y arranca correctamente en Windows;
 2. registra las operaciones contables, tributarias, comerciales, de inventario, activos fijos, planillas y costos aplicando la **normativa boliviana vigente** (IVA 13 %, IT 3 %, IUE 25 %, RC-IVA, AFP, CNS, Pro-Vivienda, ANS, bono de antigüedad, aguinaldo e indemnización);
@@ -34,7 +34,7 @@ Aun así, la aceptación en el equipo del cliente es necesaria: depende de su ve
 | Contador validador | Confirma que los asientos, impuestos y estados son correctos |
 | Responsable técnico | Analiza y corrige las incidencias |
 
-**Materiales:** equipo con Windows 10/11 (64 bits); instalador `ContaBol_Setup_2.0.0.exe`; este manual; Excel o visor de hojas de cálculo; visor de PDF; unas 3 horas para la prueba completa (1 hora para la prueba rápida de la Parte A y B).
+**Materiales:** equipo con Windows 10/11 (64 bits); instalador `ContaJB_Setup.exe`; este manual; Excel o visor de hojas de cálculo; visor de PDF; unas 3 horas para la prueba completa (1 hora para la prueba rápida de la Parte A y B).
 
 ## 1.5 Criterios de aceptación
 
@@ -50,19 +50,20 @@ La versión se **aprueba** si todos los casos marcados ★ (críticos) están �
 
 # 2. Parte A — Preparación del entorno
 
-## A1 ★ Instalación
+## A1 ★ Instalación (un solo clic)
 
-**Objetivo:** instalar ContaBol.
+**Objetivo:** instalar CONTA JB.
 
 **Pasos**
 
-1. Haga doble clic en `ContaBol_Setup_2.0.0.exe` y acepte el permiso de administrador.
-2. Elija la carpeta (por defecto `C:\Program Files\ContaBol`) y marque *Crear un acceso directo en el escritorio*.
-3. Al finalizar deje marcada *Ejecutar ContaBol*.
+1. Descargue `ContaJB_Setup.exe` desde la página de descargas (*Releases* de GitHub) y haga doble clic.
+2. Si Windows muestra «Windows protegió su PC» (el instalador no está firmado digitalmente), pulse **Más información → Ejecutar de todas formas**.
+3. Pulse **Instalar**. No hay más preguntas: se instala solo para su usuario (**no pide permisos de administrador**), crea el acceso directo **CONTA JB** en el escritorio y en el menú Inicio.
+4. Al terminar pulse **Finalizar** (deja marcada la opción *Abrir CONTA JB ahora*).
 
-**Resultado esperado:** el asistente termina sin errores, aparece el acceso directo y se abre la pantalla de ingreso. No se requiere instalar ni Python ni Access ni ningún otro programa: el instalador incluye todo lo necesario.
+**Resultado esperado:** el asistente tiene solo tres pasos (Instalar → progreso → Finalizar), aparece el acceso directo con el icono **JB** y se abre la pantalla de ingreso con el logotipo de Jaime Blanco. No se requiere instalar ni Python ni Access ni ningún otro programa.
 
-**Si falla:** anote el mensaje del instalador y la versión de Windows.
+**Si falla:** anote el mensaje del instalador y la versión de Windows. Alternativa sin instalar: `ContaJB_portable.zip` (descomprimir y ejecutar `ContaJB.exe`).
 
 ## A2 ★ Primer ingreso y cambio de contraseña
 
@@ -71,7 +72,7 @@ La versión se **aprueba** si todos los casos marcados ★ (críticos) están �
 1. En la pantalla de ingreso escriba usuario `admin` y contraseña `admin`; pulse **Ingresar**.
 2. El sistema exige elegir una nueva contraseña (mínimo 6 caracteres; no se aceptan claves triviales como «admin» o «123456»). Escríbala dos veces y pulse **Guardar**.
 
-![Pantalla de ingreso](img/01_login.png){width=55%}
+![Pantalla de ingreso con el logotipo JB Jaime Blanco](img/01_login.png){width=55%}
 
 ![Cambio obligatorio de contraseña en el primer ingreso](img/02_cambio_clave.png){width=55%}
 
@@ -126,7 +127,7 @@ La Parte B usa una empresa vacía. Pulse **Nueva empresa…** y complete:
 
 ![Tipos de cambio y UFV](img/09_tipo_cambio.png){width=100%}
 
-**Resultado esperado:** los registros aparecen ordenados por fecha. El tipo de cambio rige desde su fecha hasta que se cargue otro.
+**Resultado esperado:** los registros aparecen ordenados por fecha y la **UFV conserva sus 5 decimales** (escriba `2,61234`: debe verse `2,61234`, no un número entero ni redondeado). El tipo de cambio rige desde su fecha hasta que se cargue otro. La UFV también puede escribirse directamente en el comprobante.
 
 ## A6 Recorrido por el menú
 
@@ -154,32 +155,74 @@ Despliegue cada menú y verifique que existen las opciones del mapa siguiente. L
 
 Use la empresa **PRUEBA S.R.L.** (gestión 2026). Los resultados esperados de estos casos están verificados automáticamente.
 
-## B1 ★ Comprobante contable de traspaso (partida doble)
+## B1 ★ Registro de un comprobante contable (nuevo formulario)
 
-**Objetivo:** registrar un asiento y comprobar numeración y saldos.
+**Objetivo:** registrar un asiento y comprobar numeración automática y saldos. El formulario se reorganizó para facilitar el registro: **cabecera ordenada**, **sin botones de agregar/quitar filas** y **campos siempre editables** (se escribe directamente en la grilla).
+
+**La cabecera (de izquierda a derecha)**
+
+| Campo | Cómo funciona |
+|---|---|
+| Tipo de comprobante | Ingreso, Egreso, Traspaso o Ajuste |
+| **Nº (automático)** | Solo lectura: el sistema muestra el número que recibirá (p. ej. `E-12/0014`); **no se digita** |
+| Fecha / Mes | El mes se muestra según la fecha |
+| Moneda · **T.C.** · **UFV** | T.C. es un campo corto; la **UFV** se puede escribir aquí (5 decimales) y queda registrada para esa fecha |
+| **Banco** y **Nº de cheque / depósito** | Aparecen en egresos e ingresos; el banco se elige de las cuentas bancarias |
+| Glosa | Descripción general (obligatoria); la casilla *Glosa por línea* habilita una glosa en cada fila |
+| Cancelado a / Recibido de · Nº de documento | Dimensionados por separado (nombre amplio, documento corto) |
+| **Calculadora** | Abre una calculadora; *Usar resultado* pega el valor en el campo Debe/Haber activo |
+| **Plan de cuentas** | Abre el plan de cuentas sin salir del comprobante para crear o modificar una cuenta |
 
 **Pasos**
 
-1. *Contabilidad > Nuevo comprobante* (o **Ctrl + N** o el botón «Comprobante» de la barra).
-2. Tipo **Traspaso**, fecha 02/01/2026, glosa «Aporte inicial».
-3. En la primera línea escriba en *Cuenta* «1.1.1.01.001» (o parte del nombre: «caja»): el sistema sugiere cuentas mientras escribe; seleccione *Caja Moneda Nacional*. En *Debe* escriba **50.000** y pulse Enter.
-4. En la segunda línea escriba la cuenta «3.1.1.01.001» *Capital Social* y en *Haber* **50.000**.
-5. Observe el indicador inferior: **✔ Cuadra**. Pulse **Guardar comprobante**.
+1. *Contabilidad > Nuevo comprobante* (o **Ctrl + N** o el botón **Comprobante** de la barra).
+2. Tipo **Traspaso**, fecha 02/01/2026, glosa «Aporte inicial». Observe el número automático **T-01/0001**.
+3. En la primera fila escriba en *Código* «1.1.1.01.001» o parte del nombre («caja»): aparece la lista de sugerencias; pulse **Enter** y el sistema completa el *Nombre de la cuenta*. En *Debe* escriba **50000** y pulse Enter.
+4. En la segunda fila escriba «3.1.1.01.001» (*Capital Social*) y en *Haber* **50000**. Las filas nuevas se agregan solas.
+5. Las columnas *Debe $us / Haber $us* muestran el equivalente en la otra moneda. Abajo aparece **✔ Cuadra**. Pulse **Grabar**.
 
-![Comprobante con ayuda de cuentas, totales en tiempo real e indicador de cuadre](img/40_comprobante_nuevo.png){width=95%}
+![Registro de un comprobante de egreso con banco y cheque, equivalentes en dólares e indicador de cuadre](img/40_comprobante_nuevo.png){width=100%}
 
 **Resultado esperado:** el comprobante recibe el número **T-01/0001**; en *Contabilidad > Comprobantes* aparece vigente y el saldo de *Caja Moneda Nacional* es **Bs 50.000,00**.
+
+**Atajos:** Enter avanza al siguiente campo; ↑ ↓ cambian de fila; **Supr** limpia la fila activa; **Igualar** coloca la diferencia en la línea activa o, si se eligió banco, en una nueva línea con la cuenta del banco.
+
+![Calculadora integrada](img/40d_calculadora.png){width=35%}
+
+![Plan de cuentas abierto desde el comprobante](img/40c_plan_cuentas_desde_comprobante.png){width=85%}
 
 **Pruebas negativas (deben rechazarse con un mensaje claro y sin guardar nada):**
 
 | Intento | Mensaje esperado |
 |---|---|
-| Debe 100 / Haber 90 | «El comprobante no cuadra: Debe 100,00 / Haber 90,00» |
+| Debe 100 / Haber 90 | «El comprobante no cuadra: la diferencia es 10,00…» |
 | Glosa vacía | «La glosa del comprobante es obligatoria.» |
 | Fecha 31/12/2025 (gestión 2026) | «La fecha … está fuera de la gestión» |
+| Código inexistente | La fila muestra «(cuenta no encontrada)» y al grabar: «la cuenta … no existe o no es de movimiento» |
 | Cuenta de grupo (p. ej. 1.1.1.01) | «… no es de movimiento» |
-| Importe negativo | «no se permiten importes negativos» |
-| Línea con debe y haber a la vez | «no puede tener importe en el debe y en el haber» |
+| Línea con debe y haber a la vez | Al escribir en un lado, el otro se vacía |
+
+## B1b ★ ¿Existe factura? — vínculo con los libros de compras y ventas
+
+**Objetivo:** que los comprobantes de **Egreso** e **Ingreso** alimenten los **Libros de Compras y Ventas** (como pregunta Orion: «¿Existe factura?»).
+
+**Pasos (egreso con factura de compra)**
+
+1. Nuevo comprobante tipo **Egreso**, fecha 10/02/2026, glosa «Compra de servicios». Fila 1: *5.3.1.02.001 Energía Eléctrica*, Debe **500**; fila 2: *1.1.1.01.001 Caja*, Haber **500**. Pulse **Grabar**.
+2. Aparece la pregunta **«¿Existe factura?»** con las opciones *Sí, hay factura*, *No* y *Volver*. Elija **Sí**.
+3. En el cuadro de la factura (para egresos se elige *Compra de mercado interno* o *Importación (DUI)*) complete NIT 1003220026, razón social, Nº de factura 991, autorización/CUF e importe total **500**. Deje marcada la casilla *Agregar al comprobante la línea de crédito fiscal IVA*. Pulse **Aceptar**.
+
+![Pregunta «¿Existe factura?»: datos que alimentan el libro de compras (o de ventas en los ingresos)](img/40b_comprobante_existe_factura.png){width=75%}
+
+**Resultado esperado**
+
+| Verificación | Valor |
+|---|---|
+| Asiento final | Energía Eléctrica **435,00** (debe) · **Crédito Fiscal IVA 65,00** (debe) · Caja 500,00 (haber) |
+| Libro de Compras (febrero) | Una factura Nº 991 con base 500,00 y **crédito fiscal 65,00**, vinculada al comprobante |
+| Anular el comprobante | La factura del libro pasa a **Anulada** (importes en cero) y la liquidación de IVA ya no la considera |
+
+**Ingreso con factura de venta:** igual, con tipo **Ingreso**: se registra en el **Libro de Ventas** y el asiento separa el **débito fiscal** (13 % del importe de la factura) del ingreso principal. Si el asiento ya incluye una línea de IVA, el sistema no la duplica. Si elige **No**, el comprobante se graba sin vínculo.
 
 ## B2 Comprobante en dólares
 
@@ -334,7 +377,7 @@ Abra la empresa **DEMO 2025** y verifique cada pantalla. En todas puede **buscar
 
 | Nº | Pantalla (menú) | Qué verificar | Imagen |
 |---|---|---|---|
-| C1 | Plan de cuentas (Contabilidad) | Árbol de 264 cuentas con saldos, buscar «caja», crear subcuenta, importar/exportar CSV | Fig. C1 |
+| C1 | Plan de cuentas (Contabilidad) | Árbol de 264 cuentas **en colores por tipo** (activo azul, pasivo rojo, patrimonio verde, ingresos turquesa, costos y gastos ámbar), columnas Mov./Presup./Ajust./M.E., buscar «caja», crear subcuenta, importar/exportar CSV | Fig. C1 |
 | C2 | Comprobantes | Más de 400 comprobantes, filtro por fechas y tipo, anular, imprimir | Fig. C2 |
 | C3 | Conciliación bancaria | Seleccione *Banco Unión*; marque movimientos; diferencia con extracto | Fig. C3 |
 | C4 | Presupuesto | Asigne montos por mes a una cuenta de gasto y vea la ejecución | Fig. C4 |
@@ -349,7 +392,7 @@ Abra la empresa **DEMO 2025** y verifique cada pantalla. En todas puede **buscar
 | C13 | Cierre de gestión | Vista previa de ajustes, cierre, apertura de nueva gestión | Fig. C13 |
 | C14 | Consolidación | Marque dos empresas y consolide | Fig. C14 |
 
-![C1. Plan de cuentas](img/07_plan_cuentas.png){width=100%}
+![C1. Plan de cuentas con colores por tipo de cuenta](img/07_plan_cuentas.png){width=100%}
 
 ![C2. Comprobantes](img/08_comprobantes.png){width=100%}
 
@@ -511,15 +554,22 @@ Para **cada informe** de la tabla siguiente verifique la lista de control: (1) a
 
 Cree una segunda empresa y registre un comprobante distinto. Cambie entre empresas con *Archivo > Cambiar de empresa o gestión*: **los datos no se mezclan** (cada empresa y gestión tiene su propio archivo `datos\EMPRESA\AÑO.db`). Luego, *Contabilidad > Consolidación de empresas*: marque ambas, rango anual y nivel de detalle; el saldo consolidado de cada cuenta es la suma de ambas.
 
-## F6 Parámetros y normativa
+## F6 Datos de la empresa, parámetros y normativa
 
-![Parámetros — datos de la empresa](img/31_parametros_empresa.png){width=100%}
+La pantalla *Administración > Datos de la empresa y parámetros* se rediseñó al estilo de los «Datos empresariales» de Orion, con los **puntos clave resaltados**:
 
-![Parámetros — cuentas de las operaciones automáticas](img/32_parametros_cuentas.png){width=100%}
+1. **Datos de la empresa:** nombre, NIT, dirección, ciudad, teléfono, correo, actividad, representante legal, matrícula, gestión y archivo de datos.
+2. **Recuadro amarillo «Puntos clave»:** **% IVA, % IT, % IUE, salario mínimo nacional, aporte patronal solidario y mínimo no imponible del RC-IVA**. Al modificarlos y pulsar **Grabar** se guarda un nuevo valor de normativa con vigencia desde el inicio de la gestión.
+3. **Cuentas importantes por grupo** (Impuestos; Clientes, proveedores y caja; Ventas, compras e inventario; Sueldos, aportes y beneficios; Cierre, ajustes y activos): cada una con código, autocompletado y nombre visible.
+4. **Reglas de operación** y notas de los estados financieros.
+
+![Datos de la empresa con los puntos clave resaltados](img/31_datos_empresa.png){width=100%}
+
+**Prueba:** cambie el salario mínimo a 3.500 y grabe; abra una planilla nueva: el bono de antigüedad se calcula con el nuevo valor. Escriba un código de cuenta inexistente en un grupo: el campo muestra «⚠ cuenta no encontrada» y al grabar el sistema lo rechaza.
 
 ![Normativa laboral e impositiva vigente, con vigencia por fechas](img/33_parametros_normativa.png){width=100%}
 
-En *Normativa vigente* están todos los parámetros legales (SMN, aportes, ANS, RC-IVA, escalas de antigüedad y vacaciones, recargos, IVA, IT, IUE) con su fecha de vigencia y fuente. **Prueba:** agregue un nuevo valor de *SMN* con vigencia desde el 01/07/2026 y recalcule una planilla de agosto: debe usar el nuevo valor, mientras que una planilla de enero conserva el anterior.
+En *Normativa vigente (todas)* están todos los parámetros legales con su fecha de vigencia y fuente. **Prueba:** agregue un valor de *SMN* con vigencia desde el 01/07/2026 y recalcule una planilla de agosto: usa el nuevo valor, mientras que la de enero conserva el anterior.
 
 ## F7 Utilitarios y verificación
 
@@ -527,9 +577,28 @@ En *Normativa vigente* están todos los parámetros legales (SMN, aportes, ANS, 
 
 ![Utilitarios y verificación](img/37_utilitarios.png){width=100%}
 
-![Acerca de ContaBol](img/49_acerca_de.png){width=60%}
+![Acerca de CONTA JB](img/49_acerca_de.png){width=60%}
 
-# 8. Parte G — Pruebas automáticas y verificación del instalador
+# 8. Parte H — Verificación de las modificaciones solicitadas (versión 2.1)
+
+Esta parte comprueba, punto por punto, la «Solicitud de modificaciones» recibida.
+
+| Nº | Modificación solicitada | Cómo verificarla | Esperado |
+|---|---|---|---|
+| 1 | Nombre **CONTA JB** y logotipo | Abrir el programa; ver la ventana de ingreso, el título de la ventana, *Ayuda > Acerca de*, el icono del escritorio y los PDF | Todo dice **CONTA JB**; el logotipo JB Jaime Blanco aparece en el ingreso, el tablero y *Acerca de*; el icono es el monograma **JB** |
+| 2 | Diseño más profesional (colores y estructura de formularios) | Abrir cualquier formulario (cliente, ítem, activo, empleado…) y las pantallas principales | Cabecera de formulario con título y ayuda, campos agrupados en dos columnas, botones primarios en azul, tablas con encabezado azul |
+| 3 | UFV con **5 decimales** | *Tipos de cambio y UFV*: registrar `2,61234`; también en el comprobante | Se guarda y muestra `2,61234` |
+| 4 | Iconos del menú más profesionales | Observar la barra de accesos rápidos y los menús desplegados | Iconos vectoriales por categoría (comprobante, ventas, compras, libros, plan de cuentas, ítems, planilla, estados financieros, calculadora, respaldo) |
+| 5 | Datos de la empresa con puntos clave resaltados | *Administración > Datos de la empresa y parámetros* | Recuadro amarillo con IVA, IT, IUE, salario mínimo, aporte solidario; cuentas importantes agrupadas (ver F6) |
+| 6 | Plan de cuentas con mejor diseño en colores | *Contabilidad > Plan de cuentas* | Colores por tipo y por nivel, columnas de indicadores (ver C1) |
+| 7 | Nuevo registro de comprobantes | Ver caso **B1**: UFV en la cabecera, T.C. corto, banco y Nº de cheque, acceso directo al plan de cuentas, calculadora, campos «A nombre de» y «Nº de documento» redimensionados, **numeración automática**, grilla sin botones de filas y con celdas siempre editables | Todos los elementos presentes y funcionales |
+| 8 | Relación de ingresos y egresos con los libros de compras y ventas | Ver caso **B1b** («¿Existe factura?») | La factura queda en el Libro de Compras/Ventas, vinculada al comprobante, con IVA correcto; al anular el comprobante se anula la factura |
+
+![Tablero de inicio con el nuevo logotipo, iconos y barra de accesos rápidos](img/04_inicio.png){width=100%}
+
+![Acerca de CONTA JB](img/49_acerca_de.png){width=65%}
+
+# 9. Parte G — Pruebas automáticas y verificación del instalador
 
 ## G1 Ejecutar las pruebas automáticas (equipo técnico)
 
@@ -542,14 +611,14 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-**Esperado:** todas las pruebas en verde (más de 45), incluyendo `test_manual.py` (cifras de este manual), `test_estados.py` (los seis estados), `test_reportes.py` (65 informes en PDF y Excel) y `test_ui.py` (todas las pantallas).
+**Esperado:** todas las pruebas en verde (más de 50), incluyendo `test_manual.py` (cifras de este manual), `test_estados.py` (los seis estados), `test_reportes.py` (65 informes en PDF y Excel) y `test_ui.py` (todas las pantallas).
 
 ## G2 Autoprueba del programa instalado
 
 Desde una consola, en la carpeta de instalación:
 
 ```
-ContaBol.exe --autoprueba
+ContaJB.exe --autoprueba
 ```
 
 **Esperado:** imprime **AUTOPRUEBA OK**. La autoprueba crea datos temporales, abre la ventana principal, genera el paquete de estados financieros en PDF y Excel y verifica que el balance cuadra, sin tocar sus datos reales.
@@ -591,7 +660,7 @@ Firma del contador validador: ______________________  Firma del responsable téc
 
 1. **Alt + ImprPant** copia solo la ventana activa; péguela en Word o Paint. También sirve *Recortes* de Windows (**Win + Mayús + S**).
 2. Nombre cada captura con el caso: `B3_factura_venta.png`.
-3. Para errores inesperados, adjunte el archivo de registro `%LOCALAPPDATA%\ContaBol\logs\contabol.log`.
+3. Para errores inesperados, adjunte el archivo de registro `%LOCALAPPDATA%\ContaJB\logs\contabol.log`.
 
 # Anexo C. Formato de reporte de incidencias
 
@@ -603,7 +672,7 @@ Firma del contador validador: ______________________  Firma del responsable téc
 | Resultado esperado | |
 | Resultado obtenido | |
 | Evidencia | captura + `contabol.log` |
-| Versión | 2.0.0 (Acerca de ContaBol) |
+| Versión | 2.1.0 (Acerca de CONTA JB) |
 | Windows | versión y arquitectura |
 
 # Anexo D. Normativa aplicada por el sistema

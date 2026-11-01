@@ -37,7 +37,7 @@ def figuras() -> None:
     # estructura de datos
     im = Image.new("RGB", (1000, 430), "white")
     d = ImageDraw.Draw(im)
-    d.text((20, 12), "Estructura de la carpeta de datos (%LOCALAPPDATA%\\ContaBol)", font=f(17, True), fill=AZ)
+    d.text((20, 12), "Estructura de la carpeta de datos (%LOCALAPPDATA%\\ContaJB)", font=f(17, True), fill=AZ)
     cajas = [(40, 70, 300, 70, "sistema.db", "Usuarios, empresas, permisos,\nnormativa vigente, auditoría"), (40, 170, 300, 70, "datos\\EMPRESA1\\2025.db", "Contabilidad de la gestión 2025"),
              (40, 260, 300, 70, "datos\\EMPRESA1\\2026.db", "Contabilidad de la gestión 2026"), (380, 170, 280, 70, "datos\\EMPRESA2\\2025.db", "Otra empresa: datos aislados"),
              (700, 70, 260, 70, "backups\\*.cbk", "Copias verificables (SHA-256)"), (700, 170, 260, 70, "reportes\\", "PDF y Excel exportados"), (700, 260, 260, 70, "logs\\contabol.log", "Registro de errores")]
@@ -50,7 +50,7 @@ def figuras() -> None:
     # flujo de implementación
     im = Image.new("RGB", (1100, 190), "white")
     d = ImageDraw.Draw(im)
-    pasos = ["Instalar\nContaBol", "Ingresar y cambiar\ncontraseña", "Crear la\nempresa", "Cargar T.C. y UFV;\nrevisar parámetros", "Usuarios y\npermisos", "Saldos iniciales\ny primera copia"]
+    pasos = ["Instalar\nCONTA JB", "Ingresar y cambiar\ncontraseña", "Crear la\nempresa", "Cargar T.C. y UFV;\nrevisar parámetros", "Usuarios y\npermisos", "Saldos iniciales\ny primera copia"]
     for i, p in enumerate(pasos):
         x = 15 + i * 178
         d.rounded_rectangle([x, 50, x + 160, 130], 10, fill=AZ)
@@ -75,5 +75,5 @@ def construir(nombre: str, salida: str) -> None:
 
 if __name__ == "__main__":
     figuras()
-    construir("Manual_Pruebas", "Manual_de_Pruebas_ContaBol")
-    construir("Manual_Implementacion", "Manual_de_Implementacion_ContaBol")
+    construir("Manual_Pruebas", "Manual_de_Pruebas_ContaJB")
+    construir("Manual_Implementacion", "Manual_de_Implementacion_ContaJB")

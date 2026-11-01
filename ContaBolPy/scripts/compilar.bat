@@ -1,5 +1,5 @@
 @echo off
-REM Genera ContaBol.exe (PyInstaller) y el instalador (Inno Setup). Requiere Python 3.10+ en el PATH.
+REM Genera ContaJB.exe (PyInstaller) y el instalador (Inno Setup). Requiere Python 3.10+ en el PATH.
 REM Uso: scripts\compilar.bat
 cd /d "%~dp0\.."
 where python >nul 2>nul || (echo Instale Python 3.10 o superior desde https://www.python.org/downloads/ & pause & exit /b 1)
@@ -10,10 +10,10 @@ pip install -r requirements-dev.txt || goto error
 python -m pytest -q || goto error
 pyinstaller contabol.spec --noconfirm || goto error
 echo.
-echo Ejecutable: dist\ContaBol\ContaBol.exe
+echo Ejecutable: dist\ContaJB\ContaJB.exe
 set ISCC="%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe"
 if exist %ISCC% (
-  %ISCC% scripts\instalador.iss && echo Instalador: dist\ContaBol_Setup_2.0.0.exe
+  %ISCC% scripts\instalador.iss && echo Instalador: dist\ContaJB_Setup.exe
 ) else (
   echo Para crear el instalador instale Inno Setup 6: https://jrsoftware.org/isdl.php
 )

@@ -1,4 +1,4 @@
-# ContaBol 2.0 (Python)
+# CONTA JB 2.0 (Python)
 
 Sistema contable integrado para Bolivia (comercial y de costos). Python 3 + PySide6 + SQLite.
 
