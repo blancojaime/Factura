@@ -33,7 +33,7 @@ def construir_menu(w) -> None:
               ("resultados", "estados", "informe"), ("patrimonio", "estados", "informe"), ("flujo", "cobros", "informe"), ("notas", "libro", "informe"), ("estados financieros", "estados", "informe"),
               ("centro de reportes", "informe", "informe"), ("libro diario", "libro", "informe"), ("libro mayor", "libro", "informe"), ("sumas", "estados", "informe"), ("índices", "informe", "informe"),
               ("parámetros", "config", "admin"), ("usuarios", "usuarios", "admin"), ("auditoría financiera", "buscar", "informe"), ("auditoría tributaria", "buscar", "impuesto"), ("auditoría", "buscar", "admin"), ("copias", "respaldo", "admin"), ("contraseña", "candado", "admin"),
-              ("empresa o gestión", "banco", "conta"), ("cerrar sesión", "salir", "admin"), ("salir", "salir", "admin"), ("acerca", "ayuda", "admin")]
+              ("empresa o gestión", "banco", "conta"), ("cerrar sesión", "salir", "admin"), ("salir", "salir", "admin"), ("acerca", "ayuda", "admin"), ("activación", "candado", "admin"), ("emitir código", "candado", "admin")]
 
     def icono_para(texto):
         t = texto.lower()
@@ -68,8 +68,8 @@ def construir_menu(w) -> None:
     # Contabilidad
     m = mb.addMenu("&Contabilidad")
     accion(m, "Plan de cuentas", "CONT.PLAN", lambda: w.abrir(PlanCuentasPantalla))
+    accion(m, "Comprobantes (control)", "CONT.COMPROBANTES", w.abrir_comprobantes, "F2")
     accion(m, "Nuevo comprobante", "CONT.COMPROBANTES", w.nuevo_comprobante, "Ctrl+N")
-    accion(m, "Comprobantes", "CONT.COMPROBANTES", lambda: w.abrir(ComprobantesPantalla))
     accion(m, "Tipos de cambio y UFV", "CONT.TIPOCAMBIO", lambda: w.abrir(TipoCambioPantalla))
     m.addSeparator()
     accion(m, "Conciliación bancaria", "CONT.BANCOS", lambda: w.abrir(ConciliacionPantalla))
@@ -156,6 +156,11 @@ def construir_menu(w) -> None:
     accion(m, "Copias de seguridad y restauración", "ADM.BACKUP", lambda: w.abrir(BackupPantalla))
     # Ayuda
     m = mb.addMenu("A&yuda")
+    from .p_activacion import ActivacionDialog, EmisionDialog
+    accion(m, "Activación de la licencia…", "", lambda: ActivacionDialog(w.sis, w).exec())
+    if ctx.usuario.get("es_admin"):
+        accion(m, "Emitir código de activación (proveedor)…", "", lambda: EmisionDialog(w).exec())
+    m.addSeparator()
     accion(m, "Acerca de CONTA JB", "", lambda: AcercaDe(ctx, w).exec())
 
     # barra de accesos rápidos
@@ -170,7 +175,7 @@ def construir_menu(w) -> None:
         a.setEnabled(not permiso or ctx.puede(permiso))
         a.triggered.connect(lambda _=False: fn())
         tb.addAction(a)
-    boton_("Comprobante", "nuevo", "conta", "CONT.COMPROBANTES", w.nuevo_comprobante)
+    boton_("Comprobante", "nuevo", "conta", "CONT.COMPROBANTES", w.abrir_comprobantes)
     boton_("Venta", "venta", "venta", "COM.VENTAS", lambda: w.nuevo_documento(True))
     boton_("Compra", "compra", "compra", "COM.COMPRAS", lambda: w.nuevo_documento(False))
     tb.addSeparator()

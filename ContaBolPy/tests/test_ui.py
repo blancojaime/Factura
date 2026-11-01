@@ -62,6 +62,13 @@ def test_todas_las_pantallas(app, entorno):
     w.informe("estados_financieros", pedir=False)
     w.informe("balance_general", pedir=False)
     assert w.tabs.count() > 30
+    cc = w.abrir(ComprobantesPantalla, clave='cc')
+    assert cc.tabla.rowCount() > 0 and cc.d["cbte"].text() and cc.t_lin.rowCount() >= 2
+    cc.orden.set_valor("importe")
+    cc.refrescar()
+    cc.buscar.setText("zzzz-no-existe")
+    assert cc.tabla.rowCount() == 0 and cc.d["cbte"].text() == ""
+    cc.buscar.setText("")
     pa = w.abrir(AudFin, clave='aud_f')
     assert pa.eid is not None and pa.tabs.count() == 7
     pa._ejecutar_f()

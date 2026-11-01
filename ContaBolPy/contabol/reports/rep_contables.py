@@ -258,3 +258,25 @@ def indices(ctx, p):
     t.add("Margen neto", "Resultado neto / Ventas netas", div(er["neto"], er["ventas"]))
     t.add("Rentabilidad sobre patrimonio (ROE)", "Resultado neto / Patrimonio", div(er["neto"], b["total_patrimonio"]))
     return rep
+
+
+@reporte("control_comprobantes", "Control de comprobantes", MOD_CONT, PERM,
+         [P_DESDE(), P_HASTA(), ParamDef("tipo", "Tipo de comprobante", "tipo_comp", None), ParamDef("estado", "Estado", "lista", "", [("", "Todos"), ("V", "Vigentes"), ("A", "Anulados")])],
+         "Listado de todos los comprobantes con su información principal.")
+def control_comprobantes(ctx, p):
+    rep = base(ctx, "Control de Comprobantes", _per(p), horizontal=True, firmas=False)
+    usuarios = {u["id"]: u["login"] for u in ctx.sistema.listar_usuarios()}
+    t = rep.tabla([Col("Comprobante", 1.5), Col("Fecha", 1.1, "date"), Col("Tipo", 1.2), Col("Origen", 1), Col("A nombre de", 2.4), Col("Nº doc.", 1.1), Col("Glosa", 4), Col("Debe Bs", 1.4, "money"),
+                   Col("Haber Bs", 1.4, "money"), Col("Estado", .9), Col("Usuario", .9)])
+    td = th = 0.0
+    n = 0
+    for c in ctx.vouchers.listar(p["desde"], p["hasta"], p.get("tipo") or None, "", p.get("estado") or None):
+        vig = c["estado"] != "A"
+        t.add(ctx.vouchers.codigo(c), c["fecha"], c["tipo_nombre"], c["origen"].title(), c["a_nombre"] or "", c["nro_doc"] or "", c["glosa"], c["debe_bs"], c["haber_bs"], "Vigente" if vig else "Anulado",
+              usuarios.get(c["creado_por"], ""))
+        if vig:
+            td += c["debe_bs"]
+            th += c["haber_bs"]
+        n += 1
+    t.add("", "", "", "", "", "", f"TOTAL vigentes ({n} comprobantes listados)", round(td, 2), round(th, 2), "", "", estilo="total")
+    return rep

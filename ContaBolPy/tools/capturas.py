@@ -210,6 +210,23 @@ def main():
     sis.asignar_empresa(uid, eid, "OPERADOR")
     guardar(p_admin.PermisosDialog(sis, uid, ctx.empresa, "Juan Pérez (operador)", w), "48_permisos_usuario", 560, 640)
     guardar(p_admin.AcercaDe(ctx, w), "49_acerca_de")
+    # activación de la licencia (con claves de ejemplo descartables: los códigos mostrados no activan nada)
+    from cryptography.hazmat.primitives import serialization as _S
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    from contabol import licencia
+    from contabol.ui.p_activacion import ActivacionDialog, EmisionDialog
+    _pem = Ed25519PrivateKey.generate().private_bytes(_S.Encoding.PEM, _S.PrivateFormat.PKCS8, _S.NoEncryption())
+    _sol = "JB-7K3Q-M2XA-9PLD-4HVE-ZT8R"
+    ad = ActivacionDialog(sis, w, al_inicio=True)
+    ad.c_cod.setPlainText(licencia.emitir(_pem, _sol, None))
+    guardar(ad, "70_activacion", 680, 520)
+    _kf = os.path.join(tempfile.mkdtemp(), "clave_privada_contajb.pem")
+    open(_kf, "wb").write(_pem)
+    ed = EmisionDialog(w)
+    ed.e_clave.setText(_kf)
+    ed.e_sol.setText(_sol)
+    ed.generar()
+    guardar(ed, "71_emision_codigo", 700, 560)
     # informes en pantalla (visor)
     from contabol.ui.reportes_ui import ParametrosDialog, VisorInforme
     rep = catalogo.buscar("balance_general")
@@ -238,8 +255,14 @@ def main():
     paquete = os.path.join(tmp, "paquete.pdf")
     pdf.exportar(catalogo.ejecutar(ctx, "estados_financieros", {}), paquete)
     shutil.copy(paquete, os.path.join(SALIDA, "ejemplo_estados_financieros.pdf"))
-    from contabol.reports import excel
+    from contabol.reports import excel, word
     excel.exportar(catalogo.ejecutar(ctx, "balance_general", {}), os.path.join(SALIDA, "ejemplo_balance_general.xlsx"))
+    for nombre, id_, vals in (("word_notas_eeff", "notas_eeff", {}), ("word_memorando", "aud_mpa", {"encargo": enc_f})):
+        dx = os.path.join(tmp, nombre + ".docx")
+        word.exportar(catalogo.ejecutar(ctx, id_, vals), dx)
+        subprocess.run(["soffice", "--headless", "--convert-to", "pdf", "--outdir", tmp, dx], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run(["pdftoppm", "-r", "70", "-png", "-f", "1", "-l", "1", "-singlefile", os.path.join(tmp, nombre + ".pdf"), os.path.join(SALIDA, nombre)], check=False)
+        print("  ", nombre)
     w.accion_salida = "cambiar"
     w.close()
     ctx.cerrar()

@@ -66,8 +66,14 @@ jobs:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'ultima-version' }}
           name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || 'CONTA JB - última versión' }}
           prerelease: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-          body: "Descargue **ContaJB_Setup.exe**, ábralo y pulse *Instalar* (un solo clic, sin pedir permisos de administrador). También puede usar **ContaJB_portable.zip** (sin instalar). Si el usuario *admin* quedó bloqueado o olvidó la clave: ejecute **Restablecer_admin.bat** (o use el botón «Restablecer administrador» de la pantalla de ingreso). Windows 10/11 de 64 bits."
+          body: "Descargue **ContaJB_Setup.exe**, ábralo y pulse *Instalar* (un solo clic, sin pedir permisos de administrador). También puede usar **ContaJB_portable.zip** (sin instalar). Si el usuario *admin* quedó bloqueado o olvidó la clave: ejecute **Restablecer_admin.bat** (o use el botón «Restablecer administrador» de la pantalla de ingreso). Los manuales (PDF y Word) están en la misma página. Windows 10/11 de 64 bits."
           files: |
             ContaBolPy/dist/ContaJB_Setup.exe
             ContaBolPy/dist/ContaJB_portable.zip
             ContaBolPy/scripts/Restablecer_admin.bat
+            ContaBolPy/docs/Manual_de_Activacion_ContaJB.pdf
+            ContaBolPy/docs/Manual_de_Implementacion_ContaJB.pdf
+            ContaBolPy/docs/Manual_de_Pruebas_ContaJB.pdf
+            ContaBolPy/docs/Manual_de_Activacion_ContaJB.docx
+            ContaBolPy/docs/Manual_de_Implementacion_ContaJB.docx
+            ContaBolPy/docs/Manual_de_Pruebas_ContaJB.docx

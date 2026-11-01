@@ -1,5 +1,5 @@
 ---
-title: "CONTA JB 2.2.2 — Manual de Pruebas de Aceptación"
+title: "CONTA JB 2.3 — Manual de Pruebas de Aceptación"
 subtitle: "Guía paso a paso con datos de ejemplo, resultados esperados y capturas reales del aplicativo"
 lang: es
 ---
@@ -378,7 +378,7 @@ Abra la empresa **DEMO 2025** y verifique cada pantalla. En todas puede **buscar
 | Nº | Pantalla (menú) | Qué verificar | Imagen |
 |---|---|---|---|
 | C1 | Plan de cuentas (Contabilidad) | Árbol de 264 cuentas **en colores por tipo** (activo azul, pasivo rojo, patrimonio verde, ingresos turquesa, costos y gastos ámbar), columnas Mov./Presup./Ajust./M.E., buscar «caja», crear subcuenta, importar/exportar CSV | Fig. C1 |
-| C2 | Comprobantes | Más de 400 comprobantes, filtro por fechas y tipo, anular, imprimir | Fig. C2 |
+| C2 | **Control de comprobantes** (menú *Comprobantes (control)*, tecla F2 o botón «Comprobante») | 445 comprobantes; detalle y líneas del seleccionado; botones Nuevo, Copiar, Eliminar, Revertir, Anular, Ver/Modificar, Imprimir, Enviar a Excel y a Word (ver Parte J) | Fig. C2 |
 | C3 | Conciliación bancaria | Seleccione *Banco Unión*; marque movimientos; diferencia con extracto | Fig. C3 |
 | C4 | Presupuesto | Asigne montos por mes a una cuenta de gasto y vea la ejecución | Fig. C4 |
 | C5 | Libros de ventas y compras | Facturas con débito/crédito fiscal, estado, anular | Fig. C5 |
@@ -754,7 +754,70 @@ Desde *Auditoría > …* o el botón **Informes…** de cada pantalla: memoránd
 
 `python -m contabol.api --empresa DEMO --anio 2025` abre una **API de solo lectura** en `127.0.0.1:8765` con un token aleatorio (cabecera `Authorization: Bearer <token>`). Rutas principales (parámetro `encargo`): `/api/v1/inventarios/corte-documental`, `/api/v1/tributario/conciliacion-iva-it`, `/api/v1/activos/depreciacion-vs-ds24051`, `/api/v1/tributario/bancarizacion`, `/api/v1/auditoria/integridad`. La ruta `/api/v1/` lista todas.
 
-# 10. Parte G — Pruebas automáticas y verificación del instalador
+# 10. Parte J — Control de comprobantes, envío a Word y activación (versión 2.3)
+
+## J1 ★ Control de comprobantes
+
+Se abre con el menú **Contabilidad > Comprobantes (control)** (F2) o con el botón **Comprobante** de la barra. Muestra **todos** los comprobantes de la gestión.
+
+![Control de comprobantes](img/08_comprobantes.png){width=100%}
+
+| Elemento | Qué verificar |
+|---|---|
+| Tabla | Columnas: Cbte., Fecha, Tipo, Origen (Manual, Venta, Compra, Cobro, Planilla, Activo, Ajuste, Reversión…), Beneficiario / a nombre de, Nº doc., Glosa, Total debe y haber en Bs, Estado y Usuario. En el demo: **445 comprobantes**, total debe = total haber = **Bs 16.639.555,05** |
+| Filtros | Desde, Hasta, Tipo, Estado (Todos / Vigentes / Anulados), **Ordenar por** (Fecha, Número, Tipo y número, Importe, Beneficiario) y buscador por glosa, beneficiario o Nº de documento |
+| Detalle (al seleccionar) | Cbte., fecha, **dólar**, **UFV**, estado, origen (con referencia), banco y Nº de cheque, usuario, a nombre de, Nº de documento, **factura vinculada** (libro de compras o ventas, con su IVA), glosa y las **líneas del asiento** (cuenta, glosa, debe, haber) |
+| **Nuevo** | Abre el formulario de comprobante; al guardar, la tabla se actualiza y queda seleccionado |
+| **Copiar** | Abre un comprobante nuevo con el mismo tipo, glosa, beneficiario y líneas; usted corrige la fecha o los importes y lo guarda con número nuevo |
+| **Revertir** | Pide la fecha del contra-asiento y genera un comprobante de traspaso con **debe y haber invertidos**. Ambos quedan en los libros; el original muestra «Revertido por…». No se puede revertir dos veces ni revertir una reversión |
+| **Eliminar** | Borra definitivamente **solo el último comprobante de su tipo y mes** (para no dejar saltos en la numeración), si no está conciliado ni revertido. En otro caso explica que debe usar Anular o Revertir |
+| **Anular** | Marca el comprobante como anulado (sin efecto contable), anula su factura vinculada y lo muestra en rojo |
+| **Ver / Modificar** (o doble clic) | Abre el comprobante; los generados por otros módulos son de solo consulta |
+| **Imprimir** | Comprobante en PDF listo para firmar |
+| **Enviar a Excel / Enviar a Word** | Exporta **toda la tabla con los filtros actuales** (informe «Control de comprobantes»), con totales |
+| Actualizar / Salir | Recarga la tabla / cierra la pestaña |
+
+**Prueba guiada.**
+
+1. Filtre *Tipo = Egreso*, *Estado = Vigentes*: la leyenda inferior cambia de totales.
+2. Seleccione un egreso con factura: en «Factura vinculada» aparecen el Nº, el proveedor y el IVA.
+3. Pulse **Copiar**, cambie la fecha y el importe y guarde: aparece un comprobante nuevo con el número siguiente.
+4. Seleccione ese comprobante nuevo y pulse **Revertir**: aparece otro de tipo Traspaso con origen *Reversión*; el *Balance de sumas y saldos* queda igual que antes de ambos.
+5. Pulse **Eliminar** sobre un comprobante que no es el último de su tipo: el sistema lo rechaza explicando por qué.
+6. Pulse **Enviar a Excel** y abra el archivo: columnas numéricas con formato y fila de totales.
+
+## J2 ★ Enviar a Word
+
+Todos los informes (en especial los que tienen **texto**) tienen el botón **Word** junto a *PDF*, *Excel* e *Imprimir*: *Notas a los Estados Financieros*, *Memorándum de planificación*, hallazgos, dictámenes e informes de auditoría, etc. En la pantalla de **Dictamen / informe** de auditoría, el botón **Enviar a Word** exporta el texto **tal como usted lo editó**.
+
+![Visor con el botón Word](img/56_visor_notas.png){width=100%}
+
+| Prueba | Esperado |
+|---|---|
+| *Estados financieros > Notas a los Estados Financieros* → **Word** | Archivo `.docx` con encabezado de la empresa, título, notas numeradas y tablas con encabezado azul, importes a la derecha |
+| *Auditoría > Memorándum de planificación* → **Word** | Documento con los títulos, textos y tablas de riesgo y materialidad |
+| *Auditoría financiera > C · Dictamen* → generar borrador → editar → **Enviar a Word** | El Word contiene el texto editado |
+| Abrir el `.docx` en Word | Se puede editar, cambiar fuentes y agregar membrete propio |
+
+![Notas a los estados financieros exportadas a Word](img/word_notas_eeff.png){width=70%}
+
+![Memorándum de planificación exportado a Word](img/word_memorando.png){width=70%}
+
+## J3 ★ Activación de la licencia
+
+El procedimiento completo está en el **Manual de Activación**. Verificación rápida:
+
+| Prueba | Esperado |
+|---|---|
+| Primer ingreso | Pantalla de activación: «Modo de prueba: quedan 30 días» y un código de solicitud `JB-…` |
+| **Continuar en modo de prueba** | Entra al sistema |
+| Pegar un código inválido y **Activar** | Mensaje de error; sigue en prueba |
+| (Proveedor) *Ayuda > Emitir código de activación* con su clave privada | Genera el código para una solicitud |
+| Pegar el código y **Activar** | «CONTA JB quedó activado»; ya no se pide al iniciar |
+
+![Activación](img/70_activacion.png){width=70%}
+
+# 11. Parte G — Pruebas automáticas y verificación del instalador
 
 ## G1 Ejecutar las pruebas automáticas (equipo técnico)
 
@@ -767,7 +830,7 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-**Esperado:** todas las pruebas en verde (más de 60), incluyendo `test_manual.py` (cifras de este manual), `test_estados.py` (los seis estados), `test_reportes.py` (79 informes en PDF y Excel) y `test_ui.py` (todas las pantallas).
+**Esperado:** todas las pruebas en verde (más de 70), incluyendo `test_manual.py` (cifras de este manual), `test_estados.py` (los seis estados), `test_reportes.py` (79 informes en PDF y Excel) y `test_ui.py` (todas las pantallas).
 
 ## G2 Autoprueba del programa instalado
 

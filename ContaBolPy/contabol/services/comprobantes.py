@@ -169,7 +169,7 @@ class ComprobanteService:
             raise ErrorNegocio("Comprobante inexistente.")
         if c["estado"] == "A":
             raise ErrorNegocio("El comprobante ya está anulado.")
-        if c["origen"] not in ("MANUAL", "AJUSTE", "CIERRE") and not interno:
+        if c["origen"] not in ("MANUAL", "AJUSTE", "CIERRE", "REVERSION", "COMPROBANTE") and not interno:
             raise ErrorNegocio(f"Este comprobante pertenece al módulo {c['origen']}; anule el documento de origen.")
         if self.db.scalar("SELECT COUNT(*) FROM comp_det WHERE comprobante_id=? AND conciliado IS NOT NULL", (cid,), 0):
             raise ErrorNegocio("El comprobante tiene líneas conciliadas con el banco; desconcílielas primero.")
@@ -178,6 +178,55 @@ class ComprobanteService:
         self.db.execute("UPDATE factura SET estado='A', importe_total=0, no_sujeto=0, exento=0, tasa_cero=0, subtotal=0, descuentos=0, base_iva=0, iva=0 "
                         "WHERE comprobante_id=? AND origen='COMPROBANTE'", (cid,))
         ctx.auditar("Contabilidad", "ANULAR_COMPROBANTE", f"{c['tipo']}-{c['numero']} {c['fecha']}")
+
+    def eliminar(self, cid: int) -> None:
+        """Borra físicamente un comprobante manual. Solo se permite si es el ÚLTIMO de su tipo y mes (para no dejar saltos en la numeración),
+        no está conciliado con el banco ni tiene documentos vinculados; en los demás casos use Anular o Revertir."""
+        ctx = self.ctx
+        ctx.requiere("CONT.ANULAR")
+        ctx.requiere_abierta()
+        c = self.obtener(cid)
+        if not c:
+            raise ErrorNegocio("Comprobante inexistente.")
+        if c["origen"] not in ("MANUAL", "COMPROBANTE"):
+            raise ErrorNegocio(f"Este comprobante pertenece al módulo {c['origen']}; anule el documento de origen.")
+        ultimo = self.db.scalar("SELECT MAX(numero) FROM comprobante WHERE tipo=? AND mes=?", (c["tipo"], c["mes"]))
+        if c["numero"] != ultimo:
+            raise ErrorNegocio("Solo puede eliminar el último comprobante de su tipo y mes (para conservar la numeración correlativa). Use «Anular» o «Revertir».")
+        if self.db.scalar("SELECT COUNT(*) FROM comp_det WHERE comprobante_id=? AND conciliado IS NOT NULL", (cid,), 0):
+            raise ErrorNegocio("El comprobante tiene líneas conciliadas con el banco; desconcílielas primero.")
+        if self.db.scalar("SELECT COUNT(*) FROM comprobante WHERE origen='REVERSION' AND ref_id=?", (cid,), 0):
+            raise ErrorNegocio("El comprobante ya fue revertido; no se puede eliminar.")
+        with self.db.tx():
+            self.db.execute("DELETE FROM factura WHERE comprobante_id=? AND origen='COMPROBANTE'", (cid,))
+            self.db.execute("DELETE FROM comp_det WHERE comprobante_id=?", (cid,))
+            self.db.execute("DELETE FROM comprobante WHERE id=?", (cid,))
+        ctx.auditar("Contabilidad", "ELIMINAR_COMPROBANTE", f"{c['tipo']}-{c['numero']} {c['fecha']} Bs {c['debe_bs']:,.2f}")
+
+    def revertir(self, cid: int, fecha=None, glosa: str = "") -> int:
+        """Genera el contra-asiento (debe y haber invertidos) de un comprobante vigente; ambos quedan en los libros. Devuelve el id del nuevo comprobante."""
+        ctx = self.ctx
+        ctx.requiere("CONT.COMPROBANTES")
+        ctx.requiere_abierta()
+        c = self.obtener(cid)
+        if not c:
+            raise ErrorNegocio("Comprobante inexistente.")
+        if c["estado"] != "V":
+            raise ErrorNegocio("Solo se puede revertir un comprobante vigente.")
+        if c["origen"] == "REVERSION":
+            raise ErrorNegocio("No se puede revertir un comprobante de reversión; registre uno nuevo.")
+        if self.db.scalar("SELECT COUNT(*) FROM comprobante WHERE origen='REVERSION' AND ref_id=? AND estado='V'", (cid,), 0):
+            raise ErrorNegocio("Este comprobante ya fue revertido.")
+        f = to_date(fecha) or ctx.requiere_fecha(c["fecha"])
+        ctx.requiere_fecha(f)
+        cod = self.codigo(c)
+        lineas = [(l["cuenta_id"], l["haber_bs"], l["debe_bs"], l.get("glosa"), l.get("tercero_id"), l.get("centro_id")) for l in c["lineas"]]
+        nid = self.asiento(f, glosa or f"Reversión del comprobante {cod}: {c['glosa']}"[:200], lineas, "REVERSION", cid, "T", c.get("a_nombre"), c.get("nro_doc"))
+        ctx.auditar("Contabilidad", "REVERTIR_COMPROBANTE", f"{cod} -> comprobante {nid}")
+        return nid
+
+    def reversion_de(self, cid: int) -> dict | None:
+        return self.db.one("SELECT * FROM comprobante WHERE origen='REVERSION' AND ref_id=? AND estado='V' ORDER BY id LIMIT 1", (cid,))
 
     def _vincular_factura(self, cid: int, cab: dict, fac: dict) -> int:
         """Registra en el libro de compras (egresos) o ventas (ingresos) la factura del comprobante, sin generar otro asiento."""

@@ -59,6 +59,20 @@ def figuras() -> None:
             d.line([x + 160, 90, x + 178, 90], fill=GR, width=3)
     d.text((15, 12), "Flujo de implementación", font=f(16, True), fill=AZ)
     im.save(os.path.join(DOCS, "img", "flujo_implementacion.png"))
+    # flujo de activación
+    im = Image.new("RGB", (1100, 230), "white")
+    d = ImageDraw.Draw(im)
+    d.text((15, 12), "Flujo de activación", font=f(16, True), fill=AZ)
+    pasos = [("CLIENTE", "Copia su código\nde solicitud\n(JB-XXXX-…)"), ("CLIENTE", "Lo envía al\nproveedor\n(correo / WhatsApp)"), ("PROVEEDOR", "Emite el código de\nactivación con su\nclave privada"),
+             ("CLIENTE", "Pega el código y\npulsa Activar"), ("CONTA JB", "Verifica la firma\ny queda\nactivado")]
+    for i, (quien, txt) in enumerate(pasos):
+        x = 15 + i * 214
+        d.rounded_rectangle([x, 60, x + 190, 190], 10, fill=AZ if quien != "PROVEEDOR" else (183, 121, 31))
+        d.text((x + 95, 76), quien, font=f(11, True), fill=(200, 215, 235) if quien != "PROVEEDOR" else (255, 240, 210), anchor="mm")
+        d.multiline_text((x + 95, 130), txt, font=f(12, True), fill="white", anchor="mm", align="center")
+        if i < 4:
+            d.line([x + 190, 125, x + 214, 125], fill=GR, width=3)
+    im.save(os.path.join(DOCS, "img", "flujo_activacion.png"))
 
 
 def construir(nombre: str, salida: str) -> None:
@@ -77,3 +91,4 @@ if __name__ == "__main__":
     figuras()
     construir("Manual_Pruebas", "Manual_de_Pruebas_ContaJB")
     construir("Manual_Implementacion", "Manual_de_Implementacion_ContaJB")
+    construir("Manual_Activacion", "Manual_de_Activacion_ContaJB")

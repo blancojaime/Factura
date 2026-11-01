@@ -526,6 +526,11 @@ class ComprobanteDialog(QDialog):
             if fv:
                 self.l_fac.setText(f"Factura vinculada: Nº {fv['nro_factura']} · {fv['razon_social']} · IVA Bs {fmt(fv['iva'])} (Libro de {'Compras' if fv['libro'] == 'C' else 'Ventas'})")
         elif previo and previo.get("lineas"):
+            if previo.get("tipo"):
+                self.tipo.set_valor(previo["tipo"])
+            self.glosa.setText(previo.get("glosa") or "")
+            self.nombre.setText(previo.get("a_nombre") or "")
+            self.nro.setText(previo.get("nro_doc") or "")
             self.grid.poner_lineas(previo["lineas"])
         self._tipo()
         self._fecha(solo_numero=bool(comp))

@@ -1,5 +1,5 @@
 ---
-title: "CONTA JB 2.2.2 — Manual de Implementación"
+title: "CONTA JB 2.3 — Manual de Implementación"
 subtitle: "Instalación, configuración, puesta en marcha, operación y mantenimiento"
 lang: es
 ---
@@ -221,6 +221,37 @@ python -m contabol.api --empresa DEMO --anio 2025
 
 Escucha solo en `127.0.0.1`, exige token y no modifica datos. Rutas (prefijo `/api/v1`): `/auditoria/encargos`, `/auditoria/materialidad`, `/auditoria/resumen-desvios`, `/auditoria/integridad`, `/inventarios/muestreo-recuento`, `/inventarios/corte-documental`, `/inventarios/vnr-obsolescencia`, `/costos/conversion`, `/activos/depreciacion-vs-ds24051`, `/planillas/conciliacion`, `/tributario/conciliacion-iva-it`, `/tributario/bancarizacion`, `/tributario/depuracion-iue`, `/tributario/anexos-itc`, `/tributario/contingencia`.
 
+# 4 quater. Control de comprobantes, envío a Word y activación (versión 2.3)
+
+## Control de comprobantes
+
+El menú *Contabilidad > Comprobantes (control)* (F2) y el botón *Comprobante* de la barra abren una tabla con **todos** los comprobantes: número, fecha, tipo, origen, beneficiario, Nº de documento, glosa, totales, estado y usuario. Al seleccionar uno se ven su T.C., UFV, banco y cheque, factura vinculada y líneas del asiento. Acciones: **Nuevo, Copiar, Eliminar, Revertir, Anular, Ver/Modificar, Imprimir, Enviar a Excel y a Word**. Reglas:
+
+- **Eliminar** solo el último comprobante del tipo y mes (conserva la numeración correlativa), sin conciliación bancaria ni reversión. Requiere el permiso *Anular comprobantes*.
+- **Revertir** genera un comprobante de traspaso (origen *Reversión*) con debe y haber invertidos; no se repite ni se revierte una reversión.
+- **Anular** marca el comprobante y su factura vinculada; el comprobante queda visible en rojo.
+- Toda acción queda en la auditoría del sistema.
+
+## Envío a Word
+
+Módulo `contabol/reports/word.py` (dependencia `python-docx`). Todo informe del catálogo se puede exportar a **.docx** desde el visor (botón *Word*) y el texto editado de los dictámenes desde la pantalla de auditoría. Para el empaquetado, el archivo `.spec` incluye los datos de `docx`; la autoprueba del instalador genera un Word de prueba.
+
+## Activación de la licencia
+
+CONTA JB funciona **30 días en modo de prueba**; después exige un **código de activación** emitido por el proveedor. Detalle de uso en el **Manual de Activación**. Aspectos de implementación:
+
+| Tema | Detalle |
+|---|---|
+| Código de solicitud | `JB-` + 20 caracteres derivados de un hash del identificador del equipo (MachineGuid de Windows) |
+| Código de activación | Firma **Ed25519** del código de solicitud y de la fecha de vencimiento (o perpetua). Funciona sin Internet |
+| Dónde se guarda | Tabla `config` de `sistema.db` (`lic_codigo`, `lic_inicio`, `lic_ultimo_uso`); sobrevive a reinstalaciones y actualizaciones |
+| Clave pública | Dentro del programa (`contabol/licencia.py`); solo verifica |
+| **Clave privada** | Archivo `clave_privada_contajb.pem`, **solo en poder del proveedor**; nunca en el repositorio, instalador ni equipos de clientes |
+| Emisión | *Ayuda > Emitir código de activación (proveedor)…* (solo administradores) |
+| Datos al vencer | **No se bloquean ni se borran**: solo se pide activar para ingresar |
+| Reloj | Si la fecha de Windows retrocede respecto del último uso, se pide corregirla |
+| Instalaciones previas | Al actualizar desde una versión sin activación, comienza el período de prueba de 30 días |
+
 # 5. Usuarios, roles y permisos
 
 **Recuperación del administrador.** Si otro administrador puede ingresar, restablezca la clave en *Administración > Usuarios y permisos* (también desbloquea). Si no, use cualquiera de estas tres vías (en el equipo donde está instalado): (a) en la pantalla de ingreso, el botón **«Restablecer administrador»**; (b) *Inicio > CONTA JB > Restablecer contraseña de administrador*; (c) el archivo **`Restablecer_admin.bat`** de la página de descargas (o `ContaJB.exe --restablecer-admin`). En todas, escriba **RESTABLECER**: el usuario `admin` queda activo y desbloqueado con la clave temporal `admin` y cambio obligatorio. La acción queda en la bitácora de seguridad.
@@ -326,6 +357,7 @@ El proyecto incluye **pruebas automáticas** (`python -m pytest`) que cubren las
 - La emisión de **facturas electrónicas** se realiza en los sistemas del SIN; CONTA JB registra las facturas en los libros LCV y exporta su detalle, pero no las firma ni las transmite.
 - El ajuste por inflación con UFV está disponible pero suspendido contablemente desde 2020; su uso es decisión de la empresa.
 - El cálculo de finiquito es referencial.
+- **Activación:** si el proveedor pierde la clave privada no podrá emitir códigos para las instalaciones existentes (habría que publicar una versión con otra clave pública). Conserve copias seguras.
 - **Auditoría:** las pruebas y los borradores de dictamen son apoyo al juicio profesional; los anexos ITC son formatos referenciales; los umbrales y tasas dependientes de norma deben verificarse y, cuando corresponda, ingresarse por el usuario.
 
 # Anexo A. Formato de solicitud de soporte

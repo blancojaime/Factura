@@ -1,7 +1,7 @@
 import os
 import tempfile
 
-from contabol.reports import catalogo, excel, pdf
+from contabol.reports import catalogo, excel, pdf, word
 from tests.conftest import BANCO, CAJA, CAPITAL
 from tests.test_estados import _escenario
 
@@ -70,11 +70,12 @@ def test_todos_los_reportes_generan_pdf_y_excel(env):
             raw = pdf.generar_bytes(rep)
             assert raw[:4] == b"%PDF" and len(raw) > 1500, "PDF vacío"
             excel.exportar(rep, os.path.join(d, r.id + ".xlsx"))
+            word.exportar(rep, os.path.join(d, r.id + ".docx"))
             n += 1
         except Exception as ex:  # noqa: BLE001
             fallos.append(f"{r.id}: {type(ex).__name__}: {ex}")
     assert not fallos, "\n".join(fallos)
-    assert n >= 65, n
+    assert n >= 80, n
 
 
 def test_paquete_estados_financieros(env):

@@ -517,12 +517,14 @@ class AuditoriaPantalla(Pantalla):
         self.c_clase = Combo(list((CLASES_F if self.tipo == "F" else CLASES_T).items()))
         self.c_op = Combo(list(OPINIONES.items()))
         bb, be = boton("Generar borrador"), boton("Emitir (guardar)", "primario")
+        bw = boton("Enviar a Word")
+        bw.clicked.connect(self._word)
         bb.clicked.connect(self._borrador)
         be.clicked.connect(self._emitir)
         if self.tipo == "F":
-            lay.addLayout(hbox(QLabel("Opinión (NIA 700/705/706):"), self.c_op, bb, be, None))
+            lay.addLayout(hbox(QLabel("Opinión (NIA 700/705/706):"), self.c_op, bb, be, bw, None))
         else:
-            lay.addLayout(hbox(QLabel("Informe:"), self.c_clase, bb, be, None))
+            lay.addLayout(hbox(QLabel("Informe:"), self.c_clase, bb, be, bw, None))
         self.t_dic = QPlainTextEdit()
         lay.addWidget(self.t_dic, 1)
         self.t_emit = _Tabla([Columna("fecha", "Fecha", 90), Columna("clase", "Clase", 200), Columna("opinion", "Opinión", 120), Columna("firmante", "Firmante", 200, estirar=True)], "Dictámenes e informes emitidos")
@@ -539,6 +541,18 @@ class AuditoriaPantalla(Pantalla):
         if ok:
             self._borr = b
             self.t_dic.setPlainText(b["texto"])
+
+    def _word(self):
+        from PySide6.QtWidgets import QFileDialog
+        from ..reports import word
+        if not self.t_dic.toPlainText().strip():
+            aviso(self, "Genere primero el borrador del dictamen o informe.")
+            return
+        ruta, _ = QFileDialog.getSaveFileName(self, "Enviar a Word", "dictamen.docx", "Word (*.docx)")
+        if ruta and intentar(self, word.exportar_texto, "Dictamen e informe de auditoría", self.t_dic.toPlainText(), ruta, self.ctx)[0]:
+            import os
+            if hasattr(os, "startfile"):
+                os.startfile(ruta)  # noqa: S606
 
     def _emitir(self):
         if not self._enc() or not getattr(self, "_borr", None):

@@ -1,6 +1,6 @@
 ; Inno Setup 6 - instalador sencillo de CONTA JB: sin preguntas, un solo clic en "Instalar".
 ; Instala solo para el usuario actual (no pide permisos de administrador) y crea el acceso directo en el escritorio.
-#define Version "2.2.2"
+#define Version "2.3.0"
 
 [Setup]
 AppId={{B8E5A0C1-4D2F-4A7B-9E36-7C1F2A5D8B40}

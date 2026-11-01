@@ -4,18 +4,18 @@ import os
 import sys
 
 sys.path.insert(0, os.getcwd())
-from PyInstaller.utils.hooks import collect_submodules
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
 # los servicios se cargan dinámicamente (importlib) y deben incluirse explícitamente
 hidden = collect_submodules("contabol") + [
     "contabol.services." + m for m in ("cuentas", "tipocambio", "comprobantes", "iva", "terceros", "inventario", "comercial", "activos", "planillas",
-                                       "produccion", "presupuesto", "bancos", "libros", "estados", "gestion", "consolidacion", "auditoria", "auditoria_plantillas", "auditoria_pruebas", "auditoria_tributaria", "auditoria_informes")] + ["contabol.api"]
+                                       "produccion", "presupuesto", "bancos", "libros", "estados", "gestion", "consolidacion", "auditoria", "auditoria_plantillas", "auditoria_pruebas", "auditoria_tributaria", "auditoria_informes")] + ["contabol.api", "contabol.reports.word", "contabol.licencia", "docx", "cryptography"]
 
 a = Analysis(
     ["contabol/__main__.py"],
     pathex=["."],
     binaries=[],
-    datas=[("contabol/recursos", "contabol/recursos")],
+    datas=[("contabol/recursos", "contabol/recursos")] + collect_data_files("docx"),
     hiddenimports=hidden,
     excludes=["tkinter", "PySide6.QtWebEngineCore", "PySide6.QtQml", "PySide6.QtQuick", "PySide6.Qt3DCore", "PySide6.QtMultimedia"],
     noarchive=False,

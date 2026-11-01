@@ -44,11 +44,13 @@ class VisorInforme(Pantalla):
         b_pdf = boton("PDF", "primario", 90)
         b_xls = boton("Excel", "exito", 90)
         b_imp = boton("Imprimir", "", 90)
-        for b in (b_imp, b_xls, b_pdf):
+        b_doc = boton("Word", "", 90)
+        for b in (b_imp, b_doc, b_xls, b_pdf):
             self.banner.agregar(b)
         b_pdf.clicked.connect(self.guardar_pdf)
         b_xls.clicked.connect(self.guardar_excel)
         b_imp.clicked.connect(self.imprimir)
+        b_doc.clicked.connect(self.guardar_word)
         area = QScrollArea()
         area.setWidgetResizable(True)
         area.setFrameShape(QFrame.NoFrame)
@@ -160,6 +162,15 @@ class VisorInforme(Pantalla):
         if not ruta:
             return
         ok, _ = intentar(self, excel.exportar, self.rep, ruta)
+        if ok:
+            abrir_archivo(ruta)
+
+    def guardar_word(self) -> None:
+        from ..reports import word
+        ruta, _ = QFileDialog.getSaveFileName(self, "Enviar a Word", os.path.join(carpeta_reportes(self.ctx), self._nombre() + ".docx"), "Word (*.docx)")
+        if not ruta:
+            return
+        ok, _ = intentar(self, word.exportar, self.rep, ruta)
         if ok:
             abrir_archivo(ruta)
 

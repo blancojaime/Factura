@@ -50,6 +50,11 @@ def autoprueba() -> int:
     rep = catalogo.ejecutar(ctx, "estados_financieros", {})
     assert len(pdf.generar_bytes(rep)) > 5000
     excel.exportar(rep, os.path.join(raiz, "prueba.xlsx"))
+    from .. import licencia
+    assert licencia.codigo_solicitud().startswith("JB-")
+    from ..reports import word
+    word.exportar(rep, os.path.join(raiz, "prueba.docx"))
+    assert os.path.getsize(os.path.join(raiz, "prueba.docx")) > 5000
     assert ctx.estados.balance_general(ctx.fin)["cuadra"]
     w.accion_salida = "cambiar"
     w.close()
@@ -96,8 +101,17 @@ def main() -> int:
     except Exception as ex:  # noqa: BLE001
         QMessageBox.critical(None, APP_NAME, f"No se pudo abrir la base de datos del sistema en:\n{raiz}\n\n{ex}")
         return 1
+    from .. import licencia
     from .login import CambioClaveDialog, LoginDialog, SelectorEmpresa
+    from .p_activacion import ActivacionDialog
     from .ventana import VentanaPrincipal
+    est = licencia.estado(sis)
+    if est["modo"] != "activada":
+        dlg = ActivacionDialog(sis, None, al_inicio=True)
+        if dlg.exec() != QDialog.Accepted:
+            return 0
+        if licencia.estado(sis)["modo"] not in ("activada", "prueba"):
+            return 0
     usuario = None
     while True:
         if usuario is None:

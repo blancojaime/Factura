@@ -221,6 +221,11 @@ class VentanaPrincipal(QMainWindow):
         if ComprobanteDialog(self.ctx, None, self).exec():
             self.refrescar_todo()
 
+    def abrir_comprobantes(self) -> None:
+        """Control de comprobantes (tabla de todos los comprobantes con sus acciones)."""
+        from .p_contab import ComprobantesPantalla
+        self.abrir(ComprobantesPantalla)
+
     def nuevo_documento(self, venta: bool) -> None:
         from .p_comercial import DocumentoDialog
         if DocumentoDialog(self.ctx, venta, self).exec():
