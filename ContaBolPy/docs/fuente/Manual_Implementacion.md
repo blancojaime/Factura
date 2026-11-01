@@ -223,6 +223,8 @@ Escucha solo en `127.0.0.1`, exige token y no modifica datos. Rutas (prefijo `/a
 
 # 5. Usuarios, roles y permisos
 
+**Recuperación del administrador.** Si otro administrador puede ingresar, restablezca la clave en *Administración > Usuarios y permisos* (también desbloquea). Si no, en el equipo donde está instalado ejecute `ContaJB.exe --restablecer-admin` (desde *Ejecutar* o el acceso directo), escriba **RESTABLECER**: el usuario `admin` queda activo y desbloqueado con la clave temporal `admin` y cambio obligatorio. La acción queda en la bitácora de seguridad.
+
 | Rol | Alcance |
 |---|---|
 | **Administrador** | Todo, incluida la gestión de usuarios y la restauración |

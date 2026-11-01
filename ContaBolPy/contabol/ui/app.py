@@ -59,12 +59,29 @@ def autoprueba() -> int:
     return 0
 
 
+def restablecer_admin(raiz: str) -> int:
+    """Recuperación de emergencia desde el propio equipo: ContaJB.exe --restablecer-admin"""
+    from PySide6.QtWidgets import QInputDialog
+    app = QApplication(sys.argv)
+    tema.aplicar(app)
+    txt, ok = QInputDialog.getText(None, APP_NAME, f"Se restablecerá el usuario «admin» (clave temporal: admin, con cambio obligatorio) en:\n{raiz}\n\nEscriba RESTABLECER para confirmar:")
+    if not ok or txt.strip().upper() != "RESTABLECER":
+        return 1
+    sis = Sistema(raiz)
+    sis.restablecer_admin()
+    sis.close()
+    QMessageBox.information(None, APP_NAME, "Listo. Ingrese con usuario «admin» y contraseña «admin»; el sistema le pedirá elegir una nueva contraseña.")
+    return 0
+
+
 def main() -> int:
     if "--autoprueba" in sys.argv:
         return autoprueba()
     raiz = carpeta_datos()
     os.makedirs(raiz, exist_ok=True)
     configurar_log(raiz)
+    if "--restablecer-admin" in sys.argv:
+        return restablecer_admin(raiz)
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
     tema.aplicar(app)

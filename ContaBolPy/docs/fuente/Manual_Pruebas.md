@@ -522,6 +522,12 @@ Para **cada informe** de la tabla siguiente verifique la lista de control: (1) a
 
 ![Permisos de un usuario](img/48_permisos_usuario.png){width=65%}
 
+## F1b Recuperar el acceso de administrador
+
+**Recuperación del administrador.** Si otro administrador puede ingresar, restablezca la clave en *Administración > Usuarios y permisos* (también desbloquea). Si no, en el equipo donde está instalado ejecute `ContaJB.exe --restablecer-admin` (desde *Ejecutar* o el acceso directo), escriba **RESTABLECER**: el usuario `admin` queda activo y desbloqueado con la clave temporal `admin` y cambio obligatorio. La acción queda en la bitácora de seguridad.
+
+**Esperado:** tras la confirmación aparece «Listo»; al ingresar con `admin` / `admin` el sistema obliga a elegir una nueva contraseña. Si se escribe otra palabra, no se cambia nada.
+
 ## F2 Auditoría
 
 *Administración > Auditoría*: aparecen los ingresos (correctos y fallidos), comprobantes creados y anulados, aperturas de gestión, copias y demás acciones con usuario, fecha, hora y equipo. Pruebe el filtro por fechas.

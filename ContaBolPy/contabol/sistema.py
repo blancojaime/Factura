@@ -61,6 +61,16 @@ class Sistema:
         self.auditar(u, None, None, "Seguridad", "LOGIN", "Ingreso al sistema")
         return self.usuario(u["id"])
 
+    def restablecer_admin(self) -> None:
+        """Recuperación de emergencia (acceso al equipo): reactiva y desbloquea a 'admin' con la clave temporal 'admin' y cambio obligatorio."""
+        u = self.db.one("SELECT * FROM usuario WHERE login='admin'")
+        if not u:
+            self._sembrar_admin()
+            u = self.db.one("SELECT * FROM usuario WHERE login='admin'")
+        sal = nueva_sal()
+        self.db.update("usuario", u["id"], hash=hash_clave("admin", sal), salt=sal, activo=1, es_admin=1, cambiar_clave=1, intentos=0)
+        self.auditar(u, None, None, "Seguridad", "RESTABLECER_ADMIN", "Contraseña de admin restablecida desde el equipo (--restablecer-admin)")
+
     def usuario(self, uid: int) -> dict:
         return self.db.one("SELECT id, login, nombre, email, activo, es_admin, cambiar_clave, ultimo_acceso FROM usuario WHERE id=?", (uid,))
 

@@ -210,3 +210,16 @@ def test_demo_incluye_auditoria():
         s.close()
     finally:
         shutil.rmtree(d, ignore_errors=True)
+
+
+def test_restablecer_admin(env):
+    s = env.sis
+    s.cambiar_clave(env.usuario["id"], "NuevaClave9")
+    for _ in range(5):
+        with pytest.raises(ErrorNegocio):
+            s.autenticar("admin", "mala")
+    with pytest.raises(ErrorNegocio, match="bloqueado"):
+        s.autenticar("admin", "NuevaClave9")
+    s.restablecer_admin()
+    u = s.autenticar("admin", "admin")
+    assert u["cambiar_clave"] == 1
