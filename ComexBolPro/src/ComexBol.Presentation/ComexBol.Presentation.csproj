@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComexBol.Data\ComexBol.Data.csproj" />
+    <ProjectReference Include="..\ComexBol.Documentos\ComexBol.Documentos.csproj" />
   </ItemGroup>
 </Project>

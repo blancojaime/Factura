@@ -93,6 +93,8 @@ public class Documento
     public string NombreArchivo { get; set; } = "";
     public string Ruta { get; set; } = "";
     public string? Sha256 { get; set; }
+    public string? OcrJson { get; set; }        // campos propuestos por OCR (pendientes de confirmar)
+    public bool Validado { get; set; }          // el usuario revisó y confirmó
     public DateTime AgregadoEn { get; set; }
 }
 

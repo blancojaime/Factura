@@ -31,14 +31,20 @@ public partial class MainWindow : Window
         if (dlg.ShowDialog() == true) await Vm.ExportarExpedienteAsync(dlg.FileName);
     }
 
-    void AbrirDocumento_Click(object s, RoutedEventArgs e)
+    async void AbrirDocumento_Click(object s, RoutedEventArgs e)
     {
         var dlg = new OpenFileDialog { Filter = "Imágenes|*.jpg;*.jpeg;*.png" };
-        if (dlg.ShowDialog() == true) Vm.DocumentoRuta = dlg.FileName;
+        if (dlg.ShowDialog() == true) await Vm.ProcesarDocumentoAsync(dlg.FileName);
     }
 
     void Cumplir_Click(object s, RoutedEventArgs e)
     {
         if (((Button)s).Tag is EtapaFila fila) Vm.CompletarEtapaCmd.Execute(fila);
     }
+}
+
+public sealed class HayElementosConverter : System.Windows.Data.IValueConverter
+{
+    public object Convert(object v, Type t, object p, System.Globalization.CultureInfo c) => v is int n && n > 0 ? Visibility.Visible : Visibility.Collapsed;
+    public object ConvertBack(object v, Type t, object p, System.Globalization.CultureInfo c) => throw new NotSupportedException();
 }

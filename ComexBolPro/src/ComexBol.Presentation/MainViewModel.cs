@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using ComexBol.Core;
 using ComexBol.Data;
+using ComexBol.Documentos;
 using Microsoft.EntityFrameworkCore;
 
 namespace ComexBol.Presentation;
@@ -9,6 +10,12 @@ namespace ComexBol.Presentation;
 public sealed record EtapaFila(string Codigo, string Nombre, string Plan, string Real, Semaforo Semaforo, string ColorHex, bool EsCritica, bool EsHitoLegal);
 public sealed record ItemFila(int Numero, string Partida, string Descripcion, string Valor, string GA);
 public sealed record LineaLiquidacion(string Concepto, string Monto, bool Destacada = false);
+public sealed class CampoPropuesto(string clave, string nombre, string valor, string confianza, string origen) : ObservableObject
+{
+    public string Clave { get; } = clave; public string Nombre { get; } = nombre;
+    string _v = valor; public string Valor { get => _v; set => Set(ref _v, value); }   // editable: el usuario corrige antes de confirmar
+    public string Confianza { get; } = confianza; public string Origen { get; } = origen;
+}
 public sealed record LineaLegajo(string Documento, bool Presente, string Motivo);
 
 /// <summary>Estado y comandos de la ventana principal. Sin referencias a WPF: probado en CI Linux.</summary>
@@ -16,16 +23,18 @@ public sealed class MainViewModel : ObservableObject
 {
     static readonly CultureInfo Bo = CultureInfo.GetCultureInfo("es-BO");
     readonly ComexDb _db; readonly Func<DateOnly> _hoy;
-    readonly ServicioOperaciones _ops; readonly ServicioCatalogo _cat;
+    readonly ServicioOperaciones _ops; readonly ServicioCatalogo _cat; readonly ServicioDocumentos? _docs; int _docIdPendiente;
 
-    public MainViewModel(ComexDb db, Func<DateOnly>? hoy = null)
+    public MainViewModel(ComexDb db, Func<DateOnly>? hoy = null, IMotorOcr? ocr = null)
     {
+        _docs = ocr is null ? null : new(db, ocr);
         _db = db; _hoy = hoy ?? (() => DateOnly.FromDateTime(DateTime.Today));
         _ops = new(db); _cat = new(db);
         CargarCmd = new(_ => CargarAsync());
         NuevaImportacionCmd = new(_ => NuevaImportacionAsync());
         AgregarItemCmd = new(_ => AgregarItemAsync(), _ => Seleccionada is not null);
         LiquidarCmd = new(_ => LiquidarAsync(), _ => Seleccionada is not null);
+        ConfirmarPropuestaCmd = new(_ => ConfirmarPropuestaAsync(), _ => Propuesta.Count > 0);
         CompletarEtapaCmd = new(p => CompletarEtapaAsync((EtapaFila)p!), p => Seleccionada is not null && p is EtapaFila);
     }
 
@@ -68,6 +77,8 @@ public sealed class MainViewModel : ObservableObject
     public RelayCommand AgregarItemCmd { get; }
     public RelayCommand LiquidarCmd { get; }
     public RelayCommand CompletarEtapaCmd { get; }
+    public RelayCommand ConfirmarPropuestaCmd { get; }
+    public ObservableCollection<CampoPropuesto> Propuesta { get; } = [];
 
     void RefrescarComandos() { AgregarItemCmd.Refresh(); LiquidarCmd.Refresh(); CompletarEtapaCmd.Refresh(); }
 
@@ -124,6 +135,34 @@ public sealed class MainViewModel : ObservableObject
         await _ops.CompletarEtapaAsync(Seleccionada!.Id, e.Codigo, _hoy());
         await RefrescarAsync();
         Mensaje = $"Etapa {e.Codigo} cumplida";
+    });
+
+    /// <summary>Muestra el documento, ejecuta OCR y deja la propuesta en pantalla. No modifica la operación.</summary>
+    public Task ProcesarDocumentoAsync(string ruta) => Seguro_(async () =>
+    {
+        if (Seleccionada is null) throw new InvalidOperationException("Seleccione una operación.");
+        if (_docs is null) throw new InvalidOperationException("OCR no configurado.");
+        DocumentoRuta = ruta; Mensaje = "Leyendo documento…";
+        var r = await _docs.ProcesarAsync(Seleccionada.Id, ruta);
+        _docIdPendiente = r.Documento.Id; Propuesta.Clear();
+        void Add<T>(string k, string n, CampoOcr<T>? c, Func<T, string> f) { if (c is not null) Propuesta.Add(new(k, n, f(c.Valor), c.Confianza.ToString(), c.LineaOrigen)); }
+        Add("factura", "N.º factura", r.Campos.NumeroFactura, v => v); Add("proveedor", "Proveedor", r.Campos.Proveedor, v => v);
+        Add("incoterm", "Incoterm", r.Campos.Incoterm, v => v); Add("moneda", "Moneda", r.Campos.Moneda, v => v);
+        Add("valor", "Valor total", r.Campos.ValorTotal, v => v.ToString(CultureInfo.InvariantCulture));
+        Add("peso", "Peso bruto kg", r.Campos.PesoBrutoKg, v => v.ToString(CultureInfo.InvariantCulture));
+        ConfirmarPropuestaCmd.Refresh(); await RefrescarAsync();
+        Mensaje = $"{r.Tipo}: {Propuesta.Count} campos propuestos — revise y confirme";
+    });
+
+    public Task ConfirmarPropuestaAsync() => Seguro_(async () =>
+    {
+        string? V(string k) => Propuesta.FirstOrDefault(p => p.Clave == k)?.Valor;
+        await _docs!.ConfirmarAsync(Seleccionada!.Id, _docIdPendiente, V("incoterm"), V("moneda"), V("factura"), V("proveedor"));
+        if (decimal.TryParse(V("valor"), NumberStyles.Number, CultureInfo.InvariantCulture, out var val)) ItemValor = val;
+        if (decimal.TryParse(V("peso"), NumberStyles.Number, CultureInfo.InvariantCulture, out var pe)) ItemPesoBruto = pe;
+        Propuesta.Clear(); ConfirmarPropuestaCmd.Refresh();
+        await CargarAsync(); Seleccionada = Operaciones.First(o => o.Id == Seleccionada.Id);
+        Mensaje = "Datos confirmados: complete partida y descripción y agregue el ítem";
     });
 
     public async Task<ResumenImportacionCatalogo?> ImportarCatalogoAsync(string rutaCsv, string version)

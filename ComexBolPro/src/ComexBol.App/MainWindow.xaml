@@ -44,7 +44,7 @@
             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="6"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
             <Border BorderBrush="{StaticResource Borde}" BorderThickness="1" Background="White">
               <DockPanel>
-                <Button DockPanel.Dock="Top" Content="Abrir documento (JPG/PNG)…" Click="AbrirDocumento_Click" HorizontalAlignment="Left" Margin="6"/>
+                <Button DockPanel.Dock="Top" Content="Abrir y leer con OCR (JPG/PNG)…" Click="AbrirDocumento_Click" HorizontalAlignment="Left" Margin="6"/>
                 <Image Source="{Binding DocumentoRuta}" Stretch="Uniform"/>
               </DockPanel>
             </Border>
@@ -68,6 +68,15 @@
                     <Button Content="Calcular (F5)" Command="{Binding LiquidarCmd}"/>
                   </StackPanel>
                 </Grid>
+              </StackPanel>
+              <StackPanel DockPanel.Dock="Top" Visibility="{Binding Propuesta.Count, Converter={StaticResource HayPropuesta}}">
+                <TextBlock Text="Propuesta del OCR — revise cada campo" Style="{StaticResource Titulo}"/>
+                <ItemsControl ItemsSource="{Binding Propuesta}"><ItemsControl.ItemTemplate><DataTemplate>
+                  <Grid Margin="0,2" ToolTip="{Binding Origen}">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="110"/><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Nombre}"/><TextBox Grid.Column="1" Text="{Binding Valor}"/><TextBlock Grid.Column="2" Text="{Binding Confianza}" Margin="6,0" Foreground="#9A6700"/>
+                  </Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                <Button Content="Confirmar datos" Command="{Binding ConfirmarPropuestaCmd}" HorizontalAlignment="Left" Margin="0,6,0,10"/>
               </StackPanel>
               <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="True" IsReadOnly="True"/>
             </DockPanel>
