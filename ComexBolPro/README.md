@@ -6,7 +6,7 @@ Asistente de escritorio (Windows) para **decidir, acompañar y documentar** impo
 |---|---|---|
 | `ComexBol.Core` | Liquidación tributaria, Incoterms, ruta crítica (CPM), escenarios, catálogo (parser CSV) | Probado |
 | `ComexBol.Data` | EF Core + SQLite, operaciones, bitácora, expediente, catálogo NANDINA | Probado |
-| `ComexBol.Documentos` | OCR (Tesseract CLI), extracción de campos, clasificación del legajo | Probado (incl. Tesseract real) |
+| `ComexBol.Documentos` | OCR (Tesseract + Poppler para PDF), extracción de campos, clasificación, exportación a Excel | Probado (incl. Tesseract real) |
 | `ComexBol.Presentation` | ViewModels MVVM de la ventana principal | Probado |
 | `ComexBol.App` | Ventana WPF (XAML) | **Sin compilar**: requiere Windows (`dotnet build`) |
 
@@ -24,5 +24,6 @@ Manual completo de implementación y pruebas: [`docs/04-Manual-de-Implementacion
 ## Pendiente
 - Compilar y probar la ventana WPF en Windows; visor de PDF (WebView2) y rasterizado de PDF para OCR.
 - Validar parámetros normativos con un despachante (prueba P-09 del manual).
-- Pantallas para comparar escenarios, viabilidad y exportación; preferencias por acuerdo.
+- Pantallas para almacenaje y exportación (DEX/CEDEIM); guardar escenarios; preferencias por acuerdo.
+- Mapeo de casillas SUMA (requiere el instructivo vigente de la ANB); exportación a PDF; compresión de imágenes.
 - Mapeo de casillas SUMA, migraciones EF Core, compresión de imágenes, exportación PDF/XLSX.

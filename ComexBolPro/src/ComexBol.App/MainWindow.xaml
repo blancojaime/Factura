@@ -15,7 +15,8 @@
           <TextBlock Text="TC USD→Bs (BCB, venta):" Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
           <TextBox Width="70" Text="{Binding TipoCambioUsd, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,14,0"/>
           <Button Content="Importar catálogo…" Click="ImportarCatalogo_Click"/>
-          <Button Content="Exportar expediente…" Click="ExportarExpediente_Click"/>
+          <Button Content="Expediente (.md)…" Click="ExportarExpediente_Click"/>
+          <Button Content="Excel…" Click="ExportarExcel_Click"/>
         </StackPanel>
       </DockPanel>
     </Border>
@@ -44,7 +45,7 @@
             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="6"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
             <Border BorderBrush="{StaticResource Borde}" BorderThickness="1" Background="White">
               <DockPanel>
-                <Button DockPanel.Dock="Top" Content="Abrir y leer con OCR (JPG/PNG)…" Click="AbrirDocumento_Click" HorizontalAlignment="Left" Margin="6"/>
+                <Button DockPanel.Dock="Top" Content="Abrir y leer con OCR (JPG/PNG/PDF)…" Click="AbrirDocumento_Click" HorizontalAlignment="Left" Margin="6"/>
                 <Image Source="{Binding DocumentoRuta}" Stretch="Uniform"/>
               </DockPanel>
             </Border>
@@ -107,6 +108,66 @@
               </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
             </StackPanel>
           </Grid>
+        </TabItem>
+
+        <TabItem Header="Decisión">
+          <DockPanel Margin="10" DataContext="{Binding Decision}">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+              <TextBlock Text="Unidades" VerticalAlignment="Center"/><TextBox Width="70" Margin="6,0,14,0" Text="{Binding Unidades}"/>
+              <TextBlock Text="Gastos locales Bs" VerticalAlignment="Center"/><TextBox Width="90" Margin="6,0,14,0" Text="{Binding GastosLocalesBob}"/>
+              <TextBlock Text="Precio mercado c/IVA Bs" VerticalAlignment="Center"/><TextBox Width="90" Margin="6,0,14,0" Text="{Binding PrecioMercadoConIva}"/>
+              <TextBlock Text="Margen objetivo %" VerticalAlignment="Center"/><TextBox Width="50" Margin="6,0,14,0" Text="{Binding MargenObjetivoPct}"/>
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,8">
+              <Button Content="Agregar escenario" Command="{Binding AgregarEscenarioCmd}"/>
+              <Button Content="Comparar" Command="{Binding CompararCmd}"/>
+              <TextBlock Text="{Binding Mensaje}" VerticalAlignment="Center" Margin="10,0" Foreground="#9A6700"/>
+            </StackPanel>
+            <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Escenarios}" AutoGenerateColumns="False" CanUserAddRows="False" Height="170">
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="Escenario" Binding="{Binding Nombre}" Width="*"/>
+                <DataGridTemplateColumn Header="Incoterm" Width="90"><DataGridTemplateColumn.CellTemplate><DataTemplate>
+                  <ComboBox ItemsSource="{Binding DataContext.Incoterms, RelativeSource={RelativeSource AncestorType=DataGrid}}" SelectedItem="{Binding Incoterm, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                <DataGridTextColumn Header="Valor oferta" Binding="{Binding ValorFactura}" Width="100"/>
+                <DataGridTextColumn Header="Flete" Binding="{Binding Flete}" Width="80"/>
+                <DataGridTextColumn Header="Seguro" Binding="{Binding Seguro}" Width="80"/>
+                <DataGridTextColumn Header="Deduc. post-frontera" Binding="{Binding DeduccionesPostFrontera}" Width="130"/>
+                <DataGridTemplateColumn Width="70"><DataGridTemplateColumn.CellTemplate><DataTemplate>
+                  <Button Content="Quitar" Command="{Binding DataContext.QuitarEscenarioCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
+                </DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+              </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock DockPanel.Dock="Top" Text="Resultados (ordenados por costo unitario puesto en almacén)" Style="{StaticResource Titulo}"/>
+            <DataGrid ItemsSource="{Binding Resultados}" AutoGenerateColumns="False" IsReadOnly="True">
+              <DataGrid.RowStyle><Style TargetType="DataGridRow"><Style.Triggers><DataTrigger Binding="{Binding EsMejor}" Value="True"><Setter Property="Background" Value="#E3F4EA"/></DataTrigger></Style.Triggers></Style></DataGrid.RowStyle>
+              <DataGrid.Columns>
+                <DataGridTextColumn Header="Escenario" Binding="{Binding Nombre}" Width="*"/>
+                <DataGridTextColumn Header="Incoterm" Binding="{Binding Incoterm}" Width="80"/>
+                <DataGridTextColumn Header="CIF Bs" Binding="{Binding CifBob}" Width="110"/>
+                <DataGridTextColumn Header="Tributos Bs" Binding="{Binding Tributos}" Width="110"/>
+                <DataGridTextColumn Header="Costo unit. Bs" Binding="{Binding CostoUnitario}" Width="110"/>
+                <DataGridTextColumn Header="Margen" Binding="{Binding MargenPct}" Width="80"/>
+                <DataGridTextColumn Header="Veredicto" Binding="{Binding Veredicto}" Width="90"/>
+              </DataGrid.Columns>
+            </DataGrid>
+          </DockPanel>
+        </TabItem>
+
+        <TabItem Header="Contraste con DIM">
+          <DockPanel Margin="10" DataContext="{Binding Decision}">
+            <TextBlock DockPanel.Dock="Top" TextWrapping="Wrap" Text="Digite los tributos liquidados por la Aduana en una DIM real de esta operación y compare con el cálculo del sistema."/>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,8">
+              <TextBlock Text="GA" VerticalAlignment="Center"/><TextBox Width="90" Margin="6,0,12,0" Text="{Binding DimGA}"/>
+              <TextBlock Text="ICE" VerticalAlignment="Center"/><TextBox Width="90" Margin="6,0,12,0" Text="{Binding DimICE}"/>
+              <TextBlock Text="IEHD" VerticalAlignment="Center"/><TextBox Width="90" Margin="6,0,12,0" Text="{Binding DimIEHD}"/>
+              <TextBlock Text="IVA" VerticalAlignment="Center"/><TextBox Width="90" Margin="6,0,12,0" Text="{Binding DimIVA}"/>
+              <TextBlock Text="Tolerancia Bs" VerticalAlignment="Center"/><TextBox Width="50" Margin="6,0,12,0" Text="{Binding ToleranciaBs}"/>
+              <Button Content="Contrastar" Command="{Binding ContrastarCmd}"/>
+            </StackPanel>
+            <TextBlock DockPanel.Dock="Top" Text="{Binding Mensaje}" Foreground="#9A6700" Margin="0,0,0,6"/>
+            <DataGrid ItemsSource="{Binding Contraste}" AutoGenerateColumns="True" IsReadOnly="True"/>
+          </DockPanel>
         </TabItem>
 
         <TabItem Header="Ruta crítica">

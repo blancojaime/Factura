@@ -30,6 +30,7 @@ public sealed class MainViewModel : ObservableObject
         _docs = ocr is null ? null : new(db, ocr);
         _db = db; _hoy = hoy ?? (() => DateOnly.FromDateTime(DateTime.Today));
         _ops = new(db); _cat = new(db);
+        Decision = new DecisionViewModel(db, () => Seleccionada?.Id, () => TipoCambioUsd, _hoy);
         CargarCmd = new(_ => CargarAsync());
         NuevaImportacionCmd = new(_ => NuevaImportacionAsync());
         AgregarItemCmd = new(_ => AgregarItemAsync(), _ => Seleccionada is not null);
@@ -37,6 +38,8 @@ public sealed class MainViewModel : ObservableObject
         ConfirmarPropuestaCmd = new(_ => ConfirmarPropuestaAsync(), _ => Propuesta.Count > 0);
         CompletarEtapaCmd = new(p => CompletarEtapaAsync((EtapaFila)p!), p => Seleccionada is not null && p is EtapaFila);
     }
+
+    public DecisionViewModel Decision { get; }
 
     // --- Lista y selección ---
     public ObservableCollection<Operacion> Operaciones { get; } = [];
@@ -144,7 +147,13 @@ public sealed class MainViewModel : ObservableObject
     {
         if (Seleccionada is null) throw new InvalidOperationException("Seleccione una operación.");
         if (_docs is null) throw new InvalidOperationException("OCR no configurado.");
-        DocumentoRuta = ruta; Mensaje = "Leyendo documento…";
+        Mensaje = "Leyendo documento…";
+        if (ruta.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            var tmp = Directory.CreateTempSubdirectory("comexbol-vista-");
+            DocumentoRuta = (await PdfRasterizador.AImagenesAsync(ruta, tmp.FullName, maxPaginas: 1, dpi: 110)).FirstOrDefault();   // el visor muestra la primera página
+        }
+        else DocumentoRuta = ruta;
         var r = await _docs.ProcesarAsync(Seleccionada.Id, ruta);
         _docIdPendiente = r.Documento.Id; Propuesta.Clear();
         void Add<T>(string k, string n, CampoOcr<T>? c, Func<T, string> f) { if (c is not null) Propuesta.Add(new(k, n, f(c.Valor), c.Confianza.ToString(), c.LineaOrigen)); }
@@ -185,6 +194,14 @@ public sealed class MainViewModel : ObservableObject
             Mensaje = $"Catálogo: {res.Importadas} partidas, {res.Rechazadas} avisos/rechazos" + (res.SoloEjemplos ? " — SOLO DATOS DE EJEMPLO" : "");
         });
         return res;
+    }
+
+    public async Task<bool> ExportarExcelAsync(string ruta)
+    {
+        if (Seleccionada is null) return false;
+        var ok = false;
+        await Seguro_(async () => { await ExportadorExcel.ExportarAsync(_db, Seleccionada.Id, ruta, _hoy()); Mensaje = $"Excel guardado en {ruta}"; ok = true; });
+        return ok;
     }
 
     public async Task<string?> ExportarExpedienteAsync(string rutaMd)

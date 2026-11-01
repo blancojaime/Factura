@@ -31,9 +31,15 @@ public partial class MainWindow : Window
         if (dlg.ShowDialog() == true) await Vm.ExportarExpedienteAsync(dlg.FileName);
     }
 
+    async void ExportarExcel_Click(object s, RoutedEventArgs e)
+    {
+        var dlg = new SaveFileDialog { Filter = "Excel|*.xlsx", FileName = $"Operacion-{Vm.Seleccionada?.Carpeta}.xlsx" };
+        if (dlg.ShowDialog() == true) await Vm.ExportarExcelAsync(dlg.FileName);
+    }
+
     async void AbrirDocumento_Click(object s, RoutedEventArgs e)
     {
-        var dlg = new OpenFileDialog { Filter = "Imágenes|*.jpg;*.jpeg;*.png" };
+        var dlg = new OpenFileDialog { Filter = "Imágenes y PDF|*.jpg;*.jpeg;*.png;*.pdf" };
         if (dlg.ShowDialog() == true) await Vm.ProcesarDocumentoAsync(dlg.FileName);
     }
 

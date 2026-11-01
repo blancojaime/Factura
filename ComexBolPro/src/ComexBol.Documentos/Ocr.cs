@@ -19,9 +19,24 @@ public sealed class TesseractCliOcr(string? ejecutable = null, string idiomas = 
 
     public async Task<string> LeerTextoAsync(string rutaImagen, CancellationToken ct = default)
     {
-        var ext = Path.GetExtension(rutaImagen).ToLowerInvariant();
-        if (ext == ".pdf") throw new NotSupportedException("Tesseract no lee PDF directamente: convierta las páginas a imagen (p. ej. pdftoppm) antes del OCR.");
-        if (!File.Exists(rutaImagen)) throw new FileNotFoundException("No existe la imagen", rutaImagen);
+        if (!File.Exists(rutaImagen)) throw new FileNotFoundException("No existe el archivo", rutaImagen);
+        if (Path.GetExtension(rutaImagen).Equals(".pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            var tmp = Directory.CreateTempSubdirectory("comexbol-pdf-");
+            try
+            {
+                var paginas = await PdfRasterizador.AImagenesAsync(rutaImagen, tmp.FullName, ct);
+                var sb = new StringBuilder();
+                foreach (var pag in paginas) sb.AppendLine(await LeerImagenAsync(pag, ct));
+                return sb.ToString();
+            }
+            finally { try { tmp.Delete(true); } catch (IOException) { } }
+        }
+        return await LeerImagenAsync(rutaImagen, ct);
+    }
+
+    async Task<string> LeerImagenAsync(string rutaImagen, CancellationToken ct)
+    {
 
         var psi = new ProcessStartInfo(_exe) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow = true, StandardOutputEncoding = Encoding.UTF8 };
         foreach (var a in new[] { rutaImagen, "stdout", "-l", idiomas, "--psm", "6" }) psi.ArgumentList.Add(a);
@@ -37,5 +52,27 @@ public sealed class TesseractCliOcr(string? ejecutable = null, string idiomas = 
         {
             throw new InvalidOperationException("No se encontró Tesseract. Instálelo (con idioma español) y reinicie la aplicación.");
         }
+    }
+}
+
+/// <summary>Convierte un PDF en imágenes PNG (una por página) con pdftoppm (Poppler). Windows: poppler-windows, agregar bin\ al PATH.</summary>
+public static class PdfRasterizador
+{
+    public static async Task<IReadOnlyList<string>> AImagenesAsync(string pdf, string carpetaSalida, CancellationToken ct = default, int dpi = 200, int maxPaginas = 20)
+    {
+        var psi = new ProcessStartInfo("pdftoppm") { RedirectStandardError = true, RedirectStandardOutput = true, UseShellExecute = false, CreateNoWindow = true };
+        foreach (var a in new[] { "-r", dpi.ToString(), "-l", maxPaginas.ToString(), "-png", pdf, Path.Combine(carpetaSalida, "p") }) psi.ArgumentList.Add(a);
+        try
+        {
+            using var p = Process.Start(psi)!;
+            var err = p.StandardError.ReadToEndAsync(ct);
+            await p.WaitForExitAsync(ct);
+            if (p.ExitCode != 0) throw new InvalidOperationException($"No se pudo leer el PDF ({p.ExitCode}): {(await err).Trim()}");
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+            throw new InvalidOperationException("Para leer PDF instale Poppler (pdftoppm) y agréguelo al PATH, o convierta el PDF a imagen.");
+        }
+        return Directory.GetFiles(carpetaSalida, "p-*.png").OrderBy(f => f, StringComparer.Ordinal).ToList();
     }
 }

@@ -6,6 +6,7 @@
     <LangVersion>12</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
     <ProjectReference Include="..\ComexBol.Data\ComexBol.Data.csproj" />
   </ItemGroup>
 </Project>

@@ -16,6 +16,7 @@ Fecha de los ejemplos: 02/11/2026 · Tipo de cambio de los ejemplos: **Bs 6,96 p
 |---|---|---|
 | .NET 8 SDK | compilar y ejecutar | https://dotnet.microsoft.com/download/dotnet/8.0 |
 | Tesseract OCR con idioma **Spanish** | leer facturas escaneadas | instalador UB-Mannheim; marcar *Spanish* en "Additional language data"; ruta por defecto `C:\Program Files\Tesseract-OCR\` |
+| Poppler (`pdftoppm`) | leer facturas en PDF y mostrar su primera página | Windows: poppler-windows; agregar su carpeta `bin\` al PATH |
 | Archivos del arancel (3 `.md`) | catálogo NANDINA | los que usted ya tiene |
 
 ### 1.2 Compilar y ejecutar
@@ -30,7 +31,7 @@ Si hay errores de XAML o de compilación en `ComexBol.App`, copie el mensaje com
 ```bash
 for t in tests/*/; do (cd $t && dotnet test); done
 ```
-Resultado esperado: todas en verde (Core 21, Data 19, Documentos 8, Presentación 3). Con el arancel completo:
+Resultado esperado: todas en verde (Core 21, Data 19, Documentos 9, Presentación 7). Las pruebas de OCR/PDF se omiten solas si Tesseract o Poppler no están instalados. Con el arancel completo:
 ```bash
 cd tests/ComexBol.Data.Tests
 COMEXBOL_ARANCEL_DIR=<carpeta con los 3 .md> dotnet test      # PowerShell: $env:COMEXBOL_ARANCEL_DIR="C:\arancel"; dotnet test
@@ -110,7 +111,7 @@ Las cifras de cada caso están verificadas por pruebas automáticas (`ManualDePr
 
 4. Avisos: *«FOB ≥ Bs 50.000: complete el respaldo bancario»*. Pestaña *Legajo*: Factura, Embarque, Packing, Seguro, Bancario, Flete → todos ✖.
 5. Bitácora: «Ítem 1…», «Catálogo: GA 10 %…», «Liquidación v1…».
-**Costo y margen** (con gastos locales Bs 4.500, 200 unidades, precio de mercado Bs 2.800 con IVA): costo puesto en almacén Bs 325.669,20; unitario Bs 1.628,35; margen 34,3 %. *(Esta vista aún no está en pantalla: se verifica con la prueba automática `Caso1`.)*
+**Costo y margen** (gastos locales Bs 4.500, 200 unidades, precio de mercado Bs 2.800 con IVA): costo puesto en almacén Bs 325.669,20; unitario Bs 1.628,35; margen 34,3 %. Se ve en la pestaña **Decisión** (Caso 2).
 
 ### Caso 2 — ¿Conviene FOB, CIF o DAP? (decisión)
 Misma mercancía, tres ofertas: **FOB** USD 40.000 + flete 1.800 + seguro 150 · **CIF** USD 42.000 · **DAP** USD 44.000 (con USD 1.200 de transporte posterior a la frontera).
@@ -121,7 +122,17 @@ Misma mercancía, tres ofertas: **FOB** USD 40.000 + flete 1.800 + seguro 150 ·
 | CIF del proveedor | 292.320,00 | 77.271,87 | 1.630,26 | Viable |
 | DAP del proveedor | 297.888,00 | 78.743,71 | 1.660,88 | Viable |
 
-Lectura: FOB es el más barato por unidad; DAP cuesta Bs 32,53 más por unidad pero traslada el riesgo al proveedor. *(Comparador disponible vía código/prueba `Caso2`; la pantalla aún no lo expone.)*
+Lectura: FOB es el más barato por unidad; DAP cuesta Bs 32,53 más por unidad pero traslada el riesgo al proveedor.
+
+**En pantalla (pestaña *Decisión*):** con la operación del Caso 1 seleccionada, Unidades `200`, Gastos locales `4500`, Precio de mercado `2800`, Margen objetivo `15`. **Agregar escenario** tres veces y llene:
+
+| Escenario | Incoterm | Valor oferta | Flete | Seguro | Deduc. post-frontera |
+|---|---|---|---|---|---|
+| FOB + flete propio | FOB | 40000 | 1800 | 150 | 0 |
+| CIF del proveedor | CIF | 42000 | 0 | 0 | 0 |
+| DAP del proveedor | DAP | 44000 | 0 | 0 | 1200 |
+
+**Comparar** → la tabla de resultados debe coincidir con la de arriba, con la fila de menor costo unitario en verde. Los ítems de la operación se escalan proporcionalmente al valor de cada oferta. Si deja el precio de mercado en 0, el sistema avisa que no puede calcular margen. Pruebe también un precio de Bs 1.600: el veredicto debe pasar a *No viable*.
 
 ### Caso 3 — Animales vivos, CFR (permiso sanitario)
 **Datos:** reproductores de raza pura, partida **0101.21.00.00**, valor USD 25.000, peso 3.000 kg, seguro USD 250. Incoterm **CFR** (el flete ya viene en el precio; **no** lo digite).
@@ -172,8 +183,18 @@ Verificado en 1.3: 8.121 partidas / 97 capítulos. En la aplicación: tras impor
 3. Corrija un campo a propósito (p. ej. valor `10500`) → **Confirmar datos**. Compruebe: la operación toma el Incoterm confirmado; el *Legajo* marca **Factura ✔**; la bitácora registra «Confirmado por el usuario»; el campo *Valor* del formulario queda en 10500 listo para **Agregar ítem**.
 4. Prueba negativa: abra una foto sin texto → no debe proponer valores inventados.
 
-### Caso 11 — Expediente
-**Exportar expediente…** → guarda `Expediente-IMP-2026-001.md` con: resumen, mercancías, liquidación vigente, ruta, legajo y bitácora. Ábralo y compare con lo visto en pantalla.
+### Caso 11 — Contraste con una DIM real (prueba P-09 en pantalla)
+Con la operación del Caso 1 liquidada, pestaña **Contraste con DIM**. Escriba como si la Aduana hubiera liquidado: GA `29197,20`, IVA `47982,68` → **Contrastar** → todas las filas **OK** y mensaje «Coincide con la DIM».
+Cambie el IVA a `47990` → la fila IVA debe marcar **REVISAR** (diferencia 7,32) y el mensaje sugiere revisar parámetros. Cada contraste queda en la bitácora. **Para su prueba real:** cargue la operación con los mismos datos de la DIM (valores, flete, seguro, TC de esa fecha) y use los tributos del formulario liquidado.
+
+### Caso 12 — Factura en PDF
+Igual que el Caso 10, pero con `docs/ejemplos/factura-ejemplo.pdf` (cópielo de `tests/ComexBol.Documentos.Tests/fixtures/`). El visor muestra la **primera página**; el OCR lee **todas** (hasta 20). Sin Poppler instalado, el mensaje debe decir cómo instalarlo.
+
+### Caso 13 — Exportar a Excel
+**Excel…** → abra el `.xlsx`: hojas *Resumen, Ítems, Liquidación, Ruta crítica, Bitácora*. En *Liquidación* los totales son **fórmulas** (cambie un valor y se recalculan). Para el Caso 1: CIF 291.972,00; total tributos 77.179,88.
+
+### Caso 14 — Expediente
+**Expediente (.md)…** → guarda `Expediente-IMP-2026-001.md` con: resumen, mercancías, liquidación vigente, ruta, legajo y bitácora. Ábralo y compare con lo visto en pantalla.
 
 ---
 
@@ -188,7 +209,9 @@ Verificado en 1.3: 8.121 partidas / 97 capítulos. En la aplicación: tras impor
 | P-05 | Cambiar el TC y recalcular | la v2 de la liquidación queda en bitácora; la v1 se conserva | ☐ |
 | P-06 | Cerrar y reabrir la aplicación | operaciones, ruta y bitácora persisten | ☐ |
 | P-07 | Caso 10 con una factura real escaneada | propuesta razonable, nada se aplica sin confirmar | ☐ |
-| P-08 | Exportar expediente | contiene las 6 secciones | ☐ |
+| P-08 | Exportar expediente y Excel | `.md` con 6 secciones; `.xlsx` con 5 hojas | ☐ |
+| P-10 | Casos 2 y 11 en pantalla | tablas idénticas a las del manual | ☐ |
+| P-11 | Caso 12 (PDF) | propuesta OCR igual que con la imagen | ☐ |
 | P-09 | Contraste con una DIM real ya despachada | tributos de la app = tributos pagados (diferencia ≤ redondeo) | ☐ |
 
 **P-09 es la más importante:** tome 3 importaciones ya liquidadas por la Aduana y repita el cálculo. Cualquier diferencia indica un parámetro normativo (sección 1.7) por corregir.
@@ -196,10 +219,10 @@ Verificado en 1.3: 8.121 partidas / 97 capítulos. En la aplicación: tras impor
 ---
 
 ## 5. Limitaciones conocidas
-- **Ventana WPF sin compilar** (ver estado). Sin visor de PDF: el OCR y el visor aceptan JPG/PNG; convierta los PDF a imagen.
-- **No hay pantalla** para: comparar escenarios, viabilidad/margen, almacenaje, exportación (DEX/CEDEIM), moneda distinta de USD, gastos de origen / hasta frontera. Existen en el código y están probados.
+- **Ventana WPF sin compilar** (ver estado). El visor muestra imágenes y la primera página de un PDF (no es un visor de PDF completo).
+- **No hay pantalla** para: almacenaje, exportación (DEX/CEDEIM), moneda distinta de USD, gastos de origen / hasta frontera, ni para guardar los escenarios (se pierden al cerrar). Existen en el código y están probados.
 - **Preferencias arancelarias** y **ICE** (salvo vehículos con las 6 tasas) y **IEHD**: entrada manual.
-- **Mapeo a casillas SUMA**: no completado (requiere el instructivo vigente de la ANB). La compresión de imágenes y la exportación a PDF/Excel están pendientes.
+- **Mapeo a casillas SUMA**: no completado (requiere el instructivo vigente de la ANB). La compresión de imágenes y la exportación a PDF están pendientes (el Excel y el Markdown ya funcionan; el `.md` se imprime a PDF desde cualquier editor).
 - El OCR depende de la calidad del escaneo; se equivoca con dígitos: siempre se confirma a mano.
 
 ## 6. Registro de hallazgos (llénelo durante las pruebas)

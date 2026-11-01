@@ -65,4 +65,13 @@ public class OcrTests
         Assert.Equal("FOB", c.Incoterm?.Valor);
         Assert.Equal(10_000m, c.ValorTotal?.Valor);
     }
+
+    [Fact]
+    public async Task Tesseract_Lee_Tambien_PDF_Via_Poppler()
+    {
+        try { Process.Start(new ProcessStartInfo("pdftoppm", "-v") { RedirectStandardOutput = true, RedirectStandardError = true })!.WaitForExit(); Process.Start(new ProcessStartInfo("tesseract", "--version") { RedirectStandardOutput = true, RedirectStandardError = true })!.WaitForExit(); }
+        catch { return; }
+        var texto = await new TesseractCliOcr().LeerTextoAsync(Path.Combine(AppContext.BaseDirectory, "fixtures", "factura-ejemplo.pdf"));
+        Assert.Equal("INV-88213", ExtractorFactura.Extraer(texto).NumeroFactura?.Valor);
+    }
 }
