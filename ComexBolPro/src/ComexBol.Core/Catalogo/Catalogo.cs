@@ -12,6 +12,16 @@ public sealed record PartidaNandina(
     IReadOnlyList<string> Autorizaciones,   // SENASAG, AGEMED, IBNORCA, ...
     string Fuente)                 // "ANB-2022", "EJEMPLO"...
 {
+    /// <summary>AP, AP y C, C, C*, P (prohibida), CITES, CCRT, CRTM, DJ. Vacío = sin documento adicional.</summary>
+    public string TipoDocumento { get; init; } = "";
+    public string Entidad { get; init; } = "";
+    public string DispLegal { get; init; } = "";
+    /// <summary>Porcentajes de preferencia tal como figuran impresos (sin asignar a un acuerdo: las columnas se corren en el original).</summary>
+    public IReadOnlyList<decimal> Preferencias { get; init; } = [];
+    /// <summary>"ICE" o "IEHD" si la partida está sujeta a impuesto especial (la tasa NO viene en el arancel: se ingresa aparte).</summary>
+    public string ImpuestoEspecial { get; init; } = "";
+    /// <summary>Apéndice I (vehículos): alícuota ICE por antigüedad [nuevo, 1, 2, 3, 4, 5 años], en fracción (0.15 = 15 %). Vacío si no aplica.</summary>
+    public IReadOnlyList<decimal> IceAntiguedad { get; init; } = [];
     public string Capitulo => Codigo[..2];
     public string Partida4 => Codigo[..4];
     public bool EsEjemplo => Fuente.Equals("EJEMPLO", StringComparison.OrdinalIgnoreCase);

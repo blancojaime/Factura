@@ -18,9 +18,9 @@ public partial class MainWindow : Window
 
     async void ImportarCatalogo_Click(object s, RoutedEventArgs e)
     {
-        var dlg = new OpenFileDialog { Filter = "CSV|*.csv", Title = "Catálogo NANDINA (CSV)" };
+        var dlg = new OpenFileDialog { Filter = "Arancel (*.md;*.csv)|*.md;*.csv", Title = "Arancel Aduanero (seleccione los 3 archivos .md a la vez, o un CSV)", Multiselect = true };
         if (dlg.ShowDialog() != true) return;
-        var r = await Vm.ImportarCatalogoAsync(dlg.FileName, DateTime.Today.ToString("yyyy.MM.dd"));
+        var r = await Vm.ImportarCatalogoAsync(dlg.FileNames.OrderBy(f => f).ToList(), "2026");
         if (r is { Errores.Count: > 0 })
             MessageBox.Show(string.Join("\n", r.Errores.Take(15).Select(x => $"Línea {x.Linea}: {x.Mensaje}")), "Filas rechazadas");
     }

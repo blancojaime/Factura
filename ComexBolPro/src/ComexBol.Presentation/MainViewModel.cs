@@ -56,6 +56,8 @@ public sealed class MainViewModel : ObservableObject
     string _partida = ""; public string ItemPartida { get => _partida; set => Set(ref _partida, value); }
     string _desc = ""; public string ItemDescripcion { get => _desc; set => Set(ref _desc, value); }
     decimal _valor; public decimal ItemValor { get => _valor; set => Set(ref _valor, value); }
+    int _antig; public int ItemAntiguedad { get => _antig; set => Set(ref _antig, value); }           // vehículos: años de antigüedad (0 = nuevo)
+    decimal _icePct; public decimal ItemIcePct { get => _icePct; set => Set(ref _icePct, value); }        // ICE % ingresado a mano cuando el arancel no trae la tasa
     decimal _peso; public decimal ItemPesoBruto { get => _peso; set => Set(ref _peso, value); }
 
     string? _docRuta; public string? DocumentoRuta { get => _docRuta; set => Set(ref _docRuta, value); }
@@ -111,9 +113,9 @@ public sealed class MainViewModel : ObservableObject
     {
         var op = Seleccionada!;
         var n = await _db.Items.CountAsync(i => i.OperacionId == op.Id) + 1;
-        await _ops.AgregarItemAsync(op.Id, new() { Numero = n, CodigoNandina = new string(ItemPartida.Where(char.IsDigit).ToArray()), Descripcion = ItemDescripcion, ValorFactura = ItemValor, PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto });
+        await _ops.AgregarItemAsync(op.Id, new() { Numero = n, CodigoNandina = new string(ItemPartida.Where(char.IsDigit).ToArray()), Descripcion = ItemDescripcion, ValorFactura = ItemValor, PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto, AntiguedadAnios = ItemAntiguedad, AlicuotaIce = ItemIcePct / 100m });
         var avisos = await _cat.AplicarAOperacionAsync(op.Id);
-        ItemPartida = ItemDescripcion = ""; ItemValor = ItemPesoBruto = 0;
+        ItemPartida = ItemDescripcion = ""; ItemValor = ItemPesoBruto = ItemIcePct = 0; ItemAntiguedad = 0;
         await RefrescarAsync();
         foreach (var a in avisos) Avisos.Add(a);
         Mensaje = $"Ítem {n} agregado";
@@ -165,14 +167,22 @@ public sealed class MainViewModel : ObservableObject
         Mensaje = "Datos confirmados: complete partida y descripción y agregue el ítem";
     });
 
-    public async Task<ResumenImportacionCatalogo?> ImportarCatalogoAsync(string rutaCsv, string version)
+    /// <summary>Importa el arancel: uno o varios .md (Arancel oficial) o un .csv simple.</summary>
+    public async Task<ResumenImportacionCatalogo?> ImportarCatalogoAsync(IReadOnlyList<string> rutas, string version)
     {
         ResumenImportacionCatalogo? res = null;
         await Seguro_(async () =>
         {
-            using var rd = new StreamReader(rutaCsv);
-            res = await _cat.ImportarCsvAsync(rd, version);
-            Mensaje = $"Catálogo: {res.Importadas} partidas, {res.Rechazadas} rechazadas" + (res.SoloEjemplos ? " — SOLO DATOS DE EJEMPLO" : "");
+            Mensaje = "Importando arancel…";
+            var lectores = rutas.Select(r => (TextReader)new StreamReader(r)).ToList();
+            try
+            {
+                res = rutas.All(r => r.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+                    ? await _cat.ImportarArancelMarkdownAsync(lectores, version)
+                    : await _cat.ImportarCsvAsync(lectores[0], version);
+            }
+            finally { foreach (var l in lectores) l.Dispose(); }
+            Mensaje = $"Catálogo: {res.Importadas} partidas, {res.Rechazadas} avisos/rechazos" + (res.SoloEjemplos ? " — SOLO DATOS DE EJEMPLO" : "");
         });
         return res;
     }

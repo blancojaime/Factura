@@ -106,8 +106,9 @@ public sealed class ServicioOperaciones(ComexDb db)
         if (op.UsaPreferenciaArancelaria) req.Add((TipoDocumento.CertificadoOrigen, "Preferencia arancelaria solicitada"));
         if (op.Flete > 0) req.Add((TipoDocumento.FleteTerrestre, "Factura de flete"));
         var codigos = op.Items.Select(i => i.CodigoNandina).ToList();
-        var auts = await db.Partidas.Where(p => codigos.Contains(p.Codigo) && p.Autorizaciones != "").Select(p => p.Autorizaciones).ToListAsync();
-        if (auts.Count > 0) req.Add((TipoDocumento.AutorizacionPrevia, "Autorización previa: " + string.Join(", ", auts.SelectMany(a => a.Split('|')).Distinct())));
+        var exigidas = await db.Partidas.Where(p => codigos.Contains(p.Codigo) && p.TipoDocumento != "P" && (p.TipoDocumento != "" || p.Autorizaciones != "")).ToListAsync();
+        if (exigidas.Count > 0)
+            req.Add((TipoDocumento.AutorizacionPrevia, "Documento adicional: " + string.Join("; ", exigidas.Select(p => $"{p.TipoDocumento} {(p.Entidad != "" ? p.Entidad : p.Autorizaciones)}".Trim()).Distinct())));
         return req.Select(r => (r.Item1, op.Documentos.Any(d => d.Tipo == r.Item1), r.Item2)).ToList();
     }
 

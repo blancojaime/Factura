@@ -54,7 +54,7 @@
                 <TextBlock Text="Formulario de captura" Style="{StaticResource Titulo}"/>
                 <Grid>
                   <Grid.ColumnDefinitions><ColumnDefinition Width="110"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                  <Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
+                  <Grid.RowDefinitions><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/><RowDefinition/></Grid.RowDefinitions>
                   <TextBlock Text="Partida NANDINA" Margin="0,4"/><TextBox Grid.Column="1" Text="{Binding ItemPartida, UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
                   <TextBlock Grid.Row="1" Text="Descripción" Margin="0,4"/><TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ItemDescripcion}" Margin="0,2"/>
                   <TextBlock Grid.Row="2" Text="Valor factura" Margin="0,4"/><TextBox Grid.Row="2" Grid.Column="1" Text="{Binding ItemValor}" Margin="0,2"/>
@@ -63,7 +63,11 @@
                   <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" Margin="0,2">
                     <TextBox Width="100" Text="{Binding Flete}"/><TextBox Width="100" Text="{Binding Seguro}" Margin="6,0,0,0"/>
                   </StackPanel>
-                  <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,8">
+                  <TextBlock Grid.Row="5" Text="Antigüedad / ICE %" Margin="0,4" ToolTip="Vehículos: años de antigüedad (0 = nuevo). ICE %: solo si el arancel no trae la tasa."/>
+                  <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" Margin="0,2">
+                    <TextBox Width="100" Text="{Binding ItemAntiguedad}"/><TextBox Width="100" Text="{Binding ItemIcePct}" Margin="6,0,0,0"/>
+                  </StackPanel>
+                  <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,8">
                     <Button Content="Agregar ítem" Command="{Binding AgregarItemCmd}"/>
                     <Button Content="Calcular (F5)" Command="{Binding LiquidarCmd}"/>
                   </StackPanel>

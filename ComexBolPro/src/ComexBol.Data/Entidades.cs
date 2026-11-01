@@ -49,6 +49,7 @@ public class ItemMercancia
     public decimal UnidadesIce { get; set; }
     public decimal IehdBsPorLitro { get; set; }
     public decimal Litros { get; set; }
+    public int AntiguedadAnios { get; set; }      // vehículos: 0 = nuevo (para el ICE del Apéndice I)
 
     public ItemImportacion ToCore() => new(Numero, CodigoNandina, Descripcion, ValorFactura, PesoBrutoKg, PesoNetoKg,
         AlicuotaGA, Desgravacion, AlicuotaIce, IceEspecificoPorUnidad, UnidadesIce, IehdBsPorLitro, Litros);
@@ -140,4 +141,10 @@ public class PartidaCatalogo
     public string Autorizaciones { get; set; } = "";   // separadas por '|'
     public string Fuente { get; set; } = "";
     public string Version { get; set; } = "";
+    public string TipoDocumento { get; set; } = "";        // AP, AP y C, C, C*, P, CITES, CCRT, CRTM, DJ
+    public string Entidad { get; set; } = "";
+    public string DispLegal { get; set; } = "";
+    public string ImpuestoEspecial { get; set; } = "";     // ICE | IEHD | ""
+    public string IceAntiguedad { get; set; } = "";        // "0.15;0.20;..." (nuevo,1..5 años) o ""
+    public string Preferencias { get; set; } = "";         // porcentajes impresos, sin asignar a acuerdo
 }

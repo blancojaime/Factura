@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComexBol.Data\ComexBol.Data.csproj" />
+    <None Include="..\ComexBol.Core.Tests\fixtures\arancel-muestra.md" Link="fixtures\arancel-muestra.md" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

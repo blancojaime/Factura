@@ -13,4 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\ComexBol.Core\ComexBol.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="fixtures\*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

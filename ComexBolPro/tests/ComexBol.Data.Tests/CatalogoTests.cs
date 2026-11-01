@@ -63,3 +63,40 @@ public class CatalogoTests : IDisposable
     [Fact]
     public void Capitulos_SA() => Assert.Equal("Café, té, yerba mate y especias", CapitulosSa.Titulo("0901210000"));
 }
+
+public class ArancelOficialTests : IDisposable
+{
+    readonly SqliteConnection _cn = new("Data Source=:memory:"); readonly ComexDb _db;
+    public ArancelOficialTests() { _cn.Open(); _db = new(new DbContextOptionsBuilder<ComexDb>().UseSqlite(_cn).Options); _db.Database.EnsureCreated(); }
+    public void Dispose() { _db.Dispose(); _cn.Dispose(); }
+
+    static string Muestra => Path.Combine(AppContext.BaseDirectory, "fixtures", "arancel-muestra.md");
+
+    [Fact]
+    public async Task Importa_El_Arancel_Y_Aplica_Reglas_A_Una_Operacion()
+    {
+        var c = new ServicioCatalogo(_db);
+        var r = await c.ImportarArancelMarkdownAsync([new StreamReader(Muestra)], "2026");
+        Assert.True(r.Importadas > 10);
+        var s = new ServicioOperaciones(_db);
+        var op = await s.CrearImportacionAsync("IMP-ARANCEL", ComexBol.Core.Incoterm.CIF, "USD", new DateOnly(2026, 11, 1));
+        await s.AgregarItemAsync(op.Id, new() { Numero = 1, CodigoNandina = "0101210000", Descripcion = "Reproductor", ValorFactura = 1000 });
+        var avisos = await c.AplicarAOperacionAsync(op.Id);
+        Assert.Equal(0.05m, _db.Items.Single().AlicuotaGA);
+        Assert.Contains(avisos, a => a.Contains("C*") && a.Contains("SENASAG"));
+        Assert.Contains(await s.ChecklistAsync(op.Id), x => x.Tipo == TipoDocumento.AutorizacionPrevia && !x.Presente && x.Motivo.Contains("SENASAG"));
+    }
+
+    [Fact]
+    public async Task Vehiculo_Toma_Ice_Segun_Antiguedad_Y_Prohibida_Bloquea()
+    {
+        var c = new ServicioCatalogo(_db); await c.ImportarArancelMarkdownAsync([new StreamReader(Muestra)], "2026");
+        var s = new ServicioOperaciones(_db);
+        var op = await s.CrearImportacionAsync("IMP-VEH", ComexBol.Core.Incoterm.CIF, "USD", new DateOnly(2026, 11, 1));
+        await s.AgregarItemAsync(op.Id, new() { Numero = 1, CodigoNandina = "8701210000", Descripcion = "Tractor", ValorFactura = 20000, AntiguedadAnios = 3 });
+        await c.AplicarAOperacionAsync(op.Id);
+        Assert.Equal(0.30m, _db.Items.Single().AlicuotaIce);          // Apéndice I: 3 años = 30 %
+        await s.AgregarItemAsync(op.Id, new() { Numero = 2, CodigoNandina = "8703231010", Descripcion = "GLP", ValorFactura = 1 });
+        await Assert.ThrowsAsync<InvalidOperationException>(() => c.AplicarAOperacionAsync(op.Id));
+    }
+}
