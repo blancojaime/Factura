@@ -80,6 +80,8 @@ class ComprobanteService:
                 raise ErrorNegocio(f"El comprobante no cuadra: Debe {td:,.2f} / Haber {th:,.2f} (diferencia {abs(dif):,.2f}).")
         cab = {"tipo": d.get("tipo") or "T", "fecha": f.isoformat(), "mes": f.month, "glosa": glosa, "moneda": moneda, "tc": tc,
                "debe_bs": td, "haber_bs": th, "a_nombre": d.get("a_nombre"), "nro_doc": d.get("nro_doc"),
+               "ufv": float(d.get("ufv") or 0), "banco_id": d.get("banco_id") or None, "nro_cheque": (d.get("nro_cheque") or "").strip() or None,
+               "glosa_por_linea": 1 if d.get("glosa_por_linea") else 0,
                "origen": d.get("origen") or "MANUAL", "ref_id": d.get("ref_id")}
         if not self.db.scalar("SELECT COUNT(*) FROM tipo_comprobante WHERE codigo=?", (cab["tipo"],), 0):
             raise ErrorNegocio("Tipo de comprobante no válido.")
@@ -89,6 +91,24 @@ class ComprobanteService:
         if self.ctx.param("CONTROL_PRESUPUESTO") != "1":
             return
         self.ctx.presupuesto.verificar(lineas, to_date(fecha))
+
+    def _guardar_ufv(self, cab: dict) -> None:
+        """Si el usuario indicó T.C./UFV en el comprobante, se registran para esa fecha (sin pisar con ceros)."""
+        if cab["moneda"] == "USD" or cab["tc"] > 0:
+            fila = self.db.one("SELECT dolar, ufv FROM tipo_cambio WHERE fecha=?", (cab["fecha"],))
+            ufv = cab["ufv"] if cab["ufv"] > 0 else (fila["ufv"] if fila else 0.0)
+            if not fila or abs(fila["dolar"] - cab["tc"]) > 1e-9 or abs(fila["ufv"] - ufv) > 1e-9:
+                if cab["ufv"] > 0 or not fila:
+                    self.db.execute("INSERT INTO tipo_cambio (fecha, dolar, ufv) VALUES (?,?,?) ON CONFLICT(fecha) DO UPDATE SET dolar=excluded.dolar, ufv=excluded.ufv",
+                                    (cab["fecha"], cab["tc"], ufv))
+
+    def siguiente_numero(self, tipo: str, fecha) -> tuple[int, str]:
+        """Número que recibirá el próximo comprobante del tipo y mes (la numeración es automática)."""
+        f = to_date(fecha)
+        n = self._numero(tipo, f.month)
+        if self.ctx.gestion["correlativo_mensual"]:
+            return n, f"{tipo}-{f.month:02d}/{n:04d}"
+        return n, f"{tipo}-{n:05d}"
 
     def crear(self, d: dict, *, interno: bool = False) -> int:
         ctx = self.ctx
@@ -103,6 +123,10 @@ class ComprobanteService:
                                  creado_en=datetime.now().isoformat(timespec="seconds"))
             for n, l in enumerate(lineas, 1):
                 self.db.insert("comp_det", comprobante_id=cid, linea=n, **l)
+            if not interno:
+                self._guardar_ufv(cab)
+            if d.get("factura"):
+                self._vincular_factura(cid, cab, d["factura"])
         ctx.auditar("Contabilidad", "CREAR_COMPROBANTE", f"{cab['tipo']}-{cab['numero']} {cab['fecha']} Bs {cab['debe_bs']:,.2f}")
         return cid
 
@@ -128,6 +152,11 @@ class ComprobanteService:
             self.db.execute("DELETE FROM comp_det WHERE comprobante_id=?", (cid,))
             for n, l in enumerate(lineas, 1):
                 self.db.insert("comp_det", comprobante_id=cid, linea=n, **l)
+            self._guardar_ufv(cab)
+            if d.get("factura"):
+                for f in self.db.query("SELECT id FROM factura WHERE comprobante_id=? AND origen='COMPROBANTE'", (cid,)):
+                    self.db.delete("factura", f["id"])
+                self._vincular_factura(cid, cab, d["factura"])
         ctx.auditar("Contabilidad", "MODIFICAR_COMPROBANTE", f"{cab['tipo']}-{cab['numero']}")
 
     def anular(self, cid: int, *, interno: bool = False) -> None:
@@ -146,7 +175,41 @@ class ComprobanteService:
             raise ErrorNegocio("El comprobante tiene líneas conciliadas con el banco; desconcílielas primero.")
         self.db.execute("UPDATE comprobante SET estado='A', anulado_por=?, anulado_en=? WHERE id=?",
                         (ctx.usuario["id"], datetime.now().isoformat(timespec="seconds"), cid))
+        self.db.execute("UPDATE factura SET estado='A', importe_total=0, no_sujeto=0, exento=0, tasa_cero=0, subtotal=0, descuentos=0, base_iva=0, iva=0 "
+                        "WHERE comprobante_id=? AND origen='COMPROBANTE'", (cid,))
         ctx.auditar("Contabilidad", "ANULAR_COMPROBANTE", f"{c['tipo']}-{c['numero']} {c['fecha']}")
+
+    def _vincular_factura(self, cid: int, cab: dict, fac: dict) -> int:
+        """Registra en el libro de compras (egresos) o ventas (ingresos) la factura del comprobante, sin generar otro asiento."""
+        libro = "C" if cab["tipo"] == "E" else "V"
+        datos = dict(fac)
+        datos.update({"libro": libro, "fecha": cab["fecha"], "comprobante_id": cid, "origen": "COMPROBANTE", "origen_id": cid, "generar_asiento": False})
+        return self.ctx.iva.registrar(datos, interno=True)
+
+    def factura_vinculada(self, cid: int) -> dict | None:
+        return self.db.one("SELECT * FROM factura WHERE comprobante_id=? AND origen='COMPROBANTE' ORDER BY id LIMIT 1", (cid,))
+
+    def ajustar_asiento_iva(self, tipo: str, lineas: list[dict], importe_total: float, fecha) -> list[dict]:
+        """Agrega al asiento la línea de crédito fiscal (egreso) o débito fiscal (ingreso) y descuenta ese importe del gasto/ingreso principal.
+
+        Si el asiento ya contiene una línea de IVA no hace cambios. Devuelve la nueva lista de líneas (debe/haber en la moneda del comprobante)."""
+        ctx = self.ctx
+        cta_cf, cta_df = ctx.cuenta_param("CTA_CF_IVA"), ctx.cuenta_param("CTA_DF_IVA")
+        if any(l.get("cuenta_id") in (cta_cf, cta_df) for l in lineas):
+            return lineas
+        iva = r2(importe_total * ctx.iva.iva_pct(fecha) / 100)
+        if iva <= 0:
+            return lineas
+        nuevas = [dict(l) for l in lineas]
+        lado = "debe" if tipo == "E" else "haber"
+        candidatas = [l for l in nuevas if (l.get(lado) or 0) >= iva]
+        if not candidatas:
+            raise ErrorNegocio("Ninguna línea tiene importe suficiente para separar el IVA; ajuste el asiento manualmente.")
+        mayor = max(candidatas, key=lambda x: x[lado])
+        mayor[lado] = r2(mayor[lado] - iva)
+        nuevas.append({"cuenta_id": cta_cf if tipo == "E" else cta_df, "glosa": "Crédito fiscal IVA" if tipo == "E" else "Débito fiscal IVA",
+                       "debe": iva if tipo == "E" else 0, "haber": 0 if tipo == "E" else iva})
+        return nuevas
 
     # ------------------------------------------------------------------ consulta
     def obtener(self, cid: int) -> dict | None:

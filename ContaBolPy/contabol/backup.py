@@ -66,7 +66,7 @@ def crear_backup(sis: Sistema, empresa_id: int | None = None, carpeta: str | Non
 def verificar(ruta: str) -> dict:
     """Valida el .cbk (manifiesto y SHA-256 de cada archivo). Devuelve el manifiesto."""
     if not zipfile.is_zipfile(ruta):
-        raise ErrorNegocio("El archivo no es una copia de seguridad válida de ContaBol.")
+        raise ErrorNegocio("El archivo no es una copia de seguridad válida de CONTA JB.")
     with zipfile.ZipFile(ruta) as z:
         if "manifest.json" not in z.namelist():
             raise ErrorNegocio("La copia no contiene manifiesto.")

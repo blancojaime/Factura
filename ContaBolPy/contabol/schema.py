@@ -1,6 +1,6 @@
 """Esquemas SQL. Sistema (maestro) y Gestión (una base por empresa y año)."""
 
-VERSION_ESQUEMA = 1
+VERSION_ESQUEMA = 2
 
 SISTEMA = """
 CREATE TABLE config (clave TEXT PRIMARY KEY, valor TEXT);
@@ -63,6 +63,7 @@ CREATE TABLE comprobante (
   mes INTEGER NOT NULL, fecha TEXT NOT NULL, glosa TEXT NOT NULL, moneda TEXT NOT NULL DEFAULT 'BS',
   tc REAL NOT NULL DEFAULT 1, estado TEXT NOT NULL DEFAULT 'V', origen TEXT NOT NULL DEFAULT 'MANUAL', ref_id INTEGER,
   debe_bs REAL NOT NULL DEFAULT 0, haber_bs REAL NOT NULL DEFAULT 0, a_nombre TEXT, nro_doc TEXT,
+  ufv REAL NOT NULL DEFAULT 0, banco_id INTEGER REFERENCES cuenta(id), nro_cheque TEXT, glosa_por_linea INTEGER NOT NULL DEFAULT 0,
   creado_por INTEGER, creado_en TEXT, modificado_por INTEGER, modificado_en TEXT, anulado_por INTEGER, anulado_en TEXT);
 CREATE INDEX ix_comp_fecha ON comprobante(fecha);
 CREATE INDEX ix_comp_tipo_num ON comprobante(tipo, mes, numero);
@@ -200,3 +201,19 @@ CREATE TABLE orden_mod (
 CREATE TABLE orden_cif (
   id INTEGER PRIMARY KEY, orden_id INTEGER NOT NULL REFERENCES orden_prod(id) ON DELETE CASCADE, concepto TEXT NOT NULL, monto REAL NOT NULL);
 """
+
+
+MIGRACIONES_GESTION = [
+    ("comprobante", "ufv", "REAL NOT NULL DEFAULT 0"),
+    ("comprobante", "banco_id", "INTEGER REFERENCES cuenta(id)"),
+    ("comprobante", "nro_cheque", "TEXT"),
+    ("comprobante", "glosa_por_linea", "INTEGER NOT NULL DEFAULT 0"),
+]
+
+
+def migrar_gestion(db) -> None:
+    """Actualiza archivos de gestiones creadas con versiones anteriores (agrega columnas faltantes)."""
+    for tabla, col, definicion in MIGRACIONES_GESTION:
+        cols = {r["name"] for r in db.query(f"PRAGMA table_info({tabla})")}
+        if col not in cols:
+            db.execute(f"ALTER TABLE {tabla} ADD COLUMN {col} {definicion}")

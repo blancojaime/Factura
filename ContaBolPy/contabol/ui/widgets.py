@@ -23,7 +23,7 @@ def _caja(parent, icono_, titulo, texto, botones=QMessageBox.Ok):
     return m
 
 
-def info(parent, texto: str, titulo: str = "ContaBol") -> None:
+def info(parent, texto: str, titulo: str = "CONTA JB") -> None:
     _caja(parent, QMessageBox.Information, titulo, texto).exec()
 
 

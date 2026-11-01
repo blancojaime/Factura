@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QCheckBox, QDialog, QFormLayout, QGridLayout, QLabel, QLineEdit, QPlainTextEdit, QSpinBox, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QCheckBox, QDialog, QFormLayout, QFrame, QGridLayout, QLabel, QLineEdit, QPlainTextEdit, QSpinBox, QVBoxLayout, QWidget
 
 from . import tema
 from .widgets import CampoFecha, CampoImporte, Combo, boton, error, hbox
@@ -38,17 +38,29 @@ class FormDialog(QDialog):
         self.w: dict[str, QWidget] = {}
         self._guardar = guardar
         self.resultado = None
-        lay = QVBoxLayout(self)
-        lay.setContentsMargins(20, 16, 20, 16)
-        lay.setSpacing(12)
+        self.setWindowIcon(tema.icono_app())
+        lay0 = QVBoxLayout(self)
+        lay0.setContentsMargins(0, 0, 0, 0)
+        lay0.setSpacing(0)
+        franja = QFrame()
+        franja.setObjectName("banner")
+        fl = QVBoxLayout(franja)
+        fl.setContentsMargins(24, 14, 24, 12)
+        fl.setSpacing(1)
         h = QLabel(titulo)
         h.setObjectName("h1")
-        lay.addWidget(h)
+        fl.addWidget(h)
         if ayuda:
             a = QLabel(ayuda)
             a.setObjectName("sub")
             a.setWordWrap(True)
-            lay.addWidget(a)
+            fl.addWidget(a)
+        lay0.addWidget(franja)
+        cuerpo_w = QWidget()
+        lay = QVBoxLayout(cuerpo_w)
+        lay.setContentsMargins(24, 16, 24, 16)
+        lay.setSpacing(12)
+        lay0.addWidget(cuerpo_w)
         grid = QGridLayout()
         grid.setHorizontalSpacing(16)
         grid.setVerticalSpacing(8)

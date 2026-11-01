@@ -15,7 +15,7 @@ a = Analysis(
     ["contabol/__main__.py"],
     pathex=["."],
     binaries=[],
-    datas=[],
+    datas=[("contabol/recursos", "contabol/recursos")],
     hiddenimports=hidden,
     excludes=["tkinter", "PySide6.QtWebEngineCore", "PySide6.QtQml", "PySide6.QtQuick", "PySide6.Qt3DCore", "PySide6.QtMultimedia"],
     noarchive=False,
@@ -24,9 +24,9 @@ pyz = PYZ(a.pure)
 exe = EXE(
     pyz, a.scripts, [],
     exclude_binaries=True,
-    name="ContaBol",
+    name="ContaJB",
     console=False,
     icon="scripts/contabol.ico",
     disable_windowed_traceback=False,
 )
-coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name="ContaBol")
+coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name="ContaJB")

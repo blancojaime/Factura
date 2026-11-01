@@ -47,7 +47,7 @@ class _Numerado(canvas.Canvas):
         self.line(15 * mm, 13 * mm, w - 15 * mm, 13 * mm)
         self.setFont("Helvetica", 7.5)
         self.setFillColor(GRIS)
-        self.drawString(15 * mm, 9 * mm, f"ContaBol - Sistema Contable Integrado  |  Usuario: {self.rep.usuario}  |  Emitido: {self.rep.emitido}")
+        self.drawString(15 * mm, 9 * mm, f"CONTA JB - Sistema Contable Integrado  |  Usuario: {self.rep.usuario}  |  Emitido: {self.rep.emitido}")
         self.drawRightString(w - 15 * mm, 9 * mm, f"Página {self._pageNumber} de {total}")
 
 
@@ -140,7 +140,7 @@ def generar_bytes(rep: ReporteDef) -> bytes:
     pagina = landscape(A4) if rep.orientacion == "H" else A4
     margen = 15 * mm
     doc = SimpleDocTemplate(buf, pagesize=pagina, leftMargin=margen, rightMargin=margen, topMargin=31 * mm, bottomMargin=17 * mm,
-                            title=rep.titulo, author="ContaBol", subject=rep.empresa)
+                            title=rep.titulo, author="CONTA JB", subject=rep.empresa)
     ancho = pagina[0] - 2 * margen
     base = getSampleStyleSheet()["Normal"]
     st = ParagraphStyle("c", parent=base, fontName="Helvetica", fontSize=7.8, leading=9.4)

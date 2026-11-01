@@ -115,6 +115,33 @@ def icono(glifo: str, color: str = AZUL, fondo: str | None = None, tam: int = 32
     return QIcon(pm)
 
 
+import os as _os
+import sys as _sys
+
+_RECURSOS = _os.path.join(getattr(_sys, "_MEIPASS", _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))), "contabol", "recursos") \
+    if hasattr(_sys, "_MEIPASS") else _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "recursos")
+
+
+def recurso(nombre: str) -> str:
+    return _os.path.join(_RECURSOS, nombre)
+
+
+def logo_completo(alto: int = 120) -> QPixmap:
+    """Logotipo JB Jaime Blanco (imagen original del cliente)."""
+    pm = QPixmap(recurso("logo_completo.png"))
+    return pm.scaledToHeight(alto, Qt.SmoothTransformation) if not pm.isNull() else logo_pixmap(alto)
+
+
+def monograma(alto: int = 64, blanco: bool = False) -> QPixmap:
+    pm = QPixmap(recurso("monograma_blanco.png" if blanco else "monograma.png"))
+    return pm.scaledToHeight(alto, Qt.SmoothTransformation) if not pm.isNull() else logo_pixmap(alto)
+
+
+def icono_app() -> QIcon:
+    pm = QPixmap(recurso("icono.png"))
+    return QIcon(pm) if not pm.isNull() else icono("JB", "white", AZUL, 64)
+
+
 def logo_pixmap(tam: int = 64) -> QPixmap:
     pm = QPixmap(tam, tam)
     pm.fill(Qt.transparent)
@@ -134,5 +161,6 @@ def logo_pixmap(tam: int = 64) -> QPixmap:
 
 def aplicar(app) -> None:
     app.setStyle("Fusion")
+    app.setWindowIcon(icono_app())
     app.setFont(fuente(10))
     app.setStyleSheet(QSS)

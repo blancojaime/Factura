@@ -15,12 +15,12 @@ from . import tema
 
 
 def carpeta_datos() -> str:
-    """Carpeta de datos del usuario: %LOCALAPPDATA%\\ContaBol (Windows) o ~/.contabol. Se puede cambiar con CONTABOL_DATOS."""
+    """Carpeta de datos del usuario: %LOCALAPPDATA%\\ContaJB (Windows) o ~/.contabol. Se puede cambiar con CONTABOL_DATOS."""
     env = os.environ.get("CONTABOL_DATOS")
     if env:
         return env
     base = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
-    return os.path.join(base, "ContaBol" if os.environ.get("LOCALAPPDATA") else ".contabol")
+    return os.path.join(base, "ContaJB" if os.environ.get("LOCALAPPDATA") else ".contajb")
 
 
 def configurar_log(raiz: str) -> None:
@@ -68,6 +68,7 @@ def main() -> int:
     app = QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
     tema.aplicar(app)
+    app.setWindowIcon(tema.icono_app())
 
     def excepcion(tipo, valor, tb):
         logging.getLogger("contabol").error("Excepción no controlada", exc_info=(tipo, valor, tb))

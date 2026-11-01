@@ -113,6 +113,8 @@ class IvaService:
         f = self.obtener(fid)
         if not f:
             raise ErrorNegocio("Factura inexistente.")
+        if f["origen"] == "COMPROBANTE":
+            raise ErrorNegocio("Esta factura está vinculada a un comprobante contable; anule el comprobante y la factura se anulará con él.")
         if f["origen"] != "MANUAL":
             raise ErrorNegocio("Esta factura pertenece a una nota de venta/compra; anule el documento de origen.")
         with self.db.tx():

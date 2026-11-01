@@ -48,7 +48,9 @@ def fmt(x, dec: int = 2, cero: str = "0,00") -> str:
 
 
 def parse_num(text) -> float:
-    """Acepta '1.234,56', '1234.56', '1,234.56' y similares."""
+    """Interpreta números en formato boliviano (1.234,56) y también 1234.56 o 1,234.56.
+
+    Regla: si hay una sola coma y ningún punto, la coma es el separador decimal (admite 5 decimales: 2,50000)."""
     if text is None:
         return 0.0
     if isinstance(text, (int, float)):
@@ -64,9 +66,8 @@ def parse_num(text) -> float:
         else:
             s = s.replace(",", "")
     elif "," in s:
-        partes = s.split(",")
-        if len(partes) == 2 and len(partes[1]) <= 4:
-            s = partes[0] + "." + partes[1]
+        if s.count(",") == 1:
+            s = s.replace(",", ".")
         else:
             s = s.replace(",", "")
     elif s.count(".") > 1:

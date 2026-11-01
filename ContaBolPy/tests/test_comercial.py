@@ -83,3 +83,36 @@ def test_factura_manual_y_duplicados(env):
                                "importe_total": 10, "generar_asiento": False})
     a = env.ctx.iva.registrar({"libro": "V", "fecha": "2025-02-02", "nro_factura": "51", "estado": "A", "importe_total": 999})
     assert env.ctx.iva.obtener(a)["importe_total"] == 0
+
+
+def test_comprobante_con_factura_vinculada_a_libros(env):
+    """Un egreso/ingreso manual con factura alimenta el libro de compras/ventas y ajusta el asiento con el IVA."""
+    ctx = env.ctx
+    gasto, caja, venta = env.cta("5.3.1.02.001"), env.cta("1.1.1.01.001"), env.cta("4.1.1.01.001")
+    lineas = [{"cuenta_id": gasto, "debe": 500, "haber": 0}, {"cuenta_id": caja, "debe": 0, "haber": 500}]
+    aj = ctx.vouchers.ajustar_asiento_iva("E", lineas, 500, "2025-02-10")
+    assert [(l["cuenta_id"], l["debe"], l["haber"]) for l in aj][-1] == (env.cta("1.1.2.03.001"), 65.0, 0)
+    assert aj[0]["debe"] == 435.0
+    cid = ctx.vouchers.crear({"tipo": "E", "fecha": "2025-02-10", "glosa": "Compra de servicios", "ufv": 2.61234, "nro_cheque": "000123", "lineas": aj,
+                              "factura": {"nit": "1003220026", "razon_social": "Proveedor SA", "nro_factura": "991", "nro_autorizacion": "CUF9", "importe_total": 500}})
+    f = ctx.iva.listar("C", 2025, 2)
+    assert len(f) == 1 and f[0]["iva"] == 65.0 and f[0]["comprobante_id"] == cid and f[0]["origen"] == "COMPROBANTE"
+    assert ctx.vouchers.obtener(cid)["nro_cheque"] == "000123"
+    assert ctx.tc.ufv("2025-02-10") == 2.61234          # la UFV escrita en el comprobante queda registrada para esa fecha
+    assert env.saldo("1.1.2.03.001") == 65.0 and env.saldo("5.3.1.02.001") == 435.0
+    ctx.vouchers.anular(cid)
+    assert ctx.iva.listar("C", 2025, 2)[0]["estado"] == "A" and ctx.iva.resumen_mensual(2025, 2)["credito_fiscal"] == 0
+    # ingreso con débito fiscal
+    li = ctx.vouchers.ajustar_asiento_iva("I", [{"cuenta_id": caja, "debe": 1000, "haber": 0}, {"cuenta_id": venta, "debe": 0, "haber": 1000}], 1000, "2025-02-12")
+    ctx.vouchers.crear({"tipo": "I", "fecha": "2025-02-12", "glosa": "Venta de contado", "lineas": li, "factura": {"nit": "1", "razon_social": "Cliente", "nro_factura": "7", "importe_total": 1000}})
+    assert ctx.iva.listar("V", 2025, 2)[0]["iva"] == 130.0 and env.saldo("2.1.2.01.001") == 130.0 and env.saldo("4.1.1.01.001") == 870.0
+
+
+def test_numero_automatico_y_migracion(env):
+    n, cod = env.ctx.vouchers.siguiente_numero("I", "2025-03-05")
+    assert (n, cod) == (1, "I-03/0001")
+    env.asiento("2025-03-05", "1.1.1.01.001", "3.1.1.01.001", 10, tipo="I")
+    assert env.ctx.vouchers.siguiente_numero("I", "2025-03-20")[1] == "I-03/0002"
+    from contabol import schema
+    db = env.ctx.db
+    schema.migrar_gestion(db)   # idempotente

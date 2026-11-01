@@ -15,53 +15,176 @@ from ..permisos import OPCIONES, ROLES
 from ..services.consolidacion import ConsolidacionService
 from ..sistema import ErrorNegocio
 from ..util import fdate, fmt, r2
-from . import tema
+from . import iconos, tema
 from .base import ListaCRUD, Pantalla
 from .formularios import Campo, FormDialog
 from .widgets import CampoFecha, CampoImporte, Columna, Combo, TablaDatos, aviso, boton, confirmar, error, etiqueta, hbox, info, intentar
 
 
 # ================================================================== parámetros
+class CampoCuenta(QWidget):
+    """Código de cuenta con autocompletado y nombre al lado (para las cuentas de las operaciones automáticas)."""
+
+    def __init__(self, ctx, cuentas: list[dict], codigo: str = "", parent=None):
+        super().__init__(parent)
+        from PySide6.QtWidgets import QCompleter
+        self.por_codigo = {c["codigo"]: c for c in cuentas}
+        lay = QHBoxLayout(self)
+        lay.setContentsMargins(0, 0, 0, 0)
+        lay.setSpacing(6)
+        self.cod = QLineEdit(codigo)
+        self.cod.setMaximumWidth(150)
+        self.cod.setPlaceholderText("código")
+        comp = QCompleter([f"{c['codigo']}  {c['nombre']}" for c in cuentas], self.cod)
+        comp.setCaseSensitivity(Qt.CaseInsensitive)
+        comp.setFilterMode(Qt.MatchContains)
+        comp.activated.connect(lambda t: (self.cod.setText(t.split("  ")[0]), self.resolver()))
+        self.cod.setCompleter(comp)
+        self.nom = QLabel("")
+        self.nom.setStyleSheet(f"color:{tema.GRIS};")
+        lay.addWidget(self.cod)
+        lay.addWidget(self.nom, 1)
+        self.cod.editingFinished.connect(self.resolver)
+        self.resolver()
+
+    def resolver(self) -> None:
+        c = self.por_codigo.get(self.cod.text().strip())
+        self.nom.setText(c["nombre"] if c else ("⚠ cuenta no encontrada" if self.cod.text().strip() else ""))
+        self.nom.setStyleSheet(f"color:{tema.GRIS if c else tema.ROJO};")
+
+    def valor(self) -> str:
+        return self.cod.text().strip() if self.cod.text().strip() in self.por_codigo else ""
+
+
+GRUPOS_CUENTAS = [
+    ("Impuestos", "impuesto", [("CTA_CF_IVA", "Cuenta crédito fiscal (IVA compras)"), ("CTA_DF_IVA", "Cuenta débito fiscal (IVA ventas)"), ("CTA_IT_GASTO", "Cuenta IT egreso (gasto)"),
+                              ("CTA_IT_PAGAR", "Cuenta IT por pagar"), ("CTA_IUE_GASTO", "Cuenta IUE gasto"), ("CTA_IUE_PAGAR", "Cuenta IUE por pagar")]),
+    ("Clientes, proveedores y caja", "venta", [("CTA_CAJA", "Cuenta caja general"), ("CTA_CXC", "Cuentas por cobrar (clientes)"), ("CTA_CXP", "Cuentas por pagar (proveedores)"),
+                                               ("CTA_ANT_CLI", "Anticipo de clientes"), ("CTA_ANT_PROV", "Anticipo de proveedores"), ("CTA_ACREEDORES", "Acreedores varios")]),
+    ("Ventas, compras e inventario", "compra", [("CTA_VENTAS", "Ingresos por ventas"), ("CTA_COSTO_VTA", "Costo de ventas"), ("CTA_INVENT", "Inventario de mercaderías"),
+                                                ("CTA_DESC_VEN", "Descuento en ventas"), ("CTA_REC_VEN", "Recargo en ventas"), ("CTA_DESC_COMP", "Descuento en compras"),
+                                                ("CTA_REC_COMP", "Recargo en compras (gasto)"), ("CTA_MERMAS", "Mermas y pérdidas de inventario")]),
+    ("Sueldos, aportes y beneficios", "personal", [("CTA_SUELDOS_PAGAR", "Sueldos y salarios por pagar"), ("CTA_ANTICIPO_PERS", "Anticipo de sueldos"), ("CTA_AFP_LAB_PAGAR", "AFP aportes laborales por pagar"),
+                                                   ("CTA_AFP_PAT_PAGAR", "AFP aportes patronales por pagar"), ("CTA_CNS_PAGAR", "CNS aporte patronal por pagar"), ("CTA_VIVIENDA_PAGAR", "Pro-Vivienda por pagar"),
+                                                   ("CTA_SOLIDARIO_PAGAR", "Aporte solidario por pagar"), ("CTA_RCIVA_PAGAR", "RC-IVA por pagar"), ("CTA_PROV_AGUINALDO", "Provisión para aguinaldo"),
+                                                   ("CTA_PROV_INDEM", "Previsión para indemnizaciones"), ("CTA_SUELDOS", "Gasto sueldos y salarios"), ("CTA_BONO_ANTIG", "Gasto bono de antigüedad")]),
+    ("Cierre, ajustes y activos", "admin", [("CTA_RESULTADO", "Resultado de la gestión"), ("CTA_RESULT_ACUM", "Resultados acumulados"), ("CTA_DIFCAMBIO_ING", "Diferencia de cambio (ingreso)"),
+                                            ("CTA_DIFCAMBIO_EGR", "Diferencia de cambio (gasto)"), ("CTA_AJUSTE_ING", "Ajuste por inflación (ingreso)"), ("CTA_AJUSTE_EGR", "Ajuste por inflación (gasto)"),
+                                            ("CTA_BAJA_AF", "Baja de activos fijos"), ("CTA_AJUSTE_AF", "Actualización de activos fijos")]),
+]
+
+
 class ParametrosPantalla(Pantalla):
-    titulo = "Parámetros y normativa"
-    subtitulo = "Datos de la empresa, cuentas asociadas a cada operación automática y normativa laboral e impositiva vigente."
+    titulo = "Datos de la empresa y parámetros"
+    subtitulo = "Datos empresariales, impuestos y salario mínimo (resaltados) y las cuentas que el sistema usa en sus operaciones automáticas."
 
     def __init__(self, ctx, ventana=None):
         super().__init__(ctx, ventana)
+        from PySide6.QtWidgets import QScrollArea
         self.tabs = QTabWidget()
         self.cuerpo.addWidget(self.tabs, 1)
-        # --- empresa
-        w = QWidget()
-        l = QVBoxLayout(w)
+        # ============================= pestaña 1: datos empresariales (estilo Orion)
+        cont = QWidget()
+        cont.setObjectName("lienzo")
+        raiz = QVBoxLayout(cont)
+        raiz.setContentsMargins(4, 8, 14, 8)
+        raiz.setSpacing(12)
         e = ctx.empresa
+        fila = QHBoxLayout()
+        fila.setSpacing(14)
+        # --- datos de la empresa
+        c1 = QFrame()
+        c1.setObjectName("panel")
+        g1 = QGridLayout(c1)
+        g1.setContentsMargins(16, 12, 16, 12)
+        g1.setHorizontalSpacing(12)
+        t1 = QLabel("Datos de la empresa")
+        t1.setStyleSheet(f"font-weight:600; color:{tema.AZUL}; font-size:11pt;")
+        g1.addWidget(t1, 0, 0, 1, 4)
         self.f_emp: dict[str, QLineEdit] = {}
-        g = QGridLayout()
-        g.setHorizontalSpacing(14)
-        for i, (k, et) in enumerate([("razon_social", "Razón social"), ("nombre_comercial", "Nombre comercial"), ("nit", "NIT"), ("direccion", "Dirección"), ("ciudad", "Ciudad"), ("telefono", "Teléfono"),
-                                     ("email", "Correo"), ("actividad", "Actividad económica"), ("rep_legal", "Representante legal"), ("matricula", "Matrícula de comercio")]):
+        campos = [("razon_social", "Nombre de la empresa", 0, 2), ("nit", "NIT / RUC", 0, 1), ("direccion", "Dirección", 0, 2), ("ciudad", "Ciudad", 0, 1), ("telefono", "Teléfono", 0, 1),
+                  ("email", "Correo", 0, 1), ("actividad", "Actividad económica", 0, 2), ("rep_legal", "Representante legal", 0, 1), ("matricula", "Matrícula de comercio", 0, 1), ("nombre_comercial", "Nombre comercial", 0, 1)]
+        r, col = 1, 0
+        for k, et, _, span in campos:
+            if col + span > 2:
+                r, col = r + 2, 0
             q = QLineEdit(e.get(k) or "")
             self.f_emp[k] = q
-            g.addWidget(etiqueta(et), (i // 2) * 2, i % 2)
-            g.addWidget(q, (i // 2) * 2 + 1, i % 2)
-        l.addLayout(g)
-        b = boton("Guardar datos de la empresa", "primario")
-        b.clicked.connect(self.guardar_empresa)
-        b.setEnabled(ctx.puede("ADM.PARAMETROS"))
-        l.addWidget(b, 0, Qt.AlignLeft)
-        l.addStretch(1)
-        self.tabs.addTab(w, "Empresa")
-        # --- cuentas
-        self.t_cta = QTableWidget(0, 3)
-        self.t_cta.setHorizontalHeaderLabels(["Parámetro", "Cuenta contable", "Descripción"])
-        self.t_cta.horizontalHeader().setSectionResizeMode(2, QHeaderView.Stretch)
-        self.t_cta.setColumnWidth(0, 200)
-        self.t_cta.setColumnWidth(1, 330)
-        self.t_cta.verticalHeader().setVisible(False)
-        self.t_cta.setAlternatingRowColors(True)
-        self.tabs.addTab(self._tab_cuentas(), "Cuentas de operaciones automáticas")
-        # --- reglas
-        w2 = QWidget()
-        l2 = QVBoxLayout(w2)
+            g1.addWidget(etiqueta(et), r, col * 2, 1, span * 2)
+            g1.addWidget(q, r + 1, col * 2, 1, span * 2)
+            col += span
+        r += 2
+        ro_g = QLineEdit(str(ctx.gestion["anio"]))
+        ro_d = QLineEdit(ctx.db.path)
+        for w in (ro_g, ro_d):
+            w.setReadOnly(True)
+        g1.addWidget(etiqueta("Gestión"), r, 0, 1, 1)
+        g1.addWidget(ro_g, r + 1, 0, 1, 1)
+        g1.addWidget(etiqueta("Archivo de datos"), r, 1, 1, 3)
+        g1.addWidget(ro_d, r + 1, 1, 1, 3)
+        fila.addWidget(c1, 3, Qt.AlignTop)
+        # --- puntos clave resaltados
+        c2 = QFrame()
+        c2.setStyleSheet("QFrame#clave { background:#FFF6DC; border:2px solid #E0A526; border-radius:8px; } QFrame#clave QLabel { background:transparent; }")
+        c2.setObjectName("clave")
+        g2 = QGridLayout(c2)
+        g2.setContentsMargins(16, 12, 16, 12)
+        g2.setVerticalSpacing(6)
+        t2 = QLabel("★  Puntos clave: impuestos y salario mínimo")
+        t2.setStyleSheet("font-weight:600; color:#8A5A00; font-size:11pt;")
+        g2.addWidget(t2, 0, 0, 1, 2)
+        self.ref = min(max(date.today(), ctx.inicio), ctx.fin)
+        n = ctx.normativa
+        self.k: dict[str, CampoImporte] = {}
+        claves = [("IVA_PCT", "% IVA", 2), ("IT_PCT", "% IT (transacciones)", 2), ("IUE_PCT", "% IUE (utilidades)", 2), ("SMN", "Salario mínimo nacional (Bs)", 2),
+                  ("PAT_SOLIDARIO", "% Aporte patronal solidario", 2), ("RCIVA_MIN_SMN", "RC-IVA: mínimo no imponible (nº de SMN)", 0)]
+        for i, (clave, et, dec) in enumerate(claves):
+            campo = CampoImporte(n.num(clave, self.ref), dec)
+            campo.setMaximumWidth(140)
+            campo.setStyleSheet("font-weight:600; background:white; border:1px solid #E0A526;")
+            self.k[clave] = campo
+            g2.addWidget(QLabel(et), i + 1, 0)
+            g2.addWidget(campo, i + 1, 1)
+        nota = QLabel(f"Los cambios rigen desde el {fdate(ctx.inicio)} (inicio de la gestión). Para un cambio a mitad de año use «Normativa vigente».")
+        nota.setWordWrap(True)
+        nota.setStyleSheet("color:#8A5A00; font-size:9pt;")
+        g2.addWidget(nota, len(claves) + 1, 0, 1, 2)
+        fila.addWidget(c2, 2, Qt.AlignTop)
+        raiz.addLayout(fila)
+        # --- cuentas importantes por grupo
+        cuentas = ctx.cuentas.listar(solo_movimiento=True)
+        self.combos: dict[str, CampoCuenta] = {}
+        for titulo, cat, items in GRUPOS_CUENTAS:
+            card = QFrame()
+            card.setObjectName("panel")
+            gl = QGridLayout(card)
+            gl.setContentsMargins(16, 10, 16, 12)
+            gl.setHorizontalSpacing(18)
+            gl.setVerticalSpacing(6)
+            ic = QLabel()
+            ic.setPixmap(iconos.icono({"impuesto": "impuesto", "venta": "cobros", "compra": "items", "personal": "usuarios", "admin": "config"}[cat], cat, 26).pixmap(26, 26))
+            tt = QLabel(titulo)
+            tt.setStyleSheet(f"font-weight:600; color:{tema.AZUL}; font-size:11pt;")
+            gl.addWidget(ic, 0, 0)
+            gl.addWidget(tt, 0, 1, 1, 3)
+            for i, (clave, et) in enumerate(items):
+                col = (i % 2) * 2
+                rr = 1 + i // 2
+                gl.addWidget(QLabel(et), rr, col)
+                cc = CampoCuenta(ctx, cuentas, ctx.param(clave))
+                self.combos[clave] = cc
+                gl.addWidget(cc, rr, col + 1)
+            gl.setColumnStretch(1, 1)
+            gl.setColumnStretch(3, 1)
+            raiz.addWidget(card)
+        # reglas
+        reg = QFrame()
+        reg.setObjectName("panel")
+        rl = QVBoxLayout(reg)
+        rl.setContentsMargins(16, 10, 16, 12)
+        tr = QLabel("Reglas de operación")
+        tr.setStyleSheet(f"font-weight:600; color:{tema.AZUL}; font-size:11pt;")
+        rl.addWidget(tr)
         self.r_it = QCheckBox("Calcular IT también en ventas sin factura")
         self.r_it.setChecked(ctx.param("IT_SIN_FACTURA") == "1")
         self.r_neg = QCheckBox("Permitir stock negativo")
@@ -70,27 +193,30 @@ class ParametrosPantalla(Pantalla):
         self.r_pres.setChecked(ctx.param("CONTROL_PRESUPUESTO") == "1")
         self.r_iue = QCheckBox("Mostrar provisión estimada del IUE en el Estado de Resultados")
         self.r_iue.setChecked(ctx.param("IUE_PROVISION") == "1")
-        self.r_tc = CampoImporte(ctx.pnum("TC_DEFECTO", 6.96), 4)
-        self.r_tc.setMaximumWidth(140)
         for c in (self.r_it, self.r_neg, self.r_pres, self.r_iue):
-            l2.addWidget(c)
-        l2.addWidget(etiqueta("Tipo de cambio por defecto (si no hay uno cargado para la fecha)"))
-        l2.addWidget(self.r_tc)
-        l2.addWidget(etiqueta("Nota sobre contingencias (Notas a los Estados Financieros)"))
+            rl.addWidget(c)
+        ftc = QHBoxLayout()
+        self.r_tc = CampoImporte(ctx.pnum("TC_DEFECTO", 6.96), 4)
+        self.r_tc.setMaximumWidth(110)
+        ftc.addWidget(QLabel("Tipo de cambio por defecto (si no hay uno cargado):"))
+        ftc.addWidget(self.r_tc)
+        ftc.addStretch(1)
+        rl.addLayout(ftc)
+        rl.addWidget(etiqueta("Nota sobre contingencias (Notas a los Estados Financieros)"))
         self.n_cont = QPlainTextEdit(ctx.param("NOTA_CONTINGENCIAS"))
-        self.n_cont.setFixedHeight(70)
-        l2.addWidget(self.n_cont)
-        l2.addWidget(etiqueta("Nota sobre hechos posteriores"))
+        self.n_cont.setFixedHeight(56)
+        rl.addWidget(self.n_cont)
+        rl.addWidget(etiqueta("Nota sobre hechos posteriores"))
         self.n_post = QPlainTextEdit(ctx.param("NOTA_HECHOS_POSTERIORES"))
-        self.n_post.setFixedHeight(70)
-        l2.addWidget(self.n_post)
-        b2 = boton("Guardar reglas", "primario")
-        b2.clicked.connect(self.guardar_reglas)
-        b2.setEnabled(ctx.puede("ADM.PARAMETROS"))
-        l2.addWidget(b2, 0, Qt.AlignLeft)
-        l2.addStretch(1)
-        self.tabs.addTab(w2, "Reglas")
-        # --- normativa
+        self.n_post.setFixedHeight(56)
+        rl.addWidget(self.n_post)
+        raiz.addWidget(reg)
+        area = QScrollArea()
+        area.setWidgetResizable(True)
+        area.setFrameShape(QFrame.NoFrame)
+        area.setWidget(cont)
+        self.tabs.addTab(area, "Datos empresariales")
+        # ============================= pestaña 2: normativa
         self.t_norm = TablaDatos([Columna("clave", "Parámetro", 190), Columna("vigente_desde", "Vigente desde", 110, "date"), Columna("valor", "Valor", 130), Columna("descripcion", "Descripción", 360, estirar=True), Columna("fuente", "Fuente", 150)])
         w3 = QWidget()
         l3 = QVBoxLayout(w3)
@@ -103,66 +229,53 @@ class ParametrosPantalla(Pantalla):
         bn.clicked.connect(self.editar_norm)
         bn.setEnabled(ctx.puede("ADM.PARAMETROS"))
         l3.addWidget(bn, 0, Qt.AlignLeft)
-        self.tabs.addTab(w3, "Normativa vigente")
+        self.tabs.addTab(w3, "Normativa vigente (todas)")
         self.t_norm.doble_clic.connect(self.editar_norm)
+        # ============================= pie
+        pie = QHBoxLayout()
+        pie.addStretch(1)
+        b_grabar = boton("Grabar", "primario", 130)
+        b_grabar.setEnabled(ctx.puede("ADM.PARAMETROS"))
+        b_grabar.clicked.connect(self.grabar)
+        pie.addWidget(b_grabar)
+        self.cuerpo.addLayout(pie)
         self.refrescar()
-
-    def _tab_cuentas(self):
-        from ..seed import PARAMETROS
-        self.combos: dict[str, Combo] = {}
-        opciones = [(c["codigo"], f"{c['codigo']}  {c['nombre']}") for c in self.ctx.cuentas.listar(solo_movimiento=True)]
-        claves = sorted(k for k in PARAMETROS if k.startswith("CTA_"))
-        self.t_cta.setRowCount(len(claves))
-        desc = {"CTA_CAJA": "Caja general para contado", "CTA_CF_IVA": "Crédito fiscal IVA (compras)", "CTA_DF_IVA": "Débito fiscal IVA (ventas)", "CTA_IT_GASTO": "Gasto por IT",
-                "CTA_IT_PAGAR": "IT por pagar", "CTA_CXC": "Clientes (ventas a crédito)", "CTA_CXP": "Proveedores (compras a crédito)", "CTA_INVENT": "Inventario de mercaderías",
-                "CTA_VENTAS": "Ingresos por ventas", "CTA_COSTO_VTA": "Costo de ventas", "CTA_SUELDOS": "Sueldos y salarios", "CTA_RESULTADO": "Resultado de la gestión (cierre)",
-                "CTA_RESULT_ACUM": "Resultados acumulados (apertura)"}
-        for i, k in enumerate(claves):
-            self.t_cta.setItem(i, 0, QTableWidgetItem(k))
-            self.t_cta.item(i, 0).setFlags(Qt.ItemIsEnabled)
-            cb = Combo()
-            cb.cargar(opciones, None)
-            cb.set_valor(self.ctx.param(k))
-            self.combos[k] = cb
-            self.t_cta.setCellWidget(i, 1, cb)
-            self.t_cta.setItem(i, 2, QTableWidgetItem(desc.get(k, "")))
-            self.t_cta.item(i, 2).setFlags(Qt.ItemIsEnabled)
-        w = QWidget()
-        l = QVBoxLayout(w)
-        l.addWidget(self.t_cta, 1)
-        b = boton("Guardar cuentas", "primario")
-        b.clicked.connect(self.guardar_cuentas)
-        b.setEnabled(self.ctx.puede("ADM.PARAMETROS"))
-        l.addWidget(b, 0, Qt.AlignLeft)
-        return w
 
     def refrescar(self) -> None:
         self.t_norm.cargar(self.ctx.normativa.listar())
 
-    def guardar_empresa(self) -> None:
-        ok, _ = intentar(self, self.ctx.sistema.actualizar_empresa, self.ctx.empresa["id"], **{k: v.text().strip() for k, v in self.f_emp.items()})
-        if ok:
-            self.ctx.empresa.update({k: v.text().strip() for k, v in self.f_emp.items()})
-            info(self, "Datos de la empresa guardados.")
-            if self.ventana:
-                self.ventana.actualizar_estado()
-
-    def guardar_cuentas(self) -> None:
-        for k, cb in self.combos.items():
-            if cb.valor():
-                self.ctx.set_param(k, cb.valor())
-        info(self, "Cuentas guardadas.")
-
-    def guardar_reglas(self) -> None:
+    def grabar(self) -> None:
         c = self.ctx
-        c.set_param("IT_SIN_FACTURA", "1" if self.r_it.isChecked() else "0")
-        c.set_param("STOCK_NEGATIVO", "1" if self.r_neg.isChecked() else "0")
-        c.set_param("CONTROL_PRESUPUESTO", "1" if self.r_pres.isChecked() else "0")
-        c.set_param("IUE_PROVISION", "1" if self.r_iue.isChecked() else "0")
-        c.set_param("TC_DEFECTO", str(self.r_tc.valor()))
-        c.set_param("NOTA_CONTINGENCIAS", self.n_cont.toPlainText().strip())
-        c.set_param("NOTA_HECHOS_POSTERIORES", self.n_post.toPlainText().strip())
-        info(self, "Reglas guardadas.")
+        try:
+            # 1) empresa
+            c.sistema.actualizar_empresa(c.empresa["id"], **{k: v.text().strip() for k, v in self.f_emp.items()})
+            c.empresa.update({k: v.text().strip() for k, v in self.f_emp.items()})
+            # 2) normativa: solo si el valor cambió, con vigencia desde el inicio de la gestión
+            for clave, campo in self.k.items():
+                if abs(campo.valor() - c.normativa.num(clave, self.ref)) > 1e-9:
+                    c.normativa.guardar(clave, c.inicio.isoformat(), f"{campo.valor():g}", "Modificado desde Datos de la empresa", "Usuario")
+            # 3) cuentas
+            for k, cc in self.combos.items():
+                cod = cc.valor()
+                if not cod:
+                    raise ErrorNegocio(f"La cuenta de «{k}» no existe en el plan de cuentas. Corrija el código.")
+                c.set_param(k, cod)
+            # 4) reglas
+            c.set_param("IT_SIN_FACTURA", "1" if self.r_it.isChecked() else "0")
+            c.set_param("STOCK_NEGATIVO", "1" if self.r_neg.isChecked() else "0")
+            c.set_param("CONTROL_PRESUPUESTO", "1" if self.r_pres.isChecked() else "0")
+            c.set_param("IUE_PROVISION", "1" if self.r_iue.isChecked() else "0")
+            c.set_param("TC_DEFECTO", str(self.r_tc.valor()))
+            c.set_param("NOTA_CONTINGENCIAS", self.n_cont.toPlainText().strip())
+            c.set_param("NOTA_HECHOS_POSTERIORES", self.n_post.toPlainText().strip())
+            c.auditar("Parámetros", "GRABAR", "Datos de la empresa y parámetros")
+        except Exception as ex:  # noqa: BLE001
+            error(self, ex)
+            return
+        info(self, "Datos y parámetros grabados correctamente.")
+        self.refrescar()
+        if self.ventana:
+            self.ventana.actualizar_estado()
 
     def editar_norm(self, f=None) -> None:
         f = f if isinstance(f, dict) else None
@@ -350,14 +463,14 @@ class BackupPantalla(Pantalla):
             self.refrescar()
 
     def verificar(self) -> None:
-        ruta, _ = QFileDialog.getOpenFileName(self, "Verificar copia", os.path.join(self.sis.raiz, "backups"), "Copias ContaBol (*.cbk)")
+        ruta, _ = QFileDialog.getOpenFileName(self, "Verificar copia", os.path.join(self.sis.raiz, "backups"), "Copias CONTA JB (*.cbk)")
         if ruta:
             ok, meta = intentar(self, backup.verificar, ruta)
             if ok:
                 info(self, f"Copia VÁLIDA.\nGenerada: {meta['fecha']}\nEmpresas: {len(meta['empresas'])}  ·  Gestiones: {len(meta['gestiones'])}")
 
     def restaurar(self) -> None:
-        ruta, _ = QFileDialog.getOpenFileName(self, "Restaurar copia", os.path.join(self.sis.raiz, "backups"), "Copias ContaBol (*.cbk)")
+        ruta, _ = QFileDialog.getOpenFileName(self, "Restaurar copia", os.path.join(self.sis.raiz, "backups"), "Copias CONTA JB (*.cbk)")
         if not ruta:
             return
         if not confirmar(self, "La restauración reemplaza los datos actuales de las empresas incluidas en la copia (se crea antes una copia de seguridad de lo actual).\n\n¿Continuar?", "Restaurar", True):
@@ -578,22 +691,23 @@ class UtilitariosPantalla(Pantalla):
 class AcercaDe(QDialog):
     def __init__(self, ctx, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("Acerca de ContaBol")
-        self.setFixedSize(640, 430)
+        self.setWindowTitle("Acerca de CONTA JB")
+        self.setFixedSize(700, 450)
+        self.setWindowIcon(tema.icono_app())
         lay = QVBoxLayout(self)
         lay.setContentsMargins(30, 24, 30, 20)
         fila = QHBoxLayout()
         lg = QLabel()
-        lg.setPixmap(tema.logo_pixmap(84))
+        lg.setPixmap(tema.logo_completo(110))
         t = QVBoxLayout()
-        t1 = QLabel("ContaBol")
-        t1.setStyleSheet(f"font-size:26pt; font-weight:600; color:{tema.AZUL};")
+        t1 = QLabel("CONTA JB")
+        t1.setStyleSheet(f"font-size:24pt; font-weight:600; color:{tema.AZUL};")
         t2 = QLabel(f"Sistema Contable Integrado · Versión {__version__}")
         t2.setObjectName("sub")
         t.addWidget(t1)
         t.addWidget(t2)
         fila.addWidget(lg)
-        fila.addSpacing(14)
+        fila.addSpacing(18)
         fila.addLayout(t, 1)
         lay.addLayout(fila)
         txt = QLabel("Sistema contable comercial y de costos conforme a la normativa contable, impositiva y laboral de Bolivia: IVA 13%, IT 3%, IUE 25%, RC-IVA, "

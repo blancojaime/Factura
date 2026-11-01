@@ -107,8 +107,8 @@ def exportar(rep: ReporteDef, ruta: str) -> str:
     ws.sheet_properties.pageSetUpPr.fitToPage = True
     ws.print_title_rows = f"{primera_cabecera}:{primera_cabecera}" if primera_cabecera else None
     ws.oddFooter.center.text = "Página &P de &N"
-    ws.oddFooter.left.text = "ContaBol"
+    ws.oddFooter.left.text = "CONTA JB"
     wb.properties.title = rep.titulo
-    wb.properties.creator = "ContaBol"
+    wb.properties.creator = "CONTA JB"
     wb.save(ruta)
     return ruta

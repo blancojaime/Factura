@@ -41,12 +41,13 @@ class PlanCuentasPantalla(Pantalla):
             barra.addWidget(b)
         self.cuerpo.addLayout(barra)
         self.arbol = QTreeWidget()
-        self.arbol.setColumnCount(6)
-        self.arbol.setHeaderLabels(["Código", "Cuenta", "Tipo", "Mov.", "M.E.", "Saldo Bs"])
-        self.arbol.setAlternatingRowColors(True)
+        self.arbol.setColumnCount(8)
+        self.arbol.setHeaderLabels(["Código", "Cuenta", "Tipo", "Mov.", "Presup.", "Ajust.", "M.E.", "Saldo Bs"])
+        self.arbol.setAlternatingRowColors(False)
+        self.arbol.setStyleSheet("QTreeWidget::item { padding: 4px 2px; }")
         h = self.arbol.header()
         h.setSectionResizeMode(1, QHeaderView.Stretch)
-        for i, w in ((0, 170), (2, 130), (3, 50), (4, 50), (5, 130)):
+        for i, w in ((0, 180), (2, 130), (3, 55), (4, 65), (5, 60), (6, 50), (7, 140)):
             self.arbol.setColumnWidth(i, w)
         self.arbol.setRootIsDecorated(True)
         self.cuerpo.addWidget(self.arbol, 1)
@@ -62,7 +63,10 @@ class PlanCuentasPantalla(Pantalla):
             b.setEnabled(c.puede("CONT.PLAN") and c.abierta)
         self.refrescar()
 
+    COLORES = {"A": ("#1F4E8C", "#DDE9F7"), "P": ("#A8322D", "#F8E1DF"), "T": ("#2E7D4F", "#E0F1E7"), "I": ("#0F7C8A", "#DAF0F3"), "G": ("#B7791F", "#FBEFD5"), "O": ("#5B6675", "#E8EBEF")}
+
     def refrescar(self) -> None:
+        from PySide6.QtGui import QBrush
         c = self.ctx
         sal = c.libros.saldos_a(c.fin, incluir_cierre=True)
         self.arbol.clear()
@@ -70,19 +74,34 @@ class PlanCuentasPantalla(Pantalla):
         for ct in c.db.query("SELECT * FROM cuenta ORDER BY codigo"):
             v = sal.get(ct["id"], 0.0)
             v = v if ct["naturaleza"] == "D" else -v
+            fuerte, claro = self.COLORES[ct["tipo"]]
             it = QTreeWidgetItem([ct["codigo"], ct["nombre"], {"A": "Activo", "P": "Pasivo", "T": "Patrimonio", "I": "Ingresos", "G": "Costos y gastos", "O": "Orden"}[ct["tipo"]],
-                                  "✔" if ct["es_movimiento"] else "", "$" if ct["moneda_extranjera"] else "", fmt(v) if abs(v) >= 0.005 else ""])
+                                  "✔" if ct["es_movimiento"] else "", "✔" if ct["presupuestable"] else "", "✔" if ct["ajustable"] else "", "$" if ct["moneda_extranjera"] else "",
+                                  fmt(v) if abs(v) >= 0.005 else ""])
             it.setData(0, Qt.UserRole, ct["id"])
-            it.setTextAlignment(5, Qt.AlignRight | Qt.AlignVCenter)
-            it.setTextAlignment(3, Qt.AlignCenter)
-            it.setTextAlignment(4, Qt.AlignCenter)
-            if not ct["es_movimiento"]:
-                f = it.font(0)
-                f.setBold(True)
-                for col in range(6):
-                    it.setFont(col, f)
-            if v < 0:
-                it.setForeground(5, QColor(tema.ROJO))
+            for col in (3, 4, 5, 6):
+                it.setTextAlignment(col, Qt.AlignCenter)
+            it.setTextAlignment(7, Qt.AlignRight | Qt.AlignVCenter)
+            nivel = ct["nivel"]
+            for col in range(8):
+                f = it.font(col)
+                f.setBold(not ct["es_movimiento"])
+                it.setFont(col, f)
+                if nivel == 1:
+                    it.setBackground(col, QBrush(QColor(fuerte)))
+                    it.setForeground(col, QBrush(QColor("white")))
+                elif nivel == 2:
+                    it.setBackground(col, QBrush(QColor(claro)))
+                    it.setForeground(col, QBrush(QColor(fuerte)))
+                elif nivel in (3, 4):
+                    it.setBackground(col, QBrush(QColor(claro).lighter(112)))
+                    it.setForeground(col, QBrush(QColor(fuerte)))
+                else:
+                    it.setForeground(col, QBrush(QColor(tema.TEXTO)))
+            if ct["es_movimiento"]:
+                it.setForeground(0, QBrush(QColor(fuerte)))
+                if v < 0:
+                    it.setForeground(7, QBrush(QColor(tema.ROJO)))
             (items[ct["padre_id"]].addChild(it) if ct["padre_id"] in items else self.arbol.addTopLevelItem(it))
             items[ct["id"]] = it
         for i in range(self.arbol.topLevelItemCount()):
@@ -165,48 +184,6 @@ class PlanCuentasPantalla(Pantalla):
 
 
 # ================================================================= comprobantes
-class SelectorCuentaDelegate(QStyledItemDelegate):
-    """Edita la celda de cuenta con autocompletado por código o nombre."""
-
-    def __init__(self, ctx, parent=None):
-        super().__init__(parent)
-        self.ctx = ctx
-        self.cuentas = ctx.cuentas.listar(solo_movimiento=True)
-        self.textos = [f"{c['codigo']}  {c['nombre']}" for c in self.cuentas]
-
-    def createEditor(self, parent, option, index):
-        e = QLineEdit(parent)
-        comp = QCompleter(self.textos, e)
-        comp.setCaseSensitivity(Qt.CaseInsensitive)
-        comp.setFilterMode(Qt.MatchContains)
-        comp.setMaxVisibleItems(12)
-        e.setCompleter(comp)
-        return e
-
-    def setEditorData(self, editor, index):
-        editor.setText(index.data(Qt.EditRole) or "")
-
-    def setModelData(self, editor, model, index):
-        t = editor.text().strip()
-        cta = self.resolver(t)
-        model.setData(index, f"{cta['codigo']}  {cta['nombre']}" if cta else t, Qt.EditRole)
-        model.setData(index, cta["id"] if cta else None, Qt.UserRole)
-
-    def resolver(self, t: str):
-        if not t:
-            return None
-        tl = t.lower()
-        for c in self.cuentas:
-            if tl == f"{c['codigo']}  {c['nombre']}".lower() or tl == c["codigo"].lower():
-                return c
-        cod = t.split(" ")[0]
-        for c in self.cuentas:
-            if c["codigo"] == cod:
-                return c
-        cand = [c for c in self.cuentas if tl in c["nombre"].lower() or c["codigo"].startswith(tl)]
-        return cand[0] if len(cand) == 1 else None
-
-
 class ImporteDelegate(QStyledItemDelegate):
     def createEditor(self, parent, option, index):
         e = QLineEdit(parent)
@@ -218,238 +195,7 @@ class ImporteDelegate(QStyledItemDelegate):
         model.setData(index, fmt(v) if v else "", Qt.EditRole)
 
 
-class GridAsiento(QTableWidget):
-    """Grilla de líneas con avance automático con Enter y nueva fila al llenar la última."""
-    cambio = Signal()
-
-    COL_CUENTA, COL_GLOSA, COL_DEBE, COL_HABER, COL_CENTRO = range(5)
-
-    def __init__(self, ctx, filas: int = 8):
-        super().__init__(filas, 5)
-        self.ctx = ctx
-        self.setHorizontalHeaderLabels(["Cuenta", "Glosa de la línea", "Debe", "Haber", "Centro de costo"])
-        h = self.horizontalHeader()
-        h.setSectionResizeMode(0, QHeaderView.Stretch)
-        h.setSectionResizeMode(1, QHeaderView.Stretch)
-        for i, w in ((2, 130), (3, 130), (4, 150)):
-            self.setColumnWidth(i, w)
-        self.verticalHeader().setDefaultSectionSize(30)
-        self.setAlternatingRowColors(True)
-        self.setEditTriggers(QAbstractItemView.AllEditTriggers)
-        self.setItemDelegateForColumn(0, SelectorCuentaDelegate(ctx, self))
-        self.setItemDelegateForColumn(2, ImporteDelegate(self))
-        self.setItemDelegateForColumn(3, ImporteDelegate(self))
-        self.centros = {c["id"]: c for c in ctx.db.query("SELECT * FROM centro_costo WHERE activo=1")}
-        self.itemChanged.connect(self._cambio)
-        self._bloq = False
-        for r in range(filas):
-            self._init_fila(r)
-
-    def _init_fila(self, r: int) -> None:
-        self._bloq = True
-        for c in range(5):
-            if not self.item(r, c):
-                it = QTableWidgetItem("")
-                if c in (2, 3):
-                    it.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
-                self.setItem(r, c, it)
-        self._bloq = False
-
-    def agregar_fila(self) -> None:
-        r = self.rowCount()
-        self.insertRow(r)
-        self._init_fila(r)
-
-    def quitar_fila(self) -> None:
-        r = self.currentRow()
-        if r >= 0 and self.rowCount() > 2:
-            self.removeRow(r)
-            self.cambio.emit()
-
-    def _cambio(self, it: QTableWidgetItem) -> None:
-        if self._bloq:
-            return
-        r, c = it.row(), it.column()
-        self._bloq = True
-        if c in (2, 3) and it.text():
-            otro = self.item(r, 5 - c)  # 2<->3
-            if otro and otro.text():
-                otro.setText("")
-        if c == 0:
-            cta = it.data(Qt.UserRole)
-            it.setForeground(QColor(tema.ROJO if it.text() and not cta else tema.TEXTO))
-            it.setToolTip("" if cta or not it.text() else "Cuenta no encontrada")
-        self._bloq = False
-        if r == self.rowCount() - 1 and any(self.item(r, k) and self.item(r, k).text() for k in range(4)):
-            self.agregar_fila()
-        self.cambio.emit()
-
-    def closeEditor(self, editor, hint):
-        super().closeEditor(editor, hint)
-        if hint in (QAbstractItemDelegate.SubmitModelCache, QAbstractItemDelegate.NoHint):
-            r, c = self.currentRow(), self.currentColumn()
-            sig = {0: 1, 1: 2 if True else 3, 2: 3, 3: 0}.get(c)
-            if c == 3:
-                self.setCurrentCell(min(r + 1, self.rowCount() - 1), 0)
-            elif c == 2 and not (self.item(r, 2) and self.item(r, 2).text()):
-                self.setCurrentCell(r, 3)
-            elif c == 2:
-                self.setCurrentCell(min(r + 1, self.rowCount() - 1), 0)
-            elif sig is not None:
-                self.setCurrentCell(r, sig)
-
-    def lineas(self) -> list[dict]:
-        out = []
-        for r in range(self.rowCount()):
-            cta = self.item(r, 0).data(Qt.UserRole)
-            debe, haber = parse_num(self.item(r, 2).text()), parse_num(self.item(r, 3).text())
-            if not cta and not debe and not haber:
-                continue
-            out.append({"cuenta_id": cta, "glosa": self.item(r, 1).text().strip(), "debe": debe, "haber": haber})
-        return out
-
-    def poner_lineas(self, lineas: list[dict]) -> None:
-        self._bloq = True
-        self.setRowCount(max(len(lineas) + 2, 8))
-        for r in range(self.rowCount()):
-            self._init_fila(r)
-        for r, l in enumerate(lineas):
-            it = self.item(r, 0)
-            it.setText(f"{l['cuenta_codigo']}  {l['cuenta_nombre']}")
-            it.setData(Qt.UserRole, l["cuenta_id"])
-            self.item(r, 1).setText(l.get("glosa") or "")
-            self.item(r, 2).setText(fmt(l["debe"]) if l["debe"] else "")
-            self.item(r, 3).setText(fmt(l["haber"]) if l["haber"] else "")
-        self._bloq = False
-        self.cambio.emit()
-
-
-class ComprobanteDialog(QDialog):
-    def __init__(self, ctx, cid: int | None, parent=None, previo: dict | None = None):
-        super().__init__(parent)
-        self.ctx, self.cid = ctx, cid
-        self.vent = parent
-        comp = ctx.vouchers.obtener(cid) if cid else None
-        self.solo_lectura = bool(comp and (comp["estado"] != "V" or comp["origen"] != "MANUAL" or not ctx.puede("CONT.COMPROBANTES"))) or not ctx.abierta
-        self.setWindowTitle("Comprobante contable")
-        self.resize(1040, 640)
-        lay = QVBoxLayout(self)
-        lay.setContentsMargins(20, 16, 20, 14)
-        lay.setSpacing(10)
-        t = QLabel("Comprobante " + (ctx.vouchers.codigo(comp) if comp else "nuevo"))
-        t.setObjectName("h1")
-        lay.addWidget(t)
-        if comp and comp["estado"] == "A":
-            a = QLabel("ESTE COMPROBANTE ESTÁ ANULADO")
-            a.setStyleSheet(f"color:{tema.ROJO}; font-weight:600;")
-            lay.addWidget(a)
-        elif comp and comp["origen"] != "MANUAL":
-            a = QLabel(f"Generado automáticamente por el módulo {comp['origen']}: solo consulta.")
-            a.setObjectName("sub")
-            lay.addWidget(a)
-        cab = QGridLayout()
-        cab.setHorizontalSpacing(14)
-        self.tipo = Combo([(x["codigo"], f"{x['nombre']} ({x['codigo']})") for x in ctx.vouchers.tipos() if x["codigo"] in ("I", "E", "T", "AJ")])
-        self.fecha = CampoFecha(comp["fecha"] if comp else (previo or {}).get("fecha") or min(max(date.today(), ctx.inicio), ctx.fin), ctx.inicio, ctx.fin)
-        self.moneda = Combo([("BS", "Bolivianos (Bs)"), ("USD", "Dólares (US$)")])
-        self.tc = CampoImporte(ctx.tc.dolar(self.fecha.fecha()), 4)
-        self.glosa = QLineEdit(comp["glosa"] if comp else "")
-        self.glosa.setPlaceholderText("Descripción general del comprobante")
-        self.nombre = QLineEdit(comp["a_nombre"] or "" if comp else "")
-        self.nombre.setPlaceholderText("Pagado a / recibido de")
-        self.nro = QLineEdit(comp["nro_doc"] or "" if comp else "")
-        if comp:
-            self.tipo.set_valor(comp["tipo"])
-            self.moneda.set_valor(comp["moneda"])
-            self.tc.set_valor(comp["tc"])
-        for i, (et, w, sp) in enumerate([("Tipo", self.tipo, 1), ("Fecha", self.fecha, 1), ("Moneda", self.moneda, 1), ("T.C.", self.tc, 1)]):
-            cab.addWidget(etiqueta(et), 0, i)
-            cab.addWidget(w, 1, i)
-        cab.addWidget(etiqueta("Glosa *"), 2, 0, 1, 4)
-        cab.addWidget(self.glosa, 3, 0, 1, 4)
-        cab.addWidget(etiqueta("A nombre de"), 4, 0, 1, 2)
-        cab.addWidget(etiqueta("Nº de documento"), 4, 2, 1, 2)
-        cab.addWidget(self.nombre, 5, 0, 1, 2)
-        cab.addWidget(self.nro, 5, 2, 1, 2)
-        lay.addLayout(cab)
-        self.grid = GridAsiento(ctx)
-        lay.addWidget(self.grid, 1)
-        tot = QHBoxLayout()
-        self.b_add = boton("+ Línea")
-        self.b_del = boton("− Quitar línea")
-        tot.addWidget(self.b_add)
-        tot.addWidget(self.b_del)
-        tot.addStretch(1)
-        self.l_debe, self.l_haber, self.l_dif = QLabel(), QLabel(), QLabel()
-        for l in (self.l_debe, self.l_haber, self.l_dif):
-            l.setStyleSheet("font-size:11pt; font-weight:600; padding:0 12px;")
-            tot.addWidget(l)
-        lay.addLayout(tot)
-        self.err = QLabel("")
-        self.err.setStyleSheet(f"color:{tema.ROJO};")
-        self.err.setWordWrap(True)
-        lay.addWidget(self.err)
-        self.b_ok = boton("Guardar comprobante", "primario", 170)
-        self.b_print = boton("Imprimir")
-        self.b_anular = boton("Anular", "peligro")
-        self.b_close = boton("Cerrar")
-        lay.addLayout(hbox(self.b_anular, self.b_print, None, self.b_close, self.b_ok))
-        self.b_add.clicked.connect(self.grid.agregar_fila)
-        self.b_del.clicked.connect(self.grid.quitar_fila)
-        self.grid.cambio.connect(self.totales)
-        self.fecha.dateChanged.connect(lambda *_: self.tc.set_valor(ctx.tc.dolar(self.fecha.fecha())))
-        self.b_ok.clicked.connect(self.guardar)
-        self.b_close.clicked.connect(self.reject)
-        self.b_print.clicked.connect(self.imprimir)
-        self.b_anular.clicked.connect(self.anular)
-        if comp:
-            usd = comp["moneda"] == "USD"
-            self.grid.poner_lineas([{**l, "debe": l["debe_usd"] if usd else l["debe_bs"], "haber": l["haber_usd"] if usd else l["haber_bs"]} for l in comp["lineas"]])
-        elif previo and previo.get("lineas"):
-            self.grid.poner_lineas(previo["lineas"])
-        self.b_print.setVisible(bool(comp))
-        self.b_anular.setVisible(bool(comp and comp["estado"] == "V" and ctx.puede("CONT.ANULAR") and ctx.abierta))
-        if self.solo_lectura:
-            for w in (self.tipo, self.fecha, self.moneda, self.tc, self.glosa, self.nombre, self.nro, self.grid, self.b_add, self.b_del, self.b_ok):
-                w.setEnabled(False)
-        self.totales()
-        (self.glosa if not comp else self.b_close).setFocus()
-
-    def totales(self) -> None:
-        ls = self.grid.lineas()
-        d, h = r2(sum(l["debe"] for l in ls)), r2(sum(l["haber"] for l in ls))
-        dif = r2(d - h)
-        self.l_debe.setText(f"Debe: {fmt(d)}")
-        self.l_haber.setText(f"Haber: {fmt(h)}")
-        ok = abs(dif) < 0.005 and d > 0
-        self.l_dif.setText("✔ Cuadra" if ok else f"Diferencia: {fmt(dif)}")
-        self.l_dif.setStyleSheet(f"font-size:11pt; font-weight:600; padding:0 12px; color:{tema.VERDE if ok else tema.ROJO};")
-
-    def guardar(self) -> None:
-        d = {"tipo": self.tipo.valor(), "fecha": self.fecha.fecha(), "glosa": self.glosa.text(), "moneda": self.moneda.valor(), "tc": self.tc.valor(),
-             "a_nombre": self.nombre.text().strip() or None, "nro_doc": self.nro.text().strip() or None, "lineas": self.grid.lineas()}
-        try:
-            if self.cid:
-                self.ctx.vouchers.modificar(self.cid, d)
-            else:
-                self.cid = self.ctx.vouchers.crear(d)
-        except Exception as ex:  # noqa: BLE001
-            if isinstance(ex, (ErrorNegocio, ValueError)):
-                self.err.setText(str(ex))
-            else:
-                error(self, ex)
-            return
-        self.accept()
-
-    def imprimir(self) -> None:
-        if self.vent and hasattr(self.vent, "informe"):
-            self.vent.informe("comprobante", {"id": self.cid}, pedir=False)
-
-    def anular(self) -> None:
-        if confirmar(self, "¿Anular este comprobante? Dejará de afectar los saldos.", "Anular comprobante", True):
-            ok, _ = intentar(self, self.ctx.vouchers.anular, self.cid)
-            if ok:
-                self.accept()
+from .p_comprobante import ComprobanteDialog  # noqa: E402
 
 
 class ComprobantesPantalla(ListaCRUD):

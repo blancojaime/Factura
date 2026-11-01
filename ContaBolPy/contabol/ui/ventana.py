@@ -21,6 +21,9 @@ class Inicio(Pantalla):
     def __init__(self, ctx, ventana):
         self.subtitulo = f"{ctx.empresa['razon_social']}  ·  Gestión {ctx.gestion['anio']}"
         super().__init__(ctx, ventana)
+        lg = QLabel()
+        lg.setPixmap(tema.logo_completo(52))
+        self.banner.acciones.addWidget(lg)
         self.contenedor = QVBoxLayout()
         self.cuerpo.addLayout(self.contenedor, 1)
         self.refrescar()
@@ -120,7 +123,7 @@ class VentanaPrincipal(QMainWindow):
         self.sis, self.usuario, self.ctx = sis, usuario, ctx
         self.accion_salida = "salir"   # salir | cambiar | sesion
         self.setWindowTitle(f"{APP_NAME} - Sistema Contable Integrado")
-        self.setWindowIcon(tema.icono("CB", "white", tema.AZUL, 64))
+        self.setWindowIcon(tema.icono_app())
         self.resize(1360, 820)
         self.tabs = QTabWidget()
         self.tabs.setTabsClosable(True)
@@ -232,7 +235,7 @@ class VentanaPrincipal(QMainWindow):
         abrir_informe(self, self.ctx, id_, valores, pedir)
 
     def closeEvent(self, ev):
-        if self.accion_salida == "salir" and not confirmar(self, "¿Desea salir de ContaBol?\nSe generará una copia de seguridad automática al cerrar.", "Salir"):
+        if self.accion_salida == "salir" and not confirmar(self, "¿Desea salir de CONTA JB?\nSe generará una copia de seguridad automática al cerrar.", "Salir"):
             ev.ignore()
             return
         ev.accept()

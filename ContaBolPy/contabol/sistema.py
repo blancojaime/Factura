@@ -212,6 +212,7 @@ class Sistema:
         if not os.path.exists(ruta):
             raise ErrorNegocio(f"No se encuentra el archivo de la gestión:\n{ruta}")
         db = Database(ruta)
+        schema.migrar_gestion(db)
         chk = db.integrity_check()
         if chk != "ok":
             db.close()

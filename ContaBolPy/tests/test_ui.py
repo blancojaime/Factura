@@ -78,17 +78,36 @@ def test_dialogos(app, entorno):
 
 
 def test_comprobante_desde_la_grilla(app, entorno):
-    from contabol.ui.p_contab import ComprobanteDialog
-    from PySide6.QtCore import Qt
+    from contabol.ui.p_comprobante import ComprobanteDialog
     e = entorno
     d = ComprobanteDialog(e.ctx, None)
     caja, cap = e.ctx.cuentas.por_codigo("1.1.1.01.001"), e.ctx.cuentas.por_codigo("3.1.1.01.001")
-    g = d.grid
-    for r, (c, deb, hab) in enumerate([(caja, "1.000,00", ""), (cap, "", "1.000,00")]):
-        g.item(r, 0).setText(f"{c['codigo']}  {c['nombre']}")
-        g.item(r, 0).setData(Qt.UserRole, c["id"])
-        g.item(r, 2).setText(deb)
-        g.item(r, 3).setText(hab)
+    d.tipo.set_valor("T")
+    d.grid.poner_linea(0, caja["id"], debe=1000)
+    d.grid.poner_linea(1, cap["id"], haber=1000)
     d.glosa.setText("Prueba desde la grilla")
-    d.guardar()
+    assert "Cuadra" in d.l_dif.text()
+    d.grabar()
     assert d.cid and e.ctx.vouchers.obtener(d.cid)["debe_bs"] == 1000.0
+    # escribir códigos como lo haría el usuario
+    d2 = ComprobanteDialog(e.ctx, None)
+    d2.grid.cellWidget(0, 0).setText("1.1.1.01.001")
+    d2.grid.cellWidget(0, 0).editingFinished.emit()
+    assert d2.grid.cellWidget(0, 1).text() == "Caja Moneda Nacional"
+    d2.grid.cellWidget(0, 3).setText("500")
+    d2.grid.cellWidget(0, 3).textEdited.emit("500")
+    assert d2.grid.cellWidget(0, 5).text() != ""   # equivalente en US$
+
+
+def test_igualar_y_calculadora(app, entorno):
+    from contabol.ui.calculadora import Calculadora
+    from contabol.ui.p_comprobante import ComprobanteDialog
+    e = entorno
+    d = ComprobanteDialog(e.ctx, None)
+    caja = e.ctx.cuentas.por_codigo("1.1.1.01.001")
+    d.grid.poner_linea(0, caja["id"], debe=250)
+    d.igualar()
+    assert d.grid.cellWidget(1, 4).text() == "250,00"
+    c = Calculadora()
+    c.pantalla.setText("(100+50)/3")
+    assert c.calcular() == 50.0
