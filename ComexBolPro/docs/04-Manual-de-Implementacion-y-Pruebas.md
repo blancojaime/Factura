@@ -21,7 +21,7 @@ Fecha de los ejemplos: 02/11/2026 · Tipo de cambio de los ejemplos: **Bs 6,96 p
 ### 1.2 Compilar y ejecutar
 ```bash
 git clone <repositorio> && cd Factura/ComexBolPro
-dotnet build ComexBol.sln   # si no existe la solución: dotnet build src/ComexBol.App
+dotnet build ComexBol.sln
 dotnet run --project src/ComexBol.App
 ```
 Si hay errores de XAML o de compilación en `ComexBol.App`, copie el mensaje completo: es lo primero que debe corregirse.
