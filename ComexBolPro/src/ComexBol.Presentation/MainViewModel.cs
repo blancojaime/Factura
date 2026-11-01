@@ -59,6 +59,9 @@ public sealed class MainViewModel : ObservableObject
     string _partida = ""; public string ItemPartida { get => _partida; set => Set(ref _partida, value); }
     string _desc = ""; public string ItemDescripcion { get => _desc; set => Set(ref _desc, value); }
     decimal _valor; public decimal ItemValor { get => _valor; set => Set(ref _valor, value); }
+    public IReadOnlyList<string> Acuerdos { get; } = ["", "CAN", "ACE 22 (Chile)", "ACE 36 (Mercosur)", "ACE 47 (Cuba)", "ACE 66 (México)", "VEN (Venezuela)"];
+    string _acuerdo = ""; public string ItemAcuerdo { get => _acuerdo; set => Set(ref _acuerdo, value); }
+    decimal _desg; public decimal ItemDesgravacionPct { get => _desg; set => Set(ref _desg, value); }      // 0–100: % de rebaja del GA según el acuerdo
     int _antig; public int ItemAntiguedad { get => _antig; set => Set(ref _antig, value); }           // vehículos: años de antigüedad (0 = nuevo)
     decimal _icePct; public decimal ItemIcePct { get => _icePct; set => Set(ref _icePct, value); }        // ICE % ingresado a mano cuando el arancel no trae la tasa
     decimal _peso; public decimal ItemPesoBruto { get => _peso; set => Set(ref _peso, value); }
@@ -116,9 +119,9 @@ public sealed class MainViewModel : ObservableObject
     {
         var op = Seleccionada!;
         var n = await _db.Items.CountAsync(i => i.OperacionId == op.Id) + 1;
-        await _ops.AgregarItemAsync(op.Id, new() { Numero = n, CodigoNandina = new string(ItemPartida.Where(char.IsDigit).ToArray()), Descripcion = ItemDescripcion, ValorFactura = ItemValor, PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto, AntiguedadAnios = ItemAntiguedad, AlicuotaIce = ItemIcePct / 100m });
+        await _ops.AgregarItemAsync(op.Id, new() { Numero = n, CodigoNandina = new string(ItemPartida.Where(char.IsDigit).ToArray()), Descripcion = ItemDescripcion, ValorFactura = ItemValor, PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto, AntiguedadAnios = ItemAntiguedad, AlicuotaIce = ItemIcePct / 100m, AcuerdoPreferencial = ItemAcuerdo, Desgravacion = ItemDesgravacionPct / 100m });
         var avisos = await _cat.AplicarAOperacionAsync(op.Id);
-        ItemPartida = ItemDescripcion = ""; ItemValor = ItemPesoBruto = ItemIcePct = 0; ItemAntiguedad = 0;
+        ItemPartida = ItemDescripcion = ""; ItemValor = ItemPesoBruto = ItemIcePct = ItemDesgravacionPct = 0; ItemAntiguedad = 0; ItemAcuerdo = "";
         await RefrescarAsync();
         foreach (var a in avisos) Avisos.Add(a);
         Mensaje = $"Ítem {n} agregado";

@@ -38,9 +38,13 @@ public sealed class ServicioOperaciones(ComexDb db)
 
     public async Task AgregarItemAsync(int opId, ItemMercancia item)
     {
+        if (item.Desgravacion is < 0 or > 1) throw new ArgumentException("La desgravación debe estar entre 0 % y 100 %.");
+        if (item.Desgravacion > 0 && string.IsNullOrWhiteSpace(item.AcuerdoPreferencial))
+            throw new ArgumentException("Indique el acuerdo comercial que sustenta la desgravación (se exige Certificado de Origen).");
         item.OperacionId = opId;
         db.Items.Add(item);
-        await Log(opId, "Ítem", $"Ítem {item.Numero} {item.CodigoNandina} «{item.Descripcion}» por {item.ValorFactura:N2}.");
+        if (item.Desgravacion > 0) (await db.Operaciones.FirstAsync(o => o.Id == opId)).UsaPreferenciaArancelaria = true;
+        await Log(opId, "Ítem", $"Ítem {item.Numero} {item.CodigoNandina} «{item.Descripcion}» por {item.ValorFactura:N2}." + (item.Desgravacion > 0 ? $" Preferencia {item.AcuerdoPreferencial} {item.Desgravacion:P0}." : ""));
         await db.SaveChangesAsync();
     }
 

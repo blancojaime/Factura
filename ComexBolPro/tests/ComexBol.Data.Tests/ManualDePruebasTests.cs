@@ -112,3 +112,22 @@ public class ManualDePruebasTests : IDisposable
         Assert.Equal(97, _db.Partidas.Select(p => p.Codigo.Substring(0, 2)).Distinct().Count());
     }
 }
+
+public class PreferenciasTests : IDisposable
+{
+    readonly SqliteConnection _cn = new("Data Source=:memory:"); readonly ComexDb _db;
+    static readonly TipoCambioTable Tc = new(new DateOnly(2026, 11, 2), new Dictionary<string, decimal> { ["USD"] = 6.96m });
+    public PreferenciasTests() { _cn.Open(); _db = new(new DbContextOptionsBuilder<ComexDb>().UseSqlite(_cn).Options); _db.Database.EnsureCreated(); }
+    public void Dispose() { _db.Dispose(); _cn.Dispose(); }
+
+    [Fact] public async Task Caso15_Desgravacion_Exige_Acuerdo_Y_Certificado_De_Origen()
+    {
+        var s = new ServicioOperaciones(_db);
+        var op = await s.CrearImportacionAsync("IMP-PREF", Incoterm.CIF, "USD", new DateOnly(2026, 11, 2));
+        await Assert.ThrowsAsync<ArgumentException>(() => s.AgregarItemAsync(op.Id, new() { Numero = 1, CodigoNandina = "8471300010", Descripcion = "x", ValorFactura = 1000, AlicuotaGA = .10m, Desgravacion = 1m }));
+        await s.AgregarItemAsync(op.Id, new() { Numero = 1, CodigoNandina = "8471300010", Descripcion = "Tablets", ValorFactura = 1000, AlicuotaGA = .10m, Desgravacion = 1m, AcuerdoPreferencial = "CAN" });
+        var r = await s.LiquidarAsync(op.Id, Tc);
+        Assert.Equal(6_960.00m, r.CifBob); Assert.Equal(0m, r.GA); Assert.Equal(1_039.82m, r.IVA);     // IVA 14,94 % sobre CIF; GA exonerado
+        Assert.Contains(await s.ChecklistAsync(op.Id), x => x.Tipo == TipoDocumento.CertificadoOrigen && !x.Presente);
+    }
+}

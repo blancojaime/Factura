@@ -31,7 +31,7 @@ Si hay errores de XAML o de compilación en `ComexBol.App`, copie el mensaje com
 ```bash
 for t in tests/*/; do (cd $t && dotnet test); done
 ```
-Resultado esperado: todas en verde (Core 21, Data 19, Documentos 9, Presentación 7). Las pruebas de OCR/PDF se omiten solas si Tesseract o Poppler no están instalados. Con el arancel completo:
+Resultado esperado: todas en verde (Core 21, Data 20, Documentos 9, Presentación 7). Las pruebas de OCR/PDF se omiten solas si Tesseract o Poppler no están instalados. Con el arancel completo:
 ```bash
 cd tests/ComexBol.Data.Tests
 COMEXBOL_ARANCEL_DIR=<carpeta con los 3 .md> dotnet test      # PowerShell: $env:COMEXBOL_ARANCEL_DIR="C:\arancel"; dotnet test
@@ -78,7 +78,7 @@ Resultado con **sus** 3 archivos: **8.121 partidas** de 10 dígitos, **97 capít
 | **Prohibida (tipo P)** | Detectada: el sistema bloquea la partida |
 | Marca ICE / IEHD | Detectada (497 ICE, 20 IEHD). **La tasa de IEHD no viene en el arancel** |
 | **ICE de vehículos por antigüedad** (Apéndice I) | Solo las filas con las 6 tasas legibles (17 partidas). **Para las demás, el sistema avisa y usted ingresa el ICE % a mano** |
-| Preferencias arancelarias (CAN, ACE…) | Se guardan los porcentajes impresos pero **no se asignan a cada acuerdo** (las columnas se desplazan en el original). La desgravación se aplica a mano |
+| Preferencias arancelarias (CAN, ACE…) | Se guardan los porcentajes impresos pero **no se asignan a cada acuerdo**: en el Markdown los encabezados de esas columnas están truncados y cambian de una página a otra (hay 8 variantes). El sistema muestra «preferencias impresas: 100 / 100» y **usted elige el acuerdo y el %** (Caso 15). Para asignarlas hace falta ver el PDF original |
 
 **Los 268 avisos** (cada uno con archivo y línea): 227 filas del Apéndice ICE con tasas ilegibles; 2 filas sin unidad; el resto, documentos sin tipo. Ninguna partida se descarta en silencio ni se corrige adivinando.
 **Verificación recomendada:** revise por muestreo 20–30 partidas de su interés contra el PDF original (sección 4, prueba P-02).
@@ -193,6 +193,14 @@ Igual que el Caso 10, pero con `docs/ejemplos/factura-ejemplo.pdf` (cópielo de 
 ### Caso 13 — Exportar a Excel
 **Excel…** → abra el `.xlsx`: hojas *Resumen, Ítems, Liquidación, Ruta crítica, Bitácora*. En *Liquidación* los totales son **fórmulas** (cambie un valor y se recalculan). Para el Caso 1: CIF 291.972,00; total tributos 77.179,88.
 
+### Caso 15 — Preferencia arancelaria (CAN u otro acuerdo)
+**Datos:** tablets partida 8471.30.00.10, valor USD 1.000, Incoterm CIF, GA 10 %.
+1. Sin acuerdo: ponga *desgrav. %* = `100` y deje el acuerdo vacío → **Agregar ítem** debe rechazarlo: *«Indique el acuerdo comercial que sustenta la desgravación»*.
+2. Acuerdo **CAN**, desgrav. `100` → agregar y **Calcular**: CIF **6.960,00**, GA **0,00**, IVA **1.039,82** (14,94 % sobre el CIF; sin GA).
+3. El aviso del ítem muestra las preferencias impresas del arancel (p. ej. «100 / 100 %»). *Legajo*: **Certificado de origen ✖** queda exigido.
+4. Cambie la desgravación a `50` → GA 5 % = Bs 348,00.
+**Importante:** el sistema no decide por usted qué acuerdo aplica; la desgravación se sustenta con el Certificado de Origen y las reglas de origen.
+
 ### Caso 14 — Expediente
 **Expediente (.md)…** → guarda `Expediente-IMP-2026-001.md` con: resumen, mercancías, liquidación vigente, ruta, legajo y bitácora. Ábralo y compare con lo visto en pantalla.
 
@@ -221,7 +229,7 @@ Igual que el Caso 10, pero con `docs/ejemplos/factura-ejemplo.pdf` (cópielo de 
 ## 5. Limitaciones conocidas
 - **Ventana WPF sin compilar** (ver estado). El visor muestra imágenes y la primera página de un PDF (no es un visor de PDF completo).
 - **No hay pantalla** para: almacenaje, exportación (DEX/CEDEIM), moneda distinta de USD, gastos de origen / hasta frontera, ni para guardar los escenarios (se pierden al cerrar). Existen en el código y están probados.
-- **Preferencias arancelarias** y **ICE** (salvo vehículos con las 6 tasas) y **IEHD**: entrada manual.
+- **Preferencias arancelarias** (se elige acuerdo y %), **ICE** (salvo vehículos con las 6 tasas) y **IEHD**: entrada manual.
 - **Mapeo a casillas SUMA**: no completado (requiere el instructivo vigente de la ANB). La compresión de imágenes y la exportación a PDF están pendientes (el Excel y el Markdown ya funcionan; el `.md` se imprime a PDF desde cualquier editor).
 - El OCR depende de la calidad del escaneo; se equivoca con dígitos: siempre se confirma a mano.
 

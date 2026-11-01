@@ -49,6 +49,7 @@ public class ItemMercancia
     public decimal UnidadesIce { get; set; }
     public decimal IehdBsPorLitro { get; set; }
     public decimal Litros { get; set; }
+    public string AcuerdoPreferencial { get; set; } = "";   // CAN, ACE 22, ACE 36, ACE 47, ACE 66, VEN... (lo elige el usuario con el Certificado de Origen)
     public int AntiguedadAnios { get; set; }      // vehículos: 0 = nuevo (para el ICE del Apéndice I)
 
     public ItemImportacion ToCore() => new(Numero, CodigoNandina, Descripcion, ValorFactura, PesoBrutoKg, PesoNetoKg,

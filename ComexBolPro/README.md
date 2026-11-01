@@ -24,6 +24,7 @@ Manual completo de implementación y pruebas: [`docs/04-Manual-de-Implementacion
 ## Pendiente
 - Compilar y probar la ventana WPF en Windows; visor de PDF (WebView2) y rasterizado de PDF para OCR.
 - Validar parámetros normativos con un despachante (prueba P-09 del manual).
-- Pantallas para almacenaje y exportación (DEX/CEDEIM); guardar escenarios; preferencias por acuerdo.
+- Pantallas para almacenaje y exportación (DEX/CEDEIM); guardar escenarios.
+- Asignar las preferencias impresas a cada acuerdo (requiere el PDF original del arancel).
 - Mapeo de casillas SUMA (requiere el instructivo vigente de la ANB); exportación a PDF; compresión de imágenes.
 - Mapeo de casillas SUMA, migraciones EF Core, compresión de imágenes, exportación PDF/XLSX.

@@ -65,6 +65,8 @@ public sealed class ServicioCatalogo(ComexDb db)
             it.AlicuotaGA = p.AlicuotaGA;
             if (p.Fuente.Equals("EJEMPLO", StringComparison.OrdinalIgnoreCase)) avisos.Add($"Ítem {it.Numero}: alícuota tomada de datos de EJEMPLO, no oficiales.");
             if (p.TipoDocumento.Length > 0 || p.Autorizaciones.Length > 0) avisos.Add($"Ítem {it.Numero}: documento adicional {p.TipoDocumento} — {(p.Entidad.Length > 0 ? p.Entidad : p.Autorizaciones.Replace("|", ", "))} {p.DispLegal}".Trim());
+            if (p.Preferencias.Length > 0)
+                avisos.Add($"Ítem {it.Numero}: preferencias impresas en el arancel (sin asignar a un acuerdo): {p.Preferencias.Replace(";", " / ")} %. Si aplica un acuerdo, elíjalo y declare la desgravación con su Certificado de Origen.");
             if (p.ImpuestoEspecial == "ICE")
             {
                 var tasas = p.IceAntiguedad.Length == 0 ? [] : p.IceAntiguedad.Split(';').Select(x => decimal.Parse(x, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
