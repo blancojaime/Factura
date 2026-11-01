@@ -107,6 +107,10 @@ class Contexto:
             "libros": ("contabol.services.libros", "LibroService"),
             "estados": ("contabol.services.estados", "EstadosService"),
             "gestiones": ("contabol.services.gestion", "GestionService"),
+            "auditoria": ("contabol.services.auditoria", "AuditoriaService"),
+            "aud_pruebas": ("contabol.services.auditoria_pruebas", "PruebasFinancierasService"),
+            "aud_trib": ("contabol.services.auditoria_tributaria", "AuditoriaTributariaService"),
+            "aud_informes": ("contabol.services.auditoria_informes", "InformesAuditoriaService"),
         }
         if nombre not in mapa:
             raise AttributeError(nombre)

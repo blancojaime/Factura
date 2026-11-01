@@ -1,5 +1,5 @@
 ---
-title: "CONTA JB 2.1 — Manual de Implementación"
+title: "CONTA JB 2.2 — Manual de Implementación"
 subtitle: "Instalación, configuración, puesta en marcha, operación y mantenimiento"
 lang: es
 ---
@@ -21,8 +21,9 @@ lang: es
 | Activos fijos | Depreciación D.S. 24051 y actualización por UFV |
 | Planillas | Sueldos, bono de antigüedad, AFP, CNS, Pro-Vivienda, aporte solidario, ANS, RC-IVA, aguinaldo, finiquito |
 | Costos | Órdenes de producción (materia prima, mano de obra, CIF) |
+| **Auditoría (v2.2)** | **Auditoría Financiera (MAF)** y **Tributaria (MAI)**: planificación, ejecución con cédulas sumarias, comunicación de resultados, dictámenes y cierre inmutable con SHA-256 |
 | **Estados financieros** | **Balance General, Estado de Resultados, Evolución del Patrimonio Neto, Flujo de Efectivo (método directo e indirecto) y Notas** |
-| Informes | **65 informes** en pantalla, PDF y Excel |
+| Informes | **79 informes** en pantalla, PDF y Excel |
 | Administración | Multiempresa, multigestión, usuarios y permisos, auditoría, copias de seguridad verificables, consolidación |
 
 ## 1.2 Arquitectura
@@ -155,6 +156,71 @@ El **comprobante contable** es la fuente de los estados financieros. El formular
 
 La **UFV** escrita en el comprobante se guarda para esa fecha (5 decimales) y se usa en liquidaciones, activos fijos y ajustes.
 
+# 4 ter. Módulos de Auditoría Financiera (MAF) y Tributaria (MAI)
+
+## Marco y alcance
+
+- **Marco técnico:** Normas de Auditoría Generalmente Aceptadas y Normas Internacionales de Auditoría (NIA) — en particular NIA 300/315/320/330/500/530/700/705/706 —; Normas de Contabilidad del CTNAC (NC 1 a 14); Código de Comercio.
+- **Marco tributario:** Ley 843 (IVA, IT, IUE, RC-IVA), D.S. 21530, 21531, 21532 y 24051, Ley 2492 (Código Tributario), normas del SIN sobre facturación, medios fehacientes de pago (bancarización) e Información Tributaria Complementaria.
+- **Lo que hace el sistema:** organiza el encargo en las etapas **A Planificación**, **B Ejecución** y **C Comunicación**, conecta las pruebas con los saldos y módulos de CONTA JB y deja evidencia inmutable.
+- **Lo que no hace:** no emite opinión por sí solo, no presenta información al SIN y no reemplaza el criterio del profesional. **Verifique** con el CAUB/CTNAC la adopción vigente de las NIA en Bolivia y con el SIN el modelo oficial de dictamen, los anexos ITC y los umbrales de obligatoriedad; los valores dependientes de norma son parámetros editables (*Administración > Parámetros y normativa*): `BANCARIZACION_MONTO`, `IUE_DONACION_PCT`, `IUE_PCT_AUD`, `AUD_TASA_INTERES_ANUAL`, `AUD_UMBRAL_EXTERNA`.
+
+## Modelo de datos (esquema relacional)
+
+Cada gestión (archivo `datos/<EMPRESA>/<AÑO>.db`) incluye las tablas de auditoría; se crean con la gestión y se agregan automáticamente al abrir gestiones de versiones anteriores (migración `VERSION_ESQUEMA = 3`).
+
+| Tabla | Contenido y claves |
+|---|---|
+| `auditoria_encargo` | PK `id`; tipo F/T, código, período, estado ABIERTO/CERRADO, `sha256`, usuario y fecha de cierre |
+| `auditoria_equipo` | FK `encargo_id`; nombre, rol, iniciales (para firmas de preparación y revisión) |
+| `auditoria_memorando`, `auditoria_materialidad`, `auditoria_riesgo` | FK `encargo_id`; términos, riesgo inherente/control/aceptable/detección; materialidad global, de desempeño y trivial; riesgos por componente × aseveración |
+| `auditoria_programa`, `auditoria_programa_paso` | Programas por componente y sus procedimientos (estado, referencia, conclusión) |
+| `cedula_sumaria` | FK `encargo_id`; índice (A, B… / AA, BB…), cuentas, `saldo_sistema`, ajustes, reclasificaciones, `saldo_auditado`, preparado/revisado |
+| `cedula_analitica` | FK `sumaria_id`; cuenta, `saldo_libros`, `saldo_verificado`, diferencia, marcas |
+| `marca_auditoria` | Leyenda de marcas del encargo |
+| `hallazgo_auditoria` | Condición, criterio, causa, efecto, recomendación, descargo de la Gerencia, nivel, impacto en Bs |
+| `asiento_ajuste_propuesto` + `asiento_ajuste_det` | Ajustes (AJU) y reclasificaciones (REC) con estado PROPUESTO / ACEPTADO / NO_CORREGIDO; el detalle debe cuadrar |
+| `gasto_no_deducible_iue` | Depuración del IUE: SUGERIDO / CONFIRMADO / DESCARTADO, motivo y base legal |
+| `anexo_tributario_itc` | Anexos ITC generados (contenido JSON) |
+| `auditoria_prueba` | Resultado de cada prueba sustantiva (parámetros, resultado, conforme) |
+| `auditoria_dictamen` | Dictámenes e informes emitidos |
+| `auditoria_trail` | Bitácora **encadenada**: `hash = SHA-256(hash_prev + usuario + fecha + acción…)`; solo se agrega |
+
+## Inmutabilidad y trazabilidad
+
+- Al **cerrar y firmar** (contraseña del usuario), disparadores (*triggers*) de la base de datos impiden `INSERT`, `UPDATE` y `DELETE` sobre todas las tablas del encargo y sus detalles; la bitácora no admite modificaciones ni borrados nunca.
+- La huella **SHA-256** se calcula sobre una representación canónica (JSON ordenado) de todos los papeles de trabajo; *Verificar integridad* la recalcula y detecta cualquier alteración posterior, incluso hecha directamente en el archivo `.db`.
+- Las copias de seguridad incluyen las tablas de auditoría.
+
+## Lógica de negocio (resumen)
+
+| Elemento | Regla |
+|---|---|
+| Riesgo | RA = RI × RC × RD ⇒ RD = RA / (RI × RC); factores Bajo 0,4 · Medio 0,7 · Alto 1,0 |
+| Materialidad | Global = % de la base elegida (Activo total 1 %, Ingresos 0,5 %, Utilidad bruta 2 %, Patrimonio 2 %, Utilidad antes de impuestos 5 %; editables); desempeño 75 %; trivial 5 % de la global |
+| Cédulas sumarias | Se alimentan de los saldos del sistema a la fecha de cierre del período; los ajustes ACEPTADOS recalculan el saldo auditado |
+| Opinión sugerida | Desvíos no corregidos no triviales ≥ 3× materialidad ⇒ adversa; ≥ 1× ⇒ con salvedad; limitación de alcance de nivel alto ⇒ abstención; si no, limpia. Es una **sugerencia**; el auditor decide |
+| Inventarios | Muestreo (mayor valor al 100 % + aleatorio con semilla), corte documental, VNR (menor entre costo y valor neto de realización), obsolescencia (sin salidas / lotes vencidos), kardex vs. contabilidad |
+| Costos | MP, MOD, CIF por orden, cuota de aplicación del CIF sobre MOD y conciliación con cuentas 5.2.1.01 |
+| Activos fijos | Recalcula la depreciación con los coeficientes del D.S. 24051 y cuantifica el exceso no deducible; el ajuste por UFV es contable solo si el parámetro está activo (suspendido desde 2020 por CTNAC 03/2020) |
+| Planilla | Conciliación con aportes patronales, aguinaldo (provisión) y RC-IVA retenido (Formulario 110) |
+| IVA / IT | Débito fiscal y crédito fiscal del libro vs. contabilidad por mes; IT = tasa × ventas del libro |
+| Bancarización | Operaciones ≥ umbral deben tener pago con medio fehaciente (cheque, transferencia, depósito); las pagadas en efectivo o sin evidencia quedan «sin respaldo» (riesgo para crédito fiscal y deducibilidad) |
+| IUE | Utilidad contable + gastos no deducibles confirmados = utilidad imponible × alícuota |
+| Contingencias | Tributo omitido actualizado por UFV + intereses (tasa ingresada por el usuario, base 360) + sanción (ingresada) |
+
+## Roles
+
+El rol **Auditor** (nuevo) accede a los módulos de auditoría y a los informes; no registra comprobantes. **Administrador** y **Contador** también tienen acceso. El rol **Consulta** no accede a auditoría.
+
+## API local de solo lectura (opcional)
+
+```
+python -m contabol.api --empresa DEMO --anio 2025
+```
+
+Escucha solo en `127.0.0.1`, exige token y no modifica datos. Rutas (prefijo `/api/v1`): `/auditoria/encargos`, `/auditoria/materialidad`, `/auditoria/resumen-desvios`, `/auditoria/integridad`, `/inventarios/muestreo-recuento`, `/inventarios/corte-documental`, `/inventarios/vnr-obsolescencia`, `/costos/conversion`, `/activos/depreciacion-vs-ds24051`, `/planillas/conciliacion`, `/tributario/conciliacion-iva-it`, `/tributario/bancarizacion`, `/tributario/depuracion-iue`, `/tributario/anexos-itc`, `/tributario/contingencia`.
+
 # 5. Usuarios, roles y permisos
 
 | Rol | Alcance |
@@ -249,7 +315,7 @@ La estructura por servicios permite sustituir en el futuro la capa de datos por 
 
 # 13. Mantenimiento del código y pruebas
 
-El proyecto incluye **pruebas automáticas** (`python -m pytest`) que cubren las reglas contables, tributarias y laborales, los seis estados financieros, los 65 informes y la construcción de todas las pantallas; el flujo de integración continua las ejecuta en cada cambio y construye el instalador. Para añadir un informe, defínalo con el decorador `@reporte(...)` en el módulo correspondiente de `contabol/reports/`; aparecerá automáticamente en el Centro de reportes con sus parámetros. Las capturas de los manuales se regeneran con `python tools/capturas.py`.
+El proyecto incluye **pruebas automáticas** (`python -m pytest`) que cubren las reglas contables, tributarias y laborales, los seis estados financieros, los 79 informes y la construcción de todas las pantallas; el flujo de integración continua las ejecuta en cada cambio y construye el instalador. Para añadir un informe, defínalo con el decorador `@reporte(...)` en el módulo correspondiente de `contabol/reports/`; aparecerá automáticamente en el Centro de reportes con sus parámetros. Las capturas de los manuales se regeneran con `python tools/capturas.py`.
 
 # 14. Limitaciones conocidas
 
@@ -258,6 +324,7 @@ El proyecto incluye **pruebas automáticas** (`python -m pytest`) que cubren las
 - La emisión de **facturas electrónicas** se realiza en los sistemas del SIN; CONTA JB registra las facturas en los libros LCV y exporta su detalle, pero no las firma ni las transmite.
 - El ajuste por inflación con UFV está disponible pero suspendido contablemente desde 2020; su uso es decisión de la empresa.
 - El cálculo de finiquito es referencial.
+- **Auditoría:** las pruebas y los borradores de dictamen son apoyo al juicio profesional; los anexos ITC son formatos referenciales; los umbrales y tasas dependientes de norma deben verificarse y, cuando corresponda, ingresarse por el usuario.
 
 # Anexo A. Formato de solicitud de soporte
 

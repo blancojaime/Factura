@@ -1,5 +1,5 @@
 ---
-title: "CONTA JB 2.1 — Manual de Pruebas de Aceptación"
+title: "CONTA JB 2.2 — Manual de Pruebas de Aceptación"
 subtitle: "Guía paso a paso con datos de ejemplo, resultados esperados y capturas reales del aplicativo"
 lang: es
 ---
@@ -13,7 +13,7 @@ Este manual permite a un **contador, auditor o responsable de TI** comprobar, de
 1. se instala y arranca correctamente en Windows;
 2. registra las operaciones contables, tributarias, comerciales, de inventario, activos fijos, planillas y costos aplicando la **normativa boliviana vigente** (IVA 13 %, IT 3 %, IUE 25 %, RC-IVA, AFP, CNS, Pro-Vivienda, ANS, bono de antigüedad, aguinaldo e indemnización);
 3. emite correctamente los **seis estados financieros** (Balance General, Estado de Resultados, Estado de Evolución del Patrimonio Neto, Flujo de Efectivo por método directo, Flujo de Efectivo por método indirecto y Notas a los Estados Financieros);
-4. genera los **65 informes** del sistema en pantalla, **PDF** y **Excel**;
+4. genera los **79 informes** del sistema en pantalla, **PDF** y **Excel**;
 5. protege la información (usuarios, permisos, auditoría, copias de seguridad verificables).
 
 ## 1.2 Cómo están hechas las imágenes
@@ -22,7 +22,7 @@ Todas las imágenes de este manual son **capturas reales** del aplicativo, gener
 
 ## 1.3 Qué ya está verificado automáticamente
 
-Antes de entregar cada versión se ejecutan pruebas automáticas (paquete `tests/`) que cubren: partida doble, bimonetario, IVA/IT, inventario con costo promedio y FEFO, cobros y pagos, activos fijos, planillas con normativa vigente, producción, estados financieros, cierre y apertura de gestión, copias de seguridad, multiempresa, los 65 informes en PDF y Excel, y la construcción de **todas las pantallas** de la interfaz. Las cifras de la **Parte B** de este manual están además comprobadas por la prueba `tests/test_manual.py`: si el cálculo del sistema cambiara, esa prueba fallaría y el manual debería actualizarse.
+Antes de entregar cada versión se ejecutan pruebas automáticas (paquete `tests/`) que cubren: partida doble, bimonetario, IVA/IT, inventario con costo promedio y FEFO, cobros y pagos, activos fijos, planillas con normativa vigente, producción, estados financieros, cierre y apertura de gestión, copias de seguridad, multiempresa, los 79 informes en PDF y Excel, y la construcción de **todas las pantallas** de la interfaz. Las cifras de la **Parte B** de este manual están además comprobadas por la prueba `tests/test_manual.py`: si el cálculo del sistema cambiara, esa prueba fallaría y el manual debería actualizarse.
 
 Aun así, la aceptación en el equipo del cliente es necesaria: depende de su versión de Windows, impresoras, visor de PDF y de sus propios datos.
 
@@ -490,7 +490,7 @@ La variación coincide además con el saldo de *Caja y bancos* del Balance (el e
 
 *Estados financieros > Todos los estados financieros (paquete completo)*: genera un solo PDF con los **seis estados** en este orden: Balance General, Estado de Resultados, Evolución del Patrimonio, Flujo directo, Flujo indirecto y Notas, con **encabezado de empresa**, **paginación «Página x de y»** y **firmas** de Contador y Representante Legal. El archivo de ejemplo `ejemplo_estados_financieros.pdf` se incluye con el manual.
 
-# 6. Parte E — Informes (los 65 del sistema)
+# 6. Parte E — Informes (los 79 del sistema)
 
 Abra el **Centro de reportes** (F9). Los informes están agrupados por módulo y filtrados según los permisos del usuario.
 
@@ -598,7 +598,157 @@ Esta parte comprueba, punto por punto, la «Solicitud de modificaciones» recibi
 
 ![Acerca de CONTA JB](img/49_acerca_de.png){width=65%}
 
-# 9. Parte G — Pruebas automáticas y verificación del instalador
+# 9. Parte I — Módulos de Auditoría Financiera (MAF) y Tributaria (MAI) — versión 2.2
+
+Estos módulos se abren desde el menú **Auditoría**. Requieren el permiso *Auditoría financiera / tributaria* (rol **Auditor**, **Contador** o **Administrador**). La empresa de demostración incluye dos encargos de ejemplo: **AF-2025-001** (financiera) y **AT-2025-001** (tributaria), con los papeles de trabajo ya iniciados. Las cifras siguientes corresponden a esa empresa y están verificadas por las pruebas automáticas.
+
+> **Alcance y advertencias.** CONTA JB **organiza y calcula** los papeles de trabajo; **no sustituye el juicio profesional** del auditor. Los borradores de dictamen deben ser revisados y firmados por el profesional responsable. Los formatos de los anexos de la Información Tributaria Complementaria (ITC) son **referenciales**: deben adecuarse al formato oficial vigente del SIN antes de presentarse. Los umbrales y tasas marcados «verificar» (bancarización, tope de donaciones, tasa de interés de contingencias, umbral de auditoría externa) se encuentran en *Administración > Parámetros y normativa* y deben confirmarse con la norma vigente.
+
+## I1 ★ Encargo y planificación (Etapa A)
+
+1. *Auditoría > Auditoría financiera (MAF)*. Seleccione el encargo **AF-2025-001**.
+2. Pestaña **A · Planificación**: revise los *términos del encargo*, la comprensión del negocio y el control interno.
+3. Cambie **Riesgo inherente = Alto** y **Riesgo de control = Alto**, con riesgo aceptable 0,05, y pulse **Guardar memorándum y calcular RD**.
+
+| Verificación | Esperado |
+|---|---|
+| Fórmula | RA = RI × RC × RD ⇒ **RD = RA / (RI × RC)** (factores Bajo 0,4 · Medio 0,7 · Alto 1,0) |
+| RI = Medio, RC = Medio, RA = 5 % | RD = **10,20 %** («riesgo de detección bajo: ampliar el alcance de las pruebas»); con RI y RC en *Bajo* el RD sube a 31,25 % («medio») |
+| RI = Alto, RC = Alto, RA = 5 % | RD = **5,00 %** («riesgo de detección bajo: ampliar alcance y muestra») |
+| Materialidad (base Activo total Bs 2.048.383,01, 1 %) | Global **20.483,83** · Desempeño (75 %) **15.362,87** · Trivial (5 %) **1.024,19** |
+| Matriz de riesgos | 29 filas componente × aseveración (Existencia, Integridad, Valuación/asignación, Derechos y obligaciones, Presentación y revelación); doble clic para cambiar nivel y respuesta |
+
+![Planificación: memorándum, riesgo y materialidad](img/60_aud_planificacion.png){width=100%}
+
+![Programas de auditoría por componente](img/61_aud_programas.png){width=100%}
+
+**Programas (pestaña «A · Programas»):** 45 procedimientos para Disponibilidades, Cuentas por cobrar, Inventarios (MP, productos en proceso y terminados), Activos fijos y depreciaciones, Planillas y pasivos laborales, Costos de conversión, Patrimonio, Ingresos y Gastos. Doble clic en un procedimiento: registre estado, referencia al papel de trabajo y conclusión; el avance se actualiza en la parte superior.
+
+## I2 ★ Cédulas sumarias, analíticas y marcas (Etapa B)
+
+1. Pestaña **B · Cédulas** > **Generar desde saldos del sistema** (ya generadas en el demo).
+2. Compare con el *Balance General* y *Estado de Resultados*.
+
+| Cédula | Rubro | Saldo según sistema (Bs) |
+|---|---|---|
+| A | Disponible | **1.376.082,87** |
+| B | Exigible | **106.161,90** |
+| C | Inventarios | **458.254,90** |
+| E | Activos fijos y depreciación | **107.883,34** |
+| AA / BB / CC | Cuentas por pagar / Obligaciones fiscales / Sociales y laborales | 56.324,22 / 125.918,26 / 128.729,10 |
+| PP · II · GG | Patrimonio · Ingresos · Costos y gastos | 1.149.300,00 · 3.651.628,17 · 3.147.516,74 |
+
+Indexación: **A, B, C…** para activos y **AA, BB, CC…** para pasivos. Doble clic en una cédula: se abren las **analíticas** (una por cuenta); registre el *saldo verificado* y las **marcas** de la leyenda (V verificado, S sumado, M cotejado con Mayor, D con documentación, C confirmado por terceros, F inspección física, R recalculado, T rastreado, N no conforme, A con ajuste). Una marca que no está en la leyenda se rechaza. Use **Firmar preparación** y **Firmar revisión** (la revisión debe hacerla otra persona del equipo).
+
+![Cédulas sumarias](img/62_aud_cedulas.png){width=100%}
+
+## I3 ★ Pruebas sustantivas conectadas a los módulos (Etapa B)
+
+Pestaña **B · Pruebas sustantivas**. Seleccione la prueba, pulse **Ejecutar y guardar como papel de trabajo**.
+
+| Prueba | Conecta con | Resultado en el demo |
+|---|---|---|
+| Muestreo para recuento | Inventarios | 10 de 12 ítems seleccionados, **cobertura 99,1 %** del valor (los de mayor valor al 100 % + muestra aleatoria reproducible con *semilla* 2025) |
+| Corte documental (±5 días) | Ventas, compras, movimientos de inventario y comprobantes | 3 documentos revisados, **0 diferencias** |
+| VNR y obsolescencia | Ítems, precios, lotes y kardex | Sin ítems observados (costo ≤ valor neto de realización) |
+| Kardex vs. contabilidad | Inventarios y cuenta 1.1.3 | Diferencia 0,01 (redondeo) ⇒ **conciliado** |
+| Costos de conversión | Órdenes de producción (MP, MOD, CIF) | Cuota de aplicación del CIF sobre MOD y variaciones contra las cuentas 5.2.1.01 |
+| Depreciación vs. D.S. 24051 | Activos fijos | 4 activos, **exceso 0,08** (redondeo, tolerancia 0,50) ⇒ conforme; lista altas y bajas del período |
+| Planilla vs. aportes | Planillas | **1 partida con diferencia**: la *provisión de aguinaldo* (Bs 32.100,00 esperados) no está contabilizada ⇒ da origen al hallazgo H-01 |
+| Antigüedad de cuentas por cobrar | Ventas y cobros | Todo el saldo (Bs 106.161,90) está en el tramo 0–30 días; previsión sugerida 0,00 |
+
+![Pruebas sustantivas: muestreo para recuento](img/63_aud_pruebas.png){width=100%}
+
+## I4 ★ Hallazgos, ajustes y desvíos (Etapa C)
+
+1. Pestaña **C · Hallazgos**: el hallazgo **H-01** (aguinaldo no provisionado) tiene los cuatro elementos — **Condición, Criterio, Causa, Efecto** — más Recomendación y **Descargo de la Gerencia**. Intente guardar uno nuevo sin *Causa*: el sistema lo rechaza.
+2. Pestaña **C · Ajustes y desvíos**: el asiento propuesto **AJU-1** (Debe 5.3.1.01.004 Aguinaldos / Haber 2.1.3.02.001 Provisión de aguinaldos, **Bs 32.100,00**) está en estado *No corregido*.
+3. Cambie su estado a **Aceptado**: la cédula **CC** muestra el ajuste y el saldo auditado cambia; vuelva a dejarlo *No corregido*.
+
+| Verificación | Esperado |
+|---|---|
+| Efecto de desvíos no corregidos | **−32.100,00** en resultados |
+| Frente a la materialidad global (20.483,83) | «**SUPERA** la materialidad global: evaluar opinión modificada» |
+| Opinión sugerida (NIA 705) | **Con salvedad** (no vinculante; el auditor decide) |
+
+![Hallazgos](img/64_aud_hallazgos.png){width=100%}
+
+![Ajustes propuestos y resumen de desvíos](img/65_aud_ajustes.png){width=100%}
+
+## I5 ★ Dictamen y cierre inmutable
+
+1. Pestaña **C · Dictamen / informe**: elija la opinión y **Generar borrador** (NIA 700; con salvedad o adversa según NIA 705; énfasis y cuestiones clave según NIA 706/701). Edite el texto y pulse **Emitir**.
+2. **Cerrar y firmar**: se pide la contraseña del usuario. El encargo queda **CERRADO**: los papeles de trabajo pasan a **solo lectura** (también a nivel de base de datos) y se guarda la huella **SHA-256** de toda la evidencia.
+3. **Verificar integridad**: confirma que el contenido actual coincide con la huella firmada.
+
+| Prueba | Esperado |
+|---|---|
+| Intentar cerrar sin dictamen | Se rechaza |
+| Contraseña de firma incorrecta | Se rechaza |
+| Editar cualquier papel tras el cierre | «El encargo está CERRADO… solo lectura» |
+| Bitácora (*Informes > Bitácora de auditoría*) | Cada acción con usuario, fecha y huella encadenada; si alguien altera un registro, la cadena se marca **ALTERADA** |
+
+![Dictamen](img/66_aud_dictamen.png){width=100%}
+
+## I6 ★ Auditoría tributaria (MAI) — conciliaciones
+
+*Auditoría > Auditoría tributaria (MAI)*, encargo **AT-2025-001**, pestaña **B · Pruebas tributarias**.
+
+| Prueba | Esperado en el demo |
+|---|---|
+| Conciliación Débito Fiscal / Crédito Fiscal / IT vs. Libros de Ventas y Compras | 12 meses, **0 con diferencia** (IT: diferencia acumulada 0,03 por redondeo; tolerancia 1,00) |
+| Bancarización (umbral Bs 50.000, parámetro *BANCARIZACION_MONTO*) | **35 operaciones** ≥ umbral: 17 respaldadas, 1 pendiente de pago, **17 sin respaldo** por **Bs 1.144.950,86** (crédito fiscal en riesgo ≈ Bs 148.843,61) |
+
+![Bancarización](img/67_aud_mai_pruebas.png){width=100%}
+
+Para experimentar una diferencia: registre una factura en el Libro de Ventas **sin** generar asiento (IVA 13 % de Bs 1.000 = 130,00): la conciliación de ese mes muestra DF libro 130,00 vs. contabilidad 0,00.
+
+## I7 ★ Depuración de gastos e IUE
+
+Pestaña **B · Depuración IUE** > **Depurar**. El sistema **sugiere** gastos no deducibles (D.S. 24051): compras sin factura, operaciones sin respaldo bancario, depreciación en exceso, multas y recargos, IUE registrado como gasto, previsiones por verificar. Cada sugerencia debe ser **Confirmada o Descartada** por el auditor; también puede **agregar gastos manuales** (p. ej. donaciones por encima del tope del 10 % de la utilidad imponible).
+
+| Verificación (demo) | Esperado |
+|---|---|
+| Utilidad contable antes de impuestos | **504.111,43** |
+| Sugerencias pendientes | 2 (operaciones sin respaldo bancario Bs 1.144.950,86; depreciación en exceso Bs 0,08) |
+| Confirmar la primera | Utilidad imponible = 504.111,43 + 1.144.950,86 = **1.649.062,29**; IUE 25 % = **412.265,57** |
+| Descartar la segunda | Queda sin sugerencias pendientes (la cédula pasa a «conforme») |
+
+![Depuración del IUE](img/68_aud_mai_iue.png){width=100%}
+
+## I8 Anexos ITC e informes tributarios
+
+1. Pestaña **B · Anexos ITC** > **Llenar anexos automáticamente**: se generan los **15 anexos** referenciales (ingresos, costos y gastos, conciliaciones de DF/CF/IT, depuración del IUE, activos fijos, inventarios, cuentas por cobrar y por pagar, planilla, bancarización, patrimonio, retenciones, hallazgos).
+2. **Calculadora de contingencias**: tributo omitido Bs 10.000 con vencimiento 20/03/2025, cálculo 31/12/2025, tasa 10 % (ingresada por el usuario), sin sanción.
+
+| Resultado de la calculadora | Esperado |
+|---|---|
+| UFV al vencimiento / al cálculo | 2,49600 / 2,61600 (según los valores cargados en el demo) |
+| Tributo actualizado (× 1,048077) | **10.480,77** |
+| Intereses (286 días, 10 % anual, base 360) | **832,64** |
+| Deuda tributaria | **11.313,41** |
+
+> La tasa de interés y la sanción **no vienen precargadas** (valor 0): el usuario debe ingresarlas según la Ley 2492 (Código Tributario) y las disposiciones del SIN vigentes.
+
+Pestaña **C · Dictamen / informe** en MAI: genere el **Dictamen Tributario**, el **Informe de procedimientos mínimos tributarios** o el **Informe sobre la situación tributaria** (con la liquidación de contingencias de los hallazgos con impacto en monto).
+
+![Anexos ITC](img/69_aud_mai_anexos.png){width=100%}
+
+## I9 Informes PDF / Excel de auditoría
+
+Desde *Auditoría > …* o el botón **Informes…** de cada pantalla: memorándum de planificación, matriz de riesgos, programas, cédulas sumarias y analíticas, pruebas ejecutadas, hallazgos, resumen de desvíos, dictamen, bitácora (MAF) y conciliación IVA/IT, bancarización, depuración del IUE, anexos ITC y contingencias (MAI). Todos se exportan a **PDF y Excel** y, si el encargo está cerrado, imprimen su huella SHA-256 al pie.
+
+![Memorándum de planificación en PDF](img/pdf_aud_mpa.png){width=70%}
+
+![Cédulas sumarias en PDF](img/pdf_aud_sumarias.png){width=100%}
+
+![Cédula de depuración del IUE en PDF](img/pdf_aud_iue.png){width=70%}
+
+## I10 Consulta por API local (opcional, equipo técnico)
+
+`python -m contabol.api --empresa DEMO --anio 2025` abre una **API de solo lectura** en `127.0.0.1:8765` con un token aleatorio (cabecera `Authorization: Bearer <token>`). Rutas principales (parámetro `encargo`): `/api/v1/inventarios/corte-documental`, `/api/v1/tributario/conciliacion-iva-it`, `/api/v1/activos/depreciacion-vs-ds24051`, `/api/v1/tributario/bancarizacion`, `/api/v1/auditoria/integridad`. La ruta `/api/v1/` lista todas.
+
+# 10. Parte G — Pruebas automáticas y verificación del instalador
 
 ## G1 Ejecutar las pruebas automáticas (equipo técnico)
 
@@ -611,7 +761,7 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-**Esperado:** todas las pruebas en verde (más de 50), incluyendo `test_manual.py` (cifras de este manual), `test_estados.py` (los seis estados), `test_reportes.py` (65 informes en PDF y Excel) y `test_ui.py` (todas las pantallas).
+**Esperado:** todas las pruebas en verde (más de 60), incluyendo `test_manual.py` (cifras de este manual), `test_estados.py` (los seis estados), `test_reportes.py` (79 informes en PDF y Excel) y `test_ui.py` (todas las pantallas).
 
 ## G2 Autoprueba del programa instalado
 

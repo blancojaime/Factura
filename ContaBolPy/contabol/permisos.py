@@ -33,6 +33,9 @@ OPCIONES: list[tuple[str, str, str]] = [
     ("RH.REPORTES", "Reportes laborales", "Planillas"),
     ("COS.PRODUCCION", "Órdenes de producción", "Costos"),
     ("COS.REPORTES", "Reportes de costos", "Costos"),
+    ("AUD.FINANCIERA", "Auditoría financiera (MAF)", "Auditoría"),
+    ("AUD.TRIBUTARIA", "Auditoría tributaria (MAI)", "Auditoría"),
+    ("AUD.REPORTES", "Informes de auditoría", "Auditoría"),
 ]
 
 TODAS = [o[0] for o in OPCIONES]
@@ -41,6 +44,7 @@ ROLES = {
     "ADMIN": "Administrador (todo)",
     "CONTADOR": "Contador (todo menos usuarios y restaurar)",
     "OPERADOR": "Operador (registro de operaciones)",
+    "AUDITOR": "Auditor (módulos de auditoría e informes)",
     "CONSULTA": "Consulta (solo reportes)",
 }
 
@@ -53,6 +57,8 @@ def permisos_de_rol(rol: str) -> list[str]:
     if rol == "OPERADOR":
         return [o for o in TODAS if o.split(".")[1] in ("COMPROBANTES", "REGISTRO", "TERCEROS", "VENTAS", "COMPRAS", "COBROS",
                                                          "ITEMS", "MOVIMIENTOS", "TIPOCAMBIO", "BANCOS") or o.endswith("REPORTES")]
+    if rol == "AUDITOR":
+        return [o for o in TODAS if o.startswith("AUD.") or o.endswith("REPORTES") or o in ("CONT.COMPROBANTES",)][:-1] if False else [o for o in TODAS if o.startswith("AUD.") or o.endswith("REPORTES")]
     if rol == "CONSULTA":
-        return [o for o in TODAS if o.endswith("REPORTES")]
+        return [o for o in TODAS if o.endswith("REPORTES") and not o.startswith("AUD.")]
     return []

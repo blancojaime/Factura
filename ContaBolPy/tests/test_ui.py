@@ -47,13 +47,14 @@ def test_todas_las_pantallas(app, entorno):
     from contabol.ui.p_iva import LibroIvaPantalla
     from contabol.ui.p_rrhh import (ActivosPantalla, AnticiposPantalla, BeneficiosPantalla, DepreciacionPantalla, EmpleadosPantalla, PlanillaPantalla, ProduccionPantalla)
     from contabol.ui.reportes_ui import CentroReportes
+    from contabol.ui.p_auditoria import AuditoriaFinancieraPantalla as AudFin, AuditoriaTributariaPantalla as AudTrib
     e = entorno
     w = VentanaPrincipal(e.sis, e.usuario, e.ctx)
     w.show()
     casos = [(PlanCuentasPantalla,), (ComprobantesPantalla,), (TipoCambioPantalla,), (ConciliacionPantalla,), (PresupuestoPantalla,), (TercerosPantalla, "C"), (TercerosPantalla, "P"),
              (DocumentosPantalla, True), (DocumentosPantalla, False), (CobrosPagosPantalla,), (ItemsPantalla,), (MovimientosPantalla,), (CatalogoPantalla, "almacen"), (LibroIvaPantalla, "V"),
              (LibroIvaPantalla, "C"), (ActivosPantalla,), (DepreciacionPantalla,), (EmpleadosPantalla,), (PlanillaPantalla,), (AnticiposPantalla,), (BeneficiosPantalla,), (ProduccionPantalla,),
-             (ParametrosPantalla,), (UsuariosPantalla,), (AuditoriaPantalla,), (BackupPantalla,), (CierrePantalla,), (ConsolidarPantalla,), (UtilitariosPantalla,), (CentroReportes,)]
+             (ParametrosPantalla,), (AudFin,), (AudTrib,), (UsuariosPantalla,), (AuditoriaPantalla,), (BackupPantalla,), (CierrePantalla,), (ConsolidarPantalla,), (UtilitariosPantalla,), (CentroReportes,)]
     for i, c in enumerate(casos):
         p = w.abrir(c[0], *c[1:], clave=f"t{i}")
         assert p is not None, c
@@ -61,6 +62,19 @@ def test_todas_las_pantallas(app, entorno):
     w.informe("estados_financieros", pedir=False)
     w.informe("balance_general", pedir=False)
     assert w.tabs.count() > 30
+    pa = w.abrir(AudFin, clave='aud_f')
+    assert pa.eid is not None and pa.tabs.count() == 7
+    pa._ejecutar_f()
+    with pytest.raises(AssertionError, match='aún está abierto'):
+        pa.verificar()
+    pt = w.abrir(AudTrib, clave='aud_t')
+    assert pt.eid is None and pt.cb.count() == 0
+    e.ctx.auditoria.crear_encargo('T', 'MAI ui')
+    pt.refrescar()
+    pt._ejecutar_t()
+    pt._depurar()
+    pt._gen_anexos()
+    pt._borrador()
     w.accion_salida = "cambiar"
     w.close()
 

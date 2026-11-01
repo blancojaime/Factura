@@ -17,6 +17,7 @@ def construir_menu(w) -> None:
     from .p_iva import LibroIvaPantalla, LiquidacionDialog
     from .p_rrhh import ActivosPantalla, AnticiposPantalla, BeneficiosPantalla, DepreciacionPantalla, EmpleadosPantalla, PlanillaPantalla, ProduccionPantalla
     from .reportes_ui import CentroReportes
+    from .p_auditoria import AuditoriaFinancieraPantalla, AuditoriaTributariaPantalla
 
     ctx = w.ctx
     mb = w.menuBar()
@@ -31,7 +32,7 @@ def construir_menu(w) -> None:
               ("anticipo", "dinero", "personal"), ("aguinaldo", "calendario", "personal"), ("producción", "produccion", "costo"), ("balance", "estados", "informe"),
               ("resultados", "estados", "informe"), ("patrimonio", "estados", "informe"), ("flujo", "cobros", "informe"), ("notas", "libro", "informe"), ("estados financieros", "estados", "informe"),
               ("centro de reportes", "informe", "informe"), ("libro diario", "libro", "informe"), ("libro mayor", "libro", "informe"), ("sumas", "estados", "informe"), ("índices", "informe", "informe"),
-              ("parámetros", "config", "admin"), ("usuarios", "usuarios", "admin"), ("auditoría", "buscar", "admin"), ("copias", "respaldo", "admin"), ("contraseña", "candado", "admin"),
+              ("parámetros", "config", "admin"), ("usuarios", "usuarios", "admin"), ("auditoría financiera", "buscar", "informe"), ("auditoría tributaria", "buscar", "impuesto"), ("auditoría", "buscar", "admin"), ("copias", "respaldo", "admin"), ("contraseña", "candado", "admin"),
               ("empresa o gestión", "banco", "conta"), ("cerrar sesión", "salir", "admin"), ("salir", "salir", "admin"), ("acerca", "ayuda", "admin")]
 
     def icono_para(texto):
@@ -125,6 +126,15 @@ def construir_menu(w) -> None:
     m = mb.addMenu("Cos&tos")
     accion(m, "Órdenes de producción", "COS.PRODUCCION", lambda: w.abrir(ProduccionPantalla))
     accion(m, "Órdenes de producción (informe)", "COS.REPORTES", inf("ordenes_produccion"))
+    # Auditoría
+    m = mb.addMenu("A&uditoría")
+    accion(m, "Auditoría financiera (MAF)", "AUD.FINANCIERA", lambda: w.abrir(AuditoriaFinancieraPantalla))
+    accion(m, "Auditoría tributaria (MAI)", "AUD.TRIBUTARIA", lambda: w.abrir(AuditoriaTributariaPantalla))
+    m.addSeparator()
+    for t, i in (("Memorándum de planificación", "aud_mpa"), ("Matriz de riesgos", "aud_riesgos"), ("Cédulas sumarias y analíticas", "aud_sumarias"), ("Hallazgos de auditoría", "aud_hallazgos"),
+                 ("Resumen de desvíos y ajustes", "aud_desvios"), ("Conciliación IVA / IT", "aud_iva_it"), ("Bancarización", "aud_bancarizacion"), ("Depuración de gastos e IUE", "aud_iue"),
+                 ("Anexos ITC", "aud_anexos_itc"), ("Situación tributaria y contingencias", "aud_contingencias")):
+        accion(m, t, "AUD.REPORTES", inf(i))
     # Estados financieros
     m = mb.addMenu("&Estados financieros")
     for t, i in (("Balance General", "balance_general"), ("Estado de Resultados", "estado_resultados"), ("Estado de Evolución del Patrimonio Neto", "evolucion_patrimonio"),

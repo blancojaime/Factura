@@ -95,4 +95,4 @@ def _cargar():
     if _cargado:
         return
     _cargado = True
-    from . import rep_contables, rep_eeff, rep_iva, rep_comercial, rep_inventario, rep_rrhh, rep_otros  # noqa: F401
+    from . import rep_contables, rep_eeff, rep_iva, rep_comercial, rep_inventario, rep_rrhh, rep_otros, rep_auditoria  # noqa: F401

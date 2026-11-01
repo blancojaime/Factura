@@ -244,6 +244,8 @@ class ParametrosDialog(QDialog):
             return self._combo([(x["id"], f"{c.vouchers.codigo(x)}  {x['glosa'][:50]}") for x in c.vouchers.listar()], v, None)
         if t == "tipo_comp":
             return self._combo([(x["codigo"], x["nombre"]) for x in c.vouchers.tipos()], v, "(todos)")
+        if t == "encargo":
+            return self._combo([(x["id"], f"{x['codigo']}  {x['nombre']} ({'cerrado' if x['estado'] == 'CERRADO' else 'abierto'})") for x in c.auditoria.listar()], v, None)
         if t == "lista":
             return self._combo(p.opciones or [], v)
         if t in ("entero", "importe"):

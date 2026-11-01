@@ -4,7 +4,7 @@ Sistema contable integrado para Bolivia (comercial y de costos). Python 3 + PySi
 
 - Normativa boliviana parametrizada con vigencia: IVA 13 %, IT 3 %, IUE 25 %, RC-IVA, AFP, CNS, Pro-Vivienda, ANS, bono de antigüedad, aguinaldo, indemnización.
 - Seis estados financieros: Balance General, Estado de Resultados, Evolución del Patrimonio Neto, Flujo de Efectivo (directo e indirecto) y Notas.
-- 65 informes en pantalla, PDF y Excel. Multiempresa y multigestión. Respaldos verificables.
+- 79 informes en pantalla, PDF y Excel. Módulos de Auditoría Financiera (MAF) y Tributaria (MAI) con cierre inmutable (SHA-256). Multiempresa y multigestión. Respaldos verificables.
 
 ```
 pip install -r requirements-dev.txt

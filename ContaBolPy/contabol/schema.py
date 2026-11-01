@@ -1,6 +1,6 @@
 """Esquemas SQL. Sistema (maestro) y Gestión (una base por empresa y año)."""
 
-VERSION_ESQUEMA = 2
+VERSION_ESQUEMA = 3
 
 SISTEMA = """
 CREATE TABLE config (clave TEXT PRIMARY KEY, valor TEXT);
@@ -217,3 +217,87 @@ def migrar_gestion(db) -> None:
         cols = {r["name"] for r in db.query(f"PRAGMA table_info({tabla})")}
         if col not in cols:
             db.execute(f"ALTER TABLE {tabla} ADD COLUMN {col} {definicion}")
+    crear_auditoria(db)
+
+
+# ======================================================================= AUDITORÍA (MAF / MAI)
+SCHEMA_AUDITORIA = """
+CREATE TABLE IF NOT EXISTS auditoria_encargo (
+  id INTEGER PRIMARY KEY, tipo TEXT NOT NULL CHECK (tipo IN ('F','T')), codigo TEXT NOT NULL UNIQUE, nombre TEXT NOT NULL,
+  periodo_ini TEXT NOT NULL, periodo_fin TEXT NOT NULL, estado TEXT NOT NULL DEFAULT 'ABIERTO' CHECK (estado IN ('ABIERTO','CERRADO')),
+  fase TEXT NOT NULL DEFAULT 'PLANIFICACION', creado_por INTEGER, creado_en TEXT NOT NULL, cerrado_por TEXT, cerrado_en TEXT, sha256 TEXT);
+CREATE TABLE IF NOT EXISTS auditoria_equipo (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), nombre TEXT NOT NULL, rol TEXT NOT NULL, iniciales TEXT NOT NULL, usuario_id INTEGER);
+CREATE TABLE IF NOT EXISTS auditoria_memorando (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL UNIQUE REFERENCES auditoria_encargo(id), terminos TEXT, negocio TEXT, sector TEXT, control_interno TEXT, normativa_aplicable TEXT,
+  riesgo_inherente TEXT NOT NULL DEFAULT 'M', riesgo_control TEXT NOT NULL DEFAULT 'M', riesgo_auditoria_aceptable REAL NOT NULL DEFAULT 0.05, riesgo_deteccion REAL, conclusion TEXT, actualizado_en TEXT);
+CREATE TABLE IF NOT EXISTS auditoria_materialidad (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL UNIQUE REFERENCES auditoria_encargo(id), base TEXT NOT NULL, valor_base REAL NOT NULL, pct_global REAL NOT NULL,
+  materialidad_global REAL NOT NULL, pct_desempeno REAL NOT NULL, materialidad_desempeno REAL NOT NULL, pct_trivial REAL NOT NULL, umbral_trivial REAL NOT NULL, justificacion TEXT, calculado_en TEXT);
+CREATE TABLE IF NOT EXISTS auditoria_riesgo (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), componente TEXT NOT NULL, aseveracion TEXT NOT NULL, descripcion TEXT, nivel TEXT NOT NULL DEFAULT 'M',
+  respuesta TEXT, programa_ref TEXT);
+CREATE TABLE IF NOT EXISTS auditoria_programa (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), indice TEXT NOT NULL, componente TEXT NOT NULL, objetivo TEXT, UNIQUE(encargo_id, indice));
+CREATE TABLE IF NOT EXISTS auditoria_programa_paso (
+  id INTEGER PRIMARY KEY, programa_id INTEGER NOT NULL REFERENCES auditoria_programa(id), nro INTEGER NOT NULL, procedimiento TEXT NOT NULL, aseveracion TEXT, base_normativa TEXT,
+  estado TEXT NOT NULL DEFAULT 'P' CHECK (estado IN ('P','E','R','N')), responsable TEXT, fecha TEXT, referencia_pt TEXT, conclusion TEXT);
+CREATE TABLE IF NOT EXISTS marca_auditoria (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER REFERENCES auditoria_encargo(id), simbolo TEXT NOT NULL, significado TEXT NOT NULL, color TEXT NOT NULL DEFAULT '#1F3A5F');
+CREATE TABLE IF NOT EXISTS cedula_sumaria (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), indice TEXT NOT NULL, titulo TEXT NOT NULL, cuentas TEXT NOT NULL, naturaleza TEXT NOT NULL DEFAULT 'D',
+  saldo_sistema REAL NOT NULL DEFAULT 0, ajustes REAL NOT NULL DEFAULT 0, reclasificaciones REAL NOT NULL DEFAULT 0, saldo_auditado REAL NOT NULL DEFAULT 0, saldo_anterior REAL NOT NULL DEFAULT 0,
+  conclusion TEXT, preparado_por TEXT, preparado_en TEXT, revisado_por TEXT, revisado_en TEXT, UNIQUE(encargo_id, indice));
+CREATE TABLE IF NOT EXISTS cedula_analitica (
+  id INTEGER PRIMARY KEY, sumaria_id INTEGER NOT NULL REFERENCES cedula_sumaria(id), indice TEXT NOT NULL, cuenta_codigo TEXT NOT NULL, concepto TEXT NOT NULL, saldo_libros REAL NOT NULL DEFAULT 0,
+  saldo_verificado REAL, diferencia REAL, marcas TEXT, comentario TEXT, referencia TEXT);
+CREATE TABLE IF NOT EXISTS hallazgo_auditoria (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), codigo TEXT NOT NULL, componente TEXT, condicion TEXT NOT NULL, criterio TEXT NOT NULL, causa TEXT, efecto TEXT,
+  recomendacion TEXT, descargo_gerencia TEXT, nivel TEXT NOT NULL DEFAULT 'M', impacto_monto REAL NOT NULL DEFAULT 0, estado TEXT NOT NULL DEFAULT 'ABIERTO', referencia_pt TEXT,
+  creado_en TEXT, UNIQUE(encargo_id, codigo));
+CREATE TABLE IF NOT EXISTS asiento_ajuste_propuesto (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), numero INTEGER NOT NULL, tipo TEXT NOT NULL CHECK (tipo IN ('AJU','REC')), descripcion TEXT NOT NULL,
+  estado TEXT NOT NULL DEFAULT 'PROPUESTO' CHECK (estado IN ('PROPUESTO','ACEPTADO','NO_CORREGIDO')), hallazgo_id INTEGER REFERENCES hallazgo_auditoria(id), efecto_resultado REAL NOT NULL DEFAULT 0,
+  creado_en TEXT, UNIQUE(encargo_id, numero));
+CREATE TABLE IF NOT EXISTS asiento_ajuste_det (
+  id INTEGER PRIMARY KEY, ajuste_id INTEGER NOT NULL REFERENCES asiento_ajuste_propuesto(id), cuenta_id INTEGER NOT NULL REFERENCES cuenta(id), debe REAL NOT NULL DEFAULT 0, haber REAL NOT NULL DEFAULT 0, glosa TEXT);
+CREATE TABLE IF NOT EXISTS gasto_no_deducible_iue (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), comprobante_id INTEGER REFERENCES comprobante(id), cuenta_codigo TEXT, concepto TEXT NOT NULL, monto REAL NOT NULL,
+  motivo TEXT NOT NULL, base_legal TEXT, origen TEXT NOT NULL DEFAULT 'AUTO', estado TEXT NOT NULL DEFAULT 'SUGERIDO' CHECK (estado IN ('SUGERIDO','CONFIRMADO','DESCARTADO')));
+CREATE TABLE IF NOT EXISTS anexo_tributario_itc (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), numero INTEGER NOT NULL, titulo TEXT NOT NULL, contenido TEXT NOT NULL, generado_en TEXT, UNIQUE(encargo_id, numero));
+CREATE TABLE IF NOT EXISTS auditoria_prueba (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), clave TEXT NOT NULL, titulo TEXT NOT NULL, parametros TEXT, resultado TEXT NOT NULL, conforme INTEGER,
+  indice_pt TEXT, ejecutado_por TEXT, ejecutado_en TEXT);
+CREATE TABLE IF NOT EXISTS auditoria_dictamen (
+  id INTEGER PRIMARY KEY, encargo_id INTEGER NOT NULL REFERENCES auditoria_encargo(id), clase TEXT NOT NULL, opinion TEXT, texto TEXT NOT NULL, kam TEXT, enfasis TEXT, fecha TEXT, firmante TEXT, creado_en TEXT);
+CREATE TABLE IF NOT EXISTS auditoria_trail (
+  id INTEGER PRIMARY KEY, fecha TEXT NOT NULL, usuario TEXT NOT NULL, encargo_id INTEGER, entidad TEXT NOT NULL, entidad_id INTEGER, accion TEXT NOT NULL, detalle TEXT, hash_prev TEXT, hash TEXT NOT NULL);
+"""
+
+TABLAS_CON_ENCARGO = ["auditoria_equipo", "auditoria_memorando", "auditoria_materialidad", "auditoria_riesgo", "auditoria_programa", "marca_auditoria", "cedula_sumaria", "hallazgo_auditoria",
+                      "asiento_ajuste_propuesto", "gasto_no_deducible_iue", "anexo_tributario_itc", "auditoria_prueba", "auditoria_dictamen"]
+TABLAS_INDIRECTAS = {  # tabla: (columna_fk, tabla_padre) -> el padre lleva encargo_id
+    "auditoria_programa_paso": ("programa_id", "auditoria_programa"), "cedula_analitica": ("sumaria_id", "cedula_sumaria"), "asiento_ajuste_det": ("ajuste_id", "asiento_ajuste_propuesto")}
+MSG_CERRADO = "El encargo de auditoría está CERRADO: los papeles de trabajo son de solo lectura (evidencia inmutable)."
+
+
+def crear_auditoria(db) -> None:
+    """Crea las tablas de auditoría y los disparadores que congelan los papeles de trabajo al cerrar el encargo (idempotente)."""
+    for stmt in SCHEMA_AUDITORIA.split(";\n"):
+        if stmt.strip():
+            db.execute(stmt)
+    for t in TABLAS_CON_ENCARGO:
+        for ev, ref in (("INSERT", "NEW"), ("UPDATE", "OLD"), ("DELETE", "OLD")):
+            cond = f"(SELECT estado FROM auditoria_encargo WHERE id={ref}.encargo_id)='CERRADO'"
+            if t == "marca_auditoria":
+                cond = f"{ref}.encargo_id IS NOT NULL AND {cond}"
+            db.execute(f"CREATE TRIGGER IF NOT EXISTS trg_{t}_{ev.lower()} BEFORE {ev} ON {t} WHEN {cond} BEGIN SELECT RAISE(ABORT, '{MSG_CERRADO}'); END")
+    for t, (fk, padre) in TABLAS_INDIRECTAS.items():
+        for ev, ref in (("INSERT", "NEW"), ("UPDATE", "OLD"), ("DELETE", "OLD")):
+            cond = f"(SELECT e.estado FROM {padre} p JOIN auditoria_encargo e ON e.id=p.encargo_id WHERE p.id={ref}.{fk})='CERRADO'" if padre != "asiento_ajuste_propuesto" or True else ""
+            db.execute(f"CREATE TRIGGER IF NOT EXISTS trg_{t}_{ev.lower()} BEFORE {ev} ON {t} WHEN {cond} BEGIN SELECT RAISE(ABORT, '{MSG_CERRADO}'); END")
+    db.execute(f"CREATE TRIGGER IF NOT EXISTS trg_encargo_update BEFORE UPDATE ON auditoria_encargo WHEN OLD.estado='CERRADO' BEGIN SELECT RAISE(ABORT, '{MSG_CERRADO}'); END")
+    db.execute(f"CREATE TRIGGER IF NOT EXISTS trg_encargo_delete BEFORE DELETE ON auditoria_encargo WHEN OLD.estado='CERRADO' BEGIN SELECT RAISE(ABORT, '{MSG_CERRADO}'); END")
+    db.execute("CREATE TRIGGER IF NOT EXISTS trg_trail_update BEFORE UPDATE ON auditoria_trail BEGIN SELECT RAISE(ABORT, 'La bitácora de auditoría es de solo anexado.'); END")
+    db.execute("CREATE TRIGGER IF NOT EXISTS trg_trail_delete BEFORE DELETE ON auditoria_trail BEGIN SELECT RAISE(ABORT, 'La bitácora de auditoría es de solo anexado.'); END")

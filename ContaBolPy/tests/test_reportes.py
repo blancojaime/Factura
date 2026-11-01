@@ -26,7 +26,16 @@ def _poblar(env):
     ctx.produccion.agregar_mod(oid, eid, 8)
     ctx.produccion.agregar_cif(oid, "Energía", 40)
     ctx.produccion.cerrar(oid, "2025-02-20", 10)
-    return {"cuenta": env.cta(CAJA), "banco": env.cta(BANCO), "tercero": ctx.db.scalar("SELECT id FROM tercero WHERE clase='C'"), "item": mp,
+    a = ctx.auditoria
+    enc = a.crear_encargo("F", "Auditoría de prueba")
+    a.sumarias_generar(enc)
+    a.hallazgo_guardar(enc, {"condicion": "c", "criterio": "k", "causa": "u", "efecto": "f", "impacto_monto": 100, "nivel": "A"})
+    a.ajuste_guardar(enc, "AJU", "Ajuste", [{"cuenta_id": env.cta(CAJA), "debe": 10}, {"cuenta_id": env.cta(CAPITAL), "haber": 10}])
+    ctx.aud_pruebas.ejecutar(enc, "conciliar_inventario_kardex")
+    ctx.aud_trib.depuracion_iue(enc)
+    ctx.aud_trib.generar_anexos(enc)
+    ctx.aud_informes.emitir(enc, ctx.aud_informes.borrador_tributario(enc))
+    return {"encargo": enc, "cuenta": env.cta(CAJA), "banco": env.cta(BANCO), "tercero": ctx.db.scalar("SELECT id FROM tercero WHERE clase='C'"), "item": mp,
             "orden": oid, "empleado": eid, "comp": ctx.db.scalar("SELECT MIN(id) FROM comprobante"), "venta": ctx.db.scalar("SELECT MIN(id) FROM venta"),
             "compra": ctx.db.scalar("SELECT MIN(id) FROM compra")}
 
@@ -48,6 +57,8 @@ def test_todos_los_reportes_generan_pdf_y_excel(env):
                 vals[pd.clave] = ids["orden"]
             elif pd.tipo == "empleado":
                 vals[pd.clave] = ids["empleado"]
+            elif pd.tipo == "encargo":
+                vals[pd.clave] = ids["encargo"]
             elif pd.tipo == "comprobante":
                 vals[pd.clave] = ids["comp"]
         if r.id == "nota_venta":
@@ -63,7 +74,7 @@ def test_todos_los_reportes_generan_pdf_y_excel(env):
         except Exception as ex:  # noqa: BLE001
             fallos.append(f"{r.id}: {type(ex).__name__}: {ex}")
     assert not fallos, "\n".join(fallos)
-    assert n >= 55, n
+    assert n >= 65, n
 
 
 def test_paquete_estados_financieros(env):

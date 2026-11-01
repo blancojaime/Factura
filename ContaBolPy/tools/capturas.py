@@ -177,6 +177,34 @@ def main():
     fp = p_rrhh.FilaPlanillaDialog(ctx, ctx.rrhh.planilla(ANIO, 12)["id"], ctx.rrhh.detalle(ctx.rrhh.planilla(ANIO, 12)["id"])[1], w)
     guardar(fp, "47_planilla_variables", 560, 420)
     oid = ctx.db.scalar("SELECT id FROM orden_prod LIMIT 1")
+    # ---- módulos de auditoría (MAF / MAI)
+    from contabol.ui import p_auditoria
+    af = w.abrir(p_auditoria.AuditoriaFinancieraPantalla, clave="aud_f")
+    enc_f = af.eid
+    for nombre, idx in (("60_aud_planificacion", 0), ("61_aud_programas", 1), ("62_aud_cedulas", 2), ("64_aud_hallazgos", 4), ("65_aud_ajustes", 5)):
+        af.tabs.setCurrentIndex(idx)
+        pausa()
+        guardar(w, nombre)
+    af.tabs.setCurrentIndex(3)
+    af.c_prueba.set_valor("muestreo_recuento")
+    af._ejecutar_f()
+    pausa()
+    guardar(w, "63_aud_pruebas")
+    af.tabs.setCurrentIndex(6)
+    af._borrador()
+    pausa()
+    guardar(w, "66_aud_dictamen")
+    at = w.abrir(p_auditoria.AuditoriaTributariaPantalla, clave="aud_t")
+    enc_t = at.eid
+    at.tabs.setCurrentIndex(2)
+    at.c_pt.set_valor("bancarizacion")
+    at._ejecutar_t()
+    pausa()
+    guardar(w, "67_aud_mai_pruebas")
+    for nombre, idx in (("68_aud_mai_iue", 3), ("69_aud_mai_anexos", 4)):
+        at.tabs.setCurrentIndex(idx)
+        pausa()
+        guardar(w, nombre)
     # permisos
     uid = sis.crear_usuario("operador1", "Juan Pérez (operador)", "clave1234")
     sis.asignar_empresa(uid, eid, "OPERADOR")
@@ -198,7 +226,9 @@ def main():
     pdfs = {"pdf_balance_general": ("balance_general", {}), "pdf_estado_resultados": ("estado_resultados", {}), "pdf_evolucion_patrimonio": ("evolucion_patrimonio", {}),
             "pdf_flujo_directo": ("flujo_directo", {}), "pdf_flujo_indirecto": ("flujo_indirecto", {}), "pdf_libro_ventas": ("libro_ventas", {"mes_desde": 12, "mes_hasta": 12}),
             "pdf_comprobante": ("comprobante", {"id": primero}), "pdf_planilla": ("planilla_sueldos", {"mes": 12}), "pdf_boleta": ("boletas_pago", {"mes": 12}),
-            "pdf_kardex": ("kardex_item", {"item": ctx.db.scalar("SELECT id FROM item WHERE codigo='ARZ01'")}), "pdf_liquidacion_iva": ("resumen_iva", {"mes_hasta": 12})}
+            "pdf_kardex": ("kardex_item", {"item": ctx.db.scalar("SELECT id FROM item WHERE codigo='ARZ01'")}), "pdf_liquidacion_iva": ("resumen_iva", {"mes_hasta": 12}),
+            "pdf_aud_mpa": ("aud_mpa", {"encargo": enc_f}), "pdf_aud_sumarias": ("aud_sumarias", {"encargo": enc_f}), "pdf_aud_hallazgos": ("aud_hallazgos", {"encargo": enc_f}),
+            "pdf_aud_desvios": ("aud_desvios", {"encargo": enc_f}), "pdf_aud_iue": ("aud_iue", {"encargo": enc_t}), "pdf_aud_bancarizacion": ("aud_bancarizacion", {"encargo": enc_t})}
     tmp = tempfile.mkdtemp()
     for nombre, (id_, vals) in pdfs.items():
         ruta = os.path.join(tmp, nombre + ".pdf")

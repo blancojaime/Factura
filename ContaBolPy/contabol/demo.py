@@ -146,3 +146,30 @@ def _poblar(c, anio: int, rnd: _Azar) -> None:
         except Exception:  # noqa: BLE001
             pass
     c.set_param("IUE_PROVISION", "1")
+    _auditoria_demo(c, anio, cta)
+
+
+def _auditoria_demo(c, anio: int, cta) -> None:
+    """Dos encargos de ejemplo (MAF y MAI) con papeles de trabajo ya iniciados, para explorar el módulo de auditoría."""
+    a, p, t = c.auditoria, c.aud_pruebas, c.aud_trib
+    f = a.crear_encargo("F", f"Auditoría de estados financieros {anio}")
+    a.memorando_guardar(f, {"negocio": "Distribuidora de abarrotes con ventas al por mayor y menor; estacionalidad en fin de año.",
+                            "control_interno": "Segregación de funciones parcial; inventarios con conteos cíclicos; conciliaciones bancarias mensuales.",
+                            "riesgo_inherente": "M", "riesgo_control": "M"})
+    a.sumarias_generar(f)
+    for k in ("muestreo_recuento", "corte_documental", "vnr_obsolescencia", "conciliar_inventario_kardex", "depreciacion_vs_ds24051", "conciliar_planilla", "antiguedad_cxc"):
+        p.ejecutar(f, k)
+    h = a.hallazgo_guardar(f, {"componente": "Planillas y pasivos laborales", "condicion": "No se registró la provisión mensual de aguinaldo.",
+                               "criterio": "NC 3 y 8; D.S. 1960 (aguinaldo); principio de devengado.", "causa": "El proceso de planilla no genera el asiento de provisión.",
+                               "efecto": "Pasivos y gastos del personal subvaluados.", "recomendacion": "Provisionar 1/12 del haber mensual cada mes.",
+                               "descargo_gerencia": "La Gerencia registrará la provisión en el próximo período.", "nivel": "M", "impacto_monto": 32100})
+    aj = a.ajuste_guardar(f, "AJU", "Provisión de aguinaldo no registrada", [{"cuenta_id": cta("5.3.1.01.004"), "debe": 32100}, {"cuenta_id": cta("2.1.3.02.001"), "haber": 32100}], h)
+    a.ajuste_estado(aj, "NO_CORREGIDO")
+    mt = a.encargo(f)
+    tr = a.crear_encargo("T", f"Auditoría tributaria {anio}")
+    t.conciliacion_iva_it(tr)
+    a.guardar_prueba(tr, "conciliacion_iva_it", t.conciliacion_iva_it(tr), "T")
+    a.guardar_prueba(tr, "bancarizacion", t.bancarizacion(tr), "T")
+    t.depuracion_iue(tr)
+    t.generar_anexos(tr)
+    del mt

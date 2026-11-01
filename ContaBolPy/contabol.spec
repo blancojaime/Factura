@@ -9,7 +9,7 @@ from PyInstaller.utils.hooks import collect_submodules
 # los servicios se cargan dinámicamente (importlib) y deben incluirse explícitamente
 hidden = collect_submodules("contabol") + [
     "contabol.services." + m for m in ("cuentas", "tipocambio", "comprobantes", "iva", "terceros", "inventario", "comercial", "activos", "planillas",
-                                       "produccion", "presupuesto", "bancos", "libros", "estados", "gestion", "consolidacion")]
+                                       "produccion", "presupuesto", "bancos", "libros", "estados", "gestion", "consolidacion", "auditoria", "auditoria_plantillas", "auditoria_pruebas", "auditoria_tributaria", "auditoria_informes")] + ["contabol.api"]
 
 a = Analysis(
     ["contabol/__main__.py"],

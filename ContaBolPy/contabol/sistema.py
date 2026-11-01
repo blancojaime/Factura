@@ -172,6 +172,7 @@ class Sistema:
                 if stmt.strip():
                     gdb.execute(stmt)
             sembrar_gestion(gdb, datos, anio)
+            schema.crear_auditoria(gdb)
         finally:
             gdb.close()
         return self.db.insert("gestion", empresa_id=eid, anio=anio, fecha_inicio=inicio.isoformat(), fecha_fin=fin.isoformat(),
