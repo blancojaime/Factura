@@ -1,5 +1,5 @@
 ---
-title: "CONTA JB 2.2 — Manual de Implementación"
+title: "CONTA JB 2.2.2 — Manual de Implementación"
 subtitle: "Instalación, configuración, puesta en marcha, operación y mantenimiento"
 lang: es
 ---
@@ -223,7 +223,7 @@ Escucha solo en `127.0.0.1`, exige token y no modifica datos. Rutas (prefijo `/a
 
 # 5. Usuarios, roles y permisos
 
-**Recuperación del administrador.** Si otro administrador puede ingresar, restablezca la clave en *Administración > Usuarios y permisos* (también desbloquea). Si no, en el equipo donde está instalado ejecute `ContaJB.exe --restablecer-admin` (desde *Ejecutar* o el acceso directo), escriba **RESTABLECER**: el usuario `admin` queda activo y desbloqueado con la clave temporal `admin` y cambio obligatorio. La acción queda en la bitácora de seguridad.
+**Recuperación del administrador.** Si otro administrador puede ingresar, restablezca la clave en *Administración > Usuarios y permisos* (también desbloquea). Si no, use cualquiera de estas tres vías (en el equipo donde está instalado): (a) en la pantalla de ingreso, el botón **«Restablecer administrador»**; (b) *Inicio > CONTA JB > Restablecer contraseña de administrador*; (c) el archivo **`Restablecer_admin.bat`** de la página de descargas (o `ContaJB.exe --restablecer-admin`). En todas, escriba **RESTABLECER**: el usuario `admin` queda activo y desbloqueado con la clave temporal `admin` y cambio obligatorio. La acción queda en la bitácora de seguridad.
 
 | Rol | Alcance |
 |---|---|

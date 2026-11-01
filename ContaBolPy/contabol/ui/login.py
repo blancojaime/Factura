@@ -54,6 +54,11 @@ class LoginDialog(QDialog):
         self.b.setMinimumHeight(38)
         self.b.setDefault(True)
         lay.addWidget(self.b)
+        self.b_olvido = boton("¿Olvidó la contraseña o el usuario está bloqueado?  Restablecer administrador", "")
+        self.b_olvido.setFlat(True)
+        self.b_olvido.setStyleSheet(f"color:{tema.AZUL_MED}; border:none; text-decoration: underline; padding:2px;")
+        self.b_olvido.clicked.connect(self.restablecer)
+        lay.addWidget(self.b_olvido)
         pie = QLabel(f"Versión {__version__}  ·  Normativa boliviana vigente")
         pie.setObjectName("sub")
         pie.setAlignment(Qt.AlignCenter)
@@ -63,7 +68,25 @@ class LoginDialog(QDialog):
         self.u.returnPressed.connect(lambda: self.c.setFocus())
         self.c.returnPressed.connect(self.entrar)
 
+    def restablecer(self) -> None:
+        """Recuperación desde el propio equipo: reactiva y desbloquea a 'admin' con la clave temporal 'admin'."""
+        from PySide6.QtWidgets import QInputDialog
+        txt, ok = QInputDialog.getText(self, "Restablecer administrador", "Se restablecerá el usuario «admin» con la contraseña temporal «admin» (se le pedirá cambiarla al ingresar).\n\nEscriba RESTABLECER para confirmar:")
+        if not ok or txt.strip().upper() != "RESTABLECER":
+            return
+        try:
+            self.sis.restablecer_admin()
+        except Exception as ex:  # noqa: BLE001
+            self.err.setText(str(ex))
+            return
+        self.u.setText("admin")
+        self.c.setText("admin")
+        self.err.setStyleSheet("color:#287846;")
+        self.err.setText("Listo: usuario «admin» desbloqueado. Pulse Ingresar y elija una contraseña nueva.")
+        self.c.setFocus()
+
     def entrar(self) -> None:
+        self.err.setStyleSheet(f"color:{tema.ROJO};")
         try:
             self.usuario = self.sis.autenticar(self.u.text(), self.c.text())
         except Exception as ex:  # noqa: BLE001

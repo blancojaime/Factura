@@ -1,6 +1,6 @@
 ; Inno Setup 6 - instalador sencillo de CONTA JB: sin preguntas, un solo clic en "Instalar".
 ; Instala solo para el usuario actual (no pide permisos de administrador) y crea el acceso directo en el escritorio.
-#define Version "2.2.1"
+#define Version "2.2.2"
 
 [Setup]
 AppId={{B8E5A0C1-4D2F-4A7B-9E36-7C1F2A5D8B40}
@@ -36,6 +36,7 @@ Source: "..\dist\ContaJB\*"; DestDir: "{app}"; Flags: recursesubdirs ignoreversi
 [Icons]
 Name: "{autodesktop}\CONTA JB"; Filename: "{app}\ContaJB.exe"; IconFilename: "{app}\ContaJB.exe"
 Name: "{autoprograms}\CONTA JB"; Filename: "{app}\ContaJB.exe"
+Name: "{autoprograms}\CONTA JB - Restablecer contraseña de administrador"; Filename: "{app}\ContaJB.exe"; Parameters: "--restablecer-admin"; IconFilename: "{app}\ContaJB.exe"
 
 [Run]
 Filename: "{app}\ContaJB.exe"; Description: "Abrir CONTA JB ahora"; Flags: nowait postinstall skipifsilent

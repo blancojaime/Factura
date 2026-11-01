@@ -125,3 +125,31 @@ def test_igualar_y_calculadora(app, entorno):
     c = Calculadora()
     c.pantalla.setText("(100+50)/3")
     assert c.calcular() == 50.0
+
+
+def test_login_restablecer_admin(app, monkeypatch):
+    import shutil
+    import tempfile
+    from PySide6.QtWidgets import QInputDialog
+    from contabol.sistema import Sistema
+    from contabol.ui.login import LoginDialog
+    d = tempfile.mkdtemp()
+    try:
+        sis = Sistema(d)
+        for _ in range(5):
+            try:
+                sis.autenticar("admin", "x")
+            except Exception:  # noqa: BLE001
+                pass
+        dlg = LoginDialog(sis)
+        dlg.u.setText("admin")
+        dlg.c.setText("admin")
+        dlg.entrar()
+        assert "bloqueado" in dlg.err.text()
+        monkeypatch.setattr(QInputDialog, "getText", staticmethod(lambda *a, **k: ("restablecer", True)))
+        dlg.restablecer()
+        dlg.entrar()
+        assert dlg.usuario and dlg.usuario["login"] == "admin"
+        sis.close()
+    finally:
+        shutil.rmtree(d, ignore_errors=True)

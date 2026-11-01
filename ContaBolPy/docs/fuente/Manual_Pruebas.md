@@ -1,5 +1,5 @@
 ---
-title: "CONTA JB 2.2 — Manual de Pruebas de Aceptación"
+title: "CONTA JB 2.2.2 — Manual de Pruebas de Aceptación"
 subtitle: "Guía paso a paso con datos de ejemplo, resultados esperados y capturas reales del aplicativo"
 lang: es
 ---
@@ -524,7 +524,7 @@ Para **cada informe** de la tabla siguiente verifique la lista de control: (1) a
 
 ## F1b Recuperar el acceso de administrador
 
-**Recuperación del administrador.** Si otro administrador puede ingresar, restablezca la clave en *Administración > Usuarios y permisos* (también desbloquea). Si no, en el equipo donde está instalado ejecute `ContaJB.exe --restablecer-admin` (desde *Ejecutar* o el acceso directo), escriba **RESTABLECER**: el usuario `admin` queda activo y desbloqueado con la clave temporal `admin` y cambio obligatorio. La acción queda en la bitácora de seguridad.
+**Recuperación del administrador.** Si otro administrador puede ingresar, restablezca la clave en *Administración > Usuarios y permisos* (también desbloquea). Si no, use cualquiera de estas tres vías (en el equipo donde está instalado): (a) en la pantalla de ingreso, el botón **«Restablecer administrador»**; (b) *Inicio > CONTA JB > Restablecer contraseña de administrador*; (c) el archivo **`Restablecer_admin.bat`** de la página de descargas (o `ContaJB.exe --restablecer-admin`). En todas, escriba **RESTABLECER**: el usuario `admin` queda activo y desbloqueado con la clave temporal `admin` y cambio obligatorio. La acción queda en la bitácora de seguridad.
 
 **Esperado:** tras la confirmación aparece «Listo»; al ingresar con `admin` / `admin` el sistema obliga a elegir una nueva contraseña. Si se escribe otra palabra, no se cambia nada.
 
