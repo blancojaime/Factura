@@ -139,11 +139,15 @@ public class ComexDb(Microsoft.EntityFrameworkCore.DbContextOptions<ComexDb> o) 
         var faltan = Model.GetEntityTypes().Select(e => e.GetTableName()).Where(t => t is not null && !tablasExistentes.Contains(t!)).ToHashSet()!;
         if (faltan.Count > 0)
         {
-            foreach (var raw in Database.GenerateCreateScript().Split(";\n", StringSplitOptions.RemoveEmptyEntries))
+            // El script usa el salto de línea del sistema (CRLF en Windows): se separa con una expresión regular y cada sentencia es idempotente.
+            foreach (var raw in System.Text.RegularExpressions.Regex.Split(Database.GenerateCreateScript(), @";\s*\r?\n"))
             {
-                var st = raw.Trim(); if (st.Length == 0) continue;
-                if (faltan.Any(t => st.StartsWith($"CREATE TABLE \"{t}\"") || st.Contains($" ON \"{t}\" ")))
-                { using var c = cn.CreateCommand(); c.CommandText = st; c.ExecuteNonQuery(); }
+                var st = raw.Trim().TrimEnd(';'); if (st.Length == 0) continue;
+                var crea = st.StartsWith("CREATE TABLE \"") ? faltan.Any(t => st.StartsWith($"CREATE TABLE \"{t}\""))
+                    : st.StartsWith("CREATE ") && faltan.Any(t => st.Contains($" ON \"{t}\""));
+                if (!crea) continue;
+                st = st.Replace("CREATE TABLE ", "CREATE TABLE IF NOT EXISTS ").Replace("CREATE UNIQUE INDEX ", "CREATE UNIQUE INDEX IF NOT EXISTS ").Replace("CREATE INDEX ", "CREATE INDEX IF NOT EXISTS ");
+                using var c = cn.CreateCommand(); c.CommandText = st; c.ExecuteNonQuery();
             }
         }
         foreach (var et in Model.GetEntityTypes())

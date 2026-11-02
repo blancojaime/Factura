@@ -226,7 +226,7 @@ public class IceVariableYEsquemaTests : IDisposable
     [Fact] public void Base_Antigua_Recibe_Las_Tablas_Nuevas()
     {
         _db.Database.ExecuteSqlRaw("DROP TABLE Costos"); _db.Database.ExecuteSqlRaw("DROP TABLE Usuarios"); _db.Database.ExecuteSqlRaw("DROP TABLE Parametros");
-        _db.AsegurarEsquema();
+        _db.AsegurarEsquema(); _db.AsegurarEsquema();   // idempotente
         Assert.Empty(_db.Costos.ToList()); Assert.Empty(_db.Usuarios.ToList()); Assert.Empty(_db.Parametros.ToList());
     }
 }

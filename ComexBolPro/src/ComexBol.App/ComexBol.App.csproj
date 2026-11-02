@@ -8,7 +8,7 @@
     <AssemblyName>ComexJB</AssemblyName>
     <RootNamespace>ComexBol.App</RootNamespace>
     <ApplicationIcon>app.ico</ApplicationIcon>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <Product>COMEX JB</Product>
     <Company>Jaime Blanco Villegas</Company>
   </PropertyGroup>

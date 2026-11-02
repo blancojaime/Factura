@@ -11,7 +11,7 @@ Asistente de escritorio (Windows; antes «ComexBol Pro») para **decidir, acompa
 | `ComexBol.App` | Ventana WPF (XAML) | Compila y se ejecuta (probada con capturas reales); instalador de un clic en `installer/` |
 
 ## Instalar (usuario final)
-Ejecute `ComexJB-Setup-1.1.1.exe` (sin administrador; incluye .NET, OCR con español y lector de PDF). Manuales con capturas reales:
+Ejecute `ComexJB-Setup-1.1.2.exe` (sin administrador; incluye .NET, OCR con español y lector de PDF). Manuales con capturas reales:
 [Manual de Usuario](docs/manual/Manual-de-Usuario.pdf) · [Manual de Instalación y Pruebas](docs/manual/Manual-de-Instalacion-y-Pruebas.pdf) (también en `.docx`).
 
 ## Construir el instalador (equipo técnico)
@@ -32,7 +32,7 @@ for t in tests/*/; do (cd $t && dotnet test); done
 
 Manual completo de implementación y pruebas: [`docs/04-Manual-de-Implementacion-y-Pruebas.md`](docs/04-Manual-de-Implementacion-y-Pruebas.md).
 
-## Novedades de la versión 1.1.1
+## Novedades de la versión 1.1.2
 Nombre y logo COMEX JB · inicio de sesión con roles · rediseño con colores · selector de partida con descripción automática · editar/eliminar ítems y operaciones ·
 tabla de mantenimiento del arancel · menú Configuración (tipos de cambio, UFV, parámetros tributarios, perfil del importador, usuarios, respaldo) · hoja de costos reales · exportación JSON para la DMI.
 Datos en `%LocalAppData%\ComexJB` (se migran desde `ComexBolPro` al primer inicio).
