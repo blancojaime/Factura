@@ -147,5 +147,10 @@ public class PartidaCatalogo
     public string DispLegal { get; set; } = "";
     public string ImpuestoEspecial { get; set; } = "";     // ICE | IEHD | ""
     public string IceAntiguedad { get; set; } = "";        // "0.15;0.20;..." (nuevo,1..5 años) o ""
-    public string Preferencias { get; set; } = "";         // porcentajes impresos, sin asignar a acuerdo
+    public string Preferencias { get; set; } = "";         // porcentajes impresos tal cual
+    public bool PrefAsignada { get; set; }                 // true = se pudo asignar a las columnas del arancel
+    public string PrefCan { get; set; } = "";              // CAN / ACE 36 / ACE 47 / VEN (%)
+    public string PrefChile { get; set; } = "";            // ACE 22 Chile (%)
+    public string PrefProtocolo { get; set; } = "";        // ACE 22 Protocolo (n.º romano)
+    public string PrefMexico { get; set; } = "";           // ACE 66 México (%)
 }

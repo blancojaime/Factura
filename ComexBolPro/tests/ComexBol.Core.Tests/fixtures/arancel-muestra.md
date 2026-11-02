@@ -9,6 +9,9 @@
 |3004.90.10.00|- -Sustitutos sintéticos del plasma humano|**10**||kg||C<br>MSyD (AGEMED)|Ley 1737-D.S 25235|100|100<br>VII|100|
 |8459.70.00.00|- Las demás máquinas de roscar(incluso aterrajar)<br>**0**<br>**i  i**|u|||||100|100|
 |8701.21.00.00|- - Únicamente con motor de émbolo (pistón), de encendido por compresión<br>(diésel o semi-diésel)<br>**5**|ICE|u||( * )|||100||100|
+|1507.10.00.00|- Aceite enbruto,incluso desgomado|**10**|kg||APy C<br>MDPRyA(SENASAG)|Ley 830- D.S.2751|100|0|
+|3215.19.00.00|- -Las demás|**10**<br>kg||||100|50|VII<br>100|
+|2103.90.10.00|- -Salsa mayonesa|**10**<br>kg|C|MDPRyA (SENASAG)<br>|Ley 830|100|50|VII<br>0|
 # APÉNDICE I
 |8701.21.00.00|- - Únicamente con motor de émbolo(pistón),de encendidopor compresión(diésel o semi-diésel)<br>ICE|**15**|**20**|**25**|**30**|**40**|**50**|
 |8701.22.00.00|- - Equipados para la propulsión con motor de émbolo (pistón), de encendido por compresión (diésel o<br>semi-diésel) ycon motor eléctrico<br>ICE|**15**|**15**|**15**|**15**|**15**|**15**|

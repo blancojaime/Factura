@@ -110,6 +110,7 @@ public class ManualDePruebasTests : IDisposable
         var r = await new ServicioCatalogo(_db).ImportarArancelMarkdownAsync(archivos, "2026");
         Assert.Equal(8121, r.Importadas);
         Assert.Equal(97, _db.Partidas.Select(p => p.Codigo.Substring(0, 2)).Distinct().Count());
+        Assert.Equal(7917, _db.Partidas.Count(p => p.PrefAsignada));      // el resto queda sin asignar por ambigüedad del Markdown
     }
 }
 
@@ -129,5 +130,48 @@ public class PreferenciasTests : IDisposable
         var r = await s.LiquidarAsync(op.Id, Tc);
         Assert.Equal(6_960.00m, r.CifBob); Assert.Equal(0m, r.GA); Assert.Equal(1_039.82m, r.IVA);     // IVA 14,94 % sobre CIF; GA exonerado
         Assert.Contains(await s.ChecklistAsync(op.Id), x => x.Tipo == TipoDocumento.CertificadoOrigen && !x.Presente);
+    }
+}
+
+public class PreferenciaDelArancelTests : IDisposable
+{
+    readonly SqliteConnection _cn = new("Data Source=:memory:"); readonly ComexDb _db;
+    static string Muestra => Path.Combine(AppContext.BaseDirectory, "fixtures", "arancel-muestra.md");
+    public PreferenciaDelArancelTests() { _cn.Open(); _db = new(new DbContextOptionsBuilder<ComexDb>().UseSqlite(_cn).Options); _db.Database.EnsureCreated(); }
+    public void Dispose() { _db.Dispose(); _cn.Dispose(); }
+
+    async Task<(ServicioCatalogo c, ServicioOperaciones s, Operacion op)> Preparar()
+    {
+        var c = new ServicioCatalogo(_db); await c.ImportarArancelMarkdownAsync([new StreamReader(Muestra)], "2026");
+        var s = new ServicioOperaciones(_db); var op = await s.CrearImportacionAsync("IMP-P", Incoterm.CIF, "USD", new DateOnly(2026, 11, 2));
+        return (c, s, op);
+    }
+
+    [Fact] public async Task Caso16_Acuerdo_Elegido_Toma_La_Preferencia_Del_Arancel()
+    {
+        var (c, s, op) = await Preparar();
+        await s.AgregarItemAsync(op.Id, new() { Numero = 1, CodigoNandina = "0101210000", Descripcion = "Reproductor", ValorFactura = 1000, AcuerdoPreferencial = "CAN" });
+        var avisos = await c.AplicarAOperacionAsync(op.Id);
+        Assert.Equal(1m, _db.Items.Single().Desgravacion);
+        Assert.Contains(avisos, a => a.Contains("tomada del arancel"));
+        Assert.True(_db.Operaciones.Single().UsaPreferenciaArancelaria);
+    }
+
+    [Fact] public async Task Caso17_Mexico_Sin_Preferencia_En_Aceites_Y_Chile_50()
+    {
+        var (c, s, op) = await Preparar();
+        await s.AgregarItemAsync(op.Id, new() { Numero = 1, CodigoNandina = "1507100000", Descripcion = "Aceite", ValorFactura = 1000, AcuerdoPreferencial = "ACE 66 (México)" });
+        await s.AgregarItemAsync(op.Id, new() { Numero = 2, CodigoNandina = "2103901000", Descripcion = "Mayonesa", ValorFactura = 1000, AcuerdoPreferencial = "ACE 22 (Chile)" });
+        await c.AplicarAOperacionAsync(op.Id);
+        var it = _db.Items.OrderBy(i => i.Numero).ToList();
+        Assert.Equal(0m, it[0].Desgravacion);       // México 0 % en aceites
+        Assert.Equal(0.5m, it[1].Desgravacion);     // Chile 50 %
+    }
+
+    [Fact] public async Task Declarar_Distinto_Al_Arancel_Avisa()
+    {
+        var (c, s, op) = await Preparar();
+        await s.AgregarItemAsync(op.Id, new() { Numero = 1, CodigoNandina = "2103901000", Descripcion = "Mayonesa", ValorFactura = 1000, AcuerdoPreferencial = "ACE 22 (Chile)", Desgravacion = 1m });
+        Assert.Contains(await c.AplicarAOperacionAsync(op.Id), a => a.Contains("declaró") && a.Contains("50"));
     }
 }

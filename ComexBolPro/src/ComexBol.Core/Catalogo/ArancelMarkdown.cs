@@ -92,6 +92,21 @@ public static partial class ArancelMarkdown
         }
     }
 
+    /// <summary>
+    /// Asigna los valores impresos a las 4 columnas del arancel: [CAN/ACE 36/ACE 47/VEN] [ACE 22 Chi] [ACE 22 Prot] [ACE 66 MÉXICO].
+    /// El PDF muestra que casi todas las filas ocupan solo la primera y la última; las 4 aparecen juntas cuando hay Chile + Protocolo.
+    /// Las celdas vacías se pierden en el Markdown, así que solo se asignan los patrones inequívocos; el resto queda sin asignar.
+    /// </summary>
+    internal static PreferenciasAcuerdo? AsignarPreferencias(List<string> t)
+    {
+        decimal? N(string x) => decimal.TryParse(x.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture, out var v) ? v / 100m : null;
+        bool Num(string x) => RxNumero.IsMatch(x);
+        if (t.Count == 2 && Num(t[0]) && Num(t[1])) return new(N(t[0]), null, null, N(t[1]));
+        if (t.Count == 4 && Num(t[0]) && Num(t[3]) && (Num(t[1]) || RxRomano.IsMatch(t[1])) && (Num(t[2]) || RxRomano.IsMatch(t[2])))
+            return new(N(t[0]), Num(t[1]) ? N(t[1]) : null, t[2], N(t[3]));
+        return null;
+    }
+
     static readonly Regex RxRomano = new(@"^(I|II|III|IV|V|VI|VII|VIII|IX|X)$");
     static readonly Regex RxUnidad = new(@"^(\d+ ?)?(u|kg|g|t|l|ml|m|m²|m2|m³|m3|cm³|c/t|kWh|par|pares|doc)$", RegexOptions.IgnoreCase);
     static readonly HashSet<string> FragmentosIce = ["I", "IC", "ICE", "E", "CE", "IE", "EHD", "HD", "IEHD", "ICE-IEHD"];
@@ -142,12 +157,13 @@ public static partial class ArancelMarkdown
 
         if (unidad.Length == 0) unidad = unidadEnDesc;
 
-        string tipo = "", entidad = "", legal = ""; var prefs = new List<decimal>();
+        string tipo = "", entidad = "", legal = ""; var prefs = new List<decimal>(); var prefTokens = new List<string>();
         foreach (var raw in rest)
         {
             var t = raw;
-            if (RxNumero.IsMatch(t)) { prefs.Add(decimal.Parse(t.Replace(',', '.'), CultureInfo.InvariantCulture)); continue; }
-            if (RxRomano.IsMatch(t) || t is "*" or "(*)" or "(*" or "*)") continue;      // llamadas de nota al pie
+            if (RxNumero.IsMatch(t)) { prefs.Add(decimal.Parse(t.Replace(',', '.'), CultureInfo.InvariantCulture)); prefTokens.Add(t); continue; }
+            if (RxRomano.IsMatch(t)) { prefTokens.Add(t); continue; }                       // columna "Prot" de ACE 22: número romano del protocolo
+            if (t is "*" or "(*)" or "(*" or "*)") continue;                                // llamada de nota al pie
             if (tipo.Length == 0 && RxTipo.Match(t) is { Success: true } mt && !RxLegal.IsMatch(t))
             { tipo = Regex.IsMatch(mt.Value, @"^AP\s?y\s?C$") ? "AP y C" : mt.Value; t = t[mt.Length..].Trim(); if (t.Length == 0) continue; }
             if (RxLegal.IsMatch(t)) legal = (legal + " " + t).Trim();
@@ -159,6 +175,6 @@ public static partial class ArancelMarkdown
         if (unidad.Length == 0) problema = (problema is null ? "" : problema + "; ") + "unidad de medida no identificada";
 
         return new PartidaNandina(codigo, desc, ga / 100m, unidad, tipo == "P", auts, fuente)
-        { TipoDocumento = tipo, Entidad = entidad, DispLegal = legal, Preferencias = prefs, ImpuestoEspecial = especial };
+        { TipoDocumento = tipo, Entidad = entidad, DispLegal = legal, Preferencias = prefs, ImpuestoEspecial = especial, PorAcuerdo = AsignarPreferencias(prefTokens) };
     }
 }

@@ -59,3 +59,23 @@ public class ArancelMarkdownTests
     public void Lo_Que_No_Se_Puede_Interpretar_Se_Reporta_Con_Linea() =>
         Assert.All(Cargar().Errores, e => Assert.Contains("archivo 1, línea", e.Mensaje + "archivo 1, línea"));
 }
+
+public class PreferenciasPorAcuerdoTests
+{
+    static PartidaNandina P(string codigo) =>
+        ArancelMarkdown.Parsear([new StreamReader(Path.Combine(AppContext.BaseDirectory, "fixtures", "arancel-muestra.md"))]).Partidas.Single(p => p.Codigo == codigo);
+
+    [Fact] public void Dos_Valores_Son_Can_Y_Mexico_Como_Muestra_El_Pdf()
+    {
+        var x = P("0101210000").PorAcuerdo!;
+        Assert.Equal(1m, x.CanAce36Ace47Ven); Assert.Null(x.Ace22Chile); Assert.Equal(1m, x.Ace66Mexico);
+    }
+
+    [Fact] public void Mexico_Con_Cero_Se_Respeta() => Assert.Equal(0m, P("1507100000").PorAcuerdo!.Ace66Mexico);
+
+    [Fact] public void Cuatro_Columnas_Chile_Protocolo_Mexico()
+    {
+        var x = P("2103901000").PorAcuerdo!;
+        Assert.Equal(1m, x.CanAce36Ace47Ven); Assert.Equal(0.5m, x.Ace22Chile); Assert.Equal("VII", x.Ace22Protocolo); Assert.Equal(0m, x.Ace66Mexico);
+    }
+}

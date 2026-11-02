@@ -18,6 +18,8 @@ public sealed record PartidaNandina(
     public string DispLegal { get; init; } = "";
     /// <summary>Porcentajes de preferencia tal como figuran impresos (sin asignar a un acuerdo: las columnas se corren en el original).</summary>
     public IReadOnlyList<decimal> Preferencias { get; init; } = [];
+    /// <summary>Asignación por columna, o null cuando el Markdown no permite asignarla con certeza (usar <see cref="Preferencias"/> como referencia).</summary>
+    public PreferenciasAcuerdo? PorAcuerdo { get; init; }
     /// <summary>"ICE" o "IEHD" si la partida está sujeta a impuesto especial (la tasa NO viene en el arancel: se ingresa aparte).</summary>
     public string ImpuestoEspecial { get; init; } = "";
     /// <summary>Apéndice I (vehículos): alícuota ICE por antigüedad [nuevo, 1, 2, 3, 4, 5 años], en fracción (0.15 = 15 %). Vacío si no aplica.</summary>
@@ -26,6 +28,9 @@ public sealed record PartidaNandina(
     public string Partida4 => Codigo[..4];
     public bool EsEjemplo => Fuente.Equals("EJEMPLO", StringComparison.OrdinalIgnoreCase);
 }
+
+/// <summary>Preferencia arancelaria (fracción: 1 = 100 % de rebaja del GA) por columna del arancel. Null = sin valor impreso.</summary>
+public sealed record PreferenciasAcuerdo(decimal? CanAce36Ace47Ven, decimal? Ace22Chile, string? Ace22Protocolo, decimal? Ace66Mexico);
 
 public sealed record ErrorImportacion(int Linea, string Mensaje);
 public sealed record ResultadoImportacion(IReadOnlyList<PartidaNandina> Partidas, IReadOnlyList<ErrorImportacion> Errores);
