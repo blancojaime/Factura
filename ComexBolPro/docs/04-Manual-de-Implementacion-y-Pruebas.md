@@ -1,6 +1,6 @@
 > **Versión vigente de los manuales:** [Manual de Usuario](manual/Manual-de-Usuario.pdf) y [Manual de Instalación y Pruebas](manual/Manual-de-Instalacion-y-Pruebas.pdf) (PDF y Word, con capturas reales). Este texto se conserva como referencia técnica; el arancel se importa ahora directamente de los PDF oficiales (8.132 partidas, 2 avisos) y las pruebas automáticas son 78.
 
-# ComexBol Pro — Manual de implementación y de pruebas
+# COMEX JB — Manual de implementación y de pruebas
 
 Versión del arancel soportada: **Arancel Aduanero de Importaciones 2026** (RM N° 557, vigente desde 01/01/2026).
 Fecha de los ejemplos: 02/11/2026 · Tipo de cambio de los ejemplos: **Bs 6,96 por USD** (dato de prueba; use el oficial del día).
@@ -93,7 +93,7 @@ Convenciones: *TC = 6,96*. Las cifras en pantalla usan formato regional (p. ej. 
 Las cifras de cada caso están verificadas por pruebas automáticas (`ManualDePruebasTests`).
 
 ### Preparación común
-1. Abra ComexBol Pro. Barra superior: **TC USD→Bs = 6,96**.
+1. Abra COMEX JB. Barra superior: **TC USD→Bs = 6,96**.
 2. **Importar catálogo…** con los 3 `.md` → barra de estado: *«Catálogo: 8121 partidas…»*.
 
 ### Caso 1 — Tablets, Incoterm FOB (importación típica)

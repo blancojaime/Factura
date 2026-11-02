@@ -1,4 +1,4 @@
-# Mapeo ComexBol Pro → SUMA
+# Mapeo COMEX JB → SUMA
 
 > **Importante.** Las casillas oficiales (F8…F14, E11, E12, etc.) cambian con cada versión del formulario y no pueden asumirse de memoria. Por eso el mapeo es **datos** (`MapeoSuma`, archivo `suma-mapping.json`), no código. La columna *Casilla* debe completarse con el instructivo vigente de la ANB; la exportación falla con aviso si una casilla obligatoria queda sin asignar.
 

@@ -1,4 +1,4 @@
-# ComexBol Pro — Arquitectura y Modelo de Datos
+# COMEX JB — Arquitectura y Modelo de Datos
 
 ## 1. Principios
 1. **La norma es dato, no código.** Alícuotas, umbrales (Bs 50.000), IVA efectivo, plazos, tarifas y mapeos SUMA viven en tablas con *vigencia* (`ParametrosNormativos`, `MapeoSuma`). Un decreto nuevo = fila nueva, sin recompilar.

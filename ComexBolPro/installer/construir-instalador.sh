@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Construye dist/ComexBolPro-Setup-<version>.exe desde Linux o macOS (requiere: dotnet SDK 8 oficial, nsis, p7zip, curl, unzip).
+# Construye dist/ComexJB-Setup-<version>.exe desde Linux o macOS (requiere: dotnet SDK 8 oficial, nsis, p7zip, curl, unzip).
 # Uso: installer/construir-instalador.sh [directorio-con-tessdata-spa]
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -27,5 +27,5 @@ echo "3/4 Documentación…"
 mkdir -p dist/docs; cp -f docs/manual/*.pdf docs/manual/*.docx dist/docs/ 2>/dev/null || true
 
 echo "4/4 Empaquetando instalador…"
-makensis -V1 -DVERSION="$VERSION" installer/ComexBolPro.nsi
-ls -lh dist/ComexBolPro-Setup-*.exe
+makensis -V1 -DVERSION="$VERSION" installer/ComexJB.nsi
+ls -lh dist/ComexJB-Setup-*.exe

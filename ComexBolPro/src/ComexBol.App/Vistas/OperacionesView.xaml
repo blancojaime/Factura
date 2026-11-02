@@ -345,7 +345,7 @@
                     <StackPanel Orientation="Horizontal">
                       <Border CornerRadius="9" Padding="9,1" Margin="0,0,10,0" Width="56"><Border.Style><Style TargetType="Border"><Setter Property="Background" Value="#F9DCDB"/><Style.Triggers><DataTrigger Binding="{Binding Presente}" Value="True"><Setter Property="Background" Value="#D5F1E3"/></DataTrigger></Style.Triggers></Style></Border.Style>
                         <TextBlock HorizontalAlignment="Center" FontWeight="Bold" FontSize="11"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="FALTA"/><Setter Property="Foreground" Value="#B03A36"/><Style.Triggers><DataTrigger Binding="{Binding Presente}" Value="True"><Setter Property="Text" Value="OK"/><Setter Property="Foreground" Value="#217A52"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock></Border>
-                      <TextBlock Text="{Binding Documento}" Width="150" FontWeight="SemiBold"/><TextBlock Text="{Binding Motivo}" Style="{StaticResource Suave}"/>
+                      <StackPanel><TextBlock Text="{Binding Documento}" FontWeight="SemiBold"/><TextBlock Text="{Binding Motivo}" Style="{StaticResource Suave}" TextWrapping="Wrap" MaxWidth="300"/></StackPanel>
                     </StackPanel></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
               </StackPanel>
             </Border>
