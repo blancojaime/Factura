@@ -23,7 +23,7 @@ public sealed record LineaContraste(string Concepto, string App, string Dim, str
 /// <summary>Pantallas "Decisión" (escenarios + viabilidad) y "Contraste con DIM real" (prueba P-09).</summary>
 public sealed class DecisionViewModel : ObservableObject
 {
-    static readonly CultureInfo Bo = CultureInfo.GetCultureInfo("es-BO");
+    static CultureInfo Bo => Formato.Bo;
     readonly ComexDb _db; readonly Func<int?> _opId; readonly Func<decimal> _tcUsd; readonly Func<DateOnly> _hoy;
 
     public DecisionViewModel(ComexDb db, Func<int?> operacionId, Func<decimal> tcUsd, Func<DateOnly> hoy)
@@ -45,6 +45,7 @@ public sealed class DecisionViewModel : ObservableObject
     decimal _precio; public decimal PrecioMercadoConIva { get => _precio; set => Set(ref _precio, value); }
     decimal _objetivo = 15; public decimal MargenObjetivoPct { get => _objetivo; set => Set(ref _objetivo, value); }
     string _msg = ""; public string Mensaje { get => _msg; set => Set(ref _msg, value); }
+    string _msgC = ""; public string MensajeContraste { get => _msgC; set => Set(ref _msgC, value); }
 
     decimal _dimGa; public decimal DimGA { get => _dimGa; set => Set(ref _dimGa, value); }
     decimal _dimIce; public decimal DimICE { get => _dimIce; set => Set(ref _dimIce, value); }
@@ -87,7 +88,7 @@ public sealed class DecisionViewModel : ObservableObject
                     F(r.Viabilidad.CostoUnitario), r.Viabilidad.MargenPct.ToString("P1", Bo), r.Veredicto, r.Nombre == mejor));
             Mensaje = PrecioMercadoConIva <= 0 ? "Ingrese el precio de mercado para ver margen y veredicto." : $"Menor costo unitario: {mejor}";
         }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException) { Mensaje = "⚠ " + ex.Message; }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException) { Mensaje = "AVISO: " + ex.Message; }
     }
 
     /// <summary>Compara la última liquidación guardada con los tributos que la Aduana efectivamente liquidó en la DIM.</summary>
@@ -108,10 +109,10 @@ public sealed class DecisionViewModel : ObservableObject
                 var d = app - dim; var ok = Math.Abs(d) <= ToleranciaBs; if (!ok) revisar++;
                 Contraste.Add(new(c, F(app), F(dim), F(d), ok ? "OK" : "REVISAR"));
             }
-            Mensaje = revisar == 0 ? $"Coincide con la DIM (tolerancia Bs {F(ToleranciaBs)})." : $"{revisar} diferencia(s): revise parámetros (IVA efectivo, base del ICE, redondeo, valor en aduana).";
-            _db.Bitacora.Add(new() { OperacionId = id, Fecha = DateTime.Now, Categoria = "Contraste DIM", Detalle = $"Liquidación v{liq.Version} vs DIM: total app {F(r.TotalTributos)} / DIM {F(dimTotal)} → {(revisar == 0 ? "coincide" : "diferencias")}." });
+            MensajeContraste = revisar == 0 ? $"Coincide con la DIM (tolerancia Bs {F(ToleranciaBs)})." : $"{revisar} diferencia(s): revise parámetros (IVA efectivo, base del ICE, redondeo, valor en aduana).";
+            _db.Bitacora.Add(new() { OperacionId = id, Fecha = DateTime.Now, Categoria = "Contraste DIM", Detalle = $"Liquidación v{liq.Version} vs DIM: total app {F(r.TotalTributos)} / DIM {F(dimTotal)} / resultado: {(revisar == 0 ? "coincide" : "diferencias")}." });
             await _db.SaveChangesAsync();
         }
-        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException) { Mensaje = "⚠ " + ex.Message; }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException) { MensajeContraste = "AVISO: " + ex.Message; }
     }
 }

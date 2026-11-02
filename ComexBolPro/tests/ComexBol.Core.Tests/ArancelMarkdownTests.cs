@@ -79,3 +79,14 @@ public class PreferenciasPorAcuerdoTests
         Assert.Equal(1m, x.CanAce36Ace47Ven); Assert.Equal(0.5m, x.Ace22Chile); Assert.Equal("VII", x.Ace22Protocolo); Assert.Equal(0m, x.Ace66Mexico);
     }
 }
+
+public class LlamadasDeNotaTests
+{
+    [Fact] // En el PDF, "( * )" es una llamada de nota (vehículos con ICE), no un documento exigido.
+    public void Llamada_De_Nota_Con_Espacios_No_Es_Un_Documento()
+    {
+        var p = ArancelMarkdown.Parsear([new StreamReader(Path.Combine(AppContext.BaseDirectory, "fixtures", "arancel-muestra.md"))]).Partidas.Single(x => x.Codigo == "8701210000");
+        Assert.Equal("", p.TipoDocumento); Assert.Equal("", p.Entidad); Assert.Empty(p.Autorizaciones);
+        Assert.Equal("ICE", p.ImpuestoEspecial);
+    }
+}

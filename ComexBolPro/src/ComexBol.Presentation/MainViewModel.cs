@@ -21,7 +21,7 @@ public sealed record LineaLegajo(string Documento, bool Presente, string Motivo)
 /// <summary>Estado y comandos de la ventana principal. Sin referencias a WPF: probado en CI Linux.</summary>
 public sealed class MainViewModel : ObservableObject
 {
-    static readonly CultureInfo Bo = CultureInfo.GetCultureInfo("es-BO");
+    static CultureInfo Bo => Formato.Bo;
     readonly ComexDb _db; readonly Func<DateOnly> _hoy;
     readonly ServicioOperaciones _ops; readonly ServicioCatalogo _cat; readonly ServicioDocumentos? _docs; int _docIdPendiente;
 
@@ -94,7 +94,7 @@ public sealed class MainViewModel : ObservableObject
     {
         try { await accion(); }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException or DbUpdateException)
-        { Mensaje = "⚠ " + ex.Message; }
+        { Mensaje = "AVISO: " + ex.Message; }
     }
 
     public Task CargarAsync() => Seguro_(async () =>
@@ -118,6 +118,7 @@ public sealed class MainViewModel : ObservableObject
     public Task AgregarItemAsync() => Seguro_(async () =>
     {
         var op = Seleccionada!;
+        await GuardarCostosAsync(op.Id);          // el flete y el seguro digitados no deben perderse al refrescar la pantalla
         var n = await _db.Items.CountAsync(i => i.OperacionId == op.Id) + 1;
         await _ops.AgregarItemAsync(op.Id, new() { Numero = n, CodigoNandina = new string(ItemPartida.Where(char.IsDigit).ToArray()), Descripcion = ItemDescripcion, ValorFactura = ItemValor, PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto, AntiguedadAnios = ItemAntiguedad, AlicuotaIce = ItemIcePct / 100m, AcuerdoPreferencial = ItemAcuerdo, Desgravacion = ItemDesgravacionPct / 100m });
         var avisos = await _cat.AplicarAOperacionAsync(op.Id);
@@ -126,6 +127,12 @@ public sealed class MainViewModel : ObservableObject
         foreach (var a in avisos) Avisos.Add(a);
         Mensaje = $"Ítem {n} agregado";
     });
+
+    async Task GuardarCostosAsync(int opId)
+    {
+        var o = await _db.Operaciones.FirstAsync(x => x.Id == opId);
+        o.Flete = Flete; o.Seguro = Seguro; await _db.SaveChangesAsync();
+    }
 
     public Task LiquidarAsync() => Seguro_(async () =>
     {
@@ -171,11 +178,12 @@ public sealed class MainViewModel : ObservableObject
     public Task ConfirmarPropuestaAsync() => Seguro_(async () =>
     {
         string? V(string k) => Propuesta.FirstOrDefault(p => p.Clave == k)?.Valor;
-        await _docs!.ConfirmarAsync(Seleccionada!.Id, _docIdPendiente, V("incoterm"), V("moneda"), V("factura"), V("proveedor"));
+        var id = Seleccionada!.Id;      // guardar antes: al recargar la lista, la ventana deselecciona la operación
+        await _docs!.ConfirmarAsync(id, _docIdPendiente, V("incoterm"), V("moneda"), V("factura"), V("proveedor"));
         if (decimal.TryParse(V("valor"), NumberStyles.Number, CultureInfo.InvariantCulture, out var val)) ItemValor = val;
         if (decimal.TryParse(V("peso"), NumberStyles.Number, CultureInfo.InvariantCulture, out var pe)) ItemPesoBruto = pe;
         Propuesta.Clear(); ConfirmarPropuestaCmd.Refresh();
-        await CargarAsync(); Seleccionada = Operaciones.First(o => o.Id == Seleccionada.Id);
+        await CargarAsync(); Seleccionada = Operaciones.First(o => o.Id == id);
         Mensaje = "Datos confirmados: complete partida y descripción y agregue el ítem";
     });
 
@@ -220,6 +228,13 @@ public sealed class MainViewModel : ObservableObject
         return md;
     }
 
+    static string NombreDocumento(TipoDocumento t) => t switch
+    {
+        TipoDocumento.Factura => "Factura comercial", TipoDocumento.Embarque => "Documento de embarque", TipoDocumento.PackingList => "Lista de empaque",
+        TipoDocumento.AutorizacionPrevia => "Autorización previa", TipoDocumento.Seguro => "Seguro de transporte", TipoDocumento.GastosPortuarios => "Gastos portuarios",
+        TipoDocumento.FleteTerrestre => "Factura de flete", TipoDocumento.CertificadoOrigen => "Certificado de origen", TipoDocumento.Bancario => "Respaldo bancario", _ => t.ToString()
+    };
+
     static string Color(Semaforo s) => s switch
     {
         Semaforo.Cumplido => "#2E9E5B", Semaforo.EnCurso => "#2F7DD1", Semaforo.Alerta => "#E0A800",
@@ -236,15 +251,21 @@ public sealed class MainViewModel : ObservableObject
             var id = Seleccionada.Id; var hoy = _hoy();
             var op = await _db.Operaciones.AsNoTracking().Include(o => o.Items).Include(o => o.Bitacora).Include(o => o.Liquidaciones).FirstAsync(o => o.Id == id);
             Flete = op.Flete; Seguro = op.Seguro;
+            // Sin respaldo del arancel, el GA podría estar mal: se avisa siempre, no solo al agregar el ítem.
+            var codigos = op.Items.Select(i => i.CodigoNandina).ToList();
+            var enCatalogo = (await _db.Partidas.Where(p => codigos.Contains(p.Codigo)).Select(p => p.Codigo).ToListAsync()).ToHashSet();
+            if (!await _db.Partidas.AnyAsync()) Avisos.Add("El arancel NO está cargado: el gravamen arancelario no tiene respaldo. Use «Importar catálogo…» antes de registrar mercancías.");
+            else foreach (var i in op.Items.Where(i => !enCatalogo.Contains(i.CodigoNandina)).OrderBy(i => i.Numero))
+                Avisos.Add($"Ítem {i.Numero}: la partida {i.CodigoNandina} no existe en el arancel cargado; verifique el código (GA aplicado: {i.AlicuotaGA:P0}).");
             foreach (var i in op.Items.OrderBy(i => i.Numero))
                 Items.Add(new(i.Numero, i.CodigoNandina, i.Descripcion, i.ValorFactura.ToString("N2", Bo), i.AlicuotaGA.ToString("P0", Bo)));
 
             var estado = await _ops.EstadoRutaAsync(id, hoy);
             foreach (var s in estado)
-                Etapas.Add(new(s.Etapa.Codigo, s.Etapa.Nombre, $"{s.Etapa.InicioPlan:dd/MM} → {s.Etapa.FinPlan:dd/MM}",
+                Etapas.Add(new(s.Etapa.Codigo, s.Etapa.Nombre, $"{s.Etapa.InicioPlan:dd/MM} a {s.Etapa.FinPlan:dd/MM}",
                     s.Etapa.FinReal?.ToString("dd/MM") ?? "—", s.Semaforo, Color(s.Semaforo), s.Etapa.EsCritica, s.Etapa.EsHitoLegal));
             int N(Semaforo x) => estado.Count(s => s.Semaforo == x);
-            ResumenSemaforos = $"🟢 {N(Semaforo.Cumplido)}  🔵 {N(Semaforo.EnCurso)}  🟡 {N(Semaforo.Alerta)}  🔴 {N(Semaforo.Vencido)}";
+            ResumenSemaforos = $"Cumplidas {N(Semaforo.Cumplido)}  ·  En curso {N(Semaforo.EnCurso)}  ·  En alerta {N(Semaforo.Alerta)}  ·  Vencidas {N(Semaforo.Vencido)}";
             var prox = estado.Where(s => s.Etapa.FinReal is null).OrderBy(s => s.Etapa.FinPlan).FirstOrDefault();
             if (prox is not null) ProximoVencimiento = $"Próximo: {prox.Etapa.Nombre} — {prox.Etapa.FinPlan:dd/MM/yyyy}";
 
@@ -253,14 +274,14 @@ public sealed class MainViewModel : ObservableObject
             {
                 var r = System.Text.Json.JsonSerializer.Deserialize<LiquidacionResultado>(ult.ResultadoJson)!;
                 string F(decimal v) => v.ToString("N2", Bo);
-                Liquidacion.Add(new("Valor FOB", F(r.ValorFobBob))); Liquidacion.Add(new("+ Adiciones", F(r.AdicionesBob)));
-                Liquidacion.Add(new("− Deducciones", F(r.DeduccionesBob))); Liquidacion.Add(new("CIF aduana (Bs)", F(r.CifBob), true));
+                Liquidacion.Add(new("Valor FOB", F(r.ValorFobBob))); Liquidacion.Add(new("(+) Adiciones", F(r.AdicionesBob)));
+                Liquidacion.Add(new("(-) Deducciones", F(r.DeduccionesBob))); Liquidacion.Add(new("CIF aduana (Bs)", F(r.CifBob), true));
                 Liquidacion.Add(new("Gravamen arancelario", F(r.GA))); Liquidacion.Add(new("ICE", F(r.ICE)));
                 Liquidacion.Add(new("IEHD", F(r.IEHD))); Liquidacion.Add(new("IVA", F(r.IVA)));
                 Liquidacion.Add(new("TOTAL TRIBUTOS", F(r.TotalTributos), true));
-                if (r.RequiereBancarizacion) Avisos.Add("FOB ≥ Bs 50.000: complete el respaldo bancario (D.S. 772).");
+                if (r.RequiereBancarizacion) Avisos.Add("FOB desde Bs 50.000: complete el respaldo bancario (D.S. 772).");
             }
-            foreach (var (t, ok, m) in await _ops.ChecklistAsync(id)) Legajo.Add(new(t.ToString(), ok, m));
+            foreach (var (t, ok, m) in await _ops.ChecklistAsync(id)) Legajo.Add(new(NombreDocumento(t), ok, m));
             foreach (var e in op.Bitacora.OrderByDescending(e => e.Fecha).Take(100)) Bitacora.Add($"{e.Fecha:dd/MM HH:mm} · {e.Categoria} · {e.Detalle}");
         });
     }

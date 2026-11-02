@@ -7,6 +7,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>ComexBolPro</AssemblyName>
     <RootNamespace>ComexBol.App</RootNamespace>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <Product>ComexBol Pro</Product>
+    <Company>ComexBol</Company>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComexBol.Presentation\ComexBol.Presentation.csproj" />

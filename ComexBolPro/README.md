@@ -8,7 +8,18 @@ Asistente de escritorio (Windows) para **decidir, acompañar y documentar** impo
 | `ComexBol.Data` | EF Core + SQLite, operaciones, bitácora, expediente, catálogo NANDINA | Probado |
 | `ComexBol.Documentos` | OCR (Tesseract + Poppler para PDF), extracción de campos, clasificación, exportación a Excel | Probado (incl. Tesseract real) |
 | `ComexBol.Presentation` | ViewModels MVVM de la ventana principal | Probado |
-| `ComexBol.App` | Ventana WPF (XAML) | **Sin compilar**: requiere Windows (`dotnet build`) |
+| `ComexBol.App` | Ventana WPF (XAML) | Compila y se ejecuta (probada con capturas reales); instalador de un clic en `installer/` |
+
+## Instalar (usuario final)
+Ejecute `ComexBolPro-Setup-1.0.0.exe` (sin administrador; incluye .NET, OCR con español y lector de PDF). Manuales con capturas reales:
+[Manual de Usuario](docs/manual/Manual-de-Usuario.pdf) · [Manual de Instalación y Pruebas](docs/manual/Manual-de-Instalacion-y-Pruebas.pdf) (también en `.docx`).
+
+## Construir el instalador (equipo técnico)
+```bash
+installer/construir-instalador.sh        # requiere SDK .NET 8 oficial, nsis, p7zip-full, curl, unzip
+python3 docs/manual/generar-manuales.py  # regenera los manuales (python-docx, LibreOffice)
+docs/manual/capturas.sh docs/manual/capturas   # regenera las capturas (Wine + Xvfb + xdotool)
+```
 
 ## Ejecutar pruebas (Linux/Windows)
 ```bash
@@ -22,7 +33,7 @@ for t in tests/*/; do (cd $t && dotnet test); done
 Manual completo de implementación y pruebas: [`docs/04-Manual-de-Implementacion-y-Pruebas.md`](docs/04-Manual-de-Implementacion-y-Pruebas.md).
 
 ## Pendiente
-- Compilar y probar la ventana WPF en Windows; visor de PDF (WebView2) y rasterizado de PDF para OCR.
+- Probar en un Windows real (hasta ahora se ejecutó bajo Wine); firma digital del instalador; importación directa del arancel en PDF.
 - Validar parámetros normativos con un despachante (prueba P-09 del manual).
 - Pantallas para almacenaje y exportación (DEX/CEDEIM); guardar escenarios.
 - Preferencias: 204 partidas sin asignar a columna; leer el PDF completo por coordenadas las resolvería todas.

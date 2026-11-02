@@ -163,7 +163,7 @@ public static partial class ArancelMarkdown
             var t = raw;
             if (RxNumero.IsMatch(t)) { prefs.Add(decimal.Parse(t.Replace(',', '.'), CultureInfo.InvariantCulture)); prefTokens.Add(t); continue; }
             if (RxRomano.IsMatch(t)) { prefTokens.Add(t); continue; }                       // columna "Prot" de ACE 22: número romano del protocolo
-            if (t is "*" or "(*)" or "(*" or "*)") continue;                                // llamada de nota al pie
+            if (t.Replace(" ", "") is "*" or "(*)" or "(*" or "*)") continue;                                // llamada de nota al pie
             if (tipo.Length == 0 && RxTipo.Match(t) is { Success: true } mt && !RxLegal.IsMatch(t))
             { tipo = Regex.IsMatch(mt.Value, @"^AP\s?y\s?C$") ? "AP y C" : mt.Value; t = t[mt.Length..].Trim(); if (t.Length == 0) continue; }
             if (RxLegal.IsMatch(t)) legal = (legal + " " + t).Trim();

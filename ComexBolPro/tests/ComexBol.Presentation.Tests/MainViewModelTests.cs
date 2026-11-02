@@ -39,7 +39,7 @@ public class MainViewModelTests : IDisposable
         await _vm.CompletarEtapaCmd.ExecuteAsync(_vm.Etapas.First());
         Assert.Equal(Semaforo.Cumplido, _vm.Etapas.First().Semaforo);
         Assert.NotEmpty(_vm.Bitacora);
-        Assert.False(_vm.Legajo.First(l => l.Documento == "Factura").Presente);
+        Assert.False(_vm.Legajo.First(l => l.Documento == "Factura comercial").Presente);
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class MainViewModelTests : IDisposable
     {
         _vm.NuevaCarpeta = " ";
         await _vm.NuevaImportacionCmd.ExecuteAsync();
-        Assert.StartsWith("⚠", _vm.Mensaje);
+        Assert.StartsWith("AVISO", _vm.Mensaje);
         Assert.False(_vm.LiquidarCmd.CanExecute(null));
     }
 }
@@ -73,7 +73,7 @@ public class OcrViewModelTests : IDisposable
         Assert.Equal(5200m, vm.ItemValor);
         Assert.True(_db.Documentos.Single().Validado);
         Assert.Contains(_db.Bitacora, b => b.Categoria == "OCR" && b.Detalle.Contains("Confirmado"));
-        Assert.True(vm.Legajo.First(l => l.Documento == "Factura").Presente);
+        Assert.True(vm.Legajo.First(l => l.Documento == "Factura comercial").Presente);
     }
 }
 
@@ -117,7 +117,7 @@ public class DecisionViewModelTests : IDisposable
         _vm.Flete = 1800; _vm.Seguro = 150; await _vm.LiquidarCmd.ExecuteAsync();
         var d = _vm.Decision; d.DimGA = 29_197.20m; d.DimIVA = 47_982.68m;
         await d.ContrastarCmd.ExecuteAsync();
-        Assert.All(d.Contraste, l => Assert.Equal("OK", l.Estado));
+        Assert.All(d.Contraste, l => Assert.Equal("OK", l.Estado)); Assert.StartsWith("Coincide", d.MensajeContraste);
         d.DimIVA = 47_990m; await d.ContrastarCmd.ExecuteAsync();
         Assert.Contains(d.Contraste, l => l.Concepto == "IVA" && l.Estado == "REVISAR");
         Assert.Contains(_db.Bitacora, b => b.Categoria == "Contraste DIM");
@@ -127,7 +127,7 @@ public class DecisionViewModelTests : IDisposable
     public async Task Sin_Operacion_O_Sin_Escenarios_Avisa_Sin_Romper()
     {
         await _vm.Decision.CompararCmd.ExecuteAsync();
-        Assert.StartsWith("⚠", _vm.Decision.Mensaje);
+        Assert.StartsWith("AVISO", _vm.Decision.Mensaje);
     }
 }
 
@@ -158,5 +158,66 @@ public class ExcelYPdfTests : IDisposable
             Assert.Equal(12, wb.Worksheet("Ruta crítica").LastRowUsed()!.RowNumber() - 1);
         }
         finally { File.Delete(ruta); }
+    }
+}
+
+public class RegresionesTests : IDisposable
+{
+    readonly SqliteConnection _cn = new("Data Source=:memory:"); readonly ComexDb _db; readonly MainViewModel _vm;
+    public RegresionesTests() { _cn.Open(); _db = new(new DbContextOptionsBuilder<ComexDb>().UseSqlite(_cn).Options); _db.Database.EnsureCreated(); _vm = new MainViewModel(_db, () => new DateOnly(2026, 11, 2)); }
+    public void Dispose() { _db.Dispose(); _cn.Dispose(); }
+
+    [Fact] // Hallazgo de la primera ejecución real: "Agregar ítem" borraba el flete y el seguro recién digitados.
+    public async Task Agregar_Item_No_Borra_El_Flete_Ni_El_Seguro_Digitados()
+    {
+        _vm.NuevaCarpeta = "IMP-REG"; await _vm.NuevaImportacionCmd.ExecuteAsync();
+        _vm.Flete = 1800; _vm.Seguro = 150;
+        _vm.ItemPartida = "8471300010"; _vm.ItemDescripcion = "Tablets"; _vm.ItemValor = 40_000; _vm.ItemPesoBruto = 800;
+        await _vm.AgregarItemCmd.ExecuteAsync();
+        Assert.Equal(1800m, _vm.Flete); Assert.Equal(150m, _vm.Seguro);
+        _db.Items.Single().AlicuotaGA = 0.10m; await _db.SaveChangesAsync();
+        await _vm.LiquidarCmd.ExecuteAsync();
+        Assert.Contains(_vm.Liquidacion, l => l.Concepto.StartsWith("CIF") && l.Monto == "291.972,00");
+    }
+
+    [Fact] public void Formato_Boliviano_No_Depende_Del_Equipo() =>
+        Assert.Equal("1.234,50", 1234.5m.ToString("N2", Formato.Bo));
+}
+
+public class SeleccionWpfTests : IDisposable
+{
+    sealed class OcrFalso2(string t) : ComexBol.Documentos.IMotorOcr { public Task<string> LeerTextoAsync(string r, CancellationToken ct = default) => Task.FromResult(t); }
+    readonly SqliteConnection _cn = new("Data Source=:memory:"); readonly ComexDb _db;
+    public SeleccionWpfTests() { _cn.Open(); _db = new(new DbContextOptionsBuilder<ComexDb>().UseSqlite(_cn).Options); _db.Database.EnsureCreated(); }
+    public void Dispose() { _db.Dispose(); _cn.Dispose(); }
+
+    [Fact] // Hallazgo de la ejecución real: WPF pone Seleccionada = null cuando la lista se vacía y se recarga.
+    public async Task Confirmar_Ocr_Sobrevive_A_Que_La_Lista_Deseleccione()
+    {
+        var vm = new MainViewModel(_db, () => new DateOnly(2026, 11, 2), new OcrFalso2("Invoice No: INV-9\nIncoterm: CIF\nCurrency: USD\nTotal Amount: USD 5,000.00"));
+        vm.Operaciones.CollectionChanged += (_, e) => { if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset) vm.Seleccionada = null; };
+        vm.NuevaCarpeta = "IMP-SEL"; await vm.NuevaImportacionCmd.ExecuteAsync();
+        await vm.ProcesarDocumentoAsync("/tmp/f.png");
+        await vm.ConfirmarPropuestaCmd.ExecuteAsync();
+        Assert.StartsWith("Datos confirmados", vm.Mensaje);
+        Assert.Equal(Incoterm.CIF, _db.Operaciones.Single().Incoterm);
+        Assert.NotNull(vm.Seleccionada);
+    }
+}
+
+public class AvisosArancelTests : IDisposable
+{
+    readonly SqliteConnection _cn = new("Data Source=:memory:"); readonly ComexDb _db; readonly MainViewModel _vm;
+    public AvisosArancelTests() { _cn.Open(); _db = new(new DbContextOptionsBuilder<ComexDb>().UseSqlite(_cn).Options); _db.Database.EnsureCreated(); _vm = new MainViewModel(_db, () => new DateOnly(2026, 11, 2)); }
+    public void Dispose() { _db.Dispose(); _cn.Dispose(); }
+
+    [Fact]
+    public async Task Sin_Arancel_Cargado_Se_Avisa_Aunque_Se_Recalcule()
+    {
+        _vm.NuevaCarpeta = "IMP-SIN"; await _vm.NuevaImportacionCmd.ExecuteAsync();
+        _vm.ItemPartida = "8471300010"; _vm.ItemDescripcion = "x"; _vm.ItemValor = 100; _vm.ItemPesoBruto = 1;
+        await _vm.AgregarItemCmd.ExecuteAsync();
+        await _vm.LiquidarCmd.ExecuteAsync();
+        Assert.Contains(_vm.Avisos, a => a.Contains("arancel NO está cargado"));
     }
 }

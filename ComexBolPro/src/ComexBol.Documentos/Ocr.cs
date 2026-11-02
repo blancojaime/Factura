@@ -14,7 +14,8 @@ public interface IMotorOcr
 /// </summary>
 public sealed class TesseractCliOcr(string? ejecutable = null, string idiomas = "spa+eng") : IMotorOcr
 {
-    static readonly string[] Candidatos = [@"C:\Program Files\Tesseract-OCR\tesseract.exe", @"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe", "tesseract"];
+    static readonly string[] Candidatos = [Path.Combine(AppContext.BaseDirectory, "ocr", "tesseract", "tesseract.exe"),     // incluido en el instalador
+        @"C:\Program Files\Tesseract-OCR\tesseract.exe", @"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe", "tesseract"];
     readonly string _exe = ejecutable ?? Candidatos.FirstOrDefault(File.Exists) ?? "tesseract";
 
     public async Task<string> LeerTextoAsync(string rutaImagen, CancellationToken ct = default)
@@ -40,6 +41,8 @@ public sealed class TesseractCliOcr(string? ejecutable = null, string idiomas = 
 
         var psi = new ProcessStartInfo(_exe) { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow = true, StandardOutputEncoding = Encoding.UTF8 };
         foreach (var a in new[] { rutaImagen, "stdout", "-l", idiomas, "--psm", "6" }) psi.ArgumentList.Add(a);
+        var tessdata = Path.Combine(AppContext.BaseDirectory, "ocr", "tesseract", "tessdata");
+        if (Directory.Exists(tessdata)) psi.Environment["TESSDATA_PREFIX"] = tessdata;       // idiomas empaquetados con la aplicación
         try
         {
             using var p = Process.Start(psi)!;
@@ -60,7 +63,8 @@ public static class PdfRasterizador
 {
     public static async Task<IReadOnlyList<string>> AImagenesAsync(string pdf, string carpetaSalida, CancellationToken ct = default, int dpi = 200, int maxPaginas = 20)
     {
-        var psi = new ProcessStartInfo("pdftoppm") { RedirectStandardError = true, RedirectStandardOutput = true, UseShellExecute = false, CreateNoWindow = true };
+        var empaquetado = Path.Combine(AppContext.BaseDirectory, "ocr", "poppler", "pdftoppm.exe");
+        var psi = new ProcessStartInfo(File.Exists(empaquetado) ? empaquetado : "pdftoppm") { RedirectStandardError = true, RedirectStandardOutput = true, UseShellExecute = false, CreateNoWindow = true };
         foreach (var a in new[] { "-r", dpi.ToString(), "-l", maxPaginas.ToString(), "-png", pdf, Path.Combine(carpetaSalida, "p") }) psi.ArgumentList.Add(a);
         try
         {

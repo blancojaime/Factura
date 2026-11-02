@@ -12,7 +12,7 @@
       <DockPanel Margin="14,0">
         <TextBlock Text="ComexBol Pro" Foreground="White" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center"/>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
-          <TextBlock Text="TC USD→Bs (BCB, venta):" Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+          <TextBlock Text="TC USD a Bs (BCB, venta):" Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
           <TextBox Width="70" Text="{Binding TipoCambioUsd, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" Margin="0,0,14,0"/>
           <Button Content="Importar catálogo…" Click="ImportarCatalogo_Click"/>
           <Button Content="Expediente (.md)…" Click="ExportarExpediente_Click"/>
@@ -95,10 +95,11 @@
         <TabItem Header="Liquidación">
           <Grid Margin="10">
             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-            <ListBox ItemsSource="{Binding Liquidacion}" HorizontalContentAlignment="Stretch">
+            <ListBox ItemsSource="{Binding Liquidacion}" HorizontalContentAlignment="Stretch" FontSize="14">
+              <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="8,5"/><Setter Property="BorderThickness" Value="0,0,0,1"/><Setter Property="BorderBrush" Value="#E3E8EE"/></Style></ListBox.ItemContainerStyle>
               <ListBox.ItemTemplate><DataTemplate>
                 <DockPanel>
-                  <TextBlock Text="{Binding Monto}" DockPanel.Dock="Right" FontFamily="Consolas"/>
+                  <TextBlock Text="{Binding Monto}" DockPanel.Dock="Right"/>
                   <TextBlock Text="{Binding Concepto}"><TextBlock.Style><Style TargetType="TextBlock" BasedOn="{x:Null}">
                     <Style.Triggers><DataTrigger Binding="{Binding Destacada}" Value="True"><Setter Property="FontWeight" Value="Bold"/></DataTrigger></Style.Triggers>
                   </Style></TextBlock.Style></TextBlock>
@@ -169,7 +170,7 @@
               <TextBlock Text="Tolerancia Bs" VerticalAlignment="Center"/><TextBox Width="50" Margin="6,0,12,0" Text="{Binding ToleranciaBs}"/>
               <Button Content="Contrastar" Command="{Binding ContrastarCmd}"/>
             </StackPanel>
-            <TextBlock DockPanel.Dock="Top" Text="{Binding Mensaje}" Foreground="#9A6700" Margin="0,0,0,6"/>
+            <TextBlock DockPanel.Dock="Top" Text="{Binding MensajeContraste}" Foreground="#9A6700" Margin="0,0,0,6"/>
             <DataGrid ItemsSource="{Binding Contraste}" AutoGenerateColumns="True" IsReadOnly="True"/>
           </DockPanel>
         </TabItem>
@@ -177,7 +178,7 @@
         <TabItem Header="Ruta crítica">
           <DataGrid ItemsSource="{Binding Etapas}" AutoGenerateColumns="False" IsReadOnly="True" Margin="6" x:Name="GridEtapas">
             <DataGrid.Columns>
-              <DataGridTemplateColumn Header="●" Width="30"><DataGridTemplateColumn.CellTemplate><DataTemplate>
+              <DataGridTemplateColumn Header="Est." Width="40"><DataGridTemplateColumn.CellTemplate><DataTemplate>
                 <Ellipse Width="14" Height="14" Fill="{Binding ColorHex}"/></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
               <DataGridTextColumn Header="Etapa" Binding="{Binding Codigo}" Width="60"/>
               <DataGridTextColumn Header="Descripción" Binding="{Binding Nombre}" Width="*"/>
@@ -185,7 +186,7 @@
               <DataGridTextColumn Header="Real" Binding="{Binding Real}" Width="70"/>
               <DataGridTextColumn Header="Estado" Binding="{Binding Semaforo}" Width="90"/>
               <DataGridCheckBoxColumn Header="Crítica" Binding="{Binding EsCritica}" Width="60"/>
-              <DataGridTemplateColumn Header="" Width="110"><DataGridTemplateColumn.CellTemplate><DataTemplate>
+              <DataGridTemplateColumn Header="" Width="140"><DataGridTemplateColumn.CellTemplate><DataTemplate>
                 <Button Content="Marcar cumplida" Click="Cumplir_Click" Tag="{Binding}"/></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
             </DataGrid.Columns>
           </DataGrid>
@@ -198,14 +199,16 @@
               <TextBlock Text="Documentos exigidos" Style="{StaticResource Titulo}"/>
               <ItemsControl ItemsSource="{Binding Legajo}"><ItemsControl.ItemTemplate><DataTemplate>
                 <StackPanel Orientation="Horizontal" Margin="0,2">
-                  <TextBlock Width="22"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="✖"/><Setter Property="Foreground" Value="#D64545"/>
-                    <Style.Triggers><DataTrigger Binding="{Binding Presente}" Value="True"><Setter Property="Text" Value="✔"/><Setter Property="Foreground" Value="#2E9E5B"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                  <TextBlock Width="52" FontWeight="Bold"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="FALTA"/><Setter Property="Foreground" Value="#D64545"/>
+                    <Style.Triggers><DataTrigger Binding="{Binding Presente}" Value="True"><Setter Property="Text" Value="OK"/><Setter Property="Foreground" Value="#2E9E5B"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
                   <TextBlock Text="{Binding Documento}" Width="130" FontWeight="SemiBold"/><TextBlock Text="{Binding Motivo}"/>
                 </StackPanel></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
             </StackPanel>
             <DockPanel Grid.Column="1" Margin="14,0,0,0">
               <TextBlock DockPanel.Dock="Top" Text="Bitácora" Style="{StaticResource Titulo}"/>
-              <ListBox ItemsSource="{Binding Bitacora}"/>
+              <ListBox ItemsSource="{Binding Bitacora}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,3"/></DataTemplate></ListBox.ItemTemplate>
+              </ListBox>
             </DockPanel>
           </Grid>
         </TabItem>

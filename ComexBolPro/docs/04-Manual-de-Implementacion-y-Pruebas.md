@@ -1,3 +1,5 @@
+> **Versión vigente de los manuales:** [Manual de Usuario](manual/Manual-de-Usuario.pdf) y [Manual de Instalación y Pruebas](manual/Manual-de-Instalacion-y-Pruebas.pdf) (PDF y Word, con capturas reales). Este texto se conserva como referencia técnica; los avisos del arancel son ahora 229 y las pruebas automáticas 68.
+
 # ComexBol Pro — Manual de implementación y de pruebas
 
 Versión del arancel soportada: **Arancel Aduanero de Importaciones 2026** (RM N° 557, vigente desde 01/01/2026).
