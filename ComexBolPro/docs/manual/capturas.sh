@@ -46,7 +46,7 @@ click 1385 676; sleep 3; click $T_LIQ; sleep 2; shot 13-liquidacion
 click $T_MER; sleep 1; click 740 330; click 700 680; sleep 2; shot 14-editar-item
 click 1162 704; sleep 3; shot 15-item-editado
 click 740 330; click 840 680; sleep 2; shot 16-confirmar-eliminar-item
-click 816 549; sleep 2; shot 17-item-eliminado
+xdotool key y; sleep 2; shot 17-item-eliminado
 # ---- Decisión, contraste, costos, ruta, legajo ----
 click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3; click 1170 475; xdotool key ctrl+a; xdotool type "40000"; click 1330 475; xdotool key ctrl+a; xdotool type "500"; click 1162 704; sleep 3; click 1385 676; sleep 3
 click $T_DEC; sleep 1.5
@@ -60,6 +60,10 @@ click $T_CON; sleep 1.5; field 710 311 "29197,20"; field 840 311 "0"; field 1085
 click $T_COS; sleep 1.5; click 800 336; sleep 2; shot 21-costos-reales
 click $T_RUT; sleep 2; click 1453 302; sleep 2; shot 22-ruta-critica
 click $T_LEG; sleep 2; shot 23-legajo-bitacora
+# ---- OCR de factura ----
+click $NAV_OPS; sleep 2; click $T_MER; field 495 168 "IMP-2026-002"; click 495 259; sleep 3
+click 985 680; sleep 3; xdotool type --delay 30 'C:\cb\ejemplos\factura-ejemplo.png'; xdotool key Return; sleep 15; shot 34-ocr-propuesta
+click 1173 502; sleep 3; shot 35-ocr-confirmado
 # ---- Configuración ----
 click $NAV_CFG; sleep 2
 field 1413 372 "6,96"; click 1312 507; sleep 2; shot 24-config-tipo-cambio
@@ -70,6 +74,6 @@ click $C_USU; sleep 1.5; shot 28-config-usuarios
 click $C_DAT; sleep 1.5; shot 29-config-respaldo
 click $NAV_PANEL; sleep 2; shot 30-panel
 click $NAV_ACE; sleep 2; shot 31-acerca-de
-click $NAV_OPS; sleep 2; click 495 410; sleep 1; click 495 896; sleep 2; shot 32-confirmar-eliminar-operacion
-click 815 558; sleep 2; shot 33-operacion-eliminada
+click $NAV_OPS; sleep 2; click 495 440; sleep 1; click 495 896; sleep 2; shot 32-confirmar-eliminar-operacion
+xdotool key y; sleep 2; shot 33-operacion-eliminada
 wineserver -k 2>/dev/null; echo "Capturas en $OUT"; ls "$OUT" | wc -l

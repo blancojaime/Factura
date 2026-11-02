@@ -49,7 +49,7 @@ class Manual:
 
     def _portada(self, titulo, subtitulo, version, fecha):
         for _ in range(6): self.d.add_paragraph()
-        p = self.d.add_paragraph(); r = p.add_run("ComexBol Pro"); r.font.size = Pt(40); r.bold = True; r.font.color.rgb = AZUL
+        p = self.d.add_paragraph(); r = p.add_run("COMEX JB"); r.font.size = Pt(40); r.bold = True; r.font.color.rgb = AZUL
         p = self.d.add_paragraph(); r = p.add_run(titulo); r.font.size = Pt(26); r.font.color.rgb = DORADO
         p = self.d.add_paragraph(); r = p.add_run(subtitulo); r.font.size = Pt(13); r.font.color.rgb = GRIS
         for _ in range(8): self.d.add_paragraph()
@@ -60,7 +60,7 @@ class Manual:
 
     def _pie(self):
         sec = self.d.sections[0]
-        hp = sec.header.paragraphs[0]; hp.text = f"ComexBol Pro — {self.titulo}"; hp.runs[0].font.size = Pt(8.5); hp.runs[0].font.color.rgb = GRIS
+        hp = sec.header.paragraphs[0]; hp.text = f"COMEX JB — {self.titulo}"; hp.runs[0].font.size = Pt(8.5); hp.runs[0].font.color.rgb = GRIS
         fp = sec.footer.paragraphs[0]; fp.alignment = WD_ALIGN_PARAGRAPH.CENTER
         r = fp.add_run("Página "); r.font.size = Pt(8.5)
         r2 = fp.add_run(); r2.font.size = Pt(8.5); _field(r2, "PAGE")

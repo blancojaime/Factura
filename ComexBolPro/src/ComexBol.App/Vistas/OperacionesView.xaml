@@ -95,6 +95,19 @@
             <!-- Formulario + lista de ítems -->
             <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
               <StackPanel>
+                <!-- Propuesta del OCR -->
+                <Border Style="{StaticResource Card}" Visibility="{Binding Propuesta.Count, Converter={StaticResource HayPropuesta}}" Background="#FFF8E8" BorderBrush="{StaticResource Ambar}">
+                  <StackPanel>
+                    <TextBlock Text="Propuesta de la lectura de la factura: revise cada dato" Style="{StaticResource Subtitulo}"/>
+                    <ItemsControl ItemsSource="{Binding Propuesta}"><ItemsControl.ItemTemplate><DataTemplate>
+                      <Grid Margin="0,2" ToolTip="{Binding Origen}">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="110"/><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Nombre}" VerticalAlignment="Center"/><TextBox Grid.Column="1" Text="{Binding Valor}" Margin="0"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Confianza}" Margin="8,0,0,0" Foreground="{StaticResource Ambar}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                      </Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                    <Button Content="Confirmar datos" Command="{Binding ConfirmarPropuestaCmd}" Margin="0,8,0,0" HorizontalAlignment="Left"/>
+                  </StackPanel>
+                </Border>
                 <Border Style="{StaticResource Card}">
                   <StackPanel>
                     <TextBlock Style="{StaticResource Subtitulo}"><Run Text="{Binding TextoGuardarItem, Mode=OneWay}"/></TextBlock>
@@ -156,19 +169,6 @@
                   </StackPanel>
                 </Border>
 
-                <!-- Propuesta del OCR -->
-                <Border Style="{StaticResource Card}" Visibility="{Binding Propuesta.Count, Converter={StaticResource HayPropuesta}}" Background="#FFF8E8" BorderBrush="{StaticResource Ambar}">
-                  <StackPanel>
-                    <TextBlock Text="Propuesta de la lectura de la factura: revise cada dato" Style="{StaticResource Subtitulo}"/>
-                    <ItemsControl ItemsSource="{Binding Propuesta}"><ItemsControl.ItemTemplate><DataTemplate>
-                      <Grid Margin="0,2" ToolTip="{Binding Origen}">
-                        <Grid.ColumnDefinitions><ColumnDefinition Width="110"/><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Nombre}" VerticalAlignment="Center"/><TextBox Grid.Column="1" Text="{Binding Valor}" Margin="0"/>
-                        <TextBlock Grid.Column="2" Text="{Binding Confianza}" Margin="8,0,0,0" Foreground="{StaticResource Ambar}" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                      </Grid></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
-                    <Button Content="Confirmar datos" Command="{Binding ConfirmarPropuestaCmd}" Margin="0,8,0,0" HorizontalAlignment="Left"/>
-                  </StackPanel>
-                </Border>
 
               </StackPanel>
             </ScrollViewer>
