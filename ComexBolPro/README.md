@@ -33,7 +33,7 @@ for t in tests/*/; do (cd $t && dotnet test); done
 Manual completo de implementación y pruebas: [`docs/04-Manual-de-Implementacion-y-Pruebas.md`](docs/04-Manual-de-Implementacion-y-Pruebas.md).
 
 ## Pendiente
-- Probar en un Windows real (hasta ahora se ejecutó bajo Wine); firma digital del instalador; importación directa del arancel en PDF.
+- Probar en un Windows real (hasta ahora se ejecutó bajo Wine); firma digital del instalador.
 - Validar parámetros normativos con un despachante (prueba P-09 del manual).
 - Pantallas para almacenaje y exportación (DEX/CEDEIM); guardar escenarios.
 - Mapeo de casillas SUMA (requiere el instructivo vigente de la ANB); exportación a PDF; compresión de imágenes.
