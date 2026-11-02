@@ -222,4 +222,11 @@ public class IceVariableYEsquemaTests : IDisposable
         var p = _db.Partidas.AsNoTracking().Single();
         Assert.Equal("", p.DespachoFrontera); Assert.False(p.IceUltimaEsOMas); Assert.Equal(0.05m, p.AlicuotaGA);
     }
+
+    [Fact] public void Base_Antigua_Recibe_Las_Tablas_Nuevas()
+    {
+        _db.Database.ExecuteSqlRaw("DROP TABLE Costos"); _db.Database.ExecuteSqlRaw("DROP TABLE Usuarios"); _db.Database.ExecuteSqlRaw("DROP TABLE Parametros");
+        _db.AsegurarEsquema();
+        Assert.Empty(_db.Costos.ToList()); Assert.Empty(_db.Usuarios.ToList()); Assert.Empty(_db.Parametros.ToList());
+    }
 }

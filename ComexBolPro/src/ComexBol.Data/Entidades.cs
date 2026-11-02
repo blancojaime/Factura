@@ -129,6 +129,23 @@ public class ComexDb(Microsoft.EntityFrameworkCore.DbContextOptions<ComexDb> o) 
         Database.EnsureCreated();
         var cn = Database.GetDbConnection();
         if (cn.State != System.Data.ConnectionState.Open) cn.Open();
+        // Tablas nuevas (EnsureCreated no las crea si la base ya existía): se ejecutan solo sus CREATE TABLE / CREATE INDEX.
+        var tablasExistentes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        using (var cmd = cn.CreateCommand())
+        {
+            cmd.CommandText = "SELECT name FROM sqlite_master WHERE type='table'";
+            using var rd = cmd.ExecuteReader(); while (rd.Read()) tablasExistentes.Add(rd.GetString(0));
+        }
+        var faltan = Model.GetEntityTypes().Select(e => e.GetTableName()).Where(t => t is not null && !tablasExistentes.Contains(t!)).ToHashSet()!;
+        if (faltan.Count > 0)
+        {
+            foreach (var raw in Database.GenerateCreateScript().Split(";\n", StringSplitOptions.RemoveEmptyEntries))
+            {
+                var st = raw.Trim(); if (st.Length == 0) continue;
+                if (faltan.Any(t => st.StartsWith($"CREATE TABLE \"{t}\"") || st.Contains($" ON \"{t}\" ")))
+                { using var c = cn.CreateCommand(); c.CommandText = st; c.ExecuteNonQuery(); }
+            }
+        }
         foreach (var et in Model.GetEntityTypes())
         {
             var tabla = et.GetTableName(); if (tabla is null) continue;

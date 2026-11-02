@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from docgen import Manual
 
 AQUI = os.path.dirname(os.path.abspath(__file__)); C = AQUI + "/capturas/"; A = C + "anotadas/"; I = C + "instalador/"
-VERSION, FECHA = "1.1.0", "2 de noviembre de 2026"
+VERSION, FECHA = "1.1.1", "2 de noviembre de 2026"
 
 # ============================================================== MANUAL DE USUARIO
 def manual_usuario():
@@ -25,7 +25,7 @@ def manual_usuario():
            "contraste el cálculo con 3 importaciones ya despachadas (sección 14) y consulte a su despachante.")
 
     m.h1("2. Instalación en un clic")
-    m.bullets(["Haga doble clic en **ComexJB-Setup-1.1.0.exe**. No necesita permisos de administrador: el instalador incluye todo (también el lector OCR).",
+    m.bullets(["Haga doble clic en **ComexJB-Setup-1.1.1.exe**. No necesita permisos de administrador: el instalador incluye todo (también el lector OCR).",
                "Si Windows muestra «**Windows protegió su PC**» (SmartScreen), pulse **Más información → Ejecutar de todas formas**. Aparece porque el instalador aún no tiene firma digital comercial.",
                "Espere la barra de progreso (menos de un minuto). Al terminar, la aplicación se abre sola y se crean accesos directos en el Escritorio y en el menú Inicio.",
                "Si tenía instalada la versión anterior «ComexBol Pro», el instalador la reemplaza y **conserva sus datos** (se copian solos al primer inicio).",
@@ -222,15 +222,15 @@ def manual_implementacion():
         ["Internet", "No necesario para operar"]], [5, 12])
 
     m.h1("2. Instalación en un clic")
-    m.bullets(["Copie **ComexJB-Setup-1.1.0.exe** al equipo y haga doble clic.",
+    m.bullets(["Copie **ComexJB-Setup-1.1.1.exe** al equipo y haga doble clic.",
                "Si aparece SmartScreen («Windows protegió su PC»): **Más información → Ejecutar de todas formas**. Es normal: el instalador no tiene firma digital comercial (la firma requiere un certificado de pago; se recomienda adquirirlo antes de distribuir ampliamente).",
                "Espere la barra de progreso; al finalizar la aplicación se abre sola.",
                "Se crean: carpeta de programa en `%LocalAppData%\\Programs\\ComexJB`, accesos directos en el Escritorio y en Inicio → COMEX JB (incluye «Manual del usuario» y «Desinstalar»)."], num=True)
     for f, t in (("01-progreso.png", "Instalador en curso (pantalla única con barra de progreso)."), ("02-terminado.png", "Instalación completada.")):
         m.figura(I + f, t, 13)
     m.h1("3. Instalación para varios equipos")
-    m.bullets(["**Silenciosa** (sin pantallas): `ComexJB-Setup-1.1.0.exe /S`", "**Desinstalación silenciosa:** `\"%LocalAppData%\\Programs\\ComexJB\\Desinstalar.exe\" /S`",
-               "Para instalar en una carpeta distinta: `ComexJB-Setup-1.1.0.exe /S /D=C:\\Ruta\\ComexJB` (la ruta va al final y sin comillas).",
+    m.bullets(["**Silenciosa** (sin pantallas): `ComexJB-Setup-1.1.1.exe /S`", "**Desinstalación silenciosa:** `\"%LocalAppData%\\Programs\\ComexJB\\Desinstalar.exe\" /S`",
+               "Para instalar en una carpeta distinta: `ComexJB-Setup-1.1.1.exe /S /D=C:\\Ruta\\ComexJB` (la ruta va al final y sin comillas).",
                "Cada usuario de Windows tiene su propia base de datos; para compartir información entre equipos copie el archivo `comex.db` (sección 4)."])
 
     m.h1("4. Datos, respaldos y actualización")
@@ -255,8 +255,8 @@ def manual_implementacion():
     m.h1("6. Pruebas automáticas")
     m.p("El código incluye pruebas automáticas que se ejecutan en una consola (equipo técnico):")
     m.code("for t in tests/*/; do (cd $t && dotnet test); done")
-    m.tabla([["Proyecto", "Pruebas", "Cubre"], ["ComexBol.Core", "25", "Liquidación, Incoterms, ruta crítica, lectura del arancel (Markdown)"], ["ComexBol.Data", "40", "Base de datos, catálogo, ICE por antigüedad, preferencias, usuarios y claves (PBKDF2), configuración, costos reales, edición/eliminación, respaldo"],
-        ["ComexBol.Documentos", "15", "OCR real (Tesseract), PDF (Poppler), Excel, lectura del arancel en PDF con páginas reales"], ["ComexBol.Presentation", "24", "Lógica de las pantallas (operaciones, selector de partida, inicio de sesión, configuración, arancel), regresiones halladas en uso real"], ["**Total**", "**104**", ""]], [5, 2.5, 9.5])
+    m.tabla([["Proyecto", "Pruebas", "Cubre"], ["ComexBol.Core", "25", "Liquidación, Incoterms, ruta crítica, lectura del arancel (Markdown)"], ["ComexBol.Data", "41", "Base de datos, catálogo, ICE por antigüedad, preferencias, usuarios y claves (PBKDF2), configuración, costos reales, edición/eliminación, respaldo"],
+        ["ComexBol.Documentos", "15", "OCR real (Tesseract), PDF (Poppler), Excel, lectura del arancel en PDF con páginas reales"], ["ComexBol.Presentation", "24", "Lógica de las pantallas (operaciones, selector de partida, inicio de sesión, configuración, arancel), regresiones halladas en uso real"], ["**Total**", "**105**", ""]], [5, 2.5, 9.5])
     m.p("Con el arancel completo en PDF: `COMEXBOL_ARANCEL_PDF_DIR=<carpeta con los 3 PDF> dotnet test` (PowerShell: `$env:COMEXBOL_ARANCEL_PDF_DIR=\"C:\\arancel\"`). Verifica 8.132 partidas, 97 capítulos, 76 prohibidas y 180 con tasas ICE.")
 
     m.h1("7. Manual de pruebas")
