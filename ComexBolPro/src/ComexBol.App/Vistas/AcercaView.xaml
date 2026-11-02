@@ -1,0 +1,22 @@
+<UserControl x:Class="ComexBol.App.Vistas.AcercaView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <Border Style="{StaticResource Card}" Margin="24,20" Width="640" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="26">
+      <StackPanel>
+        <Image Source="/Assets/logo.png" Height="170" HorizontalAlignment="Left" Margin="0,0,0,10"/>
+        <TextBlock Text="COMEX JB" Style="{StaticResource Titulo}" FontSize="28"/>
+        <TextBlock x:Name="TxtVersion" Style="{StaticResource Suave}" Margin="0,2,0,14"/>
+        <TextBlock TextWrapping="Wrap" Margin="0,0,0,10" Text="Asistente para decidir, acompañar y documentar importaciones en Bolivia: simula costos y rentabilidad, calcula la liquidación de tributos con el Arancel Aduanero de Importaciones, controla la ruta y los plazos, lleva el legajo documental y la bitácora, y exporta los datos para la DMI."/>
+        <Border Background="#FFF8E8" BorderBrush="#F3D9A4" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,10">
+          <TextBlock TextWrapping="Wrap" Foreground="#8A5A00" Text="Es una herramienta de apoyo: la liquidación oficial la determina la Aduana Nacional. Contraste los cálculos con importaciones ya despachadas y consulte a su despachante."/>
+        </Border>
+        <TextBlock Text="Datos del usuario en este equipo" Style="{StaticResource Etiqueta}"/>
+        <TextBox x:Name="TxtRuta" IsReadOnly="True" Background="#EEF3F4"/>
+        <TextBlock Text="Registro de errores inesperados" Style="{StaticResource Etiqueta}"/>
+        <TextBox x:Name="TxtLog" IsReadOnly="True" Background="#EEF3F4"/>
+        <TextBlock Style="{StaticResource Suave}" FontSize="11" Margin="0,8,0,0" Text="Lectura de facturas: Tesseract OCR (Apache 2.0) y Poppler (GPL), incluidos sin modificar. Lectura de PDF del arancel: PdfPig (Apache 2.0)."/>
+      </StackPanel>
+    </Border>
+  </ScrollViewer>
+</UserControl>

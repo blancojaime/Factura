@@ -22,11 +22,27 @@ public static partial class ArancelPdf
 
     sealed record Banda(double Techo, double Piso);
 
+    /// <summary>Año del arancel según el encabezado del PDF («Arancel Aduanero de Importaciones 2026»), o null si no se encuentra.</summary>
+    public static string? DetectarVersion(string pdf)
+    {
+        try
+        {
+            using var doc = PdfDocument.Open(pdf);
+            foreach (var page in doc.GetPages().Take(3))
+            {
+                var m = Regex.Match(string.Join(" ", page.GetWords().Select(w => w.Text)), @"Importaciones\s+(20\d{2})");
+                if (m.Success) return m.Groups[1].Value;
+            }
+        }
+        catch (Exception) { }
+        return null;
+    }
+
     public static ResultadoImportacion Parsear(IEnumerable<string> pdfs, string fuente = "ANB-2026", IProgress<string>? progreso = null)
     {
         var partidas = new List<PartidaNandina>(); var errores = new List<ErrorImportacion>();
         var vistos = new HashSet<string>(); var ice = new Dictionary<string, IReadOnlyList<decimal>>(); var iceOMas = new Dictionary<string, bool>();
-        int archivo = 0;
+        int archivo = 0; var jerarquia = new Jerarquia();
         foreach (var ruta in pdfs)
         {
             archivo++;
@@ -34,7 +50,7 @@ public static partial class ArancelPdf
             foreach (var page in doc.GetPages())
             {
                 if (page.Number % 25 == 0) progreso?.Report($"Leyendo arancel: archivo {archivo}, página {page.Number}…");
-                try { Pagina(page, archivo, fuente, partidas, errores, vistos, ice, iceOMas); }
+                try { Pagina(page, archivo, fuente, partidas, errores, vistos, ice, iceOMas, jerarquia); }
                 catch (Exception ex) { errores.Add(new(page.Number, $"archivo {archivo}, pág. {page.Number}: no se pudo leer ({ex.Message})")); }
             }
         }
@@ -44,7 +60,7 @@ public static partial class ArancelPdf
         return new(partidas, errores);
     }
 
-    static void Pagina(Page page, int archivo, string fuente, List<PartidaNandina> partidas, List<ErrorImportacion> errores, HashSet<string> vistos, Dictionary<string, IReadOnlyList<decimal>> ice, Dictionary<string, bool> iceOMas)
+    static void Pagina(Page page, int archivo, string fuente, List<PartidaNandina> partidas, List<ErrorImportacion> errores, HashSet<string> vistos, Dictionary<string, IReadOnlyList<decimal>> ice, Dictionary<string, bool> iceOMas, Jerarquia jerarquia)
     {
         var words = page.GetWords().ToList();
         if (!words.Any(w => RxCodigo().IsMatch(w.Text) && w.BoundingBox.Left < 200)) return;      // página sin filas de tabla
@@ -61,6 +77,36 @@ public static partial class ArancelPdf
         var encabezadosIce = words.Where(w => w.Text == "NUEVOS").ToList();
         bool esIce = encabezadosIce.Count > 0 && words.Any(w => w.Text.StartsWith("ANTIG", StringComparison.OrdinalIgnoreCase));
         double colCodigoFin = esIce ? 200 : 91;      // las tablas pequeñas del Apéndice ICE están centradas: su columna de código empieza más a la derecha
+
+        // Jerarquía del arancel (partida → subpartidas → nivel de guiones) para dar a cada ítem una descripción completa.
+        var rutas = new Dictionary<string, string>();
+        if (!esIce)
+        {
+            var limites = new List<double> { page.Height }; limites.AddRange(filas); limites.Add(0);
+            for (int b = 0; b + 1 < limites.Count; b++)
+            {
+                double top = limites[b], bot = limites[b + 1]; if (top - bot < 4) continue;
+                var enBanda = words.Where(x => { var cy = (x.BoundingBox.Top + x.BoundingBox.Bottom) / 2; return cy < top && cy > bot; }).ToList();
+                var codigos = enBanda.Where(x => x.BoundingBox.Right < 100 && Regex.IsMatch(x.Text, @"^\d")).OrderByDescending(x => x.BoundingBox.Top).ToList();
+                var cortes = new List<(double T, double B, string Cod)>();
+                if (codigos.Count <= 1) cortes.Add((top, bot, codigos.Count == 1 ? codigos[0].Text : ""));
+                else
+                    for (int k = 0; k < codigos.Count; k++)
+                    {
+                        double yk = (codigos[k].BoundingBox.Top + codigos[k].BoundingBox.Bottom) / 2;
+                        double t = k == 0 ? top : (yk + (codigos[k - 1].BoundingBox.Top + codigos[k - 1].BoundingBox.Bottom) / 2) / 2;
+                        double bb = k == codigos.Count - 1 ? bot : (yk + (codigos[k + 1].BoundingBox.Top + codigos[k + 1].BoundingBox.Bottom) / 2) / 2;
+                        cortes.Add((t, bb, codigos[k].Text));
+                    }
+                foreach (var (t, bb, cod) in cortes)
+                {
+                    var desc = Texto(words, 91, 366, t, bb);
+                    if (desc.Length == 0 || desc.Contains("DE LA MERCANCÍA") || desc.Contains("DESCRIPCIÓN")) continue;
+                    var ruta = jerarquia.Registrar(cod, desc);
+                    if (RxCodigo().IsMatch(cod)) rutas[cod.Replace(".", "")] = ruta;
+                }
+            }
+        }
 
         // Cada fila de código define una banda entre las líneas horizontales que la rodean.
         foreach (var w in words.Where(w => RxCodigo().IsMatch(w.Text) && w.BoundingBox.Left < colCodigoFin + 2))
@@ -123,7 +169,7 @@ public static partial class ArancelPdf
             if (!RxNum.IsMatch(gaTxt) || !decimal.TryParse(gaTxt.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture, out var ga) || ga is < 0 or > 40)
             { errores.Add(new(page.Number, $"{donde} — GA ilegible ('{gaTxt}')")); vistos.Remove(codigo); continue; }
 
-            var desc = Celda(1); var especial = Celda(3).ToUpperInvariant();
+            var desc = rutas.TryGetValue(codigo, out var rutaDesc) && rutaDesc.Length > 0 ? rutaDesc : Celda(1); var especial = Celda(3).ToUpperInvariant();
             especial = especial.Contains("IEHD") ? "IEHD" : especial.Contains("ICE") ? "ICE" : "";
             var unidad = Celda(4); var front = Celda(5);
             var tipo = Limpiar(Celda(6)); var entidad = Celda(7); var legal = Celda(8);
@@ -204,5 +250,34 @@ public static partial class ArancelPdf
         foreach (var v in valores.OrderBy(v => v))
             if (res.Count == 0 || v - res[^1] > tol) res.Add(v);
         return res;
+    }
+
+    /// <summary>Pila de encabezados: partida (87.01) → subpartidas con 1, 2, 3… guiones. Cada ítem toma su ruta completa.</summary>
+    sealed class Jerarquia
+    {
+        readonly List<string> _pila = [];
+        static readonly Regex RxGuiones = new(@"^((?:-\s*)+)(.*)$", RegexOptions.Singleline);
+
+        public string Registrar(string codigo, string desc)
+        {
+            desc = Regex.Replace(desc, @"\s+", " ").Trim();
+            int nivel = 0; var texto = desc;
+            if (Regex.IsMatch(codigo, @"^\d{2}\.\d{2}$")) { _pila.Clear(); nivel = 0; }          // encabezado de partida
+            else
+            {
+                var m = RxGuiones.Match(desc);
+                if (m.Success) { nivel = m.Groups[1].Value.Count(c => c == '-'); texto = m.Groups[2].Value.Trim(); }
+                else nivel = Math.Max(1, _pila.Count);                                                // sin guiones: continúa el nivel actual
+            }
+            texto = texto.TrimEnd(':', ' ');
+            if (nivel == 0) _pila.Add(texto);
+            else
+            {
+                while (_pila.Count < nivel) _pila.Add("");
+                if (_pila.Count > nivel) _pila.RemoveRange(nivel, _pila.Count - nivel);
+                _pila.Add(texto);
+            }
+            return string.Join(" / ", _pila.Where(x => x.Length > 0));
+        }
     }
 }

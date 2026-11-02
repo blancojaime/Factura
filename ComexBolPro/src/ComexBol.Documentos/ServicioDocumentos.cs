@@ -9,7 +9,8 @@ public sealed record DocumentoProcesado(Documento Documento, TipoDocumento Tipo,
 
 public sealed class ServicioDocumentos(ComexDb db, IMotorOcr ocr)
 {
-    ServicioOperaciones Ops => new(db);
+    public string Usuario { get; set; } = "";
+    ServicioOperaciones Ops => new(db) { Usuario = Usuario };
 
     /// <summary>Adjunta la imagen al legajo, la clasifica, ejecuta OCR y guarda la PROPUESTA (sin aplicarla).</summary>
     public async Task<DocumentoProcesado> ProcesarAsync(int opId, string rutaImagen, CancellationToken ct = default)
@@ -19,7 +20,7 @@ public sealed class ServicioDocumentos(ComexDb db, IMotorOcr ocr)
         var campos = ExtractorFactura.Extraer(texto);
         var doc = await Ops.AdjuntarDocumentoAsync(opId, tipo, rutaImagen);
         doc.OcrJson = JsonSerializer.Serialize(campos);
-        db.Bitacora.Add(new() { OperacionId = opId, Fecha = DateTime.Now, Categoria = "OCR", Detalle = $"{doc.NombreArchivo} clasificado como {tipo}; propuesta pendiente de confirmación." });
+        db.Bitacora.Add(new() { OperacionId = opId, Fecha = DateTime.Now, Categoria = "OCR", Detalle = $"{doc.NombreArchivo} clasificado como {tipo}; propuesta pendiente de confirmación.", Usuario = Usuario });
         await db.SaveChangesAsync();
         return new(doc, tipo, campos, texto);
     }
@@ -35,7 +36,7 @@ public sealed class ServicioDocumentos(ComexDb db, IMotorOcr ocr)
         if (!string.IsNullOrWhiteSpace(numeroFactura)) cambios.Add($"Factura N.º {numeroFactura}");
         if (!string.IsNullOrWhiteSpace(proveedor)) cambios.Add($"Proveedor {proveedor}");
         doc.Validado = true;
-        db.Bitacora.Add(new() { OperacionId = opId, Fecha = DateTime.Now, Categoria = "OCR", Detalle = $"Confirmado por el usuario: {(cambios.Count == 0 ? "sin cambios" : string.Join("; ", cambios))}." });
+        db.Bitacora.Add(new() { OperacionId = opId, Fecha = DateTime.Now, Categoria = "OCR", Detalle = $"Confirmado por el usuario: {(cambios.Count == 0 ? "sin cambios" : string.Join("; ", cambios))}.", Usuario = Usuario });
         await db.SaveChangesAsync();
     }
 }

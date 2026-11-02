@@ -52,6 +52,56 @@ public sealed class ServicioCatalogo(ComexDb db)
         return new(res.Partidas.Count, res.Errores.Count, res.Errores, res.Partidas.All(p => p.EsEjemplo));
     }
 
+    // ---------- Mantenimiento de la tabla del arancel ----------
+    public sealed record InfoCatalogo(int Total, string Version, string Fuentes, int Prohibidas, int ConIce, int Manuales);
+
+    public async Task<InfoCatalogo> InfoAsync()
+    {
+        var total = await db.Partidas.CountAsync();
+        if (total == 0) return new(0, "", "", 0, 0, 0);
+        var version = await db.Partidas.Select(p => p.Version).FirstAsync();
+        var fuentes = await db.Partidas.Select(p => p.Fuente).Distinct().ToListAsync();
+        return new(total, version, string.Join(", ", fuentes), await db.Partidas.CountAsync(p => p.Prohibida),
+            await db.Partidas.CountAsync(p => p.ImpuestoEspecial != ""), await db.Partidas.CountAsync(p => p.Fuente == "MANUAL"));
+    }
+
+    /// <summary>Lista para la tabla: sin filtro, las primeras por código; con filtro, por código (prefijo) o palabras de la descripción.</summary>
+    public async Task<IReadOnlyList<PartidaCatalogo>> ListarAsync(string? filtro, int max = 300) =>
+        string.IsNullOrWhiteSpace(filtro) ? await db.Partidas.AsNoTracking().OrderBy(p => p.Codigo).Take(max).ToListAsync() : await BuscarAsync(filtro, max);
+
+    /// <summary>Agrega o modifica una partida (p. ej. por un decreto que cambia el GA). Las agregadas a mano quedan con fuente «MANUAL».</summary>
+    public async Task GuardarPartidaAsync(PartidaCatalogo nueva, bool esNueva)
+    {
+        nueva.Codigo = new string((nueva.Codigo ?? "").Where(char.IsDigit).ToArray());
+        if (nueva.Codigo.Length != 10) throw new ArgumentException("El código NANDINA debe tener 10 dígitos.");
+        if (string.IsNullOrWhiteSpace(nueva.Descripcion)) throw new ArgumentException("Escriba la descripción de la partida.");
+        if (nueva.AlicuotaGA is < 0 or > 0.40m) throw new ArgumentException("El gravamen arancelario debe estar entre 0 % y 40 %.");
+        var existente = await db.Partidas.FirstOrDefaultAsync(p => p.Codigo == nueva.Codigo);
+        if (esNueva)
+        {
+            if (existente is not null) throw new InvalidOperationException($"La partida {nueva.Codigo} ya existe: edítela en la tabla.");
+            var version = await db.Partidas.Select(p => p.Version).FirstOrDefaultAsync() ?? "";
+            nueva.Fuente = "MANUAL"; nueva.Version = version; nueva.PrefAsignada = true; db.Partidas.Add(nueva);
+        }
+        else
+        {
+            if (existente is null) throw new InvalidOperationException($"La partida {nueva.Codigo} no existe.");
+            existente.Descripcion = nueva.Descripcion.Trim(); existente.AlicuotaGA = nueva.AlicuotaGA; existente.Unidad = nueva.Unidad ?? ""; existente.Prohibida = nueva.Prohibida;
+            existente.TipoDocumento = nueva.TipoDocumento ?? ""; existente.Entidad = nueva.Entidad ?? ""; existente.DispLegal = nueva.DispLegal ?? ""; existente.DespachoFrontera = nueva.DespachoFrontera ?? "";
+            existente.ImpuestoEspecial = nueva.ImpuestoEspecial ?? ""; existente.Autorizaciones = nueva.Autorizaciones ?? "";
+            existente.PrefCan = nueva.PrefCan ?? ""; existente.PrefChile = nueva.PrefChile ?? ""; existente.PrefProtocolo = nueva.PrefProtocolo ?? ""; existente.PrefMexico = nueva.PrefMexico ?? "";
+            existente.IceAntiguedad = nueva.IceAntiguedad ?? ""; existente.IceUltimaEsOMas = nueva.IceUltimaEsOMas;
+            if (existente.Fuente != "MANUAL" && !existente.Fuente.EndsWith("(modificada)")) existente.Fuente += " (modificada)";
+        }
+        await db.SaveChangesAsync();
+    }
+
+    public async Task EliminarPartidaAsync(string codigo)
+    {
+        var p = await db.Partidas.FirstOrDefaultAsync(x => x.Codigo == codigo); if (p is null) return;
+        db.Partidas.Remove(p); await db.SaveChangesAsync();
+    }
+
     public Task<PartidaCatalogo?> ObtenerAsync(string codigo) => db.Partidas.AsNoTracking().FirstOrDefaultAsync(p => p.Codigo == codigo);
 
     /// <summary>Busca por prefijo de código (si el texto es numérico) o por palabras en la descripción.</summary>

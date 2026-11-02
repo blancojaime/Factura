@@ -5,13 +5,17 @@
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>ComexBolPro</AssemblyName>
+    <AssemblyName>ComexJB</AssemblyName>
     <RootNamespace>ComexBol.App</RootNamespace>
     <ApplicationIcon>app.ico</ApplicationIcon>
     <Version>1.0.0</Version>
-    <Product>ComexBol Pro</Product>
-    <Company>ComexBol</Company>
+    <Product>COMEX JB</Product>
+    <Company>Jaime Blanco Villegas</Company>
   </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="Assets\logo.png" />
+    <Resource Include="Assets\simbolo.png" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComexBol.Presentation\ComexBol.Presentation.csproj" />
   </ItemGroup>

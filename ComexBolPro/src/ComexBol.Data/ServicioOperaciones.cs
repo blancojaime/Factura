@@ -13,10 +13,60 @@ public sealed class ServicioOperaciones(ComexDb db)
 {
     static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
 
+    /// <summary>Usuario que realiza las acciones: queda registrado en cada línea de la bitácora.</summary>
+    public string Usuario { get; set; } = "";
+
     Task Log(int opId, string cat, string detalle)
     {
-        db.Bitacora.Add(new() { OperacionId = opId, Fecha = DateTime.Now, Categoria = cat, Detalle = detalle });
+        db.Bitacora.Add(new() { OperacionId = opId, Fecha = DateTime.Now, Categoria = cat, Detalle = detalle, Usuario = Usuario });
         return Task.CompletedTask;
+    }
+
+    /// <summary>Valida un ítem ANTES de guardarlo (un ítem inválido no debe quedar guardado ni bloquear los cálculos).</summary>
+    async Task ValidarItemAsync(ItemMercancia item)
+    {
+        item.CodigoNandina = new string((item.CodigoNandina ?? "").Where(char.IsDigit).ToArray());
+        if (item.CodigoNandina.Length != 10) throw new ArgumentException("La partida NANDINA debe tener 10 dígitos: elíjala del arancel o escríbala completa.");
+        if (string.IsNullOrWhiteSpace(item.Descripcion)) throw new ArgumentException("Escriba la descripción de la mercancía.");
+        if (item.ValorFactura <= 0) throw new ArgumentException("El valor de factura debe ser mayor que cero.");
+        if (item.PesoBrutoKg < 0 || item.PesoNetoKg < 0) throw new ArgumentException("Los pesos no pueden ser negativos.");
+        if (item.PesoNetoKg > item.PesoBrutoKg && item.PesoBrutoKg > 0) throw new ArgumentException("El peso neto no puede exceder el peso bruto.");
+        if (item.Desgravacion is < 0 or > 1) throw new ArgumentException("La desgravación debe estar entre 0 % y 100 %.");
+        if (item.Desgravacion > 0 && string.IsNullOrWhiteSpace(item.AcuerdoPreferencial))
+            throw new ArgumentException("Indique el acuerdo comercial que sustenta la desgravación (se exige Certificado de Origen).");
+        if (item.AntiguedadAnios < 0) throw new ArgumentException("La antigüedad no puede ser negativa.");
+        if (await db.Partidas.AnyAsync() && !await db.Partidas.AnyAsync(p => p.Codigo == item.CodigoNandina))
+            throw new ArgumentException($"La partida {item.CodigoNandina} no existe en el arancel cargado. Búsquela por nombre o código en el selector.");
+    }
+
+    public async Task ActualizarItemAsync(ItemMercancia nuevo)
+    {
+        await ValidarItemAsync(nuevo);
+        var it = await db.Items.FirstAsync(i => i.Id == nuevo.Id);
+        it.CodigoNandina = nuevo.CodigoNandina; it.Descripcion = nuevo.Descripcion; it.ValorFactura = nuevo.ValorFactura; it.PesoBrutoKg = nuevo.PesoBrutoKg; it.PesoNetoKg = nuevo.PesoNetoKg;
+        it.Cantidad = nuevo.Cantidad; it.AlicuotaGA = nuevo.AlicuotaGA; it.Desgravacion = nuevo.Desgravacion; it.AcuerdoPreferencial = nuevo.AcuerdoPreferencial; it.AlicuotaIce = nuevo.AlicuotaIce;
+        it.AntiguedadAnios = nuevo.AntiguedadAnios; it.Marca = nuevo.Marca; it.Modelo = nuevo.Modelo; it.Serie = nuevo.Serie; it.PaisOrigen = nuevo.PaisOrigen;
+        if (it.Desgravacion > 0) (await db.Operaciones.FirstAsync(o => o.Id == it.OperacionId)).UsaPreferenciaArancelaria = true;
+        await Log(it.OperacionId, "Ítem", $"Ítem {it.Numero} modificado: {it.CodigoNandina} «{it.Descripcion}» por {it.ValorFactura:N2}.");
+        await db.SaveChangesAsync();
+    }
+
+    /// <summary>Elimina el ítem y renumera los restantes (1…n). Las liquidaciones ya guardadas se conservan como historia.</summary>
+    public async Task EliminarItemAsync(int itemId)
+    {
+        var it = await db.Items.FirstAsync(i => i.Id == itemId);
+        var opId = it.OperacionId; var desc = $"{it.Numero} {it.CodigoNandina} «{it.Descripcion}»";
+        db.Items.Remove(it); await db.SaveChangesAsync();
+        int n = 1; foreach (var r in await db.Items.Where(i => i.OperacionId == opId).OrderBy(i => i.Numero).ToListAsync()) r.Numero = n++;
+        await Log(opId, "Ítem", $"Ítem eliminado: {desc}. Vuelva a calcular la liquidación.");
+        await db.SaveChangesAsync();
+    }
+
+    /// <summary>Elimina la operación completa: ítems, ruta, liquidaciones, documentos, costos y bitácora.</summary>
+    public async Task EliminarOperacionAsync(int opId)
+    {
+        var op = await db.Operaciones.FirstOrDefaultAsync(o => o.Id == opId); if (op is null) return;
+        db.Operaciones.Remove(op); await db.SaveChangesAsync();
     }
 
     public async Task<Operacion> CrearImportacionAsync(string carpeta, Incoterm incoterm, string moneda, DateOnly inicio)
@@ -38,9 +88,7 @@ public sealed class ServicioOperaciones(ComexDb db)
 
     public async Task AgregarItemAsync(int opId, ItemMercancia item)
     {
-        if (item.Desgravacion is < 0 or > 1) throw new ArgumentException("La desgravación debe estar entre 0 % y 100 %.");
-        if (item.Desgravacion > 0 && string.IsNullOrWhiteSpace(item.AcuerdoPreferencial))
-            throw new ArgumentException("Indique el acuerdo comercial que sustenta la desgravación (se exige Certificado de Origen).");
+        await ValidarItemAsync(item);
         item.OperacionId = opId;
         db.Items.Add(item);
         if (item.Desgravacion > 0) (await db.Operaciones.FirstAsync(o => o.Id == opId)).UsaPreferenciaArancelaria = true;

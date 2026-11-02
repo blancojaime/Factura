@@ -1,0 +1,85 @@
+<UserControl x:Class="ComexBol.App.Vistas.ArancelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid Margin="20">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+
+    <Border Style="{StaticResource Card}">
+      <StackPanel>
+        <Grid>
+          <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <StackPanel>
+            <TextBlock Text="Arancel Aduanero de Importaciones" Style="{StaticResource Titulo}"/>
+            <TextBlock Text="Tabla de partidas NANDINA: consulte, agregue, modifique o elimine productos después de la primera carga." Style="{StaticResource Suave}"/>
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Visibility="{Binding EsAdministrador, Converter={StaticResource BoolVis}}">
+            <Button Content="Importar arancel (PDF)…" Click="Importar_Click"/>
+            <Button Content="Nueva partida" Command="{Binding NuevaCmd}" Style="{StaticResource BtnExito}" Margin="0"/>
+          </StackPanel>
+        </Grid>
+        <!-- Estado del arancel -->
+        <Border CornerRadius="6" Padding="12,8" Margin="0,12,0,10">
+          <Border.Style><Style TargetType="Border"><Setter Property="Background" Value="#DDF3E7"/><Style.Triggers><DataTrigger Binding="{Binding ArancelCargado}" Value="False"><Setter Property="Background" Value="#FBE0DF"/></DataTrigger></Style.Triggers></Style></Border.Style>
+          <TextBlock Text="{Binding Info}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+        </Border>
+        <Grid>
+          <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <StackPanel>
+            <TextBlock Text="Buscar por código o por nombre del producto" Style="{StaticResource Etiqueta}"/>
+            <TextBox Text="{Binding Filtro, UpdateSourceTrigger=PropertyChanged}" Margin="0"/>
+          </StackPanel>
+          <TextBlock Grid.Column="1" Text="{Binding Resumen}" Style="{StaticResource Suave}" VerticalAlignment="Bottom" Margin="14,0,0,6"/>
+        </Grid>
+        <TextBlock Text="{Binding Mensaje}" Foreground="#8A5A00" FontWeight="SemiBold" Margin="0,8,0,0" TextWrapping="Wrap"/>
+      </StackPanel>
+    </Border>
+
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <DataGrid ItemsSource="{Binding Partidas}" SelectedItem="{Binding Seleccionada}" IsReadOnly="True" Margin="0,0,12,0">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Código" Binding="{Binding Codigo}" Width="105"/>
+          <DataGridTextColumn Header="Descripción (ruta del arancel)" Binding="{Binding Descripcion}" Width="*">
+            <DataGridTextColumn.ElementStyle><Style TargetType="TextBlock"><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="ToolTip" Value="{Binding Descripcion}"/></Style></DataGridTextColumn.ElementStyle>
+          </DataGridTextColumn>
+          <DataGridTextColumn Header="GA" Binding="{Binding AlicuotaGA, StringFormat=P0}" Width="55"/>
+          <DataGridTextColumn Header="Unid." Binding="{Binding Unidad}" Width="60"/>
+          <DataGridTextColumn Header="Doc." Binding="{Binding TipoDocumento}" Width="70"/>
+          <DataGridTextColumn Header="ICE/IEHD" Binding="{Binding ImpuestoEspecial}" Width="92"/>
+          <DataGridCheckBoxColumn Header="Prohib." Binding="{Binding Prohibida, Mode=OneWay}" Width="74"/>
+          <DataGridTextColumn Header="Fuente" Binding="{Binding Fuente}" Width="110"/>
+        </DataGrid.Columns>
+      </DataGrid>
+
+      <!-- Editor de la partida -->
+      <Border Grid.Column="1" Width="360" Style="{StaticResource Card}" Margin="0" Visibility="{Binding EditorAbierto, Converter={StaticResource BoolVis}}">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Visibility="{Binding EsAdministrador, Converter={StaticResource BoolVis}}">
+            <TextBlock Style="{StaticResource Subtitulo}" Text="{Binding EsNueva, Converter={StaticResource TituloEditor}}"/>
+            <TextBlock Text="Código NANDINA (10 dígitos)" Style="{StaticResource Etiqueta}"/>
+            <TextBox Text="{Binding Codigo}"><TextBox.Style><Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}"><Style.Triggers><DataTrigger Binding="{Binding EsNueva}" Value="False"><Setter Property="IsReadOnly" Value="True"/><Setter Property="Background" Value="#EEF3F4"/></DataTrigger></Style.Triggers></Style></TextBox.Style></TextBox>
+            <TextBlock Text="Descripción" Style="{StaticResource Etiqueta}"/>
+            <TextBox Text="{Binding Descripcion}" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="90" MaxHeight="160" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
+            <Grid>
+              <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
+              <StackPanel><TextBlock Text="Gravamen arancelario (%)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding GaPct}"/></StackPanel>
+              <StackPanel Grid.Column="2"><TextBlock Text="Unidad de medida" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Unidad}"/></StackPanel>
+            </Grid>
+            <TextBlock Text="Documento adicional" Style="{StaticResource Etiqueta}"/>
+            <ComboBox ItemsSource="{Binding TiposDocumento}" SelectedItem="{Binding TipoDocumento}"/>
+            <TextBlock Text="Entidad que emite" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Entidad}"/>
+            <TextBlock Text="Disposición legal" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding DispLegal}"/>
+            <TextBlock Text="Impuesto especial" Style="{StaticResource Etiqueta}"/>
+            <ComboBox ItemsSource="{Binding ImpuestosEspeciales}" SelectedItem="{Binding ImpuestoEspecial}"/>
+            <CheckBox Content="Mercancía prohibida" IsChecked="{Binding Prohibida}"/>
+            <StackPanel Orientation="Horizontal">
+              <Button Content="Guardar" Command="{Binding GuardarCmd}" Style="{StaticResource BtnExito}"/>
+              <Button Content="Cancelar" Command="{Binding CancelarCmd}" Style="{StaticResource BtnSuave}"/>
+              <Button Content="Eliminar" Style="{StaticResource BtnPeligro}" Click="Eliminar_Click" Margin="0"/>
+            </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

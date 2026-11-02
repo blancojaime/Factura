@@ -1,0 +1,63 @@
+<UserControl x:Class="ComexBol.App.Vistas.PanelView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <UserControl.Resources>
+    <Style x:Key="Kpi" TargetType="Border"><Setter Property="CornerRadius" Value="10"/><Setter Property="Padding" Value="18,14"/><Setter Property="Margin" Value="0,0,12,12"/><Setter Property="MinHeight" Value="96"/></Style>
+    <Style x:Key="KpiNumero" TargetType="TextBlock"><Setter Property="FontSize" Value="30"/><Setter Property="FontWeight" Value="Bold"/><Setter Property="Foreground" Value="White"/></Style>
+    <Style x:Key="KpiTexto" TargetType="TextBlock"><Setter Property="FontSize" Value="13"/><Setter Property="Foreground" Value="#F2FAFA"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
+    <Style x:Key="KpiValor" TargetType="TextBlock"><Setter Property="FontSize" Value="17"/><Setter Property="FontWeight" Value="SemiBold"/><Setter Property="Foreground" Value="White"/><Setter Property="TextWrapping" Value="Wrap"/></Style>
+  </UserControl.Resources>
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="24,20">
+      <Grid Margin="0,0,0,16">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <StackPanel>
+          <TextBlock x:Name="TxtSaludo" Style="{StaticResource Titulo}" Text="Panel de control"/>
+          <TextBlock Text="Resumen de sus operaciones, plazos y datos de referencia." Style="{StaticResource Suave}"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+          <Button Content="Nueva importación" Click="IrOperaciones_Click"/>
+          <Button Content="Consultar el arancel" Click="IrArancel_Click" Style="{StaticResource BtnSecundario}" Margin="0"/>
+        </StackPanel>
+      </Grid>
+
+      <UniformGrid Columns="3" Margin="0,0,-12,0">
+        <Border Style="{StaticResource Kpi}" Background="{StaticResource Turquesa}"><StackPanel><TextBlock Text="{Binding TotalOperaciones}" Style="{StaticResource KpiNumero}"/><TextBlock Text="Operaciones registradas" Style="{StaticResource KpiTexto}"/></StackPanel></Border>
+        <Border Style="{StaticResource Kpi}" Background="{StaticResource Ambar}"><StackPanel><TextBlock Text="{Binding EtapasEnAlerta}" Style="{StaticResource KpiNumero}"/><TextBlock Text="Etapas en alerta (vencen en 2 días o menos)" Style="{StaticResource KpiTexto}"/></StackPanel></Border>
+        <Border Style="{StaticResource Kpi}" Background="{StaticResource Rojo}"><StackPanel><TextBlock Text="{Binding EtapasVencidas}" Style="{StaticResource KpiNumero}"/><TextBlock Text="Etapas vencidas" Style="{StaticResource KpiTexto}"/></StackPanel></Border>
+        <Border Style="{StaticResource Kpi}" Background="{StaticResource Azul}"><StackPanel><TextBlock Text="Arancel cargado" Style="{StaticResource KpiTexto}"/><TextBlock Text="{Binding ArancelInfo}" Style="{StaticResource KpiValor}"/></StackPanel></Border>
+        <Border Style="{StaticResource Kpi}" Background="{StaticResource Verde}"><StackPanel><TextBlock Text="Tipo de cambio USD (BCB, venta)" Style="{StaticResource KpiTexto}"/><TextBlock Text="{Binding TipoCambioHoy}" Style="{StaticResource KpiValor}"/></StackPanel></Border>
+        <Border Style="{StaticResource Kpi}" Background="{StaticResource Violeta}"><StackPanel><TextBlock Text="UFV" Style="{StaticResource KpiTexto}"/><TextBlock Text="{Binding UfvHoy}" Style="{StaticResource KpiValor}"/></StackPanel></Border>
+      </UniformGrid>
+
+      <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="1.4*"/></Grid.ColumnDefinitions>
+        <Border Style="{StaticResource Card}" Margin="0" VerticalAlignment="Top" Background="#FFF8E8" BorderBrush="#F3D9A4">
+          <StackPanel>
+            <TextBlock Text="Avisos del sistema" Style="{StaticResource Subtitulo}"/>
+            <ItemsControl ItemsSource="{Binding Alertas}"><ItemsControl.ItemTemplate><DataTemplate>
+              <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,3" Foreground="#8A5A00"/>
+            </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+            <TextBlock Text="Todo en orden: no hay avisos." Foreground="{StaticResource Verde}" FontWeight="SemiBold">
+              <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Alertas.Count}" Value="0"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
+            </TextBlock>
+          </StackPanel>
+        </Border>
+        <Border Grid.Column="2" Style="{StaticResource Card}" Margin="0">
+          <StackPanel>
+            <TextBlock Text="Próximos vencimientos" Style="{StaticResource Subtitulo}"/>
+            <DataGrid ItemsSource="{Binding Proximos}" IsReadOnly="True" MaxHeight="300">
+              <DataGrid.Columns>
+                <DataGridTemplateColumn Header="" Width="36"><DataGridTemplateColumn.CellTemplate><DataTemplate><Ellipse Width="13" Height="13" Fill="{Binding ColorHex, Converter={StaticResource ColorTexto}}"/></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+                <DataGridTextColumn Header="Operación" Binding="{Binding Carpeta}" Width="120"/>
+                <DataGridTextColumn Header="Etapa" Binding="{Binding Etapa}" Width="*"/>
+                <DataGridTextColumn Header="Vence" Binding="{Binding Fecha}" Width="100"/>
+                <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="90"/>
+              </DataGrid.Columns>
+            </DataGrid>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

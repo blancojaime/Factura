@@ -30,6 +30,7 @@ public class Operacion
     public List<LiquidacionGuardada> Liquidaciones { get; set; } = [];
     public List<Documento> Documentos { get; set; } = [];
     public List<EventoBitacora> Bitacora { get; set; } = [];
+    public List<CostoOperacion> Costos { get; set; } = [];
 }
 
 public class ItemMercancia
@@ -40,6 +41,10 @@ public class ItemMercancia
     public string CodigoNandina { get; set; } = "";
     public string Descripcion { get; set; } = "";
     public string? PaisOrigen { get; set; }
+    // Ficha técnica (evita observaciones por mala declaración): marca, modelo y serie
+    public string Marca { get; set; } = "";
+    public string Modelo { get; set; } = "";
+    public string Serie { get; set; } = "";
     public decimal ValorFactura { get; set; }
     public decimal PesoBrutoKg { get; set; }
     public decimal PesoNetoKg { get; set; }
@@ -110,6 +115,7 @@ public class EventoBitacora
     public DateTime Fecha { get; set; }
     public string Categoria { get; set; } = "";
     public string Detalle { get; set; } = "";
+    public string Usuario { get; set; } = "";
 }
 
 public class ComexDb(Microsoft.EntityFrameworkCore.DbContextOptions<ComexDb> o) : Microsoft.EntityFrameworkCore.DbContext(o)
@@ -152,11 +158,22 @@ public class ComexDb(Microsoft.EntityFrameworkCore.DbContextOptions<ComexDb> o) 
     public Microsoft.EntityFrameworkCore.DbSet<Documento> Documentos => Set<Documento>();
     public Microsoft.EntityFrameworkCore.DbSet<EventoBitacora> Bitacora => Set<EventoBitacora>();
     public Microsoft.EntityFrameworkCore.DbSet<PartidaCatalogo> Partidas => Set<PartidaCatalogo>();
+    public Microsoft.EntityFrameworkCore.DbSet<Usuario> Usuarios => Set<Usuario>();
+    public Microsoft.EntityFrameworkCore.DbSet<TipoCambioRegistro> TiposCambio => Set<TipoCambioRegistro>();
+    public Microsoft.EntityFrameworkCore.DbSet<UfvRegistro> Ufvs => Set<UfvRegistro>();
+    public Microsoft.EntityFrameworkCore.DbSet<ParametroSistema> Parametros => Set<ParametroSistema>();
+    public Microsoft.EntityFrameworkCore.DbSet<PerfilImportador> Perfiles => Set<PerfilImportador>();
+    public Microsoft.EntityFrameworkCore.DbSet<CostoOperacion> Costos => Set<CostoOperacion>();
 
     protected override void OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder b)
     {
         b.Entity<Operacion>().HasIndex(x => x.Carpeta).IsUnique();
         b.Entity<PartidaCatalogo>().HasKey(x => x.Codigo);
+        b.Entity<Usuario>().HasIndex(x => x.NombreUsuario).IsUnique();
+        b.Entity<TipoCambioRegistro>().HasIndex(x => new { x.Fecha, x.Moneda }).IsUnique();
+        b.Entity<UfvRegistro>().HasIndex(x => x.Fecha).IsUnique();
+        b.Entity<ParametroSistema>().HasKey(x => x.Clave);
+        b.Entity<Operacion>().HasMany(x => x.Costos).WithOne().HasForeignKey(x => x.OperacionId);
         b.Entity<Operacion>().HasMany(x => x.Items).WithOne().HasForeignKey(x => x.OperacionId);
         b.Entity<Operacion>().HasMany(x => x.Etapas).WithOne().HasForeignKey(x => x.OperacionId);
         b.Entity<Operacion>().HasMany(x => x.Liquidaciones).WithOne().HasForeignKey(x => x.OperacionId);
@@ -188,4 +205,63 @@ public class PartidaCatalogo
     public string PrefChile { get; set; } = "";            // ACE 22 Chile (%)
     public string PrefProtocolo { get; set; } = "";        // ACE 22 Protocolo (n.º romano)
     public string PrefMexico { get; set; } = "";           // ACE 66 México (%)
+}
+
+public class Usuario
+{
+    public int Id { get; set; }
+    public string NombreUsuario { get; set; } = "";
+    public string NombreCompleto { get; set; } = "";
+    public string Rol { get; set; } = "Operador";          // Administrador | Operador
+    public string ClaveHash { get; set; } = "";
+    public string Sal { get; set; } = "";
+    public bool Activo { get; set; } = true;
+    public DateTime? UltimoAcceso { get; set; }
+}
+
+public class TipoCambioRegistro
+{
+    public int Id { get; set; }
+    public DateOnly Fecha { get; set; }
+    public string Moneda { get; set; } = "USD";
+    public decimal BobPorUnidad { get; set; }              // tipo de cambio oficial de venta (BCB)
+    public string Fuente { get; set; } = "Manual";
+}
+
+public class UfvRegistro
+{
+    public int Id { get; set; }
+    public DateOnly Fecha { get; set; }
+    public decimal ValorBob { get; set; }
+}
+
+public class ParametroSistema
+{
+    public string Clave { get; set; } = "";
+    public string Valor { get; set; } = "";
+    public string Descripcion { get; set; } = "";
+}
+
+public class PerfilImportador
+{
+    public int Id { get; set; }
+    public string RazonSocial { get; set; } = "";
+    public string Nit { get; set; } = "";
+    public string TipoImportador { get; set; } = "Habitual";   // Habitual | Ocasional
+    public string Direccion { get; set; } = "";
+    public string Ciudad { get; set; } = "";
+    public string Telefono { get; set; } = "";
+    public string Correo { get; set; } = "";
+    public string AgenciaDespachante { get; set; } = "";
+}
+
+/// <summary>Hoja de costos: lo proyectado por el simulador frente a lo realmente pagado.</summary>
+public class CostoOperacion
+{
+    public int Id { get; set; }
+    public int OperacionId { get; set; }
+    public string Concepto { get; set; } = "";
+    public decimal ProyectadoBob { get; set; }
+    public decimal? RealBob { get; set; }
+    public string Nota { get; set; } = "";
 }
