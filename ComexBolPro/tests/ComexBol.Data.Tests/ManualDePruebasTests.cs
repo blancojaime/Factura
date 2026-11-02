@@ -175,3 +175,51 @@ public class PreferenciaDelArancelTests : IDisposable
         Assert.Contains(await c.AplicarAOperacionAsync(op.Id), a => a.Contains("declaró") && a.Contains("50"));
     }
 }
+
+public class IceVariableYEsquemaTests : IDisposable
+{
+    readonly SqliteConnection _cn = new("Data Source=:memory:"); readonly ComexDb _db;
+    public IceVariableYEsquemaTests() { _cn.Open(); _db = new(new DbContextOptionsBuilder<ComexDb>().UseSqlite(_cn).Options); _db.AsegurarEsquema(); }
+    public void Dispose() { _db.Dispose(); _cn.Dispose(); }
+
+    static ComexBol.Core.Catalogo.PartidaNandina Vehiculo(string codigo, decimal[] tasas, bool omas) =>
+        new(codigo, "Vehículo de prueba", 0.10m, "u", false, [], "TEST") { ImpuestoEspecial = "ICE", IceAntiguedad = tasas, IceUltimaEsOMas = omas };
+
+    async Task<(IReadOnlyList<string> avisos, ItemMercancia item)> Probar(decimal[] tasas, bool omas, int anios)
+    {
+        var c = new ServicioCatalogo(_db);
+        await c.ImportarResultadoAsync(new([Vehiculo("8703221020", tasas, omas)], []), "t");
+        var s = new ServicioOperaciones(_db); var op = await s.CrearImportacionAsync("IMP-" + Guid.NewGuid().ToString("N")[..6], Incoterm.CIF, "USD", new DateOnly(2026, 11, 2));
+        await s.AgregarItemAsync(op.Id, new() { Numero = 1, CodigoNandina = "8703221020", Descripcion = "v", ValorFactura = 1000, AntiguedadAnios = anios });
+        var avisos = await c.AplicarAOperacionAsync(op.Id);
+        return (avisos, _db.Items.Single(i => i.OperacionId == op.Id));
+    }
+
+    [Fact] public async Task Tabla_De_Dos_Columnas_Usa_La_Tasa_De_Su_Antiguedad()
+    {
+        var (_, nuevo) = await Probar([0m, 0.15m], false, 0); Assert.Equal(0m, nuevo.AlicuotaIce);
+        var (_, uno) = await Probar([0m, 0.15m], false, 1); Assert.Equal(0.15m, uno.AlicuotaIce);
+    }
+
+    [Fact] public async Task Antiguedad_Fuera_De_La_Tabla_No_Inventa_Tasa()
+    {
+        var (avisos, it) = await Probar([0m, 0.15m], false, 4);
+        Assert.Equal(0m, it.AlicuotaIce); Assert.Contains(avisos, a => a.Contains("solo prevé tasa ICE hasta 1"));
+    }
+
+    [Fact] public async Task Columna_Mayor_O_Igual_Rige_Para_Mayores_Antiguedades()
+    {
+        var (avisos, it) = await Probar([0.10m, 0.15m, 0.20m, 0.25m], true, 5);
+        Assert.Equal(0.25m, it.AlicuotaIce); Assert.Contains(avisos, a => a.Contains("3 años o más"));
+    }
+
+    [Fact] public void Base_Antigua_Recibe_Las_Columnas_Nuevas_Sin_Perder_Datos()
+    {
+        _db.Database.ExecuteSqlRaw("INSERT INTO Partidas (Codigo,Descripcion,AlicuotaGA,Unidad,Prohibida,Autorizaciones,Fuente,Version,TipoDocumento,Entidad,DispLegal,ImpuestoEspecial,IceAntiguedad,Preferencias,PrefAsignada,PrefCan,PrefChile,PrefProtocolo,PrefMexico,IceUltimaEsOMas,DespachoFrontera) VALUES ('0101210000','x',0.05,'u',0,'','t','1','','','','','','',0,'','','','',0,'')");
+        _db.Database.ExecuteSqlRaw("ALTER TABLE Partidas DROP COLUMN DespachoFrontera");
+        _db.Database.ExecuteSqlRaw("ALTER TABLE Partidas DROP COLUMN IceUltimaEsOMas");
+        _db.AsegurarEsquema();
+        var p = _db.Partidas.AsNoTracking().Single();
+        Assert.Equal("", p.DespachoFrontera); Assert.False(p.IceUltimaEsOMas); Assert.Equal(0.05m, p.AlicuotaGA);
+    }
+}

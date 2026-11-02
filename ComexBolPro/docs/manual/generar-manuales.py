@@ -44,8 +44,10 @@ def manual_usuario():
     m.h1("4. Primer paso: cargar el arancel")
     m.p("Antes de registrar mercancías debe cargar el **Arancel Aduanero de Importaciones 2026**. Sin él, el sistema no puede determinar el gravamen arancelario, "
         "los documentos exigidos ni las mercancías prohibidas, y se lo advertirá en rojo en la pestaña Liquidación.")
-    m.bullets(["Pulse **Importar catálogo…** (barra superior).", "Seleccione **los tres archivos del arancel a la vez** (mantenga Ctrl) y pulse Abrir.",
-               "La barra de estado indica el resultado. Con el arancel 2026 completo: **8.121 partidas**, 97 capítulos y 229 avisos (filas cuyo detalle no pudo interpretarse con certeza; se informan, nunca se corrigen en silencio)."], num=True)
+    m.bullets(["Pulse **Importar catálogo…** (barra superior).", "Seleccione **los tres archivos PDF del Arancel 2026 a la vez** (mantenga Ctrl) y pulse Abrir. La lectura tarda unos 10 segundos.",
+               "La barra de estado indica el resultado. Con el arancel 2026 completo: **8.132 partidas** en 97 capítulos. Todo lo que no pueda interpretarse con certeza se informa; nunca se corrige en silencio."], num=True)
+    m.figura(C + "01b-importando-arancel.png", "Importando el arancel: la barra de estado inferior muestra el avance (archivo y página).")
+    m.figura(C + "01c-arancel-importado.png", "Resultado: «Catálogo: 8132 partidas, 2 avisos». El cuadro lista lo que no pudo interpretarse con certeza (aquí, dos filas del capítulo 98 sin unidad de medida en el original).")
     m.caja("Una sola vez al año", "El arancel se carga una vez y queda guardado. Repita el paso solo cuando se publique un arancel nuevo; la importación reemplaza el catálogo anterior sin tocar sus operaciones.", "E3F4EA")
 
     m.h1("5. Crear una importación")
@@ -123,14 +125,14 @@ def manual_usuario():
     m.figura(C + "18-vehiculo-formulario.png", "Tractor de carretera usado (partida 8701.21.00.00), antigüedad 3 años.")
     m.figura(C + "19-vehiculo-avisos-ice.png", "Aviso: «ICE 30 % (Apéndice I, antigüedad 3 años)».")
     m.figura(C + "20-vehiculo-liquidacion.png", "Liquidación con ICE: CIF 157.992,00 · GA 7.899,60 · ICE 49.767,48 · IVA 32.219,47 · total 89.886,55.")
-    m.caja("Cuando el arancel no trae la tasa", "En 227 partidas de vehículos las tasas no son legibles en el documento fuente: el sistema se lo indica y usted escribe el **ICE %** a mano. "
-           "Lo mismo ocurre con bebidas alcohólicas y con el IEHD de combustibles. **El sistema nunca inventa una tasa.**")
+    m.caja("Cuando el arancel no trae la tasa", "El arancel trae las tasas ICE de **180 vehículos** por antigüedad (según la tabla, de 1 a 5 años o «3 años o más»). Para **bebidas alcohólicas y tabaco** (45 partidas) y para el **IEHD** de combustibles (20 partidas) la tasa no figura en el arancel: usted escribe el **ICE %** a mano. "
+           "Si la antigüedad del vehículo excede lo que prevé la tabla, el sistema lo avisa y no asigna ninguna tasa. **El sistema nunca inventa una tasa.**")
 
     m.h1("13. Preferencias arancelarias")
     m.p("Si su proveedor le entrega un **Certificado de Origen**, puede aplicar la preferencia de un acuerdo comercial. En **Acuerdo / desgrav. %** elija el acuerdo (CAN, ACE 22 Chile, ACE 36 Mercosur, ACE 47, ACE 66 México, VEN) y deje la desgravación en 0: el sistema toma el porcentaje del arancel.")
     m.figura(C + "21-preferencia-formulario.png", "Reproductor de raza pura (0101.21.00.00) con acuerdo CAN.")
     m.figura(C + "22-preferencia-avisos.png", "El sistema muestra las preferencias del arancel por columna, aplica 100 % para CAN y exige el Certificado de Origen en el legajo.")
-    m.bullets(["En el arancel 2026 casi todo tiene 100 % de preferencia; las excepciones son **México 0 %** (por ejemplo aceites en bruto) y **Chile 50 %** (por ejemplo mayonesa).",
+    m.bullets(["En el arancel 2026 casi todo tiene 100 % de preferencia; las excepciones son **México 0 %** (205 partidas, por ejemplo aceites en bruto) y **Chile 50 %** (14 partidas, por ejemplo mayonesa).",
                "Si usted declara un porcentaje distinto al del arancel, el sistema lo advierte.",
                "La desgravación **no** es automática: depende de las reglas de origen y de su certificado. Verifíquelo con su despachante."])
 
@@ -156,7 +158,6 @@ def manual_usuario():
         ["Perdí mis datos / cambio de PC", "Copie el archivo %LocalAppData%\\ComexBolPro\\comex.db: es la copia de seguridad completa."]], [6.5, 10.5])
     m.h3("Lo que todavía no hace")
     m.bullets(["No genera el formulario SUMA ni transmite nada a la Aduana: es un apoyo de cálculo y control.",
-               "Las preferencias de 204 partidas no pueden asignarse a una columna con certeza: el sistema muestra los porcentajes impresos y usted verifica.",
                "Los escenarios de la pestaña Decisión no se guardan al cerrar la aplicación.",
                "No cubre exportaciones (DEX/CEDEIM) ni almacenaje en pantalla; existen en el código pero aún no tienen pantalla."])
     m.p("Las capturas de este manual son **reales**, tomadas de la aplicación en ejecución en un entorno de pruebas; en su Windows la tipografía puede verse levemente distinta.", italic=True)
@@ -196,21 +197,21 @@ def manual_implementacion():
     m.caja("Cambios de versión", "Todavía no hay migraciones automáticas de la base: ante un cambio de estructura, exporte sus expedientes a Excel y recree la base.")
 
     m.h1("5. Carga del arancel")
-    m.bullets(["Abra ComexBol Pro → **Importar catálogo…** → seleccione **los 3 archivos `.md`** del Arancel 2026 a la vez (Ctrl+clic).",
-               "Resultado esperado con los archivos del arancel oficial 2026: **8.121 partidas**, 97 capítulos, **7.917** con preferencias asignadas por columna y **229 avisos**.",
-               "Los 229 avisos incluyen 227 filas del Apéndice ICE (vehículos) cuyas tasas no son legibles: el ICE se ingresa a mano en esos casos."], num=True)
-    m.tabla([["Dato del arancel", "Estado"], ["Código, descripción, GA, unidad", "Leídos de la tabla"], ["Documento adicional (AP, C, C*, DJ…), entidad, disposición legal", "Leídos"],
-        ["Mercancía prohibida (tipo P)", "Detectada: el sistema bloquea la partida"], ["Marca ICE / IEHD", "Detectada (la tasa de IEHD no viene en el arancel)"],
-        ["ICE de vehículos por antigüedad (Apéndice I)", "Solo filas con las 6 tasas legibles"],
-        ["Preferencias (CAN/ACE36/47/VEN, ACE 22 Chile y Protocolo, ACE 66 México)", "Asignadas por columna; contraste con el PDF: 89 de 89 filas verificadas coinciden"]], [9, 8])
+    m.bullets(["Abra ComexBol Pro → **Importar catálogo…**.",
+               "Seleccione los **3 archivos PDF** del Arancel 2026 (también se aceptan los `.md` convertidos, pero el PDF es más exacto).", "Resultado esperado con el arancel oficial 2026: **8.132 partidas**, 97 capítulos y **2 avisos** (dos filas del capítulo 98 sin unidad de medida en el original)."], num=True)
+    m.tabla([["Dato del arancel", "Estado"], ["Código, descripción, GA, unidad", "Leídos celda por celda del PDF (13 columnas); GA verificado contra una segunda lectura independiente: 8.060 de 8.063 comparables coinciden (las 3 diferencias son errores de la comprobación, no del importador)"],
+        ["Documento adicional (AP, C, C*, DJ, CITES…), entidad, disposición legal, despacho en frontera", "Leídos"],
+        ["Mercancía prohibida (tipo P)", "Detectada (76 partidas): el sistema bloquea la partida"], ["Marca ICE / IEHD", "Detectada (225 ICE, 20 IEHD); la tasa de IEHD y la de bebidas/tabaco no vienen en el arancel"],
+        ["ICE de vehículos por antigüedad (Apéndice I)", "180 partidas con tasas (tablas de 6, 4 y 2 columnas; «≥3 años» reconocido)"],
+        ["Preferencias (CAN/ACE36/47/VEN, ACE 22 Chile y Protocolo, ACE 66 México)", "Asignadas por columna para todas las partidas"]], [9, 8])
     m.p("**Verificación recomendada:** revise por muestreo 20–30 partidas de su interés contra el arancel impreso (prueba P-02).")
 
     m.h1("6. Pruebas automáticas")
     m.p("El código incluye pruebas automáticas que se ejecutan en una consola (equipo técnico):")
     m.code("for t in tests/*/; do (cd $t && dotnet test); done")
-    m.tabla([["Proyecto", "Pruebas", "Cubre"], ["ComexBol.Core", "25", "Liquidación, Incoterms, ruta crítica, lectura del arancel"], ["ComexBol.Data", "23", "Base de datos, catálogo, preferencias, casos del manual"],
-        ["ComexBol.Documentos", "9", "OCR real (Tesseract), PDF (Poppler), Excel"], ["ComexBol.Presentation", "11", "Lógica de la ventana, regresiones halladas en uso real"], ["**Total**", "**68**", ""]], [5, 2.5, 9.5])
-    m.p("Con el arancel completo: `COMEXBOL_ARANCEL_DIR=<carpeta con los 3 .md> dotnet test` (PowerShell: `$env:COMEXBOL_ARANCEL_DIR=\"C:\\arancel\"`). El caso 9 verifica 8.121 partidas y 7.917 con preferencias asignadas.")
+    m.tabla([["Proyecto", "Pruebas", "Cubre"], ["ComexBol.Core", "25", "Liquidación, Incoterms, ruta crítica, lectura del arancel (Markdown)"], ["ComexBol.Data", "27", "Base de datos, catálogo, ICE por antigüedad, preferencias, actualización de esquema, casos del manual"],
+        ["ComexBol.Documentos", "15", "OCR real (Tesseract), PDF (Poppler), Excel, lectura del arancel en PDF con páginas reales"], ["ComexBol.Presentation", "11", "Lógica de la ventana, regresiones halladas en uso real"], ["**Total**", "**78**", ""]], [5, 2.5, 9.5])
+    m.p("Con el arancel completo en PDF: `COMEXBOL_ARANCEL_PDF_DIR=<carpeta con los 3 PDF> dotnet test` (PowerShell: `$env:COMEXBOL_ARANCEL_PDF_DIR=\"C:\\arancel\"`). Verifica 8.132 partidas, 97 capítulos, 76 prohibidas y 180 con tasas ICE.")
 
     m.h1("7. Manual de pruebas")
     m.p("Convenciones: TC = 6,96 Bs/USD (dato de prueba; use el oficial). Las cifras se muestran con formato boliviano. **Cada cifra de estos casos fue obtenida ejecutando la aplicación real** y está además fijada en una prueba automática. "
@@ -244,7 +245,7 @@ def manual_implementacion():
     m.p("Cree la operación el 02/11/2026: etapa I01 plan 02/11 a 04/11. Márquela cumplida: pasa a verde y la bitácora anota «a tiempo». Con una fecha posterior a un plazo pasa a Vencida (rojo); a 2 días o menos del fin, Alerta (amarillo).")
     m.figura(C + "08-etapa-cumplida.png", "Resultado esperado del Caso 8.")
     m.h2("Caso 9 — Arancel completo")
-    m.p("Tras importar: barra de estado «Catálogo: 8121 partidas, 229 avisos/rechazos».")
+    m.p("Tras importar los 3 PDF: barra de estado «Catálogo: 8132 partidas, 2 avisos/rechazos».")
     m.h2("Caso 10 — OCR de factura (imagen y PDF)")
     m.p("Abra `docs/ejemplos/factura-ejemplo.png` (y repita con `factura-ejemplo.pdf`). Propuesta esperada (puede variar algún dígito):")
     m.tabla([["Campo", "Valor", "Confianza"], ["N.º factura", "INV-88213", "Media"], ["Proveedor", "Shenzhen Tech Co., Ltd", "Alta"], ["Incoterm", "FOB", "Alta"], ["Moneda", "USD", "Media"],
@@ -265,7 +266,7 @@ def manual_implementacion():
 
     m.h1("8. Pruebas de aceptación")
     m.tabla([["#", "Prueba", "Resultado esperado", "Cumple"],
-        ["P-01", "Importar los 3 archivos del arancel", "8.121 partidas / 97 capítulos", "☐"], ["P-02", "Contrastar 20 partidas con el arancel impreso", "GA, unidad y documento coinciden", "☐"],
+        ["P-01", "Importar los 3 archivos del arancel", "8.132 partidas / 97 capítulos", "☐"], ["P-02", "Contrastar 20 partidas con el arancel impreso", "GA, unidad y documento coinciden", "☐"],
         ["P-03", "Casos 1, 3, 4, 5", "Cifras idénticas a las de este manual", "☐"], ["P-04", "Caso 7", "Prohibida bloqueada; AGEMED exigida", "☐"],
         ["P-05", "Cambiar el TC y recalcular", "La versión 2 queda en bitácora; la 1 se conserva", "☐"], ["P-06", "Cerrar y reabrir la aplicación", "Operaciones, ruta y bitácora persisten", "☐"],
         ["P-07", "Caso 10 con una factura real escaneada", "Propuesta razonable; nada se aplica sin confirmar", "☐"], ["P-08", "Exportar expediente y Excel", ".md con 6 secciones; .xlsx con 5 hojas", "☐"],
@@ -294,13 +295,14 @@ def manual_implementacion():
         ["Cierre al mostrar la liquidación en equipos sin la fuente Consolas; símbolos (✔ ✖ ●) dependientes de fuentes", "Cierre inesperado", "Texto simple y fuente estándar"],
         ["Mensaje de Decisión visible en Contraste; nombres técnicos en el legajo; botón cortado", "Confusión", "Mensajes separados, nombres legibles, columna ensanchada"],
         ["Llamada de nota «( * )» del arancel leída como documento exigido", "Aviso falso de permiso en vehículos", "Se ignora; prueba con la partida real"],
-        ["Arancel sin cargar: GA en 0 % sin aviso visible", "Liquidación subestimada", "Aviso permanente en pantalla"]], [6.8, 4.7, 5.5])
+        ["Arancel sin cargar: GA en 0 % sin aviso visible", "Liquidación subestimada", "Aviso permanente en pantalla"],
+        ["El arancel convertido a Markdown leía mal el GA de 17 partidas (p. ej. «Para rayos X»: 10 % leído como 0 %) y perdía 11 partidas", "Gravamen subestimado en esas partidas", "Se lee directamente el PDF oficial celda por celda; verificado con una segunda lectura independiente"]], [6.8, 4.7, 5.5])
 
     m.h1("12. Limitaciones conocidas")
     m.bullets(["Instalador sin firma digital (SmartScreen avisará). El instalador se verificó solo parcialmente (ver sección 2).",
                "Capturas tomadas en entorno de pruebas; la tipografía en Windows será Segoe UI.", "Sin pantalla para almacenaje, exportación (DEX/CEDEIM), otras monedas ni gastos de origen/hasta frontera.",
-               "Preferencias de 204 partidas sin columna asignada; ICE de vehículos solo con 6 tasas legibles; IEHD y bebidas: tasa manual.",
-               "Mapeo a casillas SUMA pendiente (requiere el instructivo vigente de la Aduana). Importación directa del arancel en PDF pendiente (hoy se importa el formato Markdown).",
+               "ICE de bebidas alcohólicas, tabaco y el IEHD: tasa manual (no figuran en el arancel). Si el vehículo excede la antigüedad que prevé la tabla no se asigna tasa.",
+               "Mapeo a casillas SUMA pendiente (requiere el instructivo vigente de la Aduana). El importador está calibrado con el diseño de tablas del Arancel 2026; un arancel de otro año con otro diseño podría requerir ajustes (el sistema informa las páginas que no reconoce).",
                "Los escenarios de Decisión no se guardan. Sin migraciones automáticas de la base de datos."])
 
     m.h1("13. Registro de hallazgos")

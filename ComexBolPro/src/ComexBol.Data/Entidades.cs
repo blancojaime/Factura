@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using ComexBol.Core;
 
 namespace ComexBol.Data;
@@ -112,6 +114,37 @@ public class EventoBitacora
 
 public class ComexDb(Microsoft.EntityFrameworkCore.DbContextOptions<ComexDb> o) : Microsoft.EntityFrameworkCore.DbContext(o)
 {
+    /// <summary>
+    /// Crea la base si no existe y agrega las columnas que falten (bases creadas con versiones anteriores).
+    /// Solo agrega columnas: nunca borra ni modifica datos. Reemplaza a las migraciones mientras el modelo es joven.
+    /// </summary>
+    public void AsegurarEsquema()
+    {
+        Database.EnsureCreated();
+        var cn = Database.GetDbConnection();
+        if (cn.State != System.Data.ConnectionState.Open) cn.Open();
+        foreach (var et in Model.GetEntityTypes())
+        {
+            var tabla = et.GetTableName(); if (tabla is null) continue;
+            var existentes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            using (var cmd = cn.CreateCommand())
+            {
+                cmd.CommandText = $"PRAGMA table_info(\"{tabla}\")";
+                using var rd = cmd.ExecuteReader(); while (rd.Read()) existentes.Add(rd.GetString(1));
+            }
+            foreach (var prop in et.GetProperties())
+            {
+                var col = prop.GetColumnName(); if (existentes.Contains(col)) continue;
+                var tipo = prop.GetColumnType();
+                var def = prop.ClrType == typeof(string) ? "''" : prop.ClrType == typeof(bool) || prop.ClrType.IsPrimitive || prop.ClrType == typeof(decimal) || prop.ClrType.IsEnum ? "0" : "''";
+                var nulo = Nullable.GetUnderlyingType(prop.ClrType) is not null || prop.IsNullable;
+                using var alter = cn.CreateCommand();
+                alter.CommandText = $"ALTER TABLE \"{tabla}\" ADD COLUMN \"{col}\" {tipo}{(nulo ? "" : $" NOT NULL DEFAULT {def}")}";
+                alter.ExecuteNonQuery();
+            }
+        }
+    }
+
     public Microsoft.EntityFrameworkCore.DbSet<Operacion> Operaciones => Set<Operacion>();
     public Microsoft.EntityFrameworkCore.DbSet<ItemMercancia> Items => Set<ItemMercancia>();
     public Microsoft.EntityFrameworkCore.DbSet<EtapaRuta> Etapas => Set<EtapaRuta>();
@@ -146,7 +179,9 @@ public class PartidaCatalogo
     public string Entidad { get; set; } = "";
     public string DispLegal { get; set; } = "";
     public string ImpuestoEspecial { get; set; } = "";     // ICE | IEHD | ""
-    public string IceAntiguedad { get; set; } = "";        // "0.15;0.20;..." (nuevo,1..5 años) o ""
+    public string IceAntiguedad { get; set; } = "";        // "0.15;0.20;..." tasas por antigüedad (nuevo, 1, 2…; 2 a 6 columnas) o ""
+    public bool IceUltimaEsOMas { get; set; }              // la última columna es «≥N años»
+    public string DespachoFrontera { get; set; } = "";     // columna «Despacho en Frontera» del arancel
     public string Preferencias { get; set; } = "";         // porcentajes impresos tal cual
     public bool PrefAsignada { get; set; }                 // true = se pudo asignar a las columnas del arancel
     public string PrefCan { get; set; } = "";              // CAN / ACE 36 / ACE 47 / VEN (%)

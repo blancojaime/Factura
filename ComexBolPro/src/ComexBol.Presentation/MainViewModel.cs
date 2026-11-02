@@ -187,21 +187,30 @@ public sealed class MainViewModel : ObservableObject
         Mensaje = "Datos confirmados: complete partida y descripción y agregue el ítem";
     });
 
-    /// <summary>Importa el arancel: uno o varios .md (Arancel oficial) o un .csv simple.</summary>
+    /// <summary>Importa el arancel: los PDF oficiales (recomendado), los .md convertidos, o un .csv simple.</summary>
     public async Task<ResumenImportacionCatalogo?> ImportarCatalogoAsync(IReadOnlyList<string> rutas, string version)
     {
         ResumenImportacionCatalogo? res = null;
         await Seguro_(async () =>
         {
             Mensaje = "Importando arancel…";
-            var lectores = rutas.Select(r => (TextReader)new StreamReader(r)).ToList();
-            try
+            if (rutas.All(r => r.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase)))
             {
-                res = rutas.All(r => r.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
-                    ? await _cat.ImportarArancelMarkdownAsync(lectores, version)
-                    : await _cat.ImportarCsvAsync(lectores[0], version);
+                var avance = new Progress<string>(m => Mensaje = m);
+                var leido = await Task.Run(() => ArancelPdf.Parsear(rutas.OrderBy(r => r, StringComparer.OrdinalIgnoreCase).ToList(), "ANB-" + version, avance));
+                res = await _cat.ImportarResultadoAsync(leido, version);
             }
-            finally { foreach (var l in lectores) l.Dispose(); }
+            else
+            {
+                var lectores = rutas.Select(r => (TextReader)new StreamReader(r)).ToList();
+                try
+                {
+                    res = rutas.All(r => r.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
+                        ? await _cat.ImportarArancelMarkdownAsync(lectores, version)
+                        : await _cat.ImportarCsvAsync(lectores[0], version);
+                }
+                finally { foreach (var l in lectores) l.Dispose(); }
+            }
             Mensaje = $"Catálogo: {res.Importadas} partidas, {res.Rechazadas} avisos/rechazos" + (res.SoloEjemplos ? " — SOLO DATOS DE EJEMPLO" : "");
         });
         return res;

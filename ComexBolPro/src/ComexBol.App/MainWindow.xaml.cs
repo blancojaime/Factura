@@ -18,11 +18,12 @@ public partial class MainWindow : Window
 
     async void ImportarCatalogo_Click(object s, RoutedEventArgs e)
     {
-        var dlg = new OpenFileDialog { Filter = "Arancel (*.md;*.csv)|*.md;*.csv", Title = "Arancel Aduanero (seleccione los 3 archivos .md a la vez, o un CSV)", Multiselect = true };
+        var dlg = new OpenFileDialog { Filter = "Arancel (*.pdf;*.md;*.csv)|*.pdf;*.md;*.csv", Title = "Arancel Aduanero 2026: seleccione los 3 archivos PDF a la vez (Ctrl+clic)", Multiselect = true };
         if (dlg.ShowDialog() != true) return;
         var r = await Vm.ImportarCatalogoAsync(dlg.FileNames.OrderBy(f => f).ToList(), "2026");
         if (r is { Errores.Count: > 0 })
-            MessageBox.Show(string.Join("\n", r.Errores.Take(15).Select(x => $"Línea {x.Linea}: {x.Mensaje}")), "Filas rechazadas");
+            MessageBox.Show(string.Join("\n\n", r.Errores.Take(15).Select(x => x.Mensaje.Contains("pág.") || x.Mensaje.Contains("línea") ? x.Mensaje : $"Línea {x.Linea}: {x.Mensaje}"))
+                + (r.Errores.Count > 15 ? $"\n\n… y {r.Errores.Count - 15} avisos más." : ""), "Avisos del arancel");
     }
 
     async void ExportarExpediente_Click(object s, RoutedEventArgs e)

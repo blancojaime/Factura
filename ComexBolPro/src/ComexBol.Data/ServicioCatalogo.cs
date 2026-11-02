@@ -27,6 +27,9 @@ public sealed class ServicioCatalogo(ComexDb db)
         return decimal.TryParse(col, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v / 100m : null;
     }
 
+    /// <summary>Guarda un resultado ya leído (por ejemplo, del importador de PDF) y reemplaza TODO el catálogo.</summary>
+    public Task<ResumenImportacionCatalogo> ImportarResultadoAsync(ResultadoImportacion res, string version) => GuardarAsync(res, version);
+
     async Task<ResumenImportacionCatalogo> GuardarAsync(ResultadoImportacion res, string version)
     {
         if (res.Partidas.Count == 0) return new(0, res.Errores.Count, res.Errores, false);
@@ -38,6 +41,7 @@ public sealed class ServicioCatalogo(ComexDb db)
             Codigo = p.Codigo, Descripcion = p.Descripcion, AlicuotaGA = p.AlicuotaGA, Unidad = p.Unidad,
             Prohibida = p.Prohibida, Autorizaciones = string.Join('|', p.Autorizaciones), Fuente = p.Fuente, Version = version,
             TipoDocumento = p.TipoDocumento, Entidad = p.Entidad, DispLegal = p.DispLegal, ImpuestoEspecial = p.ImpuestoEspecial,
+            DespachoFrontera = p.DespachoEnFrontera, IceUltimaEsOMas = p.IceUltimaEsOMas,
             IceAntiguedad = string.Join(';', p.IceAntiguedad.Select(x => x.ToString(System.Globalization.CultureInfo.InvariantCulture))),
             Preferencias = string.Join(';', p.Preferencias.Select(x => x.ToString(System.Globalization.CultureInfo.InvariantCulture))),
             PrefAsignada = p.PorAcuerdo is not null,
@@ -93,11 +97,14 @@ public sealed class ServicioCatalogo(ComexDb db)
                 else if (it.Desgravacion == 0) { it.Desgravacion = pref.Value; db.Operaciones.First(o => o.Id == opId).UsaPreferenciaArancelaria = true; avisos.Add($"Ítem {it.Numero}: desgravación {pref.Value:P0} tomada del arancel para {it.AcuerdoPreferencial}. Requiere Certificado de Origen."); }
                 else if (it.Desgravacion != pref.Value) avisos.Add($"Ítem {it.Numero}: usted declaró {it.Desgravacion:P0} y el arancel indica {pref.Value:P0} para {it.AcuerdoPreferencial}.");
             }
+            if (p.DespachoFrontera.Length > 0) avisos.Add($"Ítem {it.Numero}: despacho en frontera sujeto a {p.DespachoFrontera}.");
             if (p.ImpuestoEspecial == "ICE")
             {
                 var tasas = p.IceAntiguedad.Length == 0 ? [] : p.IceAntiguedad.Split(';').Select(x => decimal.Parse(x, System.Globalization.CultureInfo.InvariantCulture)).ToArray();
-                if (tasas.Length == 6) { it.AlicuotaIce = tasas[Math.Clamp(it.AntiguedadAnios, 0, 5)]; avisos.Add($"Ítem {it.Numero}: ICE {it.AlicuotaIce:P0} (Apéndice I, antigüedad {it.AntiguedadAnios} años)."); }
-                else avisos.Add($"Ítem {it.Numero}: partida sujeta a ICE; la tasa no figura legible en el arancel: ingréselas manualmente.");
+                if (tasas.Length == 0) avisos.Add($"Ítem {it.Numero}: partida sujeta a ICE; el arancel no trae la tasa (se fija por norma aparte): ingrésela manualmente.");
+                else if (it.AntiguedadAnios < tasas.Length) { it.AlicuotaIce = tasas[it.AntiguedadAnios]; avisos.Add($"Ítem {it.Numero}: ICE {it.AlicuotaIce:P0} (Apéndice I, antigüedad {it.AntiguedadAnios} años)."); }
+                else if (p.IceUltimaEsOMas) { it.AlicuotaIce = tasas[^1]; avisos.Add($"Ítem {it.Numero}: ICE {it.AlicuotaIce:P0} (Apéndice I, {tasas.Length - 1} años o más)."); }
+                else avisos.Add($"Ítem {it.Numero}: el Apéndice I solo prevé tasa ICE hasta {tasas.Length - 1} año(s) de antigüedad; con {it.AntiguedadAnios} no hay tasa. Consulte si la importación es posible.");
             }
             else if (p.ImpuestoEspecial == "IEHD") avisos.Add($"Ítem {it.Numero}: partida sujeta a IEHD (Bs/litro): ingrese la tasa vigente.");
             db.Bitacora.Add(new() { OperacionId = opId, Fecha = DateTime.Now, Categoria = "Catálogo", Detalle = $"Ítem {it.Numero}: GA {p.AlicuotaGA:P0} desde catálogo v{p.Version} ({p.Fuente})." });

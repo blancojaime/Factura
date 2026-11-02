@@ -1,4 +1,4 @@
-> **Versión vigente de los manuales:** [Manual de Usuario](manual/Manual-de-Usuario.pdf) y [Manual de Instalación y Pruebas](manual/Manual-de-Instalacion-y-Pruebas.pdf) (PDF y Word, con capturas reales). Este texto se conserva como referencia técnica; los avisos del arancel son ahora 229 y las pruebas automáticas 68.
+> **Versión vigente de los manuales:** [Manual de Usuario](manual/Manual-de-Usuario.pdf) y [Manual de Instalación y Pruebas](manual/Manual-de-Instalacion-y-Pruebas.pdf) (PDF y Word, con capturas reales). Este texto se conserva como referencia técnica; el arancel se importa ahora directamente de los PDF oficiales (8.132 partidas, 2 avisos) y las pruebas automáticas son 78.
 
 # ComexBol Pro — Manual de implementación y de pruebas
 

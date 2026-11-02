@@ -4,7 +4,7 @@
 # una base con el arancel cargado en %LocalAppData%\ComexBolPro\comex.db. Uso: capturas.sh <carpeta-salida>
 set -u
 OUT="${1:-capturas}"; mkdir -p "$OUT"
-export WINEPREFIX="${WINEPREFIX:-/tmp/wp}" DISPLAY=:99 WINEDEBUG=-all
+export WINEPREFIX="${WINEPREFIX:-/tmp/wp5}" DISPLAY=:99 WINEDEBUG=-all
 RAW=$(mktemp -d)
 shot(){ import -window root "$RAW/$1.png" && convert "$RAW/$1.png" -crop 1372x806+4+30 +repage "$OUT/$1.png"; }
 click(){ xdotool mousemove "$1" "$2" click 1; sleep 0.7; }
@@ -13,6 +13,7 @@ cell(){ click "$1" "$2"; xdotool type --delay 40 -- "$3"; xdotool key Return; sl
 pick(){ click "$1" "$2"; xdotool type --delay 90 -- "$3"; xdotool key Return; sleep 0.7; }
 pgrep Xvfb >/dev/null || { Xvfb :99 -screen 0 1440x900x24 >/dev/null 2>&1 & sleep 2; }
 wineserver -k 2>/dev/null; sleep 1
+rm -f "$WINEPREFIX/drive_c/users/root/AppData/Local/ComexBolPro/comex.db"*     # base vacía: se importa el arancel desde pantalla
 (cd "$WINEPREFIX/drive_c/cb" && WINEDLLOVERRIDES="mshtml=d" nohup wine ComexBolPro.exe >/tmp/capturas-app.log 2>&1 &)
 for i in $(seq 1 60); do xdotool search --name "ComexBol" >/dev/null 2>&1 && break; sleep 1; done; sleep 7
 
@@ -20,6 +21,9 @@ for i in $(seq 1 60); do xdotool search --name "ComexBol" >/dev/null 2>&1 && bre
 TAB_ITEMS=(304 95); TAB_LIQ=(406 95); TAB_DEC=(481 95); TAB_CON=(575 95); TAB_RUTA=(675 95); TAB_LEG=(772 95)
 
 shot 01-ventana-principal
+# --- Importar el arancel (3 PDF en C:\arancel) ---
+click 420 52; sleep 3; xdotool type --delay 20 '"C:\arancel\a1.pdf" "C:\arancel\a2.pdf" "C:\arancel\a3.pdf"'; xdotool key Return; sleep 4; shot 01b-importando-arancel
+sleep 20; shot 01c-arancel-importado; xdotool key Return; sleep 2
 # --- Caso 1: tablets FOB ---
 field 118 117 "IMP-2026-001"; shot 02-nueva-importacion
 click 41 170; sleep 3; shot 03-importacion-creada

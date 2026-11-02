@@ -25,7 +25,7 @@ public partial class App : Application
         var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ComexBolPro");
         Directory.CreateDirectory(dir);
         var db = new ComexDb(new DbContextOptionsBuilder<ComexDb>().UseSqlite($"Data Source={Path.Combine(dir, "comex.db")}").Options);
-        db.Database.EnsureCreated();           // TODO: migraciones EF Core antes de la primera versión estable
+        db.AsegurarEsquema();                 // crea la base o agrega columnas nuevas de versiones posteriores
         var vm = new MainViewModel(db, ocr: new ComexBol.Documentos.TesseractCliOcr());
         new MainWindow { DataContext = vm }.Show();
         _ = vm.CargarAsync();
