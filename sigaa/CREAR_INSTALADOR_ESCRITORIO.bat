@@ -29,6 +29,7 @@ call npm install --ignore-scripts
 if errorlevel 1 goto fallo
 echo.
 echo [4/4] Creando el instalador...
+if exist release rmdir /s /q release
 call npm run dist
 if errorlevel 1 goto sininstalador
 echo.
