@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import type { Knex } from 'knex';
-import { BusinessError, Forbidden, fail } from './core/errors.js';
+import { BusinessError, Forbidden, NotFound, fail } from './core/errors.js';
 import { Modulo, Usuario, ROLES, esAdmin, puedeEscribir } from './core/context.js';
 import { autenticar, cambiarClave, crearUsuario, hashClave, validarClaveNueva } from './core/auth.js';
 import { cfgAll, gestion, setCfg, bitacora } from './core/services.js';
@@ -22,6 +22,7 @@ import { resumenVales } from './modules/combustible/vales.js';
 import { indicadoresAF } from './modules/activos/service.js';
 import { DEFAULT_CONFIG } from './db/defaults.js';
 import { vsiafVisible } from './vsiaf/acceso.js';
+import { guardarLogo, quitarLogo, rutaLogo } from './core/logo.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -124,6 +125,14 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
     await bitacora(db, req.usuario, 'SEGURIDAD', 'CONFIGURACIÓN', '', Object.keys(b).join(', '));
     return { ok: true };
   });
+  // Logo de la entidad (se sube desde la PC; aparece en todos los reportes y documentos)
+  app.get('/api/config/logo', async (_req, reply) => {
+    const r = await rutaLogo(db);
+    if (!r) throw new NotFound('No hay logo cargado.');
+    return sendFile(reply, fs.readFileSync(r), r.endsWith('.png') ? 'image/png' : 'image/jpeg', path.basename(r));
+  });
+  app.put('/api/config/logo', { preHandler: admin }, async (req) => guardarLogo(db, req.usuario, req.body));
+  app.delete('/api/config/logo', { preHandler: admin }, async (req) => { await quitarLogo(db, req.usuario); return { ok: true }; });
   app.get('/api/usuarios', { preHandler: admin }, async () => db('core_usuarios').select('usuario', 'nombre', 'roles', 'estado', 'debe_cambiar', 'ultimo_acceso').orderBy('usuario'));
   app.post('/api/usuarios', { preHandler: admin }, async (req) => {
     const b = req.body as { usuario: string; nombre: string; roles: string[]; clave: string };

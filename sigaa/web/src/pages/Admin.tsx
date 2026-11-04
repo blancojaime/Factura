@@ -1,11 +1,39 @@
-import { useState } from 'react';
-import { get, post, put, urlConToken, fmtDate } from '../api';
+import { useEffect, useRef, useState } from 'react';
+import { del, get, post, put, subirImagenPut, urlConToken, fmtDate } from '../api';
 import { useAuth } from '../auth';
 import { Card, DataTable, Field, Modal, PageHead, SelectField, Tabs, TextField, useAction, useLoad, Badge } from '../ui';
 
 import { ROLES_INFO, rolInfo } from '../roles';
 
 const Chip = ({ r }: { r: string }) => <span className="rol-chip sm" style={{ background: rolInfo(r)?.color }}>{rolInfo(r)?.nombre ?? r}</span>;
+
+/** Logo de la entidad: se examina un archivo de la PC y se inserta en todos los reportes y documentos. */
+function LogoCampo({ valor, onCambio }: { valor: string; onCambio: () => void }) {
+  const { esAdmin } = useAuth();
+  const [run, busy] = useAction();
+  const [ver, setVer] = useState(Date.now());
+  const ref = useRef<HTMLInputElement>(null);
+  const [hay, setHay] = useState(!!valor);
+  useEffect(() => setHay(!!valor), [valor]);
+  return (
+    <div className="span2">
+      <div className="muted" style={{ fontSize: 12, fontWeight: 600 }}>Logo de la entidad</div>
+      <div className="row" style={{ alignItems: 'center', gap: 12 }}>
+        <div style={{ width: 150, height: 80, border: '1px dashed var(--line, #b9c2cf)', borderRadius: 8, display: 'grid', placeItems: 'center', background: '#fff', overflow: 'hidden' }}>
+          {hay ? <img key={ver} src={urlConToken('/config/logo', { v: ver })} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%' }} onError={() => setHay(false)} /> : <span className="muted">Sin logo</span>}
+        </div>
+        {esAdmin && (
+          <>
+            <button disabled={busy} onClick={() => ref.current?.click()}>Examinar… (JPG o PNG)</button>
+            <input ref={ref} type="file" accept="image/png,image/jpeg" hidden onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) run(async () => { await subirImagenPut('/config/logo', f); setVer(Date.now()); setHay(true); onCambio(); }, 'Logo cargado: aparecerá en todos los reportes.'); }} />
+            {hay && <button className="danger" disabled={busy} onClick={() => run(async () => { await del('/config/logo'); setHay(false); onCambio(); }, 'Logo quitado.')}>Quitar</button>}
+          </>
+        )}
+      </div>
+      <div className="muted" style={{ fontSize: 12 }}>Elija la imagen en su computadora (hasta 3 MB). Se inserta en el encabezado de todos los reportes y documentos PDF, en los reportes de Excel y en las etiquetas.</div>
+    </div>
+  );
+}
 
 function Config() {
   const { data, reload } = useLoad<any[]>(() => get('/config'));
@@ -18,7 +46,9 @@ function Config() {
       {Object.entries(mods).map(([m, titulo]) => (
         <Card key={m} title={titulo}>
           <div className="grid c2">
-            {(data ?? []).filter((c) => c.modulo === m).map((c) => c.clave === 'VsiafSoloAdmin' ? (
+            {(data ?? []).filter((c) => c.modulo === m).map((c) => c.clave === 'Logo' ? (
+              <LogoCampo key={c.clave} valor={c.valor ?? ''} onCambio={reload} />
+            ) : c.clave === 'VsiafSoloAdmin' ? (
               <label key={c.clave} className="check span2"><input type="checkbox" disabled={!esAdmin} checked={(cambios[c.clave] ?? c.valor ?? 'NO').toUpperCase() === 'SI'} onChange={(e) => setCambios({ ...cambios, [c.clave]: e.target.checked ? 'SI' : 'NO' })} /> <span><b>Reservar al administrador el envío e importación con el VSIAF.</b> Si se marca, el encargado de Activos Fijos ya no ve ni usa «Enviar al VSIAF» ni «Importar desde el VSIAF».</span></label>
             ) : (
               <TextField key={c.clave} label={c.clave} hint={c.descripcion} disabled={!esAdmin} value={cambios[c.clave] ?? c.valor ?? ''} onChange={(v) => setCambios({ ...cambios, [c.clave]: v })} />

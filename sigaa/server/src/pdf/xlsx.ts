@@ -1,5 +1,7 @@
 /** Exportación a Excel (exceljs) de reportes tabulares. */
 import ExcelJS from 'exceljs';
+import fs from 'node:fs';
+import path from 'node:path';
 import type { Col } from './builder.js';
 
 export interface TablaXlsx {
@@ -10,6 +12,8 @@ export interface TablaXlsx {
   filas: unknown[][];
   totales?: unknown[];
   hoja?: string;
+  /** Ruta de la imagen del logo (PNG/JPG) para el encabezado de la hoja. */
+  logo?: string;
 }
 
 export async function tablaAExcel(tablas: TablaXlsx | TablaXlsx[]): Promise<Buffer> {
@@ -20,22 +24,33 @@ export async function tablaAExcel(tablas: TablaXlsx | TablaXlsx[]): Promise<Buff
     const ws = wb.addWorksheet((t.hoja || t.titulo).replace(/[\\/*?:[\]]/g, ' ').slice(0, 31) || 'Reporte');
     const n = t.cols.length;
     let r = 1;
+    // Con logo: ocupa las 3 primeras filas de la columna A y los títulos se corren a la derecha (si la tabla tiene 2+ columnas)
+    let c0 = 1;
+    if (t.logo && n > 1 && fs.existsSync(t.logo)) {
+      try {
+        const img = wb.addImage({ filename: t.logo, extension: path.extname(t.logo).toLowerCase() === '.png' ? 'png' : 'jpeg' });
+        ws.addImage(img, { tl: { col: 0.1, row: 0.15 }, ext: { width: 72, height: 54 } });
+        for (let i = 1; i <= 3; i++) ws.getRow(i).height = 21;
+        c0 = 2;
+      } catch { /* logo inválido: se ignora */ }
+    }
     if (t.entidad) {
-      ws.mergeCells(r, 1, r, n);
-      ws.getCell(r, 1).value = t.entidad;
-      ws.getCell(r, 1).font = { bold: true, size: 12, color: { argb: 'FF1F3A5F' } };
+      ws.mergeCells(r, c0, r, Math.max(c0, n));
+      ws.getCell(r, c0).value = t.entidad;
+      ws.getCell(r, c0).font = { bold: true, size: 12, color: { argb: 'FF1F3A5F' } };
       r++;
     }
-    ws.mergeCells(r, 1, r, n);
-    ws.getCell(r, 1).value = t.titulo;
-    ws.getCell(r, 1).font = { bold: true, size: 13 };
+    ws.mergeCells(r, c0, r, Math.max(c0, n));
+    ws.getCell(r, c0).value = t.titulo;
+    ws.getCell(r, c0).font = { bold: true, size: 13 };
     r++;
     if (t.subtitulo) {
-      ws.mergeCells(r, 1, r, n);
-      ws.getCell(r, 1).value = t.subtitulo;
-      ws.getCell(r, 1).font = { italic: true, color: { argb: 'FF5A6270' } };
+      ws.mergeCells(r, c0, r, Math.max(c0, n));
+      ws.getCell(r, c0).value = t.subtitulo;
+      ws.getCell(r, c0).font = { italic: true, color: { argb: 'FF5A6270' } };
       r++;
     }
+    if (c0 > 1) r = Math.max(r, 4); // el logo ocupa hasta la fila 3
     r++;
     const head = ws.getRow(r);
     t.cols.forEach((c, i) => {
@@ -66,7 +81,7 @@ export async function tablaAExcel(tablas: TablaXlsx | TablaXlsx[]): Promise<Buff
     if (t.totales) put(t.totales, true);
     t.cols.forEach((c, i) => {
       const maxLen = Math.max(c.header.length, ...t.filas.slice(0, 200).map((f) => String(f[i] ?? '').length));
-      ws.getColumn(i + 1).width = Math.min(Math.max(10, maxLen + 2, (c.w ?? 1) * 6), 60);
+      ws.getColumn(i + 1).width = Math.min(Math.max(10, maxLen + 2, (c.w ?? 1) * 6, c0 > 1 && i === 0 ? 14 : 0), 60);
     });
     ws.views = [{ state: 'frozen', ySplit: head.number }];
     ws.autoFilter = { from: { row: head.number, column: 1 }, to: { row: Math.max(head.number, first + t.filas.length - 1), column: n } };

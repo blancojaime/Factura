@@ -91,3 +91,11 @@ export async function bajarArchivo(path: string, nombre: string) {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(await res.blob()); a.download = nombre; a.click();
 }
+
+/** Sube una imagen por PUT (cuerpo binario) y devuelve el JSON de respuesta. */
+export async function subirImagenPut<T = any>(path: string, file: File): Promise<T> {
+  const res = await fetch('/api' + path, { method: 'PUT', headers: { authorization: `Bearer ${token}`, 'content-type': file.type || 'application/octet-stream' }, body: file });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(data.error || `Error ${res.status}`, res.status);
+  return data;
+}

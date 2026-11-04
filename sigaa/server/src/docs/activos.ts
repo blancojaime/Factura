@@ -137,37 +137,69 @@ registrarDoc(
   },
 );
 
-/** Texto que lleva el QR del activo: entidad, edificio, auxiliar contable y código (se lee con cualquier lector de QR). */
+/**
+ * Texto que lleva el QR del activo, una línea por dato y en este orden: entidad, edificio, auxiliar contable y código.
+ * Sin rótulos, para que el QR sea lo más pequeño y fácil de leer (los lectores muestran las cuatro líneas).
+ */
 export const contenidoQr = (entidad: unknown, edificio: unknown, auxiliar: unknown, codigo: string) =>
-  [`ENTIDAD: ${txt(entidad)}`, `EDIFICIO: ${txt(edificio)}`, `AUXILIAR: ${txt(auxiliar)}`, `CODIGO: ${codigo}`].join('\n');
+  [txt(entidad), txt(edificio), txt(auxiliar), codigo].join('\n');
 
-/** Hoja de stickers (3 columnas × 10 filas por página carta): entidad, edificio, auxiliar y código del activo. */
+type Doc = InstanceType<typeof PDFDocument>;
+/** Reduce la letra hasta que el texto entre en `maxLineas` líneas del ancho dado; si aun así no entra, lo recorta con «…». */
+function ajustar(doc: Doc, texto: string, fuente: string, max: number, min: number, ancho: number, maxLineas: number): { texto: string; size: number; alto: number } {
+  let t = texto;
+  for (let size = max; ; size -= 0.25) {
+    doc.font(fuente).fontSize(size);
+    const alto = doc.heightOfString(t, { width: ancho });
+    const unaLinea = doc.heightOfString('Xy', { width: 100000 });
+    if (Math.round(alto / unaLinea) <= maxLineas) return { texto: t, size, alto };
+    if (size <= min + 0.001) {
+      if (t.length <= 2) return { texto: t, size, alto };
+      t = t.slice(0, -2).trimEnd() + '…';
+      size = max + 0.25; // vuelve a intentar con el texto recortado
+      if (t.length < 4) return { texto: t, size: min, alto };
+    }
+  }
+}
+
+/** Hoja de stickers (3 columnas × 10 filas por página carta): entidad, edificio, auxiliar y código del activo, con su QR. */
 export async function stickersPdf(db: Db, codigos: string[]): Promise<Buffer> {
   if (!codigos.length) fail('Marque con X los códigos que desea imprimir.');
   const c = await cfgAll(db);
   const acts = await db('af_activos as a').leftJoin('af_edificios as e', 'e.cod_edif', 'a.cod_edif').whereIn('a.codigo', codigos).select('a.codigo', 'a.auxiliar', 'e.edificio').orderBy('a.codigo');
   const qr = new Map<string, Buffer>();
-  for (const a of acts) qr.set(a.codigo, await QRCode.toBuffer(contenidoQr(c.Entidad, a.edificio, a.auxiliar, a.codigo), { margin: 0, width: 360, errorCorrectionLevel: 'M' }));
+  // Zona blanca de 4 módulos alrededor (norma del QR) y corrección «L»: menos módulos = más fácil de leer en una etiqueta pequeña.
+  for (const a of acts) qr.set(a.codigo, await QRCode.toBuffer(contenidoQr(c.Entidad, a.edificio, a.auxiliar, a.codigo), { margin: 3, width: 420, errorCorrectionLevel: 'L' }));
   const doc = new PDFDocument({ size: 'LETTER', margin: 0, bufferPages: true });
   const chunks: Buffer[] = [];
   doc.on('data', (b: Buffer) => chunks.push(b));
   const done = new Promise<Buffer>((res) => doc.on('end', () => res(Buffer.concat(chunks))));
-  const W = 180, H = 72, M = 36;
+  const W = 180, H = 72, M = 36, Q = 50;
   const logo = c.Logo && fs.existsSync(c.Logo) ? c.Logo : '';
   acts.forEach((a: any, k: number) => {
     if (k > 0 && k % 30 === 0) doc.addPage();
     const x = M + (k % 3) * W;
     const y = M + Math.floor((k % 30) / 3) * H;
-    doc.rect(x + 3, y + 3, W - 6, H - 6).lineWidth(0.6).strokeColor('#1F3A5F').stroke();
     doc.rect(x + 3, y + 3, W - 6, 13).fill('#1F3A5F');
-    doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(6.3).text(String(c.Entidad ?? '').toUpperCase(), x + 5, y + 7, { width: W - 10, align: 'center', lineBreak: false });
-    let tx = x + 6;
-    let tw = W - 12 - 50;
-    try { doc.image(qr.get(a.codigo)!, x + W - 53, y + 19, { fit: [47, 47] }); } catch { /* sin QR */ }
-    if (logo) { try { doc.image(logo, x + 7, y + 20, { fit: [34, 34] }); tx = x + 44; tw = W - 102; } catch { /* sin logo */ } }
-    doc.fillColor('#1A1A1A').font('Helvetica-Bold').fontSize(7).text(txt(a.edificio), tx, y + 20, { width: tw, align: 'center', lineBreak: false });
-    doc.font('Helvetica').fontSize(7).text(txt(a.auxiliar), tx, y + 29, { width: tw, align: 'center', lineBreak: false });
-    doc.font('Helvetica-Bold').fontSize(14).text(a.codigo, tx, y + 42, { width: tw, align: 'center', lineBreak: false });
+    const ent = ajustar(doc, String(c.Entidad ?? '').toUpperCase(), 'Helvetica-Bold', 6.3, 4.5, W - 12, 1);
+    doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(ent.size).text(ent.texto, x + 5, y + 3 + (13 - ent.size) / 2, { width: W - 10, align: 'center', lineBreak: false });
+    // QR a la derecha, sobre fondo blanco
+    const qx = x + W - 4.5 - Q, qy = y + 17 + (H - 6 - 14 - Q) / 2;
+    doc.rect(qx, qy, Q, Q).fill('#FFFFFF');
+    try { doc.image(qr.get(a.codigo)!, qx, qy, { fit: [Q, Q] }); } catch { /* sin QR */ }
+    // Texto a la izquierda: logo (si hay) + edificio, auxiliar y código; cada texto se ajusta para no pisar a los demás
+    let tx = x + 7;
+    if (logo) { try { doc.image(logo, x + 7, y + 22, { fit: [28, 36] }); tx = x + 39; } catch { /* sin logo */ } }
+    const tw = qx - 3 - tx;
+    const cod = ajustar(doc, a.codigo, 'Helvetica-Bold', 13, 6.5, tw, 1);
+    const yCod = y + H - 6 - cod.alto;
+    const edif = ajustar(doc, txt(a.edificio), 'Helvetica-Bold', 7.5, 5, tw, 2);
+    const yAux = y + 18 + edif.alto + 1.5;
+    const aux = ajustar(doc, txt(a.auxiliar), 'Helvetica', 7, 5, tw, Math.max(1, Math.floor((yCod - yAux - 1) / 8)));
+    doc.fillColor('#1A1A1A').font('Helvetica-Bold').fontSize(edif.size).text(edif.texto, tx, y + 18, { width: tw, align: 'center' });
+    doc.font('Helvetica').fontSize(aux.size).text(aux.texto, tx, yAux, { width: tw, align: 'center' });
+    doc.font('Helvetica-Bold').fontSize(cod.size).text(cod.texto, tx, yCod, { width: tw, align: 'center', lineBreak: false });
+    doc.rect(x + 3, y + 3, W - 6, H - 6).lineWidth(0.6).strokeColor('#1F3A5F').stroke(); // el borde va al final: nada lo tapa
   });
   doc.end();
   return done;

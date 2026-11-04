@@ -2,6 +2,7 @@ import type { Db } from '../core/context.js';
 import type { Col } from '../pdf/builder.js';
 import { PdfDoc, loadHeader } from '../pdf/builder.js';
 import { tablaAExcel } from '../pdf/xlsx.js';
+import { rutaLogo } from '../core/logo.js';
 import { cfg } from '../core/services.js';
 import { BusinessError } from '../core/errors.js';
 
@@ -52,8 +53,9 @@ export async function renderTablaPdf(db: Db, t: Tabla): Promise<Buffer> {
 
 export async function renderTablaXlsx(db: Db, t: Tabla): Promise<Buffer> {
   const entidad = await cfg(db, 'Entidad');
-  const base = { entidad, titulo: t.titulo, subtitulo: t.subtitulo, cols: t.cols, filas: t.filas, totales: t.totales };
-  return tablaAExcel([base, ...(t.extra ?? []).map((e) => ({ entidad, titulo: e.titulo, cols: e.cols, filas: e.filas, totales: e.totales }))]);
+  const logo = await rutaLogo(db);
+  const base = { entidad, logo, titulo: t.titulo, subtitulo: t.subtitulo, cols: t.cols, filas: t.filas, totales: t.totales };
+  return tablaAExcel([base, ...(t.extra ?? []).map((e) => ({ entidad, logo, titulo: e.titulo, cols: e.cols, filas: e.filas, totales: e.totales }))]);
 }
 
 export async function ejecutarReporte(db: Db, id: string, p: Params): Promise<{ rep: Reporte; tabla: Tabla }> {

@@ -86,7 +86,8 @@ f['h1']('8. Después de importar')
 f['ul']('Imprima las **etiquetas con código QR** en *Etiquetas (stickers)*: cada QR incluye la entidad, el edificio, el auxiliar contable y el código del activo.',
         'Complete en *Fichas técnicas* lo que falte (características, fotos adicionales).',
         'Los activos con responsable quedan **asignados**; los demás se asignan en *Asignación y entrega*.',
-        'Cada importación queda registrada en la **bitácora** (Administración).')
+        'Cada importación queda registrada en la **bitácora** (Administración).',
+        'Si cargó el **logo de la entidad** (Administración → Configuración → Logo), saldrá en las etiquetas y en todos los reportes. Los textos largos de las etiquetas se reducen o recortan solos; el QR siempre lleva el texto completo.')
 f['h2']('Lista de verificación')
 chk(f, 'Descargué la plantilla y no cambié los encabezados.', 'Todas las cuentas, auxiliares, edificios y responsables existen en los catálogos.', 'Las fotos están en una sola carpeta y sus nombres coinciden con foto1/foto2/foto3.', 'La validación terminó sin errores.', 'Tras importar, revisé 3 activos al azar (datos y fotos) en Fichas técnicas.', 'Imprimí las etiquetas con QR.')
 json.dump({'out': 'Manual_Importar_Activos_Excel_y_Fotos', 'bloques': B}, open('/home/user/Factura/sigaa/docs/fuentes/m1.json', 'w'), ensure_ascii=False)
@@ -201,7 +202,7 @@ f['table'](['Resultado', 'Qué significa', 'Qué hacer'], [
     ['NO COBRADO', 'Vale utilizado según el descargo que la estación **no** cobró en el periodo.', 'Informativo: puede cobrarse en la siguiente factura.'],
 ])
 f['h1']('6. El documento de conciliación')
-f['p']('Al conciliar se genera el PDF **«Conciliación de vales con el proveedor»**, con el detalle vale por vale, el **monto a pagar** y las firmas del Responsable de Activos Fijos y Almacenes (**responsable de combustible**) y del Secretario Municipal Administrativo y Financiero (**autoriza pago**). Imprímalo, fírmelo y adjúntelo al comprobante de pago. Puede reimprimirlo desde la tabla **Conciliaciones realizadas** (botón **PDF**).')
+f['p']('Al conciliar se genera el PDF **«Conciliación de vales con el proveedor»**, con el detalle vale por vale, el **monto a pagar** y las firmas del Responsable de Activos Fijos y Almacenes (**responsable de combustible**) y del Secretario Municipal Administrativo y Financiero (**autoriza pago**). El documento lleva el **logo de la entidad** si se cargó en Administración → Configuración. Imprímalo, fírmelo y adjúntelo al comprobante de pago. Puede reimprimirlo desde la tabla **Conciliaciones realizadas** (botón **PDF**).')
 f['img']('conc_pdf.jpg', 'Documento de conciliación para firma.')
 f['h1']('7. Caso práctico completo')
 f['p']('**Situación:** la estación «El Alto SRL» presenta su cobro de octubre por **5 vales, Bs 170**. En SIGAA, la solicitud VC-0001/2026 entregó los vales 1001 a 1005 (Bs 30 c/u) a un conductor; este presentó descargo con los vales 1001, 1002 y 1003; los 1004 y 1005 se devolvieron al almacén.')

@@ -66,7 +66,7 @@ describe('importación de activos desde Excel', () => {
 describe('QR de las etiquetas', () => {
   it('lleva entidad, edificio, auxiliar y código', () => {
     expect(contenidoQr('GOBIERNO AUTÓNOMO MUNICIPAL DE LAJA', 'UNIDAD EDUCATIVA LAJA', 'PUPITRE', '001-01-30121-0001').split('\n'))
-      .toEqual(['ENTIDAD: GOBIERNO AUTÓNOMO MUNICIPAL DE LAJA', 'EDIFICIO: UNIDAD EDUCATIVA LAJA', 'AUXILIAR: PUPITRE', 'CODIGO: 001-01-30121-0001']);
+      .toEqual(['GOBIERNO AUTÓNOMO MUNICIPAL DE LAJA', 'UNIDAD EDUCATIVA LAJA', 'PUPITRE', '001-01-30121-0001']);
   });
   it('la hoja de stickers se genera', async () => {
     const cods = (await db('af_activos').limit(3).select('codigo')).map((x: any) => x.codigo);
