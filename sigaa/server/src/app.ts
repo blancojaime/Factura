@@ -23,6 +23,7 @@ import { indicadoresAF } from './modules/activos/service.js';
 import { DEFAULT_CONFIG } from './db/defaults.js';
 import { vsiafVisible } from './vsiaf/acceso.js';
 import { guardarLogo, quitarLogo, rutaLogo } from './core/logo.js';
+import { resumenProduccion, respaldoPrevio, vaciarDatosDemo } from './core/produccion.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -47,7 +48,11 @@ export type Ctx = { db: Knex; app: FastifyInstance; w: (m: Modulo) => (req: Fast
 
 export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
   const { db } = opts;
-  const app = Fastify({ logger: opts.logger ?? false, bodyLimit: 12 * 1024 * 1024 });
+  // El registro (log) nunca debe guardar el token de sesión que viaja en la dirección de los PDF/Excel (?access_token=…)
+  const logger = (opts.logger ?? false)
+    ? { serializers: { req: (r: any) => ({ method: r.method, url: String(r.url).replace(/access_token=[^&]*/g, 'access_token=***'), host: r.host, remoteAddress: r.ip }) } }
+    : false;
+  const app = Fastify({ logger, bodyLimit: 12 * 1024 * 1024 });
   const secret = opts.jwtSecret || process.env.SIGAA_JWT_SECRET || crypto.randomBytes(32).toString('hex');
   await app.register(fastifyJwt, { secret, sign: { expiresIn: '10h' } });
 
@@ -60,6 +65,14 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
     if (err.statusCode && err.statusCode < 500) return reply.code(err.statusCode).send({ error: err.message });
     req.log.error(err);
     return reply.code(500).send({ error: 'Error interno del servidor. Revise el registro del sistema.' });
+  });
+
+  // Cabeceras de seguridad y sin caché para los datos de la API (equipos compartidos)
+  app.addHook('onSend', async (req, reply) => {
+    reply.header('X-Content-Type-Options', 'nosniff');
+    reply.header('X-Frame-Options', 'SAMEORIGIN');
+    reply.header('Referrer-Policy', 'no-referrer');
+    if (req.url.startsWith('/api/')) reply.header('Cache-Control', 'no-store');
   });
 
   // ── Autenticación ──
@@ -133,6 +146,12 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
   });
   app.put('/api/config/logo', { preHandler: admin }, async (req) => guardarLogo(db, req.usuario, req.body));
   app.delete('/api/config/logo', { preHandler: admin }, async (req) => { await quitarLogo(db, req.usuario); return { ok: true }; });
+  // Pasar a producción: vaciar los datos de demostración (solo administrador, con confirmación escrita)
+  app.get('/api/admin/produccion', { preHandler: admin }, async () => resumenProduccion(db));
+  app.post('/api/admin/produccion/vaciar', { preHandler: admin }, async (req) => {
+    const respaldo = await respaldoPrevio(db, process.env.SIGAA_BACKUP_DIR || path.resolve(path.dirname(process.env.SIGAA_FOTOS_DIR || 'data/fotos'), 'respaldos'));
+    return { ...(await vaciarDatosDemo(db, req.usuario, (req.body ?? {}) as any)), respaldo };
+  });
   app.get('/api/usuarios', { preHandler: admin }, async () => db('core_usuarios').select('usuario', 'nombre', 'roles', 'estado', 'debe_cambiar', 'ultimo_acceso').orderBy('usuario'));
   app.post('/api/usuarios', { preHandler: admin }, async (req) => {
     const b = req.body as { usuario: string; nombre: string; roles: string[]; clave: string };

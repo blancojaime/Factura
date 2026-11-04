@@ -9,9 +9,10 @@ export const LOGO_DIR = () => process.env.SIGAA_LOGO_DIR || path.join(path.dirna
 export const LOGO_MAX = 3 * 1024 * 1024;
 
 /** Detecta el formato por los primeros bytes (no se confía en la extensión ni en el tipo declarado). */
-export function formatoImagen(b: Buffer): 'png' | 'jpg' | null {
+export function formatoImagen(b: Buffer): 'png' | 'jpg' | 'webp' | null {
   if (b.length > 8 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return 'png';
   if (b.length > 4 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'jpg';
+  if (b.length > 12 && b.toString('latin1', 0, 4) === 'RIFF' && b.toString('latin1', 8, 12) === 'WEBP') return 'webp';
   return null;
 }
 
@@ -24,7 +25,7 @@ export async function guardarLogo(db: Db, u: Usuario, buf: unknown) {
   if (!Buffer.isBuffer(buf) || !buf.length) fail('Seleccione una imagen del logo (JPG o PNG).');
   if (buf.length > LOGO_MAX) fail('El logo supera 3 MB. Use una imagen más liviana.');
   const ext = formatoImagen(buf);
-  if (!ext) fail('El archivo no es una imagen JPG o PNG válida.');
+  if (!ext || ext === 'webp') fail('El archivo no es una imagen JPG o PNG válida.');
   fs.mkdirSync(LOGO_DIR(), { recursive: true });
   for (const e of ['png', 'jpg']) fs.rmSync(path.join(LOGO_DIR(), `logo.${e}`), { force: true });
   const ruta = path.join(LOGO_DIR(), `logo.${ext}`);

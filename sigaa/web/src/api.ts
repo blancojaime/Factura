@@ -63,7 +63,8 @@ export async function subirFoto(codigo: string, n: number, file: File) {
 export const fmt2 = (v: unknown) => (v === null || v === undefined || v === '' ? '' : Number(v).toLocaleString('es-BO', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
 export const fmtN = (v: unknown) => (v === null || v === undefined || v === '' ? '' : Number(v).toLocaleString('es-BO', { maximumFractionDigits: 4 }));
 export const fmtDate = (s?: string | null) => (s && /^\d{4}-\d{2}-\d{2}/.test(s) ? `${s.slice(8, 10)}/${s.slice(5, 7)}/${s.slice(0, 4)}` : s || '');
-export const hoy = () => new Date().toISOString().slice(0, 10);
+/** Fecha de hoy en el calendario LOCAL (toISOString usa UTC y en Bolivia daría el día siguiente desde las 20:00). */
+export const hoy = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
 
 /** POST que devuelve un PDF (stickers): se abre como blob en una pestaña nueva. */
 export async function abrirPdfPost(path: string, body: unknown) {

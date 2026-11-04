@@ -36,6 +36,8 @@ def resumen(f, con_img=True):
         ['**Importar activos desde Excel** con fotos', 'Activos fijos → Importar desde Excel', 'Manual: *Manual_Importar_Activos_Excel_y_Fotos*.'],
         ['**Importar desde el VSIAF**', 'Activos fijos → Importar desde el VSIAF', 'Manual: *Manual_Importar_Activos_desde_VSIAF*.'],
         ['**VSIAF solo para el administrador**', 'Administración → Configuración → Activos fijos', 'Marque «Reservar al administrador el envío e importación con el VSIAF»: el encargado de Activos Fijos deja de verlo y de poder usarlo.'],
+        ['**Pasar a producción**', 'Administración → pestaña **Pasar a producción**', 'Elimina los datos de demostración (con copia previa y confirmación escrita) para empezar con la base limpia. Ver «Lista de verificación para entrar en producción».'],
+        ['Seguridad reforzada', 'Todo el sistema', 'Componentes actualizados, fotos y logo validados, numeración de documentos a prueba de usuarios simultáneos, cabeceras de seguridad y token fuera del registro. Ver *Informe_Auditoria_SIGAA*.'],
         ['Reportes **sin hojas en blanco**', 'Todos los PDF', 'Cada documento sale con las páginas justas (antes añadía 2 hojas vacías).'],
         ['Instalador de escritorio **más robusto**', '`CREAR_INSTALADOR_ESCRITORIO.bat`', 'Si una instalación quedó dañada («no es una aplicación Win32 válida»), se repara sola. Con el QR ya se pueden imprimir las etiquetas en la versión de escritorio.'],
     ])
@@ -94,11 +96,17 @@ def pruebas(f):
     f['ol']('Menú **Configuración y usuarios** → tarjeta **Activos fijos** → marque **Reservar al administrador el envío e importación con el VSIAF** → **Guardar configuración**.',
             'Ingrese con el usuario `activos`: en el menú ya no aparecen **Enviar al VSIAF** ni **Importar desde el VSIAF**.',
             'Vuelva con `admin` y desmarque la opción: el usuario `activos` recupera los menús.')
+    f['h2']('M8 · Pasar a producción (Administrador) — hágala SOLO en una copia de prueba')
+    f['ol']('Menú **Configuración y usuarios** → pestaña **Pasar a producción**: se ve cuántos registros y usuarios de demostración hay.',
+            'Deje marcada **Conservar los catálogos de la entidad**. Escriba **ELIMINAR** y pulse **Eliminar datos de demostración**; confirme.',
+            'Aparece «Listo: el sistema quedó limpio» y la ruta de la copia previa. Compruebe: los tableros están en cero, los catálogos siguen, solo existe el usuario `admin`.',
+            'Registre un ingreso nuevo: el número del documento empieza en **0001**.')
+    f['note']('Resultado esperado: sistema limpio, catálogos y configuración intactos, copia previa creada. **No repita esta prueba en la base real.**', 'warn')
     f['h2']('Hoja de resultados de las pruebas nuevas')
     filas = [[c, n, r, '☐ ✔   ☐ ✘', ''] for c, n, r in [
         ('A10', 'Apertura / destino y comisión con cargo', 'Almacenes'), ('C9', 'Vale con QR y visor de vales emitidos', 'Combustible'), ('C10', 'Conciliación con la estación', 'Combustible'),
         ('F11', 'Etiquetas con QR de cuatro datos', 'Activos Fijos'), ('F12', 'Importar activos desde Excel con fotos', 'Activos Fijos'), ('F13', 'Importar desde el VSIAF', 'Activos Fijos'),
-        ('M5', 'Logo de la entidad', 'Administrador'), ('M6', 'Importar catálogos desde Excel', 'Administrador'), ('M7', 'Reservar el VSIAF al administrador', 'Administrador')]]
+        ('M5', 'Logo de la entidad', 'Administrador'), ('M6', 'Importar catálogos desde Excel', 'Administrador'), ('M7', 'Reservar el VSIAF al administrador', 'Administrador'), ('M8', 'Pasar a producción (solo en copia de prueba)', 'Administrador')]]
     f['table'](['N.º', 'Prueba', 'Rol', 'Resultado', 'Observaciones'], filas)
 
 # ───────────── Guía de envío al VSIAF
@@ -130,6 +138,26 @@ def implementacion(f):
         ['Respaldos del VSIAF', 'Carpeta `backups` dentro de la instalación del VSIAF.'],
     ])
     f['note']('Haga una **copia de seguridad** (Administración → Respaldo) antes de actualizar una PC que ya está en uso.', 'warn', 'Antes de actualizar')
+    f['h1']('Lista de verificación para entrar en producción')
+    f['table'](['N.º', 'Verificación', 'Resultado'], [[str(i + 1), t, '☐ ✔   ☐ ✘'] for i, t in enumerate([
+        '**Cambie la clave** del administrador (se exige al primer ingreso). Cree un usuario por encargado y use claves distintas (mín. 8 caracteres con letras y números).',
+        'Entre a **Administración → Pasar a producción** y elimine los datos de demostración (y los usuarios de prueba).',
+        'Cargue los catálogos de la entidad con **Catálogos → Importar desde Excel** (funcionarios, proveedores, aperturas con presupuesto, partidas, edificios, vehículos…).',
+        'Cargue el **logo** de la entidad y revise el encabezado de un reporte PDF y de uno en Excel.',
+        'Complete en **Configuración** el nombre de la entidad, los firmantes y sus cargos, la gestión y las unidades.',
+        'Defina **SIGAA_JWT_SECRET** (cadena larga y aleatoria) si usa el servidor web; así las sesiones no se pierden al reiniciar.',
+        'Si usa varias PC en red, publique el sistema detrás de **HTTPS** (por ejemplo un proxy inverso) y no exponga el puerto a internet.',
+        'Programe **copias de seguridad**: SQLite se respalda a diario en la carpeta `respaldos` (copie esa carpeta a otro equipo o disco); con PostgreSQL use `pg_dump`.',
+        'Pruebe **restaurar** una copia en otra PC antes de empezar a trabajar de verdad.',
+        'Haga las pruebas de la *Guía de pruebas por rol* (capítulos 1 a 11) con datos reales de un caso pequeño y archive la hoja de resultados firmada.'])])
+    f['h2']('Seguridad: lo que ya está y lo que depende de usted')
+    f['table'](['Tema', 'Estado'], [
+        ['Claves y bloqueo', 'Claves guardadas con scrypt; bloqueo de 15 minutos tras 5 intentos fallidos; cambio de clave obligatorio al primer ingreso.'],
+        ['Permisos', 'Cada rol solo modifica su módulo; los catálogos compartidos, usuarios, logo y paso a producción son solo del administrador (verificado por el servidor).'],
+        ['Archivos subidos', 'Fotos y logo se validan por su contenido (JPG/PNG/WEBP) y su nombre no puede salirse de la carpeta de datos.'],
+        ['Sesiones', 'Duran 10 horas; el token no se guarda en el registro del sistema.'],
+        ['**Depende de usted**', 'HTTPS en red, firewall, copias de seguridad fuera del equipo, actualizaciones periódicas y no compartir el usuario administrador.'],
+    ])
 
 if __name__ == '__main__':
     B, f = nuevo(); f['cover']('Novedades de las solicitudes 2 y 3', 'Resumen para usuarios, administradores y quien instala', '**Incluye:** logo, etiquetas con QR, vale con QR, vales emitidos, conciliación, apertura/destino, comisión con cargo, importaciones desde Excel y desde el VSIAF, opción VSIAF solo administrador.'); resumen(f)

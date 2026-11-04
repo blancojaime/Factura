@@ -48,7 +48,8 @@ async function crearVentana() {
     // Los PDF generados en pantalla (stickers con QR, vales) se abren desde un enlace blob: del propio servidor local
     const origen = servidor ? new URL(servidor.url).origin : '';
     if (servidor && (url.startsWith(servidor.url) || url.startsWith(`blob:${origen}`))) return { action: 'allow', overrideBrowserWindowOptions: { width: 1000, height: 800, autoHideMenuBar: true } };
-    shell.openExternal(url);
+    // Solo enlaces web: nunca archivos locales ni otros protocolos (file:, smb:, ms-…).
+    if (/^https?:\/\//i.test(url)) shell.openExternal(url);
     return { action: 'deny' };
   });
   await ventana.loadURL(servidor!.url);

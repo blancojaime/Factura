@@ -37,7 +37,7 @@ function Editor({ meta, fila, onClose, onSaved }: { meta: Meta; fila: Record<str
 }
 
 export default function Catalogos() {
-  const { puede } = useAuth();
+  const { puede, esAdmin } = useAuth();
   const ui = useUi();
   const { data: metas } = useLoad<Meta[]>(() => get('/maestros'));
   const [key, setKey] = useState('funcionarios');
@@ -53,7 +53,8 @@ export default function Catalogos() {
     return g;
   }, [metas]);
   if (!meta) return null;
-  const editable = puede(meta.modulo as any) || (meta.modulo === 'core' && puede('alm')) || (meta.modulo === 'core' && puede('com')) || (meta.modulo === 'core' && puede('af'));
+  // Igual que en el servidor: los catálogos compartidos solo los modifica el administrador; los de cada módulo, su encargado.
+  const editable = meta.modulo === 'core' ? esAdmin : puede(meta.modulo as any);
   const cols = meta.cols.slice(0, 9).map((c) => ({ key: c.name, header: c.label, num: c.type === 'number', badge: c.name === 'estado' }));
   return (
     <>

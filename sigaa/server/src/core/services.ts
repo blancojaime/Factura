@@ -32,14 +32,20 @@ export async function gestion(db: Db): Promise<number> {
  */
 export async function siguienteNro(db: Db, prefijo: string, g?: number, serie: string = prefijo): Promise<string> {
   const gest = g ?? (await gestion(db));
-  const row = await db('core_secuencias').where({ prefijo: serie, gestion: gest }).first();
-  let n: number;
-  if (row) {
-    n = Number(row.ultimo) + 1;
-    await db('core_secuencias').where({ prefijo: serie, gestion: gest }).update({ ultimo: n });
-  } else {
-    n = 1;
-    await db('core_secuencias').insert({ prefijo: serie, gestion: gest, ultimo: 1 });
+  const clave = { prefijo: serie, gestion: gest };
+  // Incremento ATÓMICO: la fila queda bloqueada hasta confirmar la transacción, así dos usuarios que guardan a la vez
+  // nunca reciben el mismo número (leer-y-sumar por separado permitía duplicados con PostgreSQL).
+  const incrementar = async (): Promise<number | null> => {
+    const r: any[] = await db('core_secuencias').where(clave).increment('ultimo', 1).returning('ultimo');
+    if (!r.length) return null;
+    return Number(typeof r[0] === 'object' ? r[0].ultimo : r[0]);
+  };
+  let n = await incrementar();
+  if (n === null) {
+    // primera vez de la serie: se crea la fila (si otra operación la creó al mismo tiempo, se ignora) y se incrementa
+    await db('core_secuencias').insert({ ...clave, ultimo: 0 }).onConflict(['prefijo', 'gestion']).ignore();
+    n = await incrementar();
+    if (n === null) fail('No se pudo generar el número del documento. Intente nuevamente.');
   }
   return `${prefijo}-${String(n).padStart(4, '0')}/${gest}`;
 }

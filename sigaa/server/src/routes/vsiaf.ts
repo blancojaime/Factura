@@ -1,3 +1,4 @@
+import { today } from '../core/util.js';
 import type { Ctx } from '../app.js';
 import {
   enviosDeActivo, guardarConfigVsiaf, guardarEquivalencias, importarLote, infoDestino, leerConfigVsiaf, listarEquivalencias, listarLotes, seleccionVsiaf, validarLote,
@@ -48,12 +49,12 @@ export async function registerVsiaf({ db, app, w }: Ctx) {
     const r = await armarLote(db, body(req));
     const n = r.resumen.activos + r.resumen.transferencias + r.resumen.bajas;
     if (!n) throw new BusinessError('No hay nada que exportar: no hay activos pendientes ni movimientos nuevos.');
-    return sendFile(reply, await libroExcel(r.libro, `${r.resumen.activos} activo(s), ${r.resumen.transferencias} transferencia(s), ${r.resumen.bajas} baja(s).`), XLSX, `SIGAA_para_VSIAF_${new Date().toISOString().slice(0, 10)}.xlsx`, false);
+    return sendFile(reply, await libroExcel(r.libro, `${r.resumen.activos} activo(s), ${r.resumen.transferencias} transferencia(s), ${r.resumen.bajas} baja(s).`), XLSX, `SIGAA_para_VSIAF_${today()}.xlsx`, false);
   });
   /** Informe de la vista previa (validación) en Excel. */
   app.post(`${P}/exportar/informe`, W, async (req, reply) => {
     const v = await validarLote(db, req.usuario, body(req));
-    return sendFile(reply, await informeExcel(v, 'Informe de validación — envío SIGAA → VSIAF'), XLSX, `informe_validacion_${new Date().toISOString().slice(0, 10)}.xlsx`, false);
+    return sendFile(reply, await informeExcel(v, 'Informe de validación — envío SIGAA → VSIAF'), XLSX, `informe_validacion_${today()}.xlsx`, false);
   });
 
   /** Informe de una importación ya hecha: se arma con el resultado que devolvió «importar». */

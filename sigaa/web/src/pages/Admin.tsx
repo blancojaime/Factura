@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { del, get, post, put, subirImagenPut, urlConToken, fmtDate } from '../api';
+import { del, get, post, put, subirImagenPut, urlConToken, fmtDate, hoy } from '../api';
 import { useAuth } from '../auth';
-import { Card, DataTable, Field, Modal, PageHead, SelectField, Tabs, TextField, useAction, useLoad, Badge } from '../ui';
+import { Card, DataTable, Field, Modal, PageHead, SelectField, Tabs, TextField, useAction, useLoad, useUi, Badge } from '../ui';
 
 import { ROLES_INFO, rolInfo } from '../roles';
 
@@ -104,21 +104,53 @@ function Bitacora() {
   );
 }
 
+/** Pasar a producción: elimina los datos de demostración con confirmación escrita (solo administrador). */
+function Produccion() {
+  const ui = useUi();
+  const [run, busy] = useAction();
+  const { data, reload } = useLoad<any>(() => get('/admin/produccion'));
+  const [conservar, setConservar] = useState(true);
+  const [txt, setTxt] = useState('');
+  const hayDemo = !!data && (data.registros > 0 || data.usuariosDemo > 0);
+  return (
+    <Card title="Pasar a producción: eliminar los datos de demostración">
+      <p>La base trae <b>datos de ejemplo</b> (ingresos, vales, activos, usuarios de prueba) para aprender a usar el sistema. Antes de usarlo con datos reales, elimínelos aquí para empezar <b>desde cero</b>.</p>
+      {data && <p className="muted">Ahora hay <b>{data.registros}</b> registro(s) de operaciones ({data.activos} activos, {data.ingresos} ingresos de almacén, {data.vales} vales) y <b>{data.usuariosDemo}</b> usuario(s) de demostración.</p>}
+      <h3>Qué se elimina y qué se conserva</h3>
+      <ul>
+        <li><b>Se eliminan:</b> todos los ingresos, salidas, inventarios, bajas, vales, descargos, activos, asignaciones, movimientos, la bitácora y la numeración (los documentos vuelven a empezar en 0001), y los usuarios de demostración (<code>almacen</code>, <code>combustible</code>, <code>activos</code>, <code>consulta</code>).</li>
+        <li><b>Siempre se conservan:</b> su usuario administrador, la configuración (entidad, firmantes, logo) y los catálogos normativos (cuentas contables, estados, grupos de materiales, causales y trámites de baja, tipos de vehículo).</li>
+      </ul>
+      <label className="check"><input type="checkbox" checked={conservar} onChange={(e) => setConservar(e.target.checked)} /> <span><b>Conservar los catálogos de la entidad</b> (funcionarios, proveedores, aperturas, partidas, bodegas, vehículos, edificios…). Desmárquelo si esos datos también son de ejemplo: después los carga con <i>Importar desde Excel</i> en Catálogos.</span></label>
+      <p className="warn">⚠ Esta acción <b>no se puede deshacer</b>. Con SQLite se hace una copia automática de la base antes de borrar (carpeta de respaldos); con PostgreSQL haga antes un <code>pg_dump</code>.</p>
+      <div className="row" style={{ marginTop: 8 }}>
+        <input style={{ width: 220 }} placeholder="Escriba ELIMINAR para confirmar" value={txt} onChange={(e) => setTxt(e.target.value)} />
+        <button className="danger" disabled={busy || txt.trim().toUpperCase() !== 'ELIMINAR'} onClick={async () => {
+          if (!(await ui.confirm('Se eliminarán TODOS los datos de demostración. ¿Desea continuar?'))) return;
+          run(async () => { const r = await post('/admin/produccion/vaciar', { confirmar: txt, conservarCatalogos: conservar }); setTxt(''); reload(); ui.ok(`Listo: el sistema quedó limpio.${r.respaldo ? ' Copia previa: ' + r.respaldo : ''}`); });
+        }}>Eliminar datos de demostración</button>
+      </div>
+      {!hayDemo && data && <p className="ok-txt" style={{ marginTop: 8 }}>✔ No hay datos de demostración: el sistema está limpio.</p>}
+    </Card>
+  );
+}
+
 export default function Admin() {
   const { esAdmin } = useAuth();
-  const [t, setT] = useState<'cfg' | 'usr' | 'bit' | 'resp'>('cfg');
+  const [t, setT] = useState<'cfg' | 'usr' | 'bit' | 'resp' | 'prod'>('cfg');
   return (
     <>
       <PageHead title="Administración" sub="Configuración de la entidad, usuarios, auditoría y respaldo" />
-      <Tabs value={t} onChange={setT} items={[{ id: 'cfg', label: 'Configuración' }, ...(esAdmin ? [{ id: 'usr' as const, label: 'Usuarios' }, { id: 'bit' as const, label: 'Bitácora' }, { id: 'resp' as const, label: 'Copia de seguridad' }] : [])]} />
+      <Tabs value={t} onChange={setT} items={[{ id: 'cfg', label: 'Configuración' }, ...(esAdmin ? [{ id: 'usr' as const, label: 'Usuarios' }, { id: 'bit' as const, label: 'Bitácora' }, { id: 'prod' as const, label: 'Pasar a producción' }, { id: 'resp' as const, label: 'Copia de seguridad' }] : [])]} />
       {t === 'cfg' && <Config />}
       {t === 'usr' && <Usuarios />}
       {t === 'bit' && <Bitacora />}
+      {t === 'prod' && <Produccion />}
       {t === 'resp' && (
         <Card title="Copia de seguridad">
           <p>Descarga una copia completa de la base de datos SQLite. Con PostgreSQL use <code>pg_dump</code> en el servidor de base de datos.</p>
           <button className="primary" onClick={() => window.open(urlConToken('/backup'), '_blank')}>Descargar copia ahora</button>
-          <p className="muted">Se recomienda realizarla a diario y antes del cierre de gestión. Última fecha: {fmtDate(new Date().toISOString().slice(0, 10))}</p>
+          <p className="muted">Se recomienda realizarla a diario y antes del cierre de gestión. Hoy es {fmtDate(hoy())}.</p>
         </Card>
       )}
     </>

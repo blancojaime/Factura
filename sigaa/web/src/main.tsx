@@ -5,13 +5,14 @@ import './styles.css';
 import { AuthProvider } from './auth';
 import { UiProvider } from './ui';
 import App from './App';
+import ErrorBoundary from './ErrorBoundary';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <UiProvider>
         <AuthProvider>
-          <App />
+          <ErrorBoundary><App /></ErrorBoundary>
         </AuthProvider>
       </UiProvider>
     </BrowserRouter>

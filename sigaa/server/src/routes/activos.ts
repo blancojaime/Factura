@@ -1,3 +1,4 @@
+import { today } from '../core/util.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Ctx } from '../app.js';
@@ -10,6 +11,7 @@ import {
 import { FOTOS_DIR, stickersPdf } from '../docs/activos.js';
 import { estructuraActivos, importarActivosExcel, plantillaActivos } from '../modules/activos/importar.js';
 import { cfgAll } from '../core/services.js';
+import { formatoImagen } from '../core/logo.js';
 
 /** Rutas del módulo de Activos Fijos (/api/af). */
 export async function registerActivos({ db, app, w }: Ctx) {
@@ -65,15 +67,18 @@ export async function registerActivos({ db, app, w }: Ctx) {
   // Fotografías (hasta 4 por activo): se suben como imagen binaria.
   app.put(`${P}/activos/:codigo/foto/:n`, W, async (req) => {
     const { codigo, n } = req.params as { codigo: string; n: string };
-    const ct = String(req.headers['content-type'] || '');
-    const ext = ct.includes('png') ? 'png' : ct.includes('webp') ? 'webp' : 'jpg';
+    // El número y el formato se validan ANTES de tocar el disco: nada del nombre viene tal cual del cliente.
+    const nn = Number(n);
+    if (!/^[1-4]$/.test(n) || !Number.isInteger(nn)) fail('Las fotografías van del 1 al 4.');
     if (!Buffer.isBuffer(req.body) || !(req.body as Buffer).length) fail('Seleccione una imagen (JPG o PNG).');
     if ((req.body as Buffer).length > 8 * 1024 * 1024) fail('La imagen supera 8 MB.');
+    const ext = formatoImagen(req.body as Buffer);
+    if (!ext) fail('El archivo no es una imagen válida (JPG, PNG o WEBP).');
     await obtenerActivo(db, codigo);
     fs.mkdirSync(FOTOS_DIR(), { recursive: true });
-    const file = `${codigo}_${n}.${ext}`;
+    const file = `${codigo.replace(/[^A-Za-z0-9._-]+/g, '_')}_${nn}.${ext}`;
     fs.writeFileSync(path.join(FOTOS_DIR(), file), req.body as Buffer);
-    await guardarFoto(db, req.usuario, codigo, Number(n), file);
+    await guardarFoto(db, req.usuario, codigo, nn, file);
     return { archivo: file };
   });
   app.delete(`${P}/activos/:codigo/foto/:n`, W, async (req) => {
@@ -118,7 +123,7 @@ export async function registerActivos({ db, app, w }: Ctx) {
     const codigos = (body(req)?.codigos ?? []) as string[];
     const buf = await stickersPdf(db, codigos);
     if (body(req)?.marcar !== false) await marcarEtiquetas(db, req.usuario, codigos);
-    return sendFile(reply, buf, 'application/pdf', `stickers-${new Date().toISOString().slice(0, 10)}.pdf`);
+    return sendFile(reply, buf, 'application/pdf', `stickers-${today()}.pdf`);
   });
   app.get(`${P}/stickers`, async (req, reply) => {
     const codigos = String(q(req).codigos || '').split(',').filter(Boolean);

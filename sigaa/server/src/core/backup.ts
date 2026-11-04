@@ -1,3 +1,4 @@
+import { today } from './util.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import type { Knex } from 'knex';
@@ -7,7 +8,7 @@ import { isPg } from '../db/connect.js';
 export async function respaldar(db: Knex, dir: string, retener = 14): Promise<string | null> {
   if (isPg(db)) return null;
   fs.mkdirSync(dir, { recursive: true });
-  const hoy = new Date().toISOString().slice(0, 10);
+  const hoy = today();
   const dest = path.join(dir, `sigaa-${hoy}.sqlite`);
   if (fs.existsSync(dest)) return null;
   await db.raw(`VACUUM INTO '${dest.replace(/'/g, "''")}'`);

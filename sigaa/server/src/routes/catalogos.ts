@@ -1,3 +1,4 @@
+import { today } from '../core/util.js';
 import type { Ctx } from '../app.js';
 import { sendFile } from '../app.js';
 import { estructuraImportacion, importarMaestro, plantillaImportacion } from '../modules/maestros-import.js';
@@ -66,7 +67,7 @@ export async function registerCatalogos({ db, app, w }: Ctx) {
     const q = req.query as Record<string, string>;
     const { rep, tabla } = await ejecutarReporte(db, id, q);
     const formato = (q.formato || 'json').toLowerCase();
-    const base = `${rep.id}-${new Date().toISOString().slice(0, 10)}`;
+    const base = `${rep.id}-${today()}`;
     if (formato === 'pdf') return sendFile(reply, await renderTablaPdf(db, tabla), 'application/pdf', `${base}.pdf`);
     if (formato === 'xlsx' || formato === 'excel') return sendFile(reply, await renderTablaXlsx(db, tabla), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', `${base}.xlsx`, false);
     return { reporte: { id: rep.id, nombre: rep.nombre }, ...tabla };

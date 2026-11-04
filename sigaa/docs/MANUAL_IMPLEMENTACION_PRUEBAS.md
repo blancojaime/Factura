@@ -223,3 +223,15 @@ El piloto se aprueba si se cumple todo lo siguiente:
 | Olvidé la clave del propio admin | Pedir soporte; no borrar la base de datos, se perderían los datos |
 | Un PDF sale en blanco | Probar con otro navegador y enviar foto del mensaje |
 | La instalación falla | Enviar foto de toda la ventana, incluidas las líneas rojas |
+
+---
+
+## Actualización (solicitudes 2 y 3 y auditoría)
+
+Consulte el capítulo final de `Manual_SIGAA_Implementacion_y_Pruebas` (Word/PDF): *Novedades de las solicitudes 2 y 3*, *Actualización para quien instala* y la **Lista de verificación para entrar en producción**. Resumen:
+
+1. Cambie la clave del administrador y cree un usuario por encargado.
+2. **Administración → Pasar a producción**: elimina los datos de demostración (con copia previa).
+3. Cargue catálogos con **Catálogos → Importar desde Excel** y el **logo** en Configuración.
+4. Defina `SIGAA_JWT_SECRET`, publique con HTTPS si hay red y programe copias de seguridad (probar la restauración).
+5. Revise `Informe_Auditoria_SIGAA` (riesgos pendientes).
