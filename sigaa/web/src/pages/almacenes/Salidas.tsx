@@ -69,7 +69,7 @@ export default function AlmSalidas() {
               <TextField label="Cargo del solicitante" value={h.cargo} onChange={(v) => setH({ ...h, cargo: v })} disabled={!editable} />
               <SelectField label="Unidad solicitante" req value={h.unidad} onChange={(v) => setH({ ...h, unidad: v })} disabled={!editable} options={(unids ?? []).map((u) => u.nombre)} />
               <SelectField label="Inmediato superior (Vo.Bo.)" req value={h.superior} onChange={(v) => setH({ ...h, superior: v })} disabled={!editable} options={jerarquia} />
-              <SelectField label="Proyecto / destino" value={h.proyecto} onChange={(v) => setH({ ...h, proyecto: v })} disabled={!editable} options={(proys ?? []).map((p) => p.nombre)} />
+              <SelectField label="Apertura / destino" value={h.proyecto} onChange={(v) => setH({ ...h, proyecto: v })} disabled={!editable} options={(proys ?? []).map((p) => p.nombre)} />
               <TextField label="Nº nota interna (cantidades elevadas)" value={h.nota_interna} onChange={(v) => setH({ ...h, nota_interna: v })} disabled={!editable} />
               <AreaField className="span2" label="Justificación del pedido" req value={h.justificacion} onChange={(v) => setH({ ...h, justificacion: v })} disabled={!editable} />
               <TextField className="span2" label="Excepción de plazo/límite autorizada por" value={h.excepcion} onChange={(v) => setH({ ...h, excepcion: v })} disabled={!editable} hint="Solo si el pedido incumple el plazo del mes o el máximo de pedidos" />

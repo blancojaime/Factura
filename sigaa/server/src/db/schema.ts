@@ -932,6 +932,7 @@ const COLUMNAS_NUEVAS: [tabla: string, columna: string, def: (t: Knex.AlterTable
   ['af_movimientos', 'resolucion', (t) => t.string('resolucion', 40)],
   ['af_movimientos', 'motivo_cod', (t) => t.integer('motivo_cod')],
   ['af_ingresos', 'org_fin', (t) => t.string('org_fin', 3)],
+  ['alm_ingresos', 'comision_cargo', (t) => t.string('comision_cargo', 160)],
 ];
 
 export async function createSchema(knex: Knex): Promise<void> {

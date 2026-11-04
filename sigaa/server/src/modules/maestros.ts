@@ -46,8 +46,8 @@ export const MAESTROS: Maestro[] = [
   { key: 'unidades', titulo: 'Unidades organizacionales', tabla: 'core_unidades', pk: ['id'], autoId: true, modulo: 'core', cols: [T('nombre', 'Unidad', { required: true, width: 3 }), T('sigla', 'Sigla'), T('responsable', 'Responsable', { width: 2 }), T('cargo', 'Cargo', { width: 2 })], orden: ['nombre'] },
   { key: 'funcionarios', titulo: 'Funcionarios / servidores públicos', tabla: 'core_funcionarios', pk: ['id'], autoId: true, modulo: 'core', cols: [T('nombre', 'Nombre', { required: true, width: 3 }), T('ci', 'CI'), T('cargo', 'Cargo', { width: 2 }), T('unidad', 'Unidad', { ref: 'core_unidades.nombre', width: 2 }), T('celular', 'Celular'), S('estado', 'Estado', ESTADO)], orden: ['nombre'], mayus: ['nombre'] },
   { key: 'proveedores', titulo: 'Proveedores / estaciones de servicio', tabla: 'core_proveedores', pk: ['id'], autoId: true, modulo: 'core', cols: [T('nit', 'NIT', { required: true }), T('razon_social', 'Razón social', { required: true, width: 3 }), T('contacto', 'Contacto / representante'), T('telefono', 'Teléfono'), T('direccion', 'Dirección', { width: 2 }), T('estacion', 'Estación de servicio'), S('estado', 'Estado', ESTADO)], orden: ['razon_social'] },
-  { key: 'proyectos', titulo: 'Proyectos / destinos', tabla: 'core_proyectos', pk: ['id'], autoId: true, modulo: 'core', cols: [T('nombre', 'Proyecto / destino', { required: true, width: 4 }), S('estado', 'Estado', ESTADO)], orden: ['nombre'] },
-  { key: 'aperturas', titulo: 'Aperturas programáticas', tabla: 'core_aperturas', pk: ['id'], autoId: true, modulo: 'core', cols: [T('apertura', 'Apertura', { required: true }), T('descripcion', 'Descripción', { width: 3 }), N('presupuesto', 'Presupuesto Bs')], orden: ['apertura'] },
+  { key: 'proyectos', titulo: 'Aperturas programáticas / destino', tabla: 'core_proyectos', pk: ['id'], autoId: true, modulo: 'core', cols: [T('nombre', 'Apertura programática / destino', { required: true, width: 4 }), S('estado', 'Estado', ESTADO)], orden: ['nombre'] },
+  { key: 'aperturas', titulo: 'Aperturas programáticas y presupuesto', tabla: 'core_aperturas', pk: ['id'], autoId: true, modulo: 'core', cols: [T('apertura', 'Apertura', { required: true }), T('descripcion', 'Descripción', { width: 3 }), N('presupuesto', 'Presupuesto Bs')], orden: ['apertura'] },
   { key: 'partidas', titulo: 'Partidas presupuestarias', tabla: 'core_partidas', pk: ['partida'], modulo: 'core', cols: [T('partida', 'Partida', { required: true }), T('descripcion', 'Descripción', { width: 4 })], orden: ['partida'] },
   // ───── Almacenes ─────
   { key: 'bodegas', titulo: 'Bodegas', tabla: 'alm_bodegas', pk: ['cod'], modulo: 'alm', cols: [T('cod', 'Código (2 dígitos)', { required: true }), T('nombre', 'Bodega', { required: true, width: 3 }), T('responsable', 'Responsable', { ref: 'core_funcionarios.nombre', width: 2 }), T('ubicacion', 'Ubicación'), S('estado', 'Estado', ESTADO)], orden: ['cod'], uso: [{ tabla: 'alm_catalogo', col: 'cod_bod', label: 'catálogo de ítems' }, { tabla: 'alm_lotes', col: 'cod_bod', label: 'existencias' }] },
@@ -81,7 +81,7 @@ export const maestroPorKey = (key: string): Maestro => {
   return m;
 };
 
-function limpiar(m: Maestro, d: Record<string, unknown>, esAlta: boolean) {
+export function limpiar(m: Maestro, d: Record<string, unknown>, esAlta: boolean) {
   const out: Record<string, unknown> = {};
   const e = new Errores();
   for (const c of m.cols) {

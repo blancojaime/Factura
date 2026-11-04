@@ -13,6 +13,8 @@ interface AuthState {
   /** ¿puede escribir en el módulo? */
   puede(m: 'alm' | 'com' | 'af' | 'core'): boolean;
   esAdmin: boolean;
+  /** ¿ve el envío / importación con el VSIAF? (el administrador puede reservarlo para sí) */
+  vsiaf: boolean;
 }
 const Ctx = createContext<AuthState>(null as any);
 export const useAuth = () => useContext(Ctx);
@@ -23,6 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [gestion, setGestion] = useState<number | null>(null);
   const [debeCambiar, setDebe] = useState(false);
+  const [vsiaf, setVsiaf] = useState(true);
   const [cargando, setCargando] = useState(true);
 
   const logout = useCallback(() => {
@@ -33,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!getToken()) return setCargando(false);
     get('/auth/me')
-      .then((r) => { setUsuario(r.usuario); setGestion(r.gestion); })
+      .then((r) => { setUsuario(r.usuario); setGestion(r.gestion); setVsiaf(r.vsiaf !== false); })
       .catch((e) => { if (e.extra?.cambiarClave) setDebe(true); else logout(); })
       .finally(() => setCargando(false));
   }, [logout]);
@@ -45,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(r.token);
       setUsuario(r.usuario);
       setGestion(r.gestion);
+      setVsiaf(r.vsiaf !== false);
       setDebe(!!r.debeCambiar);
     },
     logout,
@@ -55,6 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     puede: (m) => !!usuario && (usuario.roles.includes('ADMIN') || (m !== 'core' && usuario.roles.includes(ROL[m]))),
     esAdmin: !!usuario?.roles.includes('ADMIN'),
+    vsiaf,
   };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

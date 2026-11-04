@@ -89,7 +89,7 @@ registrar(
     id: 'alm-salidas',
     nombre: 'Resumen de salidas de materiales y suministros (Anexo 4)',
     modulo: 'alm',
-    params: [...PARAMS_PERIODO, { name: 'unidad', label: 'Unidad solicitante (opcional)', type: 'text' }, { name: 'proyecto', label: 'Proyecto / destino (opcional)', type: 'text' }],
+    params: [...PARAMS_PERIODO, { name: 'unidad', label: 'Unidad solicitante (opcional)', type: 'text' }, { name: 'proyecto', label: 'Apertura / destino (opcional)', type: 'text' }],
     async ejecutar(db, p): Promise<Tabla> {
       const { desde, hasta } = periodo(p);
       const b = await bodTxt(db, p);
@@ -101,16 +101,16 @@ registrar(
       const filas = (await q).map((s: any) => [fmtDate(s.fecha_pedido), s.nro, bm.get(s.cod_bod), s.unidad, s.solicitante, s.proyecto, num(s.total)]);
       return {
         titulo: 'Resumen de salidas de materiales y suministros', subtitulo: `${b.nombre} · Del ${fmtDate(desde)} al ${fmtDate(hasta)} · Solo vales entregados`, landscape: true,
-        cols: [{ header: 'Fecha', w: 1 }, { header: 'Vale', w: 1.2 }, { header: 'Bodega', w: 2.2 }, { header: 'Unidad solicitante', w: 2.6 }, { header: 'Solicitante', w: 2.2 }, { header: 'Proyecto / destino', w: 3 }, { header: 'Total (Bs)', w: 1.1, num: 'money' }],
+        cols: [{ header: 'Fecha', w: 1 }, { header: 'Vale', w: 1.2 }, { header: 'Bodega', w: 2.2 }, { header: 'Unidad solicitante', w: 2.6 }, { header: 'Solicitante', w: 2.2 }, { header: 'Apertura / destino', w: 3 }, { header: 'Total (Bs)', w: 1.1, num: 'money' }],
         filas, totales: ['', '', '', '', '', 'TOTAL', sumCol(filas, 6)], firmas: await firmasAlm(db),
       };
     },
   },
   {
     id: 'alm-por-unidad',
-    nombre: 'Salidas por unidad solicitante y/o proyecto (control por destino)',
+    nombre: 'Salidas por unidad solicitante y/o apertura (control por destino)',
     modulo: 'alm',
-    params: [...PARAMS_PERIODO, { name: 'unidad', label: 'Unidad solicitante (opcional)', type: 'text' }, { name: 'proyecto', label: 'Proyecto / destino (opcional)', type: 'text' }],
+    params: [...PARAMS_PERIODO, { name: 'unidad', label: 'Unidad solicitante (opcional)', type: 'text' }, { name: 'proyecto', label: 'Apertura / destino (opcional)', type: 'text' }],
     async ejecutar(db, p): Promise<Tabla> {
       const { desde, hasta } = periodo(p);
       const b = await bodTxt(db, p);
@@ -121,8 +121,8 @@ registrar(
       const rows = await q.groupBy('s.unidad', 's.proyecto', 'd.cod_item', 'd.descripcion', 'd.unidad').select('s.unidad as uni', 's.proyecto', 'd.cod_item', 'd.descripcion', 'd.unidad as um').sum({ c: 'd.cant_entregada', t: 'd.total' }).orderBy(['s.unidad', 's.proyecto', 'd.cod_item']);
       const filas = rows.map((r: any) => [r.uni, r.proyecto, r.cod_item, r.descripcion, r.um, num(r.c), num(r.t)]);
       return {
-        titulo: 'Salidas por unidad solicitante y/o proyecto', subtitulo: `${b.nombre} · Del ${fmtDate(desde)} al ${fmtDate(hasta)}`, landscape: true,
-        cols: [{ header: 'Unidad solicitante', w: 2.5 }, { header: 'Proyecto / destino', w: 3 }, { header: 'Código', w: 1.3 }, { header: 'Descripción', w: 3.5 }, { header: 'Unid.', w: 0.9 }, { header: 'Cantidad', w: 1, num: 'qty' }, { header: 'Importe (Bs)', w: 1.2, num: 'money' }],
+        titulo: 'Salidas por unidad solicitante y/o apertura', subtitulo: `${b.nombre} · Del ${fmtDate(desde)} al ${fmtDate(hasta)}`, landscape: true,
+        cols: [{ header: 'Unidad solicitante', w: 2.5 }, { header: 'Apertura / destino', w: 3 }, { header: 'Código', w: 1.3 }, { header: 'Descripción', w: 3.5 }, { header: 'Unid.', w: 0.9 }, { header: 'Cantidad', w: 1, num: 'qty' }, { header: 'Importe (Bs)', w: 1.2, num: 'money' }],
         filas, totales: ['', '', '', '', 'TOTAL', '', sumCol(filas, 6)], firmas: await firmasAlm(db),
       };
     },

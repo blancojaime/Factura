@@ -137,13 +137,17 @@ registrarDoc(
   },
 );
 
+/** Texto que lleva el QR del activo: entidad, edificio, auxiliar contable y código (se lee con cualquier lector de QR). */
+export const contenidoQr = (entidad: unknown, edificio: unknown, auxiliar: unknown, codigo: string) =>
+  [`ENTIDAD: ${txt(entidad)}`, `EDIFICIO: ${txt(edificio)}`, `AUXILIAR: ${txt(auxiliar)}`, `CODIGO: ${codigo}`].join('\n');
+
 /** Hoja de stickers (3 columnas × 10 filas por página carta): entidad, edificio, auxiliar y código del activo. */
 export async function stickersPdf(db: Db, codigos: string[]): Promise<Buffer> {
   if (!codigos.length) fail('Marque con X los códigos que desea imprimir.');
   const c = await cfgAll(db);
   const acts = await db('af_activos as a').leftJoin('af_edificios as e', 'e.cod_edif', 'a.cod_edif').whereIn('a.codigo', codigos).select('a.codigo', 'a.auxiliar', 'e.edificio').orderBy('a.codigo');
   const qr = new Map<string, Buffer>();
-  for (const a of acts) qr.set(a.codigo, await QRCode.toBuffer(a.codigo, { margin: 0, width: 160 }));
+  for (const a of acts) qr.set(a.codigo, await QRCode.toBuffer(contenidoQr(c.Entidad, a.edificio, a.auxiliar, a.codigo), { margin: 0, width: 360, errorCorrectionLevel: 'M' }));
   const doc = new PDFDocument({ size: 'LETTER', margin: 0, bufferPages: true });
   const chunks: Buffer[] = [];
   doc.on('data', (b: Buffer) => chunks.push(b));
@@ -158,9 +162,9 @@ export async function stickersPdf(db: Db, codigos: string[]): Promise<Buffer> {
     doc.rect(x + 3, y + 3, W - 6, 13).fill('#1F3A5F');
     doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(6.3).text(String(c.Entidad ?? '').toUpperCase(), x + 5, y + 7, { width: W - 10, align: 'center', lineBreak: false });
     let tx = x + 6;
-    let tw = W - 12 - 40;
-    try { doc.image(qr.get(a.codigo)!, x + W - 46, y + 19, { fit: [40, 40] }); } catch { /* sin QR */ }
-    if (logo) { try { doc.image(logo, x + 7, y + 20, { fit: [34, 34] }); tx = x + 44; tw = W - 96; } catch { /* sin logo */ } }
+    let tw = W - 12 - 50;
+    try { doc.image(qr.get(a.codigo)!, x + W - 53, y + 19, { fit: [47, 47] }); } catch { /* sin QR */ }
+    if (logo) { try { doc.image(logo, x + 7, y + 20, { fit: [34, 34] }); tx = x + 44; tw = W - 102; } catch { /* sin logo */ } }
     doc.fillColor('#1A1A1A').font('Helvetica-Bold').fontSize(7).text(txt(a.edificio), tx, y + 20, { width: tw, align: 'center', lineBreak: false });
     doc.font('Helvetica').fontSize(7).text(txt(a.auxiliar), tx, y + 29, { width: tw, align: 'center', lineBreak: false });
     doc.font('Helvetica-Bold').fontSize(14).text(a.codigo, tx, y + 42, { width: tw, align: 'center', lineBreak: false });

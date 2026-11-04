@@ -101,7 +101,8 @@ pre.msg { white-space: pre-wrap; font: inherit; margin: 0 0 8px; }
 
 .login { min-height: 100%; display: grid; place-items: center; background: linear-gradient(135deg, #14263f, #2d5a94); padding: 20px; }
 .login .box { background: var(--panel); border-radius: 14px; padding: 28px; width: min(400px, 100%); box-shadow: 0 20px 60px rgba(0, 0, 0, .35); }
-.login h1 { margin-bottom: 4px; } .login p { margin: 0 0 16px; color: var(--muted); }
+.login .logo-jb { display: block; width: min(250px, 80%); margin: 0 auto 14px; background: #fff; border-radius: 10px; padding: 6px; }
+.login h1 { margin-bottom: 4px; text-align: center; } .login p { margin: 0 0 16px; color: var(--muted); text-align: center; }
 .muted { color: var(--muted); } .right { text-align: right; } .nowrap { white-space: nowrap; }
 .empty { padding: 28px; text-align: center; color: var(--muted); }
 .steps { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }

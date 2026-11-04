@@ -116,6 +116,26 @@ export class PdfDoc {
     d.fillColor(C.text);
   }
 
+  /** Recuadro con datos a la izquierda y un código QR (ya generado como PNG) a la derecha. */
+  qrBloque(png: Buffer, titulo: string, lineas: string[], pie = 'Escanee para verificar') {
+    const d = this.doc;
+    const h = 90;
+    this.ensure(h + 6);
+    const y = d.y + 2;
+    d.rect(this.margin, y, this.width, h).lineWidth(0.6).strokeColor(C.line).stroke();
+    d.rect(this.margin, y, this.width, 14).fill(C.light);
+    d.fillColor(C.primary).font('Helvetica-Bold').fontSize(8.5).text(titulo, this.margin + 6, y + 3.5, { width: this.width - 90, lineBreak: false });
+    d.fillColor(C.text).font('Helvetica').fontSize(8.5);
+    let ty = y + 20;
+    for (const l of lineas) { d.text(l, this.margin + 8, ty, { width: this.width - 110, lineBreak: false }); ty += 12; }
+    const q = 62;
+    try { d.image(png, this.margin + this.width - q - 8, y + 16, { fit: [q, q] }); } catch { /* sin QR */ }
+    d.fillColor(C.muted).fontSize(6).text(pie, this.margin + this.width - 100, y + 16 + q + 1, { width: 94, align: 'center', lineBreak: false });
+    d.y = y + h + 6;
+    d.x = this.margin;
+    return this;
+  }
+
   espacio(n = 6) {
     this.doc.y += n;
     return this;
@@ -258,10 +278,14 @@ export class PdfDoc {
     const range = d.bufferedPageRange();
     for (let i = 0; i < range.count; i++) {
       d.switchToPage(i);
+      // El pie va dentro del margen inferior: sin bajarlo, PDFKit abre una hoja nueva por cada texto del pie.
+      const mb = d.page.margins.bottom;
+      d.page.margins.bottom = 0;
       const y = d.page.height - this.margin + 4;
       d.fillColor(C.muted).font('Helvetica').fontSize(7);
       d.text(`SIGAA · ${this.opts.header.entidad}`, this.margin, y, { width: this.width / 2, align: 'left', lineBreak: false });
       d.text(`Página ${i + 1} de ${range.count}`, this.margin + this.width / 2, y, { width: this.width / 2, align: 'right', lineBreak: false });
+      d.page.margins.bottom = mb;
     }
     const chunks: Buffer[] = [];
     return new Promise((resolve, reject) => {

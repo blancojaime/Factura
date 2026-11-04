@@ -8,3 +8,4 @@ export { default as ComViajes } from './Viajes';
 export { default as ComConciliacion } from './Conciliacion';
 export { default as ComCronograma } from './Cronograma';
 export { default as ComVales } from './Vales';
+export { default as ComEmitidos } from './Emitidos';

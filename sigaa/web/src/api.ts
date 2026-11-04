@@ -74,3 +74,20 @@ export async function abrirPdfPost(path: string, body: unknown) {
   }
   window.open(URL.createObjectURL(await res.blob()), '_blank');
 }
+
+/** Sube un archivo (cuerpo binario) y devuelve el JSON de respuesta. */
+export async function subirArchivo<T = any>(path: string, file: File, tipo?: string): Promise<T> {
+  const res = await fetch('/api' + path, { method: 'POST', headers: { authorization: `Bearer ${token}`, 'content-type': tipo || file.type || 'application/octet-stream' }, body: file });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new ApiError(data.error || `Error ${res.status}`, res.status);
+  return data;
+}
+export const XLSX_TIPO = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
+/** Descarga un archivo generado por el servidor (GET autenticado). */
+export async function bajarArchivo(path: string, nombre: string) {
+  const res = await fetch('/api' + path, { headers: { authorization: `Bearer ${token}` } });
+  if (!res.ok) { const d = await res.json().catch(() => ({})); throw new ApiError(d.error || `Error ${res.status}`, res.status); }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(await res.blob()); a.download = nombre; a.click();
+}

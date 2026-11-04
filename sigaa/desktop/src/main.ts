@@ -45,7 +45,9 @@ async function crearVentana() {
   ]));
   // PDF/Excel/enlaces externos: los PDF se abren en una ventana; lo demás en el navegador del sistema
   ventana.webContents.setWindowOpenHandler(({ url }) => {
-    if (servidor && url.startsWith(servidor.url)) return { action: 'allow', overrideBrowserWindowOptions: { width: 1000, height: 800, autoHideMenuBar: true } };
+    // Los PDF generados en pantalla (stickers con QR, vales) se abren desde un enlace blob: del propio servidor local
+    const origen = servidor ? new URL(servidor.url).origin : '';
+    if (servidor && (url.startsWith(servidor.url) || url.startsWith(`blob:${origen}`))) return { action: 'allow', overrideBrowserWindowOptions: { width: 1000, height: 800, autoHideMenuBar: true } };
     shell.openExternal(url);
     return { action: 'deny' };
   });

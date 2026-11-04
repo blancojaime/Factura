@@ -4,7 +4,7 @@ import { useAuth } from '../../auth';
 import { AreaField, Badge, Card, DataTable, DateField, ItemsGrid, PageHead, SelectField, TextField, useAction, useLoad, useUi } from '../../ui';
 import { codeOf, nroUrl, useAlmMeta, useItems } from './common';
 
-const vacio = () => ({ nro: '', fecha: hoy(), cod_bod: '', tipo: '', proveedor: '', nro_oc: '', plazo_entrega: '', factura: '', fecha_factura: '', unidad: '', preventivo: '', nro_pse: '', proyecto: '', fuente: '', partida: '', comision: '', obs_plazo: '', estado: '' });
+const vacio = () => ({ nro: '', fecha: hoy(), cod_bod: '', tipo: '', proveedor: '', nro_oc: '', plazo_entrega: '', factura: '', fecha_factura: '', unidad: '', preventivo: '', nro_pse: '', proyecto: '', comision_cargo: '', fuente: '', partida: '', comision: '', obs_plazo: '', estado: '' });
 const linea = () => ({ item: '', cantidad: '', precio_unit: '', vencimiento: '', lote: '', marca: '' });
 
 export default function AlmIngresos() {
@@ -16,6 +16,7 @@ export default function AlmIngresos() {
   const { data: provs } = useLoad<any[]>(() => get('/maestros/proveedores'));
   const { data: unids } = useLoad<any[]>(() => get('/maestros/unidades'));
   const { data: proys } = useLoad<any[]>(() => get('/maestros/proyectos'));
+  const { data: funcs } = useLoad<any[]>(() => get('/maestros/funcionarios'));
   const [h, setH] = useState<any>(vacio());
   const [items, setItems] = useState<any[]>([linea()]);
   const [docs, setDocs] = useState<any[]>([]);
@@ -72,10 +73,11 @@ export default function AlmIngresos() {
               <SelectField label="Unidad solicitante" value={h.unidad} onChange={(v) => setH({ ...h, unidad: v })} disabled={!editable} options={(unids ?? []).map((u) => u.nombre)} />
               <TextField label="Nº preventivo" value={h.preventivo} onChange={(v) => setH({ ...h, preventivo: v })} disabled={!editable} />
               <TextField label="Nº almacén sin existencia (PSE)" value={h.nro_pse} onChange={(v) => setH({ ...h, nro_pse: v })} disabled={!editable} />
-              <SelectField label="Proyecto / destino" value={h.proyecto} onChange={(v) => setH({ ...h, proyecto: v })} disabled={!editable} options={(proys ?? []).map((p) => p.nombre)} />
+              <SelectField label="Apertura / destino" value={h.proyecto} onChange={(v) => setH({ ...h, proyecto: v })} disabled={!editable} options={(proys ?? []).map((p) => p.nombre)} />
               <TextField label="Fuente de financiamiento / organismo" value={h.fuente} onChange={(v) => setH({ ...h, fuente: v })} disabled={!editable} />
               <SelectField label="Partida presupuestaria" value={h.partida} onChange={(v) => setH({ ...h, partida: v })} disabled={!editable} options={(meta?.partidas ?? []).map((p) => ({ value: p.partida, label: `${p.partida} - ${p.descripcion}` }))} />
-              <TextField className="span2" label="Comisión / responsable de recepción" value={h.comision} onChange={(v) => setH({ ...h, comision: v })} disabled={!editable} />
+              <SelectField label="Comisión / responsable de recepción" value={h.comision} onChange={(v) => setH({ ...h, comision: v, comision_cargo: (funcs ?? []).find((f) => f.nombre === v)?.cargo ?? h.comision_cargo })} disabled={!editable} options={[...new Set([...(funcs ?? []).map((f) => f.nombre), ...(h.comision ? [h.comision] : [])])]} />
+              <TextField label="Cargo" value={h.comision_cargo ?? ''} onChange={(v) => setH({ ...h, comision_cargo: v })} disabled={!editable} hint="Se completa solo al elegir al funcionario; puede corregirlo." />
               <AreaField className="span-all" label="Observaciones / justificación de entrega fuera de plazo" value={h.obs_plazo} onChange={(v) => setH({ ...h, obs_plazo: v })} disabled={!editable} />
             </div>
           </Card>

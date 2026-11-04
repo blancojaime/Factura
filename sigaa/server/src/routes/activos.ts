@@ -8,6 +8,7 @@ import {
   listarSolicitudes, marcarEtiquetas, obtenerActivo, obtenerAsignacion, obtenerIngresoAF, obtenerSolicitud, pendientesCodificar, procesarMovimientoAF, solicitudSinExistencia, TIPOS_INGRESO_AF,
 } from '../modules/activos/service.js';
 import { FOTOS_DIR, stickersPdf } from '../docs/activos.js';
+import { estructuraActivos, importarActivosExcel, plantillaActivos } from '../modules/activos/importar.js';
 import { cfgAll } from '../core/services.js';
 
 /** Rutas del módulo de Activos Fijos (/api/af). */
@@ -17,6 +18,14 @@ export async function registerActivos({ db, app, w }: Ctx) {
   const q = (req: any) => req.query as Record<string, string>;
   const body = (req: any) => req.body as any;
   const nro = (req: any) => decodeURIComponent((req.params as any).nro);
+
+  // Importación de activos desde Excel (las fotos se suben después, una a una, con el endpoint de fotos).
+  app.get(`${P}/importar/estructura`, async () => estructuraActivos());
+  app.get(`${P}/importar/plantilla`, async (_req, reply) => sendFile(reply, await plantillaActivos(db), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'plantilla_activos_fijos.xlsx', false));
+  app.post(`${P}/importar`, W, async (req) => {
+    if (!Buffer.isBuffer(req.body) || !(req.body as Buffer).length) fail('Seleccione un archivo .xlsx.');
+    return importarActivosExcel(db, req.usuario, req.body as Buffer, q(req).confirmar === '1');
+  });
 
   app.get(`${P}/indicadores`, async () => indicadoresAF(db));
   app.get(`${P}/meta`, async () => ({

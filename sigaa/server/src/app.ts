@@ -21,6 +21,7 @@ import { tablero } from './modules/combustible/otros.js';
 import { resumenVales } from './modules/combustible/vales.js';
 import { indicadoresAF } from './modules/activos/service.js';
 import { DEFAULT_CONFIG } from './db/defaults.js';
+import { vsiafVisible } from './vsiaf/acceso.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -96,9 +97,9 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
     const { user, debeCambiar } = await autenticar(db, b.usuario, b.clave);
     const token = app.jwt.sign({ u: user.usuario, n: user.nombre, r: user.roles, dc: debeCambiar });
     await bitacora(db, user, 'SEGURIDAD', 'INICIO DE SESIÓN', user.usuario, '');
-    return { token, usuario: user, debeCambiar, gestion: await gestion(db) };
+    return { token, usuario: user, debeCambiar, gestion: await gestion(db), vsiaf: await vsiafVisible(db, user) };
   });
-  app.get('/api/auth/me', async (req) => ({ usuario: req.usuario, gestion: await gestion(db), entidad: (await cfgAll(db)).Entidad }));
+  app.get('/api/auth/me', async (req) => ({ usuario: req.usuario, gestion: await gestion(db), entidad: (await cfgAll(db)).Entidad, vsiaf: await vsiafVisible(db, req.usuario) }));
   app.post('/api/auth/cambiar-clave', async (req) => {
     const b = req.body as { actual?: string; nueva?: string };
     await cambiarClave(db, req.usuario.usuario, b?.actual ?? '', b?.nueva ?? '');

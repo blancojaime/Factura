@@ -1,5 +1,6 @@
 import type { Ctx } from '../app.js';
 import { sendFile } from '../app.js';
+import { estructuraImportacion, importarMaestro, plantillaImportacion } from '../modules/maestros-import.js';
 import { MAESTROS, actualizarMaestro, crearMaestro, eliminarMaestro, listarMaestro, maestroPorKey, opcionesRef } from '../modules/maestros.js';
 import { REGISTRO, ejecutarReporte, renderTablaPdf, renderTablaXlsx } from '../reports/types.js';
 import { DOCS } from '../docs/types.js';
@@ -38,6 +39,18 @@ export async function registerCatalogos({ db, app, w }: Ctx) {
     await permiso(req, key);
     await actualizarMaestro(db, req.usuario, key, idDe(key, pk), req.body as Record<string, unknown>);
     return { ok: true };
+  });
+  /** Importación desde Excel: estructura, plantilla y carga (cuerpo = archivo .xlsx). */
+  app.get('/api/maestros/:key/importar/estructura', async (req) => estructuraImportacion((req.params as { key: string }).key));
+  app.get('/api/maestros/:key/importar/plantilla', async (req, reply) => {
+    const { key } = req.params as { key: string };
+    return sendFile(reply, await plantillaImportacion(key), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', `plantilla_${key}.xlsx`, false);
+  });
+  app.post('/api/maestros/:key/importar', async (req) => {
+    const { key } = req.params as { key: string };
+    await permiso(req, key);
+    if (!Buffer.isBuffer(req.body) || !(req.body as Buffer).length) fail('Seleccione un archivo .xlsx.');
+    return importarMaestro(db, req.usuario, key, req.body as Buffer);
   });
   app.delete('/api/maestros/:key/:pk', async (req) => {
     const { key, pk } = req.params as { key: string; pk: string };

@@ -18,7 +18,9 @@ function Config() {
       {Object.entries(mods).map(([m, titulo]) => (
         <Card key={m} title={titulo}>
           <div className="grid c2">
-            {(data ?? []).filter((c) => c.modulo === m).map((c) => (
+            {(data ?? []).filter((c) => c.modulo === m).map((c) => c.clave === 'VsiafSoloAdmin' ? (
+              <label key={c.clave} className="check span2"><input type="checkbox" disabled={!esAdmin} checked={(cambios[c.clave] ?? c.valor ?? 'NO').toUpperCase() === 'SI'} onChange={(e) => setCambios({ ...cambios, [c.clave]: e.target.checked ? 'SI' : 'NO' })} /> <span><b>Reservar al administrador el envío e importación con el VSIAF.</b> Si se marca, el encargado de Activos Fijos ya no ve ni usa «Enviar al VSIAF» ni «Importar desde el VSIAF».</span></label>
+            ) : (
               <TextField key={c.clave} label={c.clave} hint={c.descripcion} disabled={!esAdmin} value={cambios[c.clave] ?? c.valor ?? ''} onChange={(v) => setCambios({ ...cambios, [c.clave]: v })} />
             ))}
           </div>

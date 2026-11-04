@@ -9,14 +9,14 @@ import Catalogos from './pages/Catalogos';
 import Reportes from './pages/Reportes';
 import Admin from './pages/Admin';
 import { AlmCatalogo, AlmExistencias, AlmIngresos, AlmSalidas, AlmInventarios, AlmBajas, AlmTransferencias, AlmReposicion, AlmSeguridad, AlmCierre } from './pages/almacenes';
-import { ComTablero, ComRecepcion, ComEmitir, ComDescargo, ComMovimientos, ComTurriles, ComViajes, ComConciliacion, ComCronograma, ComVales } from './pages/combustible';
-import { AfIngresos, AfCodificar, AfFichas, AfSolicitudes, AfAsignar, AfMovimientos, AfEtiquetas, AfConsulta, AfVsiaf } from './pages/activos';
+import { ComTablero, ComRecepcion, ComEmitir, ComDescargo, ComMovimientos, ComTurriles, ComViajes, ComConciliacion, ComCronograma, ComVales, ComEmitidos } from './pages/combustible';
+import { AfIngresos, AfCodificar, AfFichas, AfSolicitudes, AfAsignar, AfMovimientos, AfEtiquetas, AfConsulta, AfVsiaf, AfImportarExcel, AfDesdeVsiaf } from './pages/activos';
 
 const NAV: { grupo: string; mod?: string; items: [string, string][] }[] = [
   { grupo: 'General', items: [['/', 'Tablero general']] },
   { grupo: 'Almacenes', mod: 'alm', items: [['/almacenes/catalogo', 'Catálogo de ítems'], ['/almacenes/existencias', 'Existencias y kardex'], ['/almacenes/ingresos', 'Ingresos (CGI)'], ['/almacenes/salidas', 'Salidas (vales)'], ['/almacenes/inventarios', 'Inventario físico'], ['/almacenes/bajas', 'Bajas'], ['/almacenes/transferencias', 'Transferencias'], ['/almacenes/reposicion', 'Reposición'], ['/almacenes/seguridad', 'Seguridad e higiene'], ['/almacenes/cierre', 'Cierre de gestión']] },
-  { grupo: 'Combustible', mod: 'com', items: [['/combustible/tablero', 'Tablero de control'], ['/combustible/recepcion', 'Recepción de vales'], ['/combustible/emitir', 'Emitir vales'], ['/combustible/descargo', 'Descargo de vales'], ['/combustible/movimientos', 'Devolución / baja de vales'], ['/combustible/turriles', 'Turriles'], ['/combustible/viajes', 'Viajes y fondos en avance'], ['/combustible/conciliacion', 'Conciliación'], ['/combustible/cronograma', 'Cronograma'], ['/combustible/vales', 'Registro de vales']] },
-  { grupo: 'Activos fijos', mod: 'af', items: [['/activos/ingresos', 'Ingreso a almacén'], ['/activos/codificar', 'Codificación'], ['/activos/fichas', 'Fichas técnicas'], ['/activos/solicitudes', 'Solicitudes'], ['/activos/asignar', 'Asignación y entrega'], ['/activos/movimientos', 'Devolución / transferencia / baja'], ['/activos/etiquetas', 'Etiquetas (stickers)'], ['/activos/consulta', 'Consulta y kardex'], ['/activos/vsiaf', 'Enviar al VSIAF']] },
+  { grupo: 'Combustible', mod: 'com', items: [['/combustible/tablero', 'Tablero de control'], ['/combustible/recepcion', 'Recepción de vales'], ['/combustible/emitir', 'Emitir vales'], ['/combustible/emitidos', 'Vales emitidos'], ['/combustible/descargo', 'Descargo de vales'], ['/combustible/movimientos', 'Devolución / baja de vales'], ['/combustible/turriles', 'Turriles'], ['/combustible/viajes', 'Viajes y fondos en avance'], ['/combustible/conciliacion', 'Conciliación'], ['/combustible/cronograma', 'Cronograma'], ['/combustible/vales', 'Registro de vales']] },
+  { grupo: 'Activos fijos', mod: 'af', items: [['/activos/ingresos', 'Ingreso a almacén'], ['/activos/codificar', 'Codificación'], ['/activos/fichas', 'Fichas técnicas'], ['/activos/solicitudes', 'Solicitudes'], ['/activos/asignar', 'Asignación y entrega'], ['/activos/movimientos', 'Devolución / transferencia / baja'], ['/activos/etiquetas', 'Etiquetas (stickers)'], ['/activos/consulta', 'Consulta y kardex'], ['/activos/importar', 'Importar desde Excel'], ['/activos/vsiaf', 'Enviar al VSIAF'], ['/activos/desde-vsiaf', 'Importar desde el VSIAF']] },
   { grupo: 'Información', items: [['/reportes', 'Reportes y documentos']] },
   { grupo: 'Administración', mod: 'adm', items: [['/catalogos', 'Catálogos y bases de datos'], ['/admin', 'Configuración y usuarios']] },
 ];
@@ -45,7 +45,7 @@ function CambiarClave() {
 }
 
 function Shell() {
-  const { usuario, logout, gestion, puede } = useAuth();
+  const { usuario, logout, gestion, puede, vsiaf } = useAuth();
   const [open, setOpen] = useState(false);
   const [tema, setTema] = useState(() => localStorage.getItem('sigaa.tema') || '');
   const loc = useLocation();
@@ -62,7 +62,7 @@ function Shell() {
         {NAV.map((g) => (
           <div key={g.grupo}>
             <h4 className={g.mod ? 'g-' + g.mod : ''}>{g.grupo}{g.mod && g.mod !== 'adm' && !puede(g.mod as any) ? ' (solo lectura)' : ''}</h4>
-            {g.items.map(([to, label]) => <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => (g.mod ? 'm-' + g.mod + ' ' : '') + (isActive ? 'active' : '')}>{label}</NavLink>)}
+            {g.items.filter(([to]) => vsiaf || !to.includes('vsiaf')).map(([to, label]) => <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => (g.mod ? 'm-' + g.mod + ' ' : '') + (isActive ? 'active' : '')}>{label}</NavLink>)}
           </div>
         ))}
       </aside>
@@ -100,6 +100,7 @@ function Shell() {
             <Route path="/combustible/conciliacion" element={<ComConciliacion />} />
             <Route path="/combustible/cronograma" element={<ComCronograma />} />
             <Route path="/combustible/vales" element={<ComVales />} />
+            <Route path="/combustible/emitidos" element={<ComEmitidos />} />
             <Route path="/activos/ingresos" element={<AfIngresos />} />
             <Route path="/activos/codificar" element={<AfCodificar />} />
             <Route path="/activos/fichas" element={<AfFichas />} />
@@ -109,6 +110,8 @@ function Shell() {
             <Route path="/activos/etiquetas" element={<AfEtiquetas />} />
             <Route path="/activos/consulta" element={<AfConsulta />} />
             <Route path="/activos/vsiaf" element={<AfVsiaf />} />
+            <Route path="/activos/importar" element={<AfImportarExcel />} />
+            <Route path="/activos/desde-vsiaf" element={<AfDesdeVsiaf />} />
             <Route path="/reportes" element={<Reportes />} />
             <Route path="/catalogos" element={<Catalogos />} />
             <Route path="/admin" element={<Admin />} />

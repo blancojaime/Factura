@@ -6,12 +6,19 @@ import { armarLote } from '../vsiaf/adaptador.js';
 import { TIPOS_EQUIV } from '../vsiaf/adaptador.js';
 import { sendFile } from '../app.js';
 import { informeExcel, libroExcel } from '../vsiaf/exportes.js';
-import { BusinessError } from '../core/errors.js';
+import { BusinessError, Forbidden } from '../core/errors.js';
+import { vsiafVisible } from '../vsiaf/acceso.js';
+import { infoDesdeVsiaf, previsualizarDesdeVsiaf, traerDesdeVsiaf } from '../vsiaf/desde-vsiaf.js';
 
 /** Envío de activos al VSIAF (/api/af/vsiaf). Escribir exige el rol de Activos Fijos (o ADMIN). */
 export async function registerVsiaf({ db, app, w }: Ctx) {
   const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
   const P = '/api/af/vsiaf';
+  // Si el administrador activó «solo administradores», nadie más ve ni ejecuta nada de este módulo.
+  app.addHook('preHandler', async (req) => {
+    if (!req.url.startsWith(P)) return;
+    if (!(await vsiafVisible(db, req.usuario))) throw new Forbidden('El envío e importación con el VSIAF está reservado al administrador del sistema.');
+  });
   const W = { preHandler: w('af') };
   const q = (req: any) => req.query as Record<string, string>;
   const body = (req: any) => (req.body ?? {}) as any;
@@ -57,6 +64,11 @@ export async function registerVsiaf({ db, app, w }: Ctx) {
     v.faltantes ??= []; v.omitidos ??= []; v.totalesPorGrupo ??= []; v.calculos ??= {};
     return sendFile(reply, await informeExcel(v, `Informe de importación — lote ${b.lote ?? ''}`, [['Lote', b.lote ?? ''], ['Respaldo', b.respaldo ?? '']]), XLSX, `informe_importacion_${b.lote ?? ''}.xlsx`, false);
   });
+
+  // ── Sentido inverso: del VSIAF a SIGAA ──
+  app.get(`${P}/leer/info`, async (req) => infoDesdeVsiaf(db, q(req).ruta || undefined));
+  app.post(`${P}/leer/previsualizar`, W, async (req) => previsualizarDesdeVsiaf(db, body(req)));
+  app.post(`${P}/leer/traer`, W, async (req) => traerDesdeVsiaf(db, req.usuario, body(req)));
 
   app.get(`${P}/lotes`, async () => listarLotes(db));
   app.get(`${P}/envios/:codigo`, async (req) => enviosDeActivo(db, decodeURIComponent((req.params as any).codigo)));

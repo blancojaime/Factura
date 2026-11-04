@@ -23,14 +23,14 @@ registrarDoc(
       const h = await obtenerIngreso(db, nro);
       const c = await cfgAll(db);
       const pdf = await nuevo(db, 'Control General de Ingresos a Almacén (CGI)', nro, h.estado === 'INGRESADO' ? undefined : `Estado: ${h.estado} — documento no válido hasta confirmar el ingreso`, true);
-      pdf.kv([['Fecha de recepción', fmtDate(h.fecha)], ['Bodega', h.bodega], ['Tipo de ingreso', h.tipo], ['Proveedor', h.proveedor], ['NIT', h.nit], ['Orden de compra / contrato', h.nro_oc], ['Plazo de entrega', fmtDate(h.plazo_entrega)], ['Factura / nota de remisión', h.factura], ['Fecha de factura', fmtDate(h.fecha_factura)], ['Unidad solicitante', h.unidad], ['Nº preventivo', h.preventivo], ['Proyecto / destino', h.proyecto], ['Fuente de financiamiento', h.fuente], ['Partida', h.partida], ['Comisión de recepción', h.comision], ['Observaciones', h.obs_plazo]]);
+      pdf.kv([['Fecha de recepción', fmtDate(h.fecha)], ['Bodega', h.bodega], ['Tipo de ingreso', h.tipo], ['Proveedor', h.proveedor], ['NIT', h.nit], ['Orden de compra / contrato', h.nro_oc], ['Plazo de entrega', fmtDate(h.plazo_entrega)], ['Factura / nota de remisión', h.factura], ['Fecha de factura', fmtDate(h.fecha_factura)], ['Unidad solicitante', h.unidad], ['Nº preventivo', h.preventivo], ['Apertura / destino', h.proyecto], ['Fuente de financiamiento', h.fuente], ['Partida', h.partida], ['Comisión de recepción', h.comision], ['Cargo de la comisión', h.comision_cargo], ['Observaciones', h.obs_plazo]]);
       pdf.espacio(4).tabla(
         [{ header: 'N°', w: 0.5, align: 'center' }, { header: 'Código', w: 1.3 }, { header: 'Descripción', w: 4 }, { header: 'Marca / caract.', w: 1.5 }, { header: 'Unidad', w: 0.9 }, { header: 'Cantidad', w: 0.9, num: 'qty' }, { header: 'P. unit. (Bs)', w: 1, num: 'money' }, { header: 'Total (Bs)', w: 1.1, num: 'money' }, { header: 'Vencim.', w: 1 }, { header: 'Lote', w: 0.9 }],
         h.items.map((x: any) => [x.item, x.cod_item, x.descripcion, x.marca, x.unidad, x.cantidad, x.precio_unit, x.total, fmtDate(x.vencimiento), x.lote]),
         { totales: ['', '', '', '', '', '', 'TOTAL', h.total, '', ''] },
       );
       pdf.parrafo(`Son: ${literal(num(h.total))}`, { bold: true, align: 'left' });
-      pdf.firmas([{ nombre: c.NombreALM, cargo: c.CargoALM, rol: 'ENCARGADO DE ALMACENES' }, { nombre: txt(h.comision).split('/')[0], cargo: 'COMISIÓN DE RECEPCIÓN', rol: 'RECEPCIÓN CONFORME' }, { nombre: c.NombreCON, cargo: c.CargoCON, rol: 'REGISTRO CONTABLE' }]);
+      pdf.firmas([{ nombre: c.NombreALM, cargo: c.CargoALM, rol: 'ENCARGADO DE ALMACENES' }, { nombre: txt(h.comision).split('/')[0], cargo: txt(h.comision_cargo) || 'COMISIÓN DE RECEPCIÓN', rol: 'RECEPCIÓN CONFORME' }, { nombre: c.NombreCON, cargo: c.CargoCON, rol: 'REGISTRO CONTABLE' }]);
       return pdf.buffer();
     },
   },
@@ -53,7 +53,7 @@ registrarDoc(
       const h = await obtenerSalida(db, nro);
       const c = await cfgAll(db);
       const pdf = await nuevo(db, 'Pedido y vale de salida de materiales y suministros', nro, `Estado: ${h.estado}`, true);
-      pdf.kv([['Fecha del pedido', fmtDate(h.fecha_pedido)], ['Bodega', h.bodega], ['Unidad solicitante', h.unidad], ['Solicitante', h.solicitante], ['Cargo', h.cargo], ['Inmediato superior (Vo.Bo.)', h.superior], ['Proyecto / destino', h.proyecto], ['Nota interna', h.nota_interna], ['Justificación', h.justificacion], ['Excepción autorizada por', h.excepcion], ['Fecha de entrega', h.fecha_entrega], ['Observaciones', h.observ]]);
+      pdf.kv([['Fecha del pedido', fmtDate(h.fecha_pedido)], ['Bodega', h.bodega], ['Unidad solicitante', h.unidad], ['Solicitante', h.solicitante], ['Cargo', h.cargo], ['Inmediato superior (Vo.Bo.)', h.superior], ['Apertura / destino', h.proyecto], ['Nota interna', h.nota_interna], ['Justificación', h.justificacion], ['Excepción autorizada por', h.excepcion], ['Fecha de entrega', h.fecha_entrega], ['Observaciones', h.observ]]);
       pdf.espacio(4).tabla(
         [{ header: 'N°', w: 0.5, align: 'center' }, { header: 'Código', w: 1.3 }, { header: 'Descripción', w: 4 }, { header: 'Unidad', w: 1 }, { header: 'Saldo', w: 0.9, num: 'qty' }, { header: 'Pedida', w: 0.9, num: 'qty' }, { header: 'Entregada', w: 0.9, num: 'qty' }, { header: 'P.U. prom. (Bs)', w: 1.1, num: 'money' }, { header: 'Importe (Bs)', w: 1.1, num: 'money' }],
         h.items.map((x: any) => [x.item, x.cod_item, x.descripcion, x.unidad, x.saldo_actual, x.cant_pedida, h.estado === 'ENTREGADO' ? x.cant_entregada : '', h.estado === 'ENTREGADO' ? x.precio_prom : '', h.estado === 'ENTREGADO' ? x.total : '']),

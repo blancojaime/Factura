@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { get, post, put, del } from '../api';
 import { useAuth } from '../auth';
+import ImportarExcel from '../ImportarExcel';
 import { Card, DataTable, Datalist, Field, Modal, PageHead, SelectField, useAction, useLoad, useUi, Badge } from '../ui';
 
 interface MCol { name: string; label: string; type: string; required?: boolean; options?: string[]; ref?: string; readonly?: boolean; width?: number }
@@ -42,6 +43,7 @@ export default function Catalogos() {
   const [key, setKey] = useState('funcionarios');
   const [q, setQ] = useState('');
   const [edit, setEdit] = useState<{ fila: any | null } | null>(null);
+  const [imp, setImp] = useState(false);
   const meta = metas?.find((m) => m.key === key);
   const { data: filas, reload } = useLoad<any[]>(() => get(`/maestros/${key}`, { q }), [key, q]);
   const [run] = useAction();
@@ -56,6 +58,7 @@ export default function Catalogos() {
   return (
     <>
       <PageHead title="Catálogos y bases de datos" sub="Datos maestros compartidos por los tres módulos (equivalentes a las hojas BD_* de los sistemas originales)">
+        {editable && <button onClick={() => setImp(true)}>Importar desde Excel</button>}
         {editable && <button className="primary" onClick={() => setEdit({ fila: null })}>+ Nuevo registro</button>}
       </PageHead>
       <div className="split" style={{ gridTemplateColumns: '260px minmax(0,1fr)' }}>
@@ -82,6 +85,7 @@ export default function Catalogos() {
           <small className="muted">{filas?.length ?? 0} registro(s)</small>
         </Card>
       </div>
+      {imp && <ImportarExcel base={`/maestros/${key}/importar`} titulo={meta.titulo} onClose={() => setImp(false)} onDone={reload} />}
       {edit && <Editor meta={meta} fila={edit.fila} onClose={() => setEdit(null)} onSaved={() => { setEdit(null); reload(); }} />}
       <Datalist id="_none" options={[]} />
     </>

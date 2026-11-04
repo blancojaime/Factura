@@ -1,4 +1,5 @@
 /** Documentos PDF de Combustible: solicitud y vale (Anexos 1 y 2), nota de ingreso, planilla y descargo (Anexo 3), actas, conciliación y viajes (Anexos 4 y 6). */
+import QRCode from 'qrcode';
 import type { Db } from '../core/context.js';
 import { fail, NotFound } from '../core/errors.js';
 import { fmtDate, fmt2, literal, num, txt, round } from '../core/util.js';
@@ -29,6 +30,9 @@ registrarDoc(
       pdf.tabla([{ header: 'Apertura', w: 1.2 }, { header: 'Descripción apertura', w: 3 }, { header: 'Litros', w: 1, num: 'money' }, { header: 'CU (Bs/L)', w: 1, num: 'money' }, { header: 'Costo total Bs', w: 1.2, num: 'money' }], [[e.apertura, e.desc_apertura, e.litros, e.precio_l, e.monto]], { totales: ['', '', '', 'TOTAL', e.monto] });
       pdf.parrafo(`Son: ${literal(num(e.monto))}`, { bold: true, align: 'left' });
       pdf.kv([['Vales entregados', e.detalle_vales], ['Cantidad', `${e.cant_vales} vales`]], 1);
+      const datosQr = [`SOLICITUD: ${nro}`, `FECHA: ${e.fecha}`, `DESTINO: ${e.placa}`, `VALES A ENTREGAR: ${e.cant_vales} (${txt(e.detalle_vales)})`, `MONTO TOTAL Bs: ${fmt2(e.monto)}`, `COMBUSTIBLE: ${e.combustible}`];
+      pdf.qrBloque(await QRCode.toBuffer(datosQr.join('\n'), { margin: 0, width: 360, errorCorrectionLevel: 'M' }), 'Datos de verificación (QR)',
+        [`Nº de solicitud: ${nro}`, `Vales a entregar: ${e.cant_vales}`, `Detalle: ${txt(e.detalle_vales)}`, `Monto total: Bs ${fmt2(e.monto)}`, `Combustible: ${e.combustible} · Placa/código: ${e.placa}`]);
       pdf.parrafo('El conductor se compromete a presentar el descargo (Anexo 3) con la bitácora de recorrido y las facturas dentro del plazo establecido. Prohibido usar los vales en vehículos distintos al consignado (Art. 14).', { size: 8, align: 'left' });
       pdf.firmas([{ nombre: c.NombreRAF, cargo: c.CargoRAF, rol: 'ENTREGA' }, { nombre: e.conductor, cargo: 'CONDUCTOR / OPERADOR', rol: 'RECIBÍ CONFORME' }, { nombre: c.NombreSEC, cargo: c.CargoSEC, rol: 'AUTORIZA' }]);
       return pdf.buffer();

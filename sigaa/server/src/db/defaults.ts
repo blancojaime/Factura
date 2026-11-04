@@ -54,6 +54,7 @@ export const DEFAULT_CONFIG: CfgDef[] = [
   // Activos fijos
   c('af', 'UnidadAF', 'UNIDAD DE ACTIVOS FIJOS', 'Unidad responsable de activos fijos'),
   c('af', 'ValorMinimo', '500', 'Valor mínimo de activo fijo (Bs) — RI-02: bienes menores se alertan en el ingreso'),
+  c('af', 'VsiafSoloAdmin', 'NO', 'SI = el envío e importación con el VSIAF solo lo ven y ejecutan los administradores; NO = también lo usa el encargado de Activos Fijos'),
   c('af', 'SepCodigo', '-', 'Separador del código de activo: 001-03-03007-01 (15 caracteres, límite VSIAF)'),
   // Combustible
   c('com', 'LITROS_DIA_EJECUTIVO', '16', 'Litros por día hábil (lunes a sábado) para uso ejecutivo — DS 27327 Art. 19'),

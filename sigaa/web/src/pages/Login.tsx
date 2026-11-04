@@ -10,6 +10,7 @@ export default function Login() {
   return (
     <div className="login">
       <form className="box" onSubmit={(e) => { e.preventDefault(); run(() => login(u, c)); }}>
+        <img className="logo-jb" src="/logo-jb.jpg" alt="JB · Jaime Blanco, Consultor Administrativo Financiero" />
         <h1>SIGAA</h1>
         <p>Sistema Integrado de Gestión de Almacenes, Combustible y Activos Fijos</p>
         <div className="grid" style={{ gridTemplateColumns: '1fr' }}>

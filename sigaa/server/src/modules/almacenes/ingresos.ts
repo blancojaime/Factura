@@ -30,6 +30,7 @@ export interface IngresoInput {
   fuente?: string;
   partida?: string;
   comision?: string;
+  comision_cargo?: string;
   obs_plazo?: string;
   items: IngresoItem[];
   docs?: { documento: string; estado?: string }[];
@@ -122,6 +123,7 @@ export async function guardarIngreso(db: Db, u: Usuario, d: IngresoInput) {
       fuente: txt(d.fuente),
       partida: txt(d.partida),
       comision: txt(d.comision),
+      comision_cargo: txt(d.comision_cargo),
       obs_plazo: txt(d.obs_plazo),
       total,
     };
