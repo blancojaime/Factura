@@ -10,6 +10,11 @@ GAM_DATA_DIR=./data uvicorn app.main:app --port 8000      # luego abrir http://1
 ```
 La primera vez crea el administrador desde el navegador. Para ver el sistema funcionando con datos: `python datos_prueba/cargar_dataset.py --clave '<su clave>'` (ver `docs/GUIA_PRUEBAS.md`).
 
+## Instalador para Windows y manual
+* `desktop/GAMPersonal_Setup.exe` — instalador sencillo (31 MB, incluye Python y librerías, sin permisos de administrador). Se reconstruye con `python desktop/build_installer.py` (requiere NSIS).
+* `docs/Manual_GAM_Personal.docx` / `.pdf` — manual de implementación, instalación y pruebas (se regenera con `python docs/generar_manual.py`).
+* ⚠️ El instalador se construyó en Linux y **aún no se ejecutó en Windows**: pruébelo en una PC piloto (manual §7.6).
+
 ## Contenido
 | Carpeta | Qué hay |
 |---|---|

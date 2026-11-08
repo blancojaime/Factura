@@ -9,3 +9,4 @@ dist/
 build/
 datos_prueba/reportes_prueba/
 .pytest_cache/
+desktop/build_setup/
