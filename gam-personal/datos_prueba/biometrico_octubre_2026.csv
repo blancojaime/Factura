@@ -1,0 +1,409 @@
+ID Empleado;Nombre Completo;Fecha;Hora;Tipo de Marcación;Método Verificación;Dispositivo
+1001;Mamani Quispe Juan Carlos;01/10/2026;07:57:20;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;01/10/2026;12:11:53;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;01/10/2026;14:32:57;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;01/10/2026;18:33:38;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;02/10/2026;07:51:57;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;02/10/2026;12:05:29;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;02/10/2026;14:32:13;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;02/10/2026;18:40:12;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;05/10/2026;08:00:01;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;05/10/2026;12:07:51;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;05/10/2026;14:27:47;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;05/10/2026;18:38:30;Salida;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;06/10/2026;08:12:32;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;06/10/2026;12:03:44;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;06/10/2026;14:28:52;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;06/10/2026;18:34:46;Salida;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;07/10/2026;07:53:06;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;07/10/2026;12:15:24;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;07/10/2026;14:25:27;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;07/10/2026;18:35:40;Salida;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;08/10/2026;07:50:57;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;08/10/2026;12:07:28;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;08/10/2026;14:34:08;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;08/10/2026;18:45:46;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;09/10/2026;07:56:12;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;09/10/2026;12:06:03;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;09/10/2026;14:30:48;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;09/10/2026;18:36:28;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;12/10/2026;07:54:59;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;12/10/2026;12:14:52;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;12/10/2026;14:34:31;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;12/10/2026;18:46:23;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;13/10/2026;08:01:28;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;13/10/2026;12:01:29;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;13/10/2026;14:27:14;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;13/10/2026;18:47:03;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;14/10/2026;08:00:14;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;14/10/2026;14:28:53;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;14/10/2026;18:35:11;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;15/10/2026;07:55:12;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;15/10/2026;12:11:54;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;15/10/2026;14:31:38;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;15/10/2026;18:50:34;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;16/10/2026;07:53:55;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;16/10/2026;12:14:30;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;16/10/2026;14:25:48;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;16/10/2026;18:35:42;Salida;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;19/10/2026;07:58:50;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;19/10/2026;12:01:40;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;19/10/2026;14:27:14;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;19/10/2026;18:30:56;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;20/10/2026;07:58:55;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;20/10/2026;12:02:44;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;20/10/2026;14:48:30;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;20/10/2026;18:36:09;Salida;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;21/10/2026;08:04:18;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;21/10/2026;12:09:34;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;21/10/2026;14:32:12;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;21/10/2026;18:41:40;Salida;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;22/10/2026;07:56:51;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;22/10/2026;12:14:48;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;22/10/2026;14:23:40;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;22/10/2026;18:43:37;Salida;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;23/10/2026;07:54:55;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;23/10/2026;12:04:22;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;23/10/2026;14:28:37;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;23/10/2026;18:35:49;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;26/10/2026;07:55:23;Entrada;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;26/10/2026;12:08:28;Salida Mañana;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;26/10/2026;14:26:10;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;26/10/2026;18:32:38;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;27/10/2026;08:00:40;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;27/10/2026;12:08:27;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;27/10/2026;14:20:59;Entrada Tarde;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;27/10/2026;18:46:19;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;28/10/2026;07:56:08;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;28/10/2026;12:04:17;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;28/10/2026;14:29:43;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;28/10/2026;18:44:10;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;29/10/2026;07:54:07;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;29/10/2026;12:00:11;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;29/10/2026;14:21:28;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;29/10/2026;18:43:38;Salida;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;30/10/2026;07:51:44;Entrada;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;30/10/2026;12:11:43;Salida Mañana;Rostro;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;30/10/2026;14:23:31;Entrada Tarde;Huella Digital;Reloj Recepción
+1001;Mamani Quispe Juan Carlos;30/10/2026;18:31:09;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;01/10/2026;08:04:25;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;01/10/2026;12:06:53;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;01/10/2026;14:29:22;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;01/10/2026;18:45:28;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;02/10/2026;08:25:47;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;02/10/2026;12:04:25;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;02/10/2026;14:27:48;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;02/10/2026;18:33:07;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;05/10/2026;07:58:43;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;05/10/2026;12:09:06;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;05/10/2026;14:35:06;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;05/10/2026;18:30:38;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;06/10/2026;07:52:37;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;06/10/2026;12:10:19;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;06/10/2026;14:24:29;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;06/10/2026;18:33:04;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;07/10/2026;08:45:51;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;07/10/2026;12:01:05;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;07/10/2026;14:30:22;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;07/10/2026;18:40:25;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;08/10/2026;07:54:17;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;08/10/2026;12:04:03;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;08/10/2026;14:32:23;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;08/10/2026;18:37:46;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;09/10/2026;08:01:32;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;09/10/2026;12:06:23;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;09/10/2026;14:31:43;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;09/10/2026;18:48:38;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;12/10/2026;07:59:16;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;12/10/2026;12:09:30;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;12/10/2026;14:31:56;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;12/10/2026;18:41:27;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;13/10/2026;08:04:41;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;13/10/2026;12:05:04;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;13/10/2026;14:28:11;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;13/10/2026;18:44:07;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;14/10/2026;07:57:18;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;14/10/2026;12:00:31;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;14/10/2026;14:28:14;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;14/10/2026;18:31:34;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;16/10/2026;08:02:02;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;16/10/2026;12:01:53;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;16/10/2026;14:23:06;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;16/10/2026;18:44:15;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;19/10/2026;07:50:20;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;19/10/2026;12:04:14;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;19/10/2026;14:34:19;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;19/10/2026;18:43:33;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;20/10/2026;07:57:27;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;20/10/2026;12:15:21;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;20/10/2026;14:35:46;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;20/10/2026;18:32:08;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;21/10/2026;08:00:49;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;21/10/2026;12:01:37;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;21/10/2026;14:25:43;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;21/10/2026;18:43:33;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;22/10/2026;08:00:09;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;22/10/2026;12:12:45;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;22/10/2026;14:27:01;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;22/10/2026;18:34:36;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;23/10/2026;08:00:54;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;23/10/2026;12:13:18;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;23/10/2026;14:33:01;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;23/10/2026;18:39:45;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;26/10/2026;08:01:37;Entrada;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;26/10/2026;12:06:38;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;26/10/2026;14:22:10;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;26/10/2026;18:45:49;Salida;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;27/10/2026;08:00:23;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;27/10/2026;12:03:21;Salida Mañana;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;27/10/2026;14:33:44;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;27/10/2026;18:48:18;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;28/10/2026;07:53:16;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;28/10/2026;12:03:48;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;28/10/2026;14:21:52;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;28/10/2026;18:32:53;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;29/10/2026;08:01:12;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;29/10/2026;12:08:39;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;29/10/2026;14:26:46;Entrada Tarde;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;29/10/2026;18:48:31;Salida;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;30/10/2026;08:00:54;Entrada;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;30/10/2026;12:09:50;Salida Mañana;Huella Digital;Reloj Recepción
+1002;Vargas Rojas María Elena;30/10/2026;14:26:51;Entrada Tarde;Rostro;Reloj Recepción
+1002;Vargas Rojas María Elena;30/10/2026;18:33:52;Salida;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;01/10/2026;08:03:26;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;01/10/2026;12:10:05;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;01/10/2026;14:31:37;Entrada Tarde;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;01/10/2026;18:37:48;Salida;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;02/10/2026;07:58:59;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;02/10/2026;12:06:31;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;02/10/2026;14:28:43;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;02/10/2026;18:48:26;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;05/10/2026;07:53:30;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;05/10/2026;12:14:13;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;05/10/2026;14:24:22;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;05/10/2026;18:50:02;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;06/10/2026;07:53:01;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;06/10/2026;12:01:56;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;06/10/2026;14:20:40;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;06/10/2026;18:37:52;Salida;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;07/10/2026;08:00:38;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;07/10/2026;12:13:02;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;07/10/2026;14:35:16;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;07/10/2026;18:40:03;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;08/10/2026;07:52:21;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;08/10/2026;12:02:13;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;08/10/2026;14:26:31;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;08/10/2026;18:41:47;Salida;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;09/10/2026;08:03:14;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;09/10/2026;12:13:33;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;09/10/2026;14:33:28;Entrada Tarde;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;09/10/2026;18:33:39;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;14/10/2026;08:01:07;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;14/10/2026;12:06:23;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;14/10/2026;14:22:23;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;14/10/2026;18:48:43;Salida;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;15/10/2026;07:59:28;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;15/10/2026;12:05:06;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;15/10/2026;14:30:28;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;15/10/2026;18:33:09;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;16/10/2026;08:02:06;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;16/10/2026;12:03:10;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;16/10/2026;14:35:30;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;16/10/2026;18:50:31;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;19/10/2026;08:02:58;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;19/10/2026;12:14:31;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;19/10/2026;14:29:00;Entrada Tarde;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;19/10/2026;18:35:48;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;20/10/2026;07:51:23;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;20/10/2026;12:14:06;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;20/10/2026;14:23:50;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;20/10/2026;18:40:40;Salida;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;21/10/2026;10:05:45;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;21/10/2026;12:03:04;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;21/10/2026;14:25:30;Entrada Tarde;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;21/10/2026;18:35:35;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;22/10/2026;08:00:51;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;22/10/2026;12:15:07;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;22/10/2026;14:29:58;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;22/10/2026;18:45:58;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;23/10/2026;07:55:00;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;23/10/2026;12:08:58;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;23/10/2026;14:31:25;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;23/10/2026;18:36:59;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;26/10/2026;07:55:24;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;26/10/2026;12:00:54;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;26/10/2026;14:22:18;Entrada Tarde;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;26/10/2026;18:37:42;Salida;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;27/10/2026;07:53:23;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;27/10/2026;12:13:51;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;27/10/2026;14:34:18;Entrada Tarde;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;27/10/2026;18:42:43;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;28/10/2026;07:55:49;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;28/10/2026;12:06:45;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;29/10/2026;07:50:15;Entrada;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;29/10/2026;12:01:11;Salida Mañana;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;29/10/2026;14:28:59;Entrada Tarde;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;29/10/2026;18:50:07;Salida;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;30/10/2026;08:05:36;Entrada;Rostro;Reloj Recepción
+2001;Choque Condori Luis Alberto;30/10/2026;12:03:03;Salida Mañana;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;30/10/2026;14:22:59;Entrada Tarde;Huella Digital;Reloj Recepción
+2001;Choque Condori Luis Alberto;30/10/2026;18:45:09;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;01/10/2026;07:51:49;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;01/10/2026;12:13:26;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;01/10/2026;14:30:03;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;01/10/2026;18:43:31;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;02/10/2026;08:05:01;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;02/10/2026;12:00:44;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;02/10/2026;14:21:42;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;02/10/2026;18:44:28;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;05/10/2026;07:51:39;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;05/10/2026;12:09:33;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;05/10/2026;14:24:40;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;05/10/2026;18:45:22;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;06/10/2026;08:02:07;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;06/10/2026;12:12:28;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;06/10/2026;14:21:07;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;06/10/2026;18:44:59;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;07/10/2026;07:51:46;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;07/10/2026;12:10:51;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;07/10/2026;14:27:27;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;07/10/2026;18:38:37;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;08/10/2026;08:01:48;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;08/10/2026;12:15:17;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;08/10/2026;14:20:19;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;08/10/2026;18:47:20;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;12/10/2026;07:57:31;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;12/10/2026;12:09:37;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;12/10/2026;14:22:16;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;12/10/2026;18:31:46;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;13/10/2026;08:01:00;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;13/10/2026;12:09:23;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;13/10/2026;14:24:38;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;13/10/2026;18:43:22;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;14/10/2026;07:57:03;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;14/10/2026;12:02:44;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;14/10/2026;14:52:30;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;14/10/2026;18:37:44;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;15/10/2026;07:59:09;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;15/10/2026;12:00:01;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;15/10/2026;14:22:49;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;15/10/2026;18:42:10;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;16/10/2026;07:55:38;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;16/10/2026;12:06:32;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;16/10/2026;14:29:52;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;16/10/2026;18:49:56;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;19/10/2026;07:56:21;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;19/10/2026;12:12:36;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;19/10/2026;14:23:09;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;19/10/2026;18:42:56;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;20/10/2026;07:58:30;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;20/10/2026;12:04:46;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;20/10/2026;14:26:19;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;20/10/2026;18:49:26;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;21/10/2026;07:53:19;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;21/10/2026;12:14:15;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;21/10/2026;14:29:55;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;21/10/2026;18:50:55;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;22/10/2026;07:59:36;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;22/10/2026;12:05:26;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;22/10/2026;18:35:37;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;23/10/2026;07:51:19;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;23/10/2026;12:12:04;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;23/10/2026;14:26:32;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;23/10/2026;18:45:26;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;26/10/2026;08:03:53;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;26/10/2026;12:06:07;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;26/10/2026;14:21:58;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;26/10/2026;18:37:04;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;27/10/2026;08:04:56;Entrada;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;27/10/2026;12:13:57;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;27/10/2026;14:27:46;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;27/10/2026;18:31:49;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;28/10/2026;07:52:58;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;28/10/2026;12:11:41;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;28/10/2026;14:35:31;Entrada Tarde;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;28/10/2026;18:49:42;Salida;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;29/10/2026;08:03:27;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;29/10/2026;12:07:51;Salida Mañana;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;29/10/2026;14:34:10;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;29/10/2026;18:40:14;Salida;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;30/10/2026;07:57:45;Entrada;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;30/10/2026;12:15:58;Salida Mañana;Huella Digital;Reloj Recepción
+2002;Flores Apaza Carla Andrea;30/10/2026;14:35:23;Entrada Tarde;Rostro;Reloj Recepción
+2002;Flores Apaza Carla Andrea;30/10/2026;18:34:30;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;01/10/2026;07:57:55;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;01/10/2026;12:14:41;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;01/10/2026;14:23:33;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;01/10/2026;18:34:26;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;02/10/2026;08:04:34;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;02/10/2026;12:15:50;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;02/10/2026;14:20:00;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;02/10/2026;18:37:56;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;05/10/2026;07:57:56;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;05/10/2026;12:13:53;Salida Mañana;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;05/10/2026;14:31:43;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;05/10/2026;18:41:27;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;06/10/2026;07:55:03;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;06/10/2026;12:10:27;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;06/10/2026;14:29:23;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;06/10/2026;18:35:48;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;07/10/2026;07:56:53;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;07/10/2026;12:05:46;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;07/10/2026;14:33:17;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;07/10/2026;18:31:06;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;09/10/2026;08:00:47;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;09/10/2026;12:05:08;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;09/10/2026;14:34:44;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;09/10/2026;18:48:20;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;12/10/2026;07:54:25;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;12/10/2026;12:11:13;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;12/10/2026;14:25:19;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;12/10/2026;18:48:17;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;13/10/2026;08:50:01;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;13/10/2026;12:02:57;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;13/10/2026;14:29:55;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;13/10/2026;18:38:29;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;14/10/2026;07:55:26;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;14/10/2026;12:07:21;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;14/10/2026;14:34:26;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;14/10/2026;18:49:31;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;15/10/2026;07:56:45;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;15/10/2026;12:07:02;Salida Mañana;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;15/10/2026;14:20:37;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;15/10/2026;18:43:00;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;16/10/2026;07:50:34;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;16/10/2026;12:01:41;Salida Mañana;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;16/10/2026;14:24:01;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;16/10/2026;18:31:56;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;20/10/2026;07:57:00;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;20/10/2026;12:06:18;Salida Mañana;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;20/10/2026;14:20:08;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;20/10/2026;18:46:46;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;21/10/2026;08:00:02;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;21/10/2026;12:14:42;Salida Mañana;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;21/10/2026;14:30:15;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;21/10/2026;18:43:03;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;22/10/2026;08:04:21;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;22/10/2026;12:11:00;Salida Mañana;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;22/10/2026;14:35:01;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;22/10/2026;18:42:10;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;23/10/2026;07:53:40;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;23/10/2026;12:04:36;Salida Mañana;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;23/10/2026;14:26:30;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;23/10/2026;18:31:54;Salida;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;26/10/2026;07:52:52;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;26/10/2026;12:00:18;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;26/10/2026;14:20:30;Entrada Tarde;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;26/10/2026;18:36:00;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;28/10/2026;07:57:17;Entrada;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;28/10/2026;12:14:44;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;28/10/2026;14:29:47;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;28/10/2026;18:39:16;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;29/10/2026;08:02:29;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;29/10/2026;12:06:08;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;29/10/2026;14:25:43;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;29/10/2026;18:30:58;Salida;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;30/10/2026;08:02:33;Entrada;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;30/10/2026;12:11:12;Salida Mañana;Huella Digital;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;30/10/2026;14:24:58;Entrada Tarde;Rostro;Reloj Recepción
+3001;Salazar Copa Miguel Ángel;30/10/2026;18:31:19;Salida;Huella Digital;Reloj Recepción

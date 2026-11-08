@@ -1,0 +1,6 @@
+codigo;ci;complemento;nombres;apellidos;cargo;unidad;modalidad;partida;haber_basico;bono_antiguedad;fecha_ingreso;fecha_fin;estado;nro_cua;nro_documento
+1001;1000001;;Juan Carlos;Mamani Quispe;Técnico de Catastro;Dirección de Obras Públicas;Permanente;11000;6000;0;01/03/2022;;Activo;;MEM-014/2022
+1002;1000002;;María Elena;Vargas Rojas;Auxiliar Contable;Dirección Administrativa Financiera;Permanente;11000;4500;0;15/01/2021;;Activo;;MEM-003/2021
+2001;1000003;;Luis Alberto;Choque Condori;Inspector Municipal;Intendencia Municipal;Eventual;12100;3800;0;01/02/2026;31/12/2026;Activo;;CONT-021/2026
+2002;1000004;;Carla Andrea;Flores Apaza;Profesional Jurídico;Dirección Jurídica;Eventual;12100;3500;0;01/10/2026;31/12/2026;Activo;;CONT-077/2026
+3001;1000005;;Miguel Ángel;Salazar Copa;Consultor Individual de Línea - Supervisión;Dirección de Obras Públicas;Consultor en Línea;25200;7000;0;01/07/2026;30/10/2026;Activo;;CIL-009/2026

@@ -1,0 +1,7 @@
+codigo_empleado;tipo;desde;hasta;hora_desde;hora_hasta;motivo;doc_respaldo;autorizado_por;estado
+2001;LIC_MEDICA;2026-10-12;2026-10-13;;;Incapacidad temporal;Cert. CNS N° 44589;Jefe inmediato;APROBADO
+2001;PARTICULAR_CGH;2026-10-21;2026-10-21;08:00;10:00;Trámite personal;Boleta firmada;Jefe inmediato;APROBADO
+2002;PARTICULAR_SGH;2026-10-09;2026-10-09;;;Asunto familiar;Solicitud escrita;Jefe inmediato;APROBADO
+3001;PARTICULAR_CGH;2026-10-08;2026-10-08;;;Trámite personal;Solicitud escrita;Ing. Fiscal de Obra;APROBADO
+3001;LIC_MEDICA;2026-10-19;2026-10-19;;;Consulta médica;Certificado médico;Ing. Fiscal de Obra;APROBADO
+3001;PARTICULAR_CGH;2026-10-27;2026-10-27;;;Trámite personal;Solicitud escrita;;PENDIENTE
