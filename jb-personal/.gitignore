@@ -14,3 +14,4 @@ desktop/build_setup/
 *.pem
 *.bak
 data/
+!descargas/JBPersonal_Setup.exe
