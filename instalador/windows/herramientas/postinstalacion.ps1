@@ -181,7 +181,7 @@ LICENCIA_DIAS_PRUEBA=30
     $svc = Get-Service -Name $SvcApp -ErrorAction SilentlyContinue
     if ($svc -and $svc.Status -ne 'Stopped') { Stop-Service -Name $SvcApp -Force; $svc.WaitForStatus('Stopped', '00:00:30') }
     Copy-Item -Force -ErrorAction Stop (Join-Path $InstallDir 'herramientas\winsw.exe') $exe
-    $plantilla = Get-Content -Raw (Join-Path $InstallDir 'herramientas\plantillas\servicio.xml.tpl')
+    $plantilla = Get-Content -Raw -Encoding UTF8 (Join-Path $InstallDir 'herramientas\plantillas\servicio.xml.tpl')
     $plantilla = $plantilla.Replace('@INSTALL@', $InstallDir).Replace('@DATA@', $DataDir).Replace('@CONFIG@', $ConfigDir)
     Escribir-Archivo $xml $plantilla
     if (-not $svc) {
@@ -192,7 +192,7 @@ LICENCIA_DIAS_PRUEBA=30
         Invocar-Nativo 'sc.exe' @('config', $SvcApp, 'obj=', 'NT AUTHORITY\NetworkService') | Out-Null
         Invocar-Nativo 'sc.exe' @('failure', $SvcApp, 'reset=', '86400', 'actions=', 'restart/5000/restart/10000/restart/30000') | Out-Null
     }
-    Restringir $dirServicio 'R'
+    Restringir $dirServicio 'RX'
     try { Start-Service -Name $SvcApp -ErrorAction Stop }
     catch {
         Log ("No inició el servicio de la aplicación: " + $_.Exception.Message)
