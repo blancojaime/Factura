@@ -51,6 +51,7 @@ Name: "{group}\Estado del sistema"; Filename: "{sys}\WindowsPowerShell\v1.0\powe
 Name: "{group}\Respaldar ahora"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\herramientas\respaldar.ps1"""
 Name: "{group}\Restaurar un respaldo"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\herramientas\restaurar.ps1"""
 Name: "{group}\Cambiar la dirección o el puerto de red"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\herramientas\configurar-red.ps1"""
+Name: "{group}\Restablecer la contraseña de un usuario"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\herramientas\restablecer-clave.ps1"""
 Name: "{group}\Reiniciar el servicio"; Filename: "{sys}\WindowsPowerShell\v1.0\powershell.exe"; Parameters: "-NoProfile -ExecutionPolicy Bypass -File ""{app}\herramientas\servicios.ps1"" -Accion reiniciar"
 Name: "{group}\Manual de instalación y uso"; Filename: "{app}\docs"
 Name: "{group}\Desinstalar SICOM-MUNI"; Filename: "{uninstallexe}"
