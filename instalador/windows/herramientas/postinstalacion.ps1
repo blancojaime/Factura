@@ -82,7 +82,18 @@ log_min_duration_statement = 2000
         if ($x.Codigo -ne 0) { throw "No se pudo registrar el servicio de PostgreSQL (código $($x.Codigo))" }
         Invocar-Nativo 'sc.exe' @('description', $SvcBd, 'Base de datos PostgreSQL de SICOM-MUNI') | Out-Null
     }
-    if ((Get-Service -Name $SvcBd).Status -ne 'Running') { Start-Service -Name $SvcBd }
+    if ((Get-Service -Name $SvcBd).Status -ne 'Running') {
+        try { Start-Service -Name $SvcBd -ErrorAction Stop }
+        catch {
+            Log ("No inició el servicio de la base de datos: " + $_.Exception.Message)
+            foreach ($f in Get-ChildItem (Join-Path $pgdata 'log') -ErrorAction SilentlyContinue) { Log ("--- pgdata\log\" + $f.Name + " ---"); Log ((Get-Content $f.FullName -Tail 40 -ErrorAction SilentlyContinue) -join "`n") }
+            try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'System'; ProviderName = 'Service Control Manager' } -MaxEvents 6 | ForEach-Object { $_.Message }) -join "`n") } catch { }
+            Log ((Invocar-Nativo 'icacls.exe' @($pgdata)).Salida)
+            Log ((Invocar-Nativo 'sc.exe' @('qc', $SvcBd)).Salida)
+            Log ((Invocar-Nativo 'icacls.exe' @($bin)).Salida)
+            throw
+        }
+    }
     $listo = $false
     for ($i = 0; $i -lt 60; $i++) {
         $x = Invocar-Nativo (Join-Path $bin 'pg_isready.exe') @('-h', '127.0.0.1', '-p', "$($script:PgPuerto)")
