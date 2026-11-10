@@ -90,7 +90,10 @@ log_min_duration_statement = 2000
             try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'System'; ProviderName = 'Service Control Manager' } -MaxEvents 6 | ForEach-Object { $_.Message }) -join "`n") } catch { }
             Log ((Invocar-Nativo 'icacls.exe' @($pgdata)).Salida)
             Log ((Invocar-Nativo 'sc.exe' @('qc', $SvcBd)).Salida)
-            Log ((Invocar-Nativo 'icacls.exe' @($bin)).Salida)
+            try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'Application' } -MaxEvents 15 | Where-Object { $_.ProviderName -match 'Postgre|pg_ctl|Application Error' } | ForEach-Object { $_.ProviderName + ': ' + $_.Message }) -join "`n") } catch { }
+            Log ('postgres -C: ' + (Invocar-Nativo (Join-Path $bin 'postgres.exe') @('-D', $pgdata, '-C', 'data_directory')).Salida)
+            Log ('pg_ctl start (administrador): ' + (Invocar-Nativo (Join-Path $bin 'pg_ctl.exe') @('start', '-D', $pgdata, '-w', '-t', '20', '-l', (Join-Path $env:TEMP 'pgprueba.log'))).Salida)
+            if (Test-Path (Join-Path $env:TEMP 'pgprueba.log')) { Log (Get-Content (Join-Path $env:TEMP 'pgprueba.log') -Raw) }
             throw
         }
     }
