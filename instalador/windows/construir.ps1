@@ -1,4 +1,4 @@
-# Prepara el contenido del instalador de Windows en _stage (se ejecuta en GitHub Actions, en Windows).
+﻿# Prepara el contenido del instalador de Windows en _stage (se ejecuta en GitHub Actions, en Windows).
 # Requisitos previos: frontend exportado en sicom-muni/frontend/out, DLL de GTK en _gtk, Python 3.12 en el PATH.
 param(
     [string]$Version = '2.0.0',
@@ -83,6 +83,7 @@ $fuentes = (Get-Content -Raw (Join-Path $aqui 'plantillas\fonts.conf.tpl')).Repl
 Set-Content -Path (Join-Path $tmp 'fonts.conf') -Value $fuentes -Encoding UTF8
 $env:SICOM_GTK_DIR = Join-Path $stage 'gtk\bin'
 $env:FONTCONFIG_FILE = Join-Path $tmp 'fonts.conf'
+$env:WEASYPRINT_DLL_DIRECTORIES = $env:SICOM_GTK_DIR
 $env:PATH = "$($env:SICOM_GTK_DIR);$env:PATH"
 $env:PYTHONUTF8 = '1'
 $env:DATABASE_URL = 'sqlite:///' + ((Join-Path $tmp 'prueba.db') -replace '\\', '/')
