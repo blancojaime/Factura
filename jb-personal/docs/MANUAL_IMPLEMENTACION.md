@@ -11,7 +11,7 @@
 
 ## 2. Windows: instalador como servicio (independiente de la sesión)
 1. Ejecute `JBPersonal_Setup.exe` como administrador (SmartScreen: *Más información → Ejecutar de todas formas*; no está firmado).
-2. Componentes: **JB-Personal (servicio)** obligatorio; marque *Permitir el acceso desde otras PC de la red local* solo si hace falta (abre el puerto 8765 para redes de dominio/privadas).
+2. **Siguiente → Instalar → Finalizar** (sin más preguntas). Acceso desde otras PC (opcional): menú Inicio → JB-Personal → *Habilitar acceso desde la red* (abre el puerto 8765 para redes de dominio/privadas); *Solo esta PC* lo revierte.
 3. Se registra la tarea programada **JB-Personal** (al arrancar, cuenta SYSTEM, reinicio automático cada minuto). **Funciona sin que haya sesión de usuario abierta.**
 4. Se abre `http://127.0.0.1:8765/`; cree el administrador y active la licencia.
 

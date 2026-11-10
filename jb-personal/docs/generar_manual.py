@@ -260,8 +260,7 @@ P("El archivo **JBPersonal_Setup.exe** instala JB-Personal como un **servicio de
   "o se cierre la sesión; si el proceso falla, Windows lo reinicia al minuto.")
 N(["Copie **JBPersonal_Setup.exe** al equipo (USB, correo o carpeta compartida) y haga doble clic. Acepte el aviso de permisos de administrador.",
    "Si Windows muestra «Windows protegió su PC» (el instalador no está firmado digitalmente), pulse **Más información → Ejecutar de todas formas**.",
-   "Pulse **Siguiente**. En «Componentes» deje marcado **JB-Personal (servicio)**. Marque **Permitir el acceso desde otras PC de la red local** *solo* si otras computadoras usarán el sistema desde su navegador (abre el puerto 8765 en el Firewall para redes de dominio y privadas).",
-   "Elija la carpeta (por defecto `C:\\Program Files\\JB-Personal`) y pulse **Instalar**. El asistente copia los archivos, registra la tarea de arranque, la inicia y verifica que responda.",
+   "Pulse **Siguiente** y luego **Instalar**: no hay más preguntas. El asistente copia los archivos en `C:\\Program Files\\JB-Personal`, registra la tarea de arranque, la inicia y verifica que responda.",
    "Deje marcada **Abrir JB-Personal en el navegador** y pulse **Finalizar**: se abre `http://127.0.0.1:8765/`.",
    "En el primer ingreso cree la cuenta de administrador (capítulo 5) y, en el menú **Licencia**, active el sistema (capítulo 4)."])
 T(["Elemento", "Ubicación / detalle"], [
@@ -269,12 +268,13 @@ T(["Elemento", "Ubicación / detalle"], [
     ["Servicio", "Tarea programada **JB-Personal** (al arrancar, cuenta SYSTEM, reinicio automático cada minuto si falla, sin límite de tiempo)"],
     ["Datos, respaldos y registro", "`C:\\ProgramData\\JB-Personal` (base de datos `gam_personal.db`, carpeta `backups`, `logs\\servicio.log`, `config.ini`). **No se borran al desinstalar**"],
     ["Dirección de uso", "`http://127.0.0.1:8765/` (desde otras PC, si se habilitó la red: `http://IP-DEL-EQUIPO:8765/`)"],
-    ["Accesos directos", "Escritorio y menú Inicio → JB-Personal: *JB-Personal* (abre el navegador), *Administrar el servicio*, *Manuales*, *Desinstalar*"],
+    ["Accesos directos", "Escritorio y menú Inicio → JB-Personal: *JB-Personal* (abre el navegador), *Administrar el servicio*, *Habilitar acceso desde la red*, *Solo esta PC*, *Manuales*, *Desinstalar*"],
 ], [4.2, 12.3])
 H("Administrar el servicio", 3)
 P("Menú Inicio → JB-Personal → **Administrar el servicio** (pide permisos de administrador): iniciar, detener, reiniciar, abrir el navegador, ver el registro y abrir la carpeta de datos. "
   "Equivalentes en una consola de administrador: `schtasks /Run /TN \"JB-Personal\"` (iniciar) · `schtasks /End /TN \"JB-Personal\"` (detener) · `schtasks /Query /TN \"JB-Personal\"` (estado).")
-P("Para cambiar el puerto o abrir/cerrar el acceso de red edite `C:\\ProgramData\\JB-Personal\\config.ini` (`host = 127.0.0.1` solo esta PC · `host = 0.0.0.0` toda la red; `port = 8765`), reinicie el servicio y, si cambió el puerto, actualice las reglas del Firewall y el acceso directo.")
+P("**Acceso desde otras PC de la red (opcional):** por defecto el sistema solo responde en la propia PC. Para habilitarlo use el acceso directo **Habilitar acceso desde la red** (menú Inicio → JB-Personal; abre el puerto 8765 en el Firewall para redes de dominio y privadas) y para revertirlo **Solo esta PC**. Luego, desde las otras PC: `http://IP-DE-ESTA-PC:8765/`.")
+P("Para cambiar el puerto o abrir/cerrar el acceso de red a mano edite `C:\\ProgramData\\JB-Personal\\config.ini` (`host = 127.0.0.1` solo esta PC · `host = 0.0.0.0` toda la red; `port = 8765`), reinicie el servicio y, si cambió el puerto, actualice las reglas del Firewall y el acceso directo.")
 H("Actualizar y desinstalar", 3)
 P("**Actualizar:** ejecute el instalador nuevo sobre el anterior: detiene el servicio, reemplaza el programa y lo vuelve a iniciar; los datos y la licencia se conservan. Haga un respaldo antes. "
   "**Desinstalar:** menú Inicio → JB-Personal → Desinstalar (o Configuración → Aplicaciones). Se elimina el programa, el servicio y la regla de firewall; los datos permanecen en `C:\\ProgramData\\JB-Personal`.")
@@ -536,7 +536,7 @@ H("11. Solución de problemas")
 T(["Síntoma", "Causa probable y solución"], [
     ["El navegador no abre `http://127.0.0.1:8765/`", "Inicie el servicio: menú Inicio → JB-Personal → Administrar el servicio → 1. Revise `C:\\ProgramData\\JB-Personal\\logs\\servicio.log`. Si el puerto 8765 está ocupado, cambie `port` en `config.ini`"],
     ["El instalador dice que el servicio no respondió a tiempo", "Revise el registro; suele ser un antivirus bloqueando `pythonw.exe` o el puerto en uso. Agregue una excepción para `C:\\Program Files\\JB-Personal`"],
-    ["Otras PC no acceden", "Reinstale marcando «Permitir el acceso desde otras PC», o ponga `host = 0.0.0.0` en `config.ini`, reinicie el servicio y cree la regla de firewall del puerto 8765. Pruebe con la IP del equipo, no con `127.0.0.1`"],
+    ["Otras PC no acceden", "Ejecute el acceso directo «Habilitar acceso desde la red» (o ponga `host = 0.0.0.0` en `config.ini`, reinicie el servicio y cree la regla de firewall del puerto 8765). Pruebe con la IP del equipo, no con `127.0.0.1`"],
     ["Windows SmartScreen bloquea el instalador", "Más información → Ejecutar de todas formas (no está firmado). La institución puede firmarlo con su certificado de código"],
     ["«Periodo de prueba terminó» / error 402", "El sistema está en solo lectura. Active la licencia (capítulo 4). Los datos están intactos y se puede respaldar"],
     ["«Este código fue emitido para OTRO equipo»", "El código de equipo cambió (otra PC o reinstalación de Windows). Envíe el código de equipo actual para recibir uno nuevo"],
