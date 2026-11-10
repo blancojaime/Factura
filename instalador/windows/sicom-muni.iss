@@ -107,6 +107,8 @@ begin
   PaginaAdmin.Add('Contraseña:', True);
   PaginaAdmin.Add('Repita la contraseña:', True);
   PaginaAdmin.Values[0] := Param('ADMIN', 'admin');
+  PaginaAdmin.Values[1] := Param('CLAVE', '');
+  PaginaAdmin.Values[2] := Param('CLAVE', '');
 
   PaginaRed := CreateInputQueryPage(PaginaAdmin.ID, 'Red local',
     'Puerto con el que los demás equipos entrarán al sistema.',
@@ -136,7 +138,7 @@ begin
   begin
     if Trim(PaginaEntidad.Values[0]) = '' then
     begin
-      MsgBox('Escriba el nombre de la entidad.', mbError, MB_OK);
+      SuppressibleMsgBox('Escriba el nombre de la entidad.', mbError, MB_OK, IDOK);
       Result := False;
     end;
   end
@@ -144,17 +146,17 @@ begin
   begin
     if Trim(PaginaAdmin.Values[0]) = '' then
     begin
-      MsgBox('Escriba el nombre de usuario del administrador.', mbError, MB_OK);
+      SuppressibleMsgBox('Escriba el nombre de usuario del administrador.', mbError, MB_OK, IDOK);
       Result := False;
     end
     else if not ClaveValida(PaginaAdmin.Values[1]) then
     begin
-      MsgBox('La contraseña debe tener al menos 10 caracteres, con mayúsculas, minúsculas y números.', mbError, MB_OK);
+      SuppressibleMsgBox('La contraseña debe tener al menos 10 caracteres, con mayúsculas, minúsculas y números.', mbError, MB_OK, IDOK);
       Result := False;
     end
     else if PaginaAdmin.Values[1] <> PaginaAdmin.Values[2] then
     begin
-      MsgBox('Las dos contraseñas no coinciden.', mbError, MB_OK);
+      SuppressibleMsgBox('Las dos contraseñas no coinciden.', mbError, MB_OK, IDOK);
       Result := False;
     end;
   end
@@ -163,7 +165,7 @@ begin
     Puerto := StrToIntDef(Trim(PaginaRed.Values[0]), 0);
     if (Puerto < 1024) or (Puerto > 65535) then
     begin
-      MsgBox('El puerto debe ser un número entre 1024 y 65535 (recomendado: 8080).', mbError, MB_OK);
+      SuppressibleMsgBox('El puerto debe ser un número entre 1024 y 65535 (recomendado: 8080).', mbError, MB_OK, IDOK);
       Result := False;
     end;
   end;
