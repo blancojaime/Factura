@@ -23,7 +23,7 @@ env:
 jobs:
   windows:
     runs-on: windows-2022
-    timeout-minutes: 90
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -90,7 +90,17 @@ jobs:
           $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
           $log = Join-Path $env:RUNNER_TEMP 'setup.log'
           $argumentos = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', "/LOG=$log", '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8090', '/DEMO=NO')
-          $p = Start-Process -FilePath $setup -ArgumentList $argumentos -Wait -PassThru
+          $p = Start-Process -FilePath $setup -ArgumentList $argumentos -PassThru
+          if (-not $p.WaitForExit(900000)) {
+            Write-Host '##[error]El instalador no terminó en 15 minutos. Diagnóstico:'
+            Get-Process | Where-Object { $_.ProcessName -match 'powershell|pwsh|pg_ctl|initdb|postgres|python|vc_redist|WinSW|SICOM|msiexec' } | Format-Table Id, ProcessName, StartTime, CPU -AutoSize | Out-String | Write-Host
+            if (Test-Path $log) { Write-Host '--- setup.log ---'; Get-Content $log -Tail 60 }
+            Get-ChildItem "$env:ProgramData\SICOM-MUNI" -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 60 FullName | Out-String | Write-Host
+            foreach ($f in Get-ChildItem "$env:ProgramData\SICOM-MUNI\logs" -ErrorAction SilentlyContinue) { Write-Host "--- $($f.Name) ---"; Get-Content $f.FullName -Tail 60 }
+            Get-Process | Where-Object { $_.ProcessName -match 'SICOM-MUNI-Instalador' } | Stop-Process -Force
+            throw 'Instalador colgado'
+          }
+          $p.WaitForExit()
           Write-Host "Código de salida del instalador: $($p.ExitCode)"
           if (Test-Path "$env:ProgramData\SICOM-MUNI\logs\instalacion.log") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" }
           if ($p.ExitCode -ne 0) { throw "El instalador terminó con código $($p.ExitCode)" }
