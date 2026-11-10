@@ -1,0 +1,8592 @@
+{
+"T_CUENTAS": [
+{
+"ID_Cta": 1,
+"Cuenta": "Edificios",
+"Partida": "41100",
+"Cod_VSIAF": 1,
+"Cuenta_VSIAF": "EDIFICACIONES",
+"Vida_Util": 40,
+"Mostrar": "01 - Edificios"
+},
+{
+"ID_Cta": 2,
+"Cuenta": "Tierras y Terrenos",
+"Partida": "41200",
+"Cod_VSIAF": 34,
+"Cuenta_VSIAF": "TERRENOS",
+"Vida_Util": 0,
+"Mostrar": "02 - Tierras y Terrenos"
+},
+{
+"ID_Cta": 3,
+"Cuenta": "Equipo de Oficina y Muebles",
+"Partida": "43110",
+"Cod_VSIAF": 2,
+"Cuenta_VSIAF": "MUEBLES Y ENSERES DE OFICINA",
+"Vida_Util": 10,
+"Mostrar": "03 - Equipo de Oficina y Muebles"
+},
+{
+"ID_Cta": 4,
+"Cuenta": "Equipo de Computación",
+"Partida": "43120",
+"Cod_VSIAF": 15,
+"Cuenta_VSIAF": "EQUIPOS DE COMPUTACION",
+"Vida_Util": 4,
+"Mostrar": "04 - Equipo de Computación"
+},
+{
+"ID_Cta": 5,
+"Cuenta": "Maquinaria y Equipo de Producción",
+"Partida": "43200",
+"Cod_VSIAF": 3,
+"Cuenta_VSIAF": "MAQUINARIA EN GENERAL",
+"Vida_Util": 8,
+"Mostrar": "05 - Maquinaria y Equipo de Producción"
+},
+{
+"ID_Cta": 6,
+"Cuenta": "Vehículos Livianos para Funciones Administrativas",
+"Partida": "43310",
+"Cod_VSIAF": 8,
+"Cuenta_VSIAF": "VEHICULOS AUTOMOTORES",
+"Vida_Util": 5,
+"Mostrar": "06 - Vehículos Livianos para Funciones Administrativas"
+},
+{
+"ID_Cta": 7,
+"Cuenta": "Vehículos Livianos para Proyectos de Inversión Pública",
+"Partida": "43320",
+"Cod_VSIAF": 8,
+"Cuenta_VSIAF": "VEHICULOS AUTOMOTORES",
+"Vida_Util": 5,
+"Mostrar": "07 - Vehículos Livianos para Proyectos de Inversión Pública"
+},
+{
+"ID_Cta": 8,
+"Cuenta": "Maquinaria y Equipo de Transporte",
+"Partida": "43330",
+"Cod_VSIAF": 3,
+"Cuenta_VSIAF": "MAQUINARIA EN GENERAL",
+"Vida_Util": 8,
+"Mostrar": "08 - Maquinaria y Equipo de Transporte"
+},
+{
+"ID_Cta": 9,
+"Cuenta": "Equipo de Elevación",
+"Partida": "43340",
+"Cod_VSIAF": 3,
+"Cuenta_VSIAF": "MAQUINARIA EN GENERAL",
+"Vida_Util": 8,
+"Mostrar": "09 - Equipo de Elevación"
+},
+{
+"ID_Cta": 10,
+"Cuenta": "Equipo Médico y de Laboratorio",
+"Partida": "43400",
+"Cod_VSIAF": 4,
+"Cuenta_VSIAF": "EQUIPO MEDICO Y DE LABORATORIO",
+"Vida_Util": 8,
+"Mostrar": "10 - Equipo Médico y de Laboratorio"
+},
+{
+"ID_Cta": 11,
+"Cuenta": "Equipo de Comunicación",
+"Partida": "43500",
+"Cod_VSIAF": 5,
+"Cuenta_VSIAF": "EQUIPO DE COMUNICACIONES",
+"Vida_Util": 8,
+"Mostrar": "11 - Equipo de Comunicación"
+},
+{
+"ID_Cta": 12,
+"Cuenta": "Equipo Educacional y Recreativo",
+"Partida": "43600",
+"Cod_VSIAF": 6,
+"Cuenta_VSIAF": "EQUIPO EDUCACIONAL Y RECREATIVO",
+"Vida_Util": 8,
+"Mostrar": "12 - Equipo Educacional y Recreativo"
+},
+{
+"ID_Cta": 13,
+"Cuenta": "Otra Maquinaria y Equipo",
+"Partida": "43700",
+"Cod_VSIAF": 3,
+"Cuenta_VSIAF": "MAQUINARIA EN GENERAL",
+"Vida_Util": 8,
+"Mostrar": "13 - Otra Maquinaria y Equipo"
+},
+{
+"ID_Cta": 14,
+"Cuenta": "Activos Intangibles",
+"Partida": "49100",
+"Cod_VSIAF": 37,
+"Cuenta_VSIAF": "ACTIVOS INTANGIBLES",
+"Vida_Util": 5,
+"Mostrar": "14 - Activos Intangibles"
+},
+{
+"ID_Cta": 15,
+"Cuenta": "Semovientes y Otros Animales",
+"Partida": "49300",
+"Cod_VSIAF": 12,
+"Cuenta_VSIAF": "ANIMALES DE TRABAJO",
+"Vida_Util": 4,
+"Mostrar": "15 - Semovientes y Otros Animales"
+},
+{
+"ID_Cta": 16,
+"Cuenta": "Activos Museológicos y Culturales",
+"Partida": "49400",
+"Cod_VSIAF": 40,
+"Cuenta_VSIAF": "ACTIVOS MUSEOLOGICOS Y CULTURALES",
+"Vida_Util": 0,
+"Mostrar": "16 - Activos Museológicos y Culturales"
+},
+{
+"ID_Cta": 17,
+"Cuenta": "Otros",
+"Partida": "43700",
+"Cod_VSIAF": 36,
+"Cuenta_VSIAF": "OTROS ACTIVOS FIJOS",
+"Vida_Util": 0,
+"Mostrar": "17 - Otros"
+}
+],
+"T_AUX": [
+{
+"ID_Cta": 2,
+"ID_Aux": 496,
+"Auxiliar": "JUEGO DE LIVING",
+"Mostrar": "496 - JUEGO DE LIVING"
+},
+{
+"ID_Cta": 2,
+"ID_Aux": 525,
+"Auxiliar": "SILLA DE ESPERA",
+"Mostrar": "525 - SILLA DE ESPERA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 1,
+"Auxiliar": "ESCRITORIO",
+"Mostrar": "001 - ESCRITORIO"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 2,
+"Auxiliar": "ESTANTE",
+"Mostrar": "002 - ESTANTE"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 3,
+"Auxiliar": "GAVETERO",
+"Mostrar": "003 - GAVETERO"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 5,
+"Auxiliar": "MESA",
+"Mostrar": "005 - MESA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 6,
+"Auxiliar": "MUEBLE PARA COMPUTADORA",
+"Mostrar": "006 - MUEBLE PARA COMPUTADORA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 7,
+"Auxiliar": "SILLA",
+"Mostrar": "007 - SILLA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 8,
+"Auxiliar": "SILLON",
+"Mostrar": "008 - SILLON"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 9,
+"Auxiliar": "ANILLADORA",
+"Mostrar": "009 - ANILLADORA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 10,
+"Auxiliar": "BANCA DE ESPERA",
+"Mostrar": "010 - BANCA DE ESPERA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 11,
+"Auxiliar": "GUILLOTINA",
+"Mostrar": "011 - GUILLOTINA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 12,
+"Auxiliar": "MAQUINA DE ESCRIBIR",
+"Mostrar": "012 - MAQUINA DE ESCRIBIR"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 13,
+"Auxiliar": "MODULAR",
+"Mostrar": "013 - MODULAR"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 14,
+"Auxiliar": "ROPERO",
+"Mostrar": "014 - ROPERO"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 15,
+"Auxiliar": "PERFORADORA",
+"Mostrar": "015 - PERFORADORA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 16,
+"Auxiliar": "BAULERA",
+"Mostrar": "016 - BAULERA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 17,
+"Auxiliar": "TABURETE",
+"Mostrar": "017 - TABURETE"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 18,
+"Auxiliar": "VELADOR",
+"Mostrar": "018 - VELADOR"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 19,
+"Auxiliar": "ALFOMBRA PORTATIL",
+"Mostrar": "019 - ALFOMBRA PORTATIL"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 20,
+"Auxiliar": "DISPENSADOR DE AGUA",
+"Mostrar": "020 - DISPENSADOR DE AGUA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 21,
+"Auxiliar": "ENGRAMPADORA SEMI INDUSTRIAL",
+"Mostrar": "021 - ENGRAMPADORA SEMI INDUSTRIAL"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 22,
+"Auxiliar": "CASILLERO",
+"Mostrar": "022 - CASILLERO"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 23,
+"Auxiliar": "PULPITO",
+"Mostrar": "023 - PULPITO"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 24,
+"Auxiliar": "CASILLERO BIPERSONAL",
+"Mostrar": "024 - CASILLERO BIPERSONAL"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 25,
+"Auxiliar": "COLCHON",
+"Mostrar": "025 - COLCHON"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 26,
+"Auxiliar": "CATRERA",
+"Mostrar": "026 - CATRERA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 27,
+"Auxiliar": "COMODA",
+"Mostrar": "027 - COMODA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 521,
+"Auxiliar": "MOSTRADOR",
+"Mostrar": "521 - MOSTRADOR"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 530,
+"Auxiliar": "MUEBLE PARA EQUIPO",
+"Mostrar": "530 - MUEBLE PARA EQUIPO"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 544,
+"Auxiliar": "CREDENZA",
+"Mostrar": "544 - CREDENZA"
+},
+{
+"ID_Cta": 3,
+"ID_Aux": 545,
+"Auxiliar": "MAMPARA",
+"Mostrar": "545 - MAMPARA"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 28,
+"Auxiliar": "CPU",
+"Mostrar": "028 - CPU"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 29,
+"Auxiliar": "IMPRESORAS",
+"Mostrar": "029 - IMPRESORAS"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 30,
+"Auxiliar": "MONITOR",
+"Mostrar": "030 - MONITOR"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 31,
+"Auxiliar": "TABLET",
+"Mostrar": "031 - TABLET"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Auxiliar": "LAPTOP",
+"Mostrar": "032 - LAPTOP"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 33,
+"Auxiliar": "TECLADO",
+"Mostrar": "033 - TECLADO"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 34,
+"Auxiliar": "ESTABILIZADOR",
+"Mostrar": "034 - ESTABILIZADOR"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 35,
+"Auxiliar": "PARLANTE COMPUTADORA",
+"Mostrar": "035 - PARLANTE COMPUTADORA"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 36,
+"Auxiliar": "MOUSE",
+"Mostrar": "036 - MOUSE"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 37,
+"Auxiliar": "MODEM",
+"Mostrar": "037 - MODEM"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 38,
+"Auxiliar": "COMPUTADORA TODO EN UNO",
+"Mostrar": "038 - COMPUTADORA TODO EN UNO"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 39,
+"Auxiliar": "FOTOCOPIADORA",
+"Mostrar": "039 - FOTOCOPIADORA"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 40,
+"Auxiliar": "IMPRESORA",
+"Mostrar": "040 - IMPRESORA"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 42,
+"Auxiliar": "SWICHT",
+"Mostrar": "042 - SWICHT"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 43,
+"Auxiliar": "ACEFALO 3",
+"Mostrar": "043 - ACEFALO 3"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 44,
+"Auxiliar": "CELULAR",
+"Mostrar": "044 - CELULAR"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 45,
+"Auxiliar": "DISCO DURO EXTERNO",
+"Mostrar": "045 - DISCO DURO EXTERNO"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 46,
+"Auxiliar": "CORTAPICOS",
+"Mostrar": "046 - CORTAPICOS"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 47,
+"Auxiliar": "UPS ESTABILIZADOR",
+"Mostrar": "047 - UPS ESTABILIZADOR"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 48,
+"Auxiliar": "MONITOR CONVENCIONAL",
+"Mostrar": "048 - MONITOR CONVENCIONAL"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 320,
+"Auxiliar": "IMAC",
+"Mostrar": "320 - IMAC"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 321,
+"Auxiliar": "TODO EN UNO",
+"Mostrar": "321 - TODO EN UNO"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 327,
+"Auxiliar": "COMPUTADORA",
+"Mostrar": "327 - COMPUTADORA"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 354,
+"Auxiliar": "OLLA PRESIÓN",
+"Mostrar": "354 - OLLA PRESIÓN"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 355,
+"Auxiliar": "HELADERA",
+"Mostrar": "355 - HELADERA"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 356,
+"Auxiliar": "LICUADORA",
+"Mostrar": "356 - LICUADORA"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 489,
+"Auxiliar": "LECTOR CD",
+"Mostrar": "489 - LECTOR CD"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 520,
+"Auxiliar": "RUTTER",
+"Mostrar": "520 - RUTTER"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 522,
+"Auxiliar": "REPETIDORA WI FI",
+"Mostrar": "522 - REPETIDORA WI FI"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 523,
+"Auxiliar": "PLOTER",
+"Mostrar": "523 - PLOTER"
+},
+{
+"ID_Cta": 4,
+"ID_Aux": 543,
+"Auxiliar": "SCANNER",
+"Mostrar": "543 - SCANNER"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 49,
+"Auxiliar": "CIERRA SIN FIN CARPINTERIA",
+"Mostrar": "049 - CIERRA SIN FIN CARPINTERIA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 50,
+"Auxiliar": "ESCUADRADORA CARPINTERIA",
+"Mostrar": "050 - ESCUADRADORA CARPINTERIA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 51,
+"Auxiliar": "GENERADOR DE ENERGIA",
+"Mostrar": "051 - GENERADOR DE ENERGIA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 52,
+"Auxiliar": "MACHETE",
+"Mostrar": "052 - MACHETE"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 53,
+"Auxiliar": "CEPILLADORA",
+"Mostrar": "053 - CEPILLADORA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 54,
+"Auxiliar": "GROCEADORA CARPINTERIA",
+"Mostrar": "054 - GROCEADORA CARPINTERIA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 55,
+"Auxiliar": "TUPI CARPINTERIA",
+"Mostrar": "055 - TUPI CARPINTERIA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 56,
+"Auxiliar": "ESCOPLEADORA",
+"Mostrar": "056 - ESCOPLEADORA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 57,
+"Auxiliar": "AFILADOR DE CUCHILLOS",
+"Mostrar": "057 - AFILADOR DE CUCHILLOS"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 58,
+"Auxiliar": "COMPRESORA",
+"Mostrar": "058 - COMPRESORA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 59,
+"Auxiliar": "AMOLADORA",
+"Mostrar": "059 - AMOLADORA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 60,
+"Auxiliar": "TALADRO",
+"Mostrar": "060 - TALADRO"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 61,
+"Auxiliar": "TICOTICO",
+"Mostrar": "061 - TICOTICO"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 62,
+"Auxiliar": "ENGRASADORA",
+"Mostrar": "062 - ENGRASADORA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 63,
+"Auxiliar": "CARRETILLA",
+"Mostrar": "063 - CARRETILLA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 64,
+"Auxiliar": "ESMERIL",
+"Mostrar": "064 - ESMERIL"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 65,
+"Auxiliar": "JUEGO DE LLAVES",
+"Mostrar": "065 - JUEGO DE LLAVES"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 66,
+"Auxiliar": "FORMON",
+"Mostrar": "066 - FORMON"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 67,
+"Auxiliar": "PRENSA",
+"Mostrar": "067 - PRENSA"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 497,
+"Auxiliar": "MOTOCULTOR",
+"Mostrar": "497 - MOTOCULTOR"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 518,
+"Auxiliar": "ESTACIÓN TOTAL",
+"Mostrar": "518 - ESTACIÓN TOTAL"
+},
+{
+"ID_Cta": 5,
+"ID_Aux": 519,
+"Auxiliar": "CINTA MÉTRICA",
+"Mostrar": "519 - CINTA MÉTRICA"
+},
+{
+"ID_Cta": 6,
+"ID_Aux": 69,
+"Auxiliar": "VAGONETA",
+"Mostrar": "069 - VAGONETA"
+},
+{
+"ID_Cta": 6,
+"ID_Aux": 70,
+"Auxiliar": "MINIBUS",
+"Mostrar": "070 - MINIBUS"
+},
+{
+"ID_Cta": 6,
+"ID_Aux": 71,
+"Auxiliar": "CAMIONETA",
+"Mostrar": "071 - CAMIONETA"
+},
+{
+"ID_Cta": 7,
+"ID_Aux": 72,
+"Auxiliar": "AUTOBUS",
+"Mostrar": "072 - AUTOBUS"
+},
+{
+"ID_Cta": 7,
+"ID_Aux": 73,
+"Auxiliar": "MOTOCICLETA",
+"Mostrar": "073 - MOTOCICLETA"
+},
+{
+"ID_Cta": 8,
+"ID_Aux": 74,
+"Auxiliar": "CAMION",
+"Mostrar": "074 - CAMION"
+},
+{
+"ID_Cta": 8,
+"ID_Aux": 75,
+"Auxiliar": "EXCAVADORA",
+"Mostrar": "075 - EXCAVADORA"
+},
+{
+"ID_Cta": 8,
+"ID_Aux": 76,
+"Auxiliar": "RETROEXCAVADORA",
+"Mostrar": "076 - RETROEXCAVADORA"
+},
+{
+"ID_Cta": 8,
+"ID_Aux": 77,
+"Auxiliar": "DRAGA",
+"Mostrar": "077 - DRAGA"
+},
+{
+"ID_Cta": 8,
+"ID_Aux": 78,
+"Auxiliar": "COMPACTADORA",
+"Mostrar": "078 - COMPACTADORA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 79,
+"Auxiliar": "BALANZA",
+"Mostrar": "079 - BALANZA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 80,
+"Auxiliar": "CATRERA MEDICA",
+"Mostrar": "080 - CATRERA MEDICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 81,
+"Auxiliar": "LAMPARA DE LUZ ALOGENA",
+"Mostrar": "081 - LAMPARA DE LUZ ALOGENA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 82,
+"Auxiliar": "ESTUCHE DE MICROMOTOR",
+"Mostrar": "082 - ESTUCHE DE MICROMOTOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 83,
+"Auxiliar": "ESTUCHE DE FRESAS",
+"Mostrar": "083 - ESTUCHE DE FRESAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 84,
+"Auxiliar": "COMPRESORA",
+"Mostrar": "084 - COMPRESORA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 85,
+"Auxiliar": "CAJA METALICA",
+"Mostrar": "085 - CAJA METALICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 86,
+"Auxiliar": "TRIPODE",
+"Mostrar": "086 - TRIPODE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 87,
+"Auxiliar": "MECANOS",
+"Mostrar": "087 - MECANOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 88,
+"Auxiliar": "ESPECULO",
+"Mostrar": "088 - ESPECULO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 89,
+"Auxiliar": "RESUCITADOR",
+"Mostrar": "089 - RESUCITADOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 90,
+"Auxiliar": "DOPPLER FETAL",
+"Mostrar": "090 - DOPPLER FETAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 91,
+"Auxiliar": "EQUIPO DE CURACION",
+"Mostrar": "091 - EQUIPO DE CURACION"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 92,
+"Auxiliar": "EQUIPO DE PARTO",
+"Mostrar": "092 - EQUIPO DE PARTO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 93,
+"Auxiliar": "EQUIPO DE SUTURACION",
+"Mostrar": "093 - EQUIPO DE SUTURACION"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 94,
+"Auxiliar": "EQUIPO / CAJA ODONTOLOGICO",
+"Mostrar": "094 - EQUIPO / CAJA ODONTOLOGICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 95,
+"Auxiliar": "GRADILLA",
+"Mostrar": "095 - GRADILLA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 96,
+"Auxiliar": "LAMPARA CUELLO DE GANZO",
+"Mostrar": "096 - LAMPARA CUELLO DE GANZO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 97,
+"Auxiliar": "MANOMETRO",
+"Mostrar": "097 - MANOMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 98,
+"Auxiliar": "BALANZA DE PIE",
+"Mostrar": "098 - BALANZA DE PIE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 99,
+"Auxiliar": "MESA GINECOLOGICA",
+"Mostrar": "099 - MESA GINECOLOGICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 100,
+"Auxiliar": "MESA MAYO",
+"Mostrar": "100 - MESA MAYO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 101,
+"Auxiliar": "MESA MEDICA",
+"Mostrar": "101 - MESA MEDICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 102,
+"Auxiliar": "MICROSCOPIO",
+"Mostrar": "102 - MICROSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 103,
+"Auxiliar": "PORTA SUEROS",
+"Mostrar": "103 - PORTA SUEROS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 104,
+"Auxiliar": "PUPINEL",
+"Mostrar": "104 - PUPINEL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 105,
+"Auxiliar": "RIÑONERA",
+"Mostrar": "105 - RIÑONERA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 106,
+"Auxiliar": "ACEFALO",
+"Mostrar": "106 - ACEFALO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 107,
+"Auxiliar": "SILLA DE RUEDAS",
+"Mostrar": "107 - SILLA DE RUEDAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 108,
+"Auxiliar": "BALANZA DIGITAL",
+"Mostrar": "108 - BALANZA DIGITAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 109,
+"Auxiliar": "SILLA ODONTOLOGICA",
+"Mostrar": "109 - SILLA ODONTOLOGICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 110,
+"Auxiliar": "TALLIMETRO",
+"Mostrar": "110 - TALLIMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 111,
+"Auxiliar": "TAMBOR MEDICO",
+"Mostrar": "111 - TAMBOR MEDICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 112,
+"Auxiliar": "TANQUE DE OXIGENO",
+"Mostrar": "112 - TANQUE DE OXIGENO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 113,
+"Auxiliar": "TERMO MEDICO",
+"Mostrar": "113 - TERMO MEDICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 114,
+"Auxiliar": "BANDEJA METALICA",
+"Mostrar": "114 - BANDEJA METALICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 115,
+"Auxiliar": "EQUIPO RECIEN NACIDO",
+"Mostrar": "115 - EQUIPO RECIEN NACIDO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 116,
+"Auxiliar": "ESTETOSCOPIO",
+"Mostrar": "116 - ESTETOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 117,
+"Auxiliar": "FONENDOSCOPIO",
+"Mostrar": "117 - FONENDOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 118,
+"Auxiliar": "VELADOR",
+"Mostrar": "118 - VELADOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 119,
+"Auxiliar": "EQUIPO DE RETIRO DE PUNTOS",
+"Mostrar": "119 - EQUIPO DE RETIRO DE PUNTOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 120,
+"Auxiliar": "MESA DE CURACIÓN",
+"Mostrar": "120 - MESA DE CURACIÓN"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 121,
+"Auxiliar": "TENSIOMETRO",
+"Mostrar": "121 - TENSIOMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 122,
+"Auxiliar": "TRIPODES DE SUERO",
+"Mostrar": "122 - TRIPODES DE SUERO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 123,
+"Auxiliar": "BASURERO",
+"Mostrar": "123 - BASURERO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 124,
+"Auxiliar": "OXIMETRO DE PULSO",
+"Mostrar": "124 - OXIMETRO DE PULSO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 125,
+"Auxiliar": "POCILLO METALICO",
+"Mostrar": "125 - POCILLO METALICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 126,
+"Auxiliar": "TABURETE",
+"Mostrar": "126 - TABURETE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 127,
+"Auxiliar": "COLCHONES",
+"Mostrar": "127 - COLCHONES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 128,
+"Auxiliar": "ESTABILIZADOR MEDICO",
+"Mostrar": "128 - ESTABILIZADOR MEDICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 129,
+"Auxiliar": "PINZA DE DISECCION",
+"Mostrar": "129 - PINZA DE DISECCION"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 130,
+"Auxiliar": "TENSIOMETRO DIGITAL",
+"Mostrar": "130 - TENSIOMETRO DIGITAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 131,
+"Auxiliar": "FORSE PARA NIÑOS",
+"Mostrar": "131 - FORSE PARA NIÑOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 132,
+"Auxiliar": "PINZA KELLY RECTA",
+"Mostrar": "132 - PINZA KELLY RECTA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 133,
+"Auxiliar": "BALANZA PEDIATRICA",
+"Mostrar": "133 - BALANZA PEDIATRICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 134,
+"Auxiliar": "FORSE PARA ADULTOS",
+"Mostrar": "134 - FORSE PARA ADULTOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 135,
+"Auxiliar": "HUMIDIFICADORES",
+"Mostrar": "135 - HUMIDIFICADORES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 136,
+"Auxiliar": "MESA PEDIATRICA",
+"Mostrar": "136 - MESA PEDIATRICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 137,
+"Auxiliar": "NEBULIZADOR",
+"Mostrar": "137 - NEBULIZADOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 138,
+"Auxiliar": "PANTOSCOPIO",
+"Mostrar": "138 - PANTOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 139,
+"Auxiliar": "PINZA FORESTER",
+"Mostrar": "139 - PINZA FORESTER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 140,
+"Auxiliar": "ELEVADORES",
+"Mostrar": "140 - ELEVADORES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 141,
+"Auxiliar": "PINZA PORTA AGUJAS",
+"Mostrar": "141 - PINZA PORTA AGUJAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 142,
+"Auxiliar": "TABURETE ODONTOLOGICO",
+"Mostrar": "142 - TABURETE ODONTOLOGICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 143,
+"Auxiliar": "CANULA DE YANKAHUERA",
+"Mostrar": "143 - CANULA DE YANKAHUERA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 144,
+"Auxiliar": "ESPEJO BUCAL",
+"Mostrar": "144 - ESPEJO BUCAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 145,
+"Auxiliar": "CAJA METALICA ANITOXIDANTE",
+"Mostrar": "145 - CAJA METALICA ANITOXIDANTE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 146,
+"Auxiliar": "ESPECULO VAGINAL METALICO",
+"Mostrar": "146 - ESPECULO VAGINAL METALICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 147,
+"Auxiliar": "LED DE LUZ ALOGENA",
+"Mostrar": "147 - LED DE LUZ ALOGENA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 148,
+"Auxiliar": "PINZA CURVA MAYO",
+"Mostrar": "148 - PINZA CURVA MAYO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 149,
+"Auxiliar": "SONDA EXPLORADORA",
+"Mostrar": "149 - SONDA EXPLORADORA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 150,
+"Auxiliar": "AMBU ADULTO",
+"Mostrar": "150 - AMBU ADULTO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 151,
+"Auxiliar": "JUEGO DE PINZAS",
+"Mostrar": "151 - JUEGO DE PINZAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 152,
+"Auxiliar": "NEBULIZADOR ULTRASONICO",
+"Mostrar": "152 - NEBULIZADOR ULTRASONICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 153,
+"Auxiliar": "PINZA KELLY CURVA",
+"Mostrar": "153 - PINZA KELLY CURVA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 154,
+"Auxiliar": "ALGONDONERO",
+"Mostrar": "154 - ALGONDONERO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 155,
+"Auxiliar": "INFANTOMETRO",
+"Mostrar": "155 - INFANTOMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 156,
+"Auxiliar": "LIMA PARA HUESO",
+"Mostrar": "156 - LIMA PARA HUESO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 157,
+"Auxiliar": "NEBULIZADOR COMPRESOR",
+"Mostrar": "157 - NEBULIZADOR COMPRESOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 158,
+"Auxiliar": "PINZA ARO",
+"Mostrar": "158 - PINZA ARO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 159,
+"Auxiliar": "ESPATULA PARA CEMENTO",
+"Mostrar": "159 - ESPATULA PARA CEMENTO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 160,
+"Auxiliar": "MARTILLO DE REFLEJOS",
+"Mostrar": "160 - MARTILLO DE REFLEJOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 161,
+"Auxiliar": "ESPÉCULOS",
+"Mostrar": "161 - ESPÉCULOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 162,
+"Auxiliar": "GRASE",
+"Mostrar": "162 - GRASE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 163,
+"Auxiliar": "TENSIOMETRO PEDIATRICO",
+"Mostrar": "163 - TENSIOMETRO PEDIATRICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 164,
+"Auxiliar": "VITRINA",
+"Mostrar": "164 - VITRINA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 165,
+"Auxiliar": "MACRO",
+"Mostrar": "165 - MACRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 166,
+"Auxiliar": "NEBULIZADOR NEONATAL",
+"Mostrar": "166 - NEBULIZADOR NEONATAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 167,
+"Auxiliar": "DETECTOR FETAL DOPPLER",
+"Mostrar": "167 - DETECTOR FETAL DOPPLER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 168,
+"Auxiliar": "MANGO BISTURI",
+"Mostrar": "168 - MANGO BISTURI"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 169,
+"Auxiliar": "BALANZA CON TALLIMETRO",
+"Mostrar": "169 - BALANZA CON TALLIMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 170,
+"Auxiliar": "GLUCOMETRO",
+"Mostrar": "170 - GLUCOMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 171,
+"Auxiliar": "LUZ ALOGENA",
+"Mostrar": "171 - LUZ ALOGENA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 172,
+"Auxiliar": "RIÑONERA METALICA",
+"Mostrar": "172 - RIÑONERA METALICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 173,
+"Auxiliar": "DETECTOR FETAL MANUAL",
+"Mostrar": "173 - DETECTOR FETAL MANUAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 174,
+"Auxiliar": "ESTERILIZADOR",
+"Mostrar": "174 - ESTERILIZADOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 175,
+"Auxiliar": "MARTILLO PERCUTOR",
+"Mostrar": "175 - MARTILLO PERCUTOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 176,
+"Auxiliar": "PAQUETES FRIOS (PERRITOS)",
+"Mostrar": "176 - PAQUETES FRIOS (PERRITOS)"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 177,
+"Auxiliar": "CARRO DE CURACIONES",
+"Mostrar": "177 - CARRO DE CURACIONES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 178,
+"Auxiliar": "OFTALMOSCOPIO",
+"Mostrar": "178 - OFTALMOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 179,
+"Auxiliar": "COMPRESOR",
+"Mostrar": "179 - COMPRESOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 180,
+"Auxiliar": "ESFIGMOSCOPIO",
+"Mostrar": "180 - ESFIGMOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 181,
+"Auxiliar": "MICROCENTRIFUGADORA",
+"Mostrar": "181 - MICROCENTRIFUGADORA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 182,
+"Auxiliar": "AMBU PEDIATRICO",
+"Mostrar": "182 - AMBU PEDIATRICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 183,
+"Auxiliar": "STATFAX 4500",
+"Mostrar": "183 - STATFAX 4500"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 184,
+"Auxiliar": "VISOR DE RAYOS X",
+"Mostrar": "184 - VISOR DE RAYOS X"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 185,
+"Auxiliar": "CARRITO DE CURACIONES",
+"Mostrar": "185 - CARRITO DE CURACIONES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 186,
+"Auxiliar": "LAMPARA",
+"Mostrar": "186 - LAMPARA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 187,
+"Auxiliar": "TALLIMETRO PEDIATRICO",
+"Mostrar": "187 - TALLIMETRO PEDIATRICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 188,
+"Auxiliar": "VORTEX",
+"Mostrar": "188 - VORTEX"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 189,
+"Auxiliar": "BIOMBO",
+"Mostrar": "189 - BIOMBO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 190,
+"Auxiliar": "UPS ESTABILIZADOR",
+"Mostrar": "190 - UPS ESTABILIZADOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 191,
+"Auxiliar": "MECHERO BUNSEN",
+"Mostrar": "191 - MECHERO BUNSEN"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 192,
+"Auxiliar": "MACROCENTRIFUGADOR",
+"Mostrar": "192 - MACROCENTRIFUGADOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 193,
+"Auxiliar": "EQUIPO RAYOS X",
+"Mostrar": "193 - EQUIPO RAYOS X"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 194,
+"Auxiliar": "PANEL",
+"Mostrar": "194 - PANEL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 195,
+"Auxiliar": "RAYOS X PORTABLE",
+"Mostrar": "195 - RAYOS X PORTABLE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 196,
+"Auxiliar": "MEGATOSCOPIO",
+"Mostrar": "196 - MEGATOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 197,
+"Auxiliar": "CALEFACTOR",
+"Mostrar": "197 - CALEFACTOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 198,
+"Auxiliar": "MANDIL PLOMO",
+"Mostrar": "198 - MANDIL PLOMO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 199,
+"Auxiliar": "PROTECTORES GONADALES",
+"Mostrar": "199 - PROTECTORES GONADALES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 200,
+"Auxiliar": "BOTELLON DE OXIGENO",
+"Mostrar": "200 - BOTELLON DE OXIGENO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 201,
+"Auxiliar": "UNIFICADOR",
+"Mostrar": "201 - UNIFICADOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 202,
+"Auxiliar": "CAJA DE REVELADO DE RAYOS X",
+"Mostrar": "202 - CAJA DE REVELADO DE RAYOS X"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 203,
+"Auxiliar": "MANPARA",
+"Mostrar": "203 - MANPARA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 204,
+"Auxiliar": "CHATAS METALICAS",
+"Mostrar": "204 - CHATAS METALICAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 205,
+"Auxiliar": "DEPOSITO DE ROPA METÁLICO",
+"Mostrar": "205 - DEPOSITO DE ROPA METÁLICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 206,
+"Auxiliar": "PIEZA DE MANO DE ALTA VELOCIDAD",
+"Mostrar": "206 - PIEZA DE MANO DE ALTA VELOCIDAD"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 207,
+"Auxiliar": "APOYADERAS",
+"Mostrar": "207 - APOYADERAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 208,
+"Auxiliar": "MACROMODELOS DENTALES",
+"Mostrar": "208 - MACROMODELOS DENTALES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 209,
+"Auxiliar": "JARRA METALICA",
+"Mostrar": "209 - JARRA METALICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 210,
+"Auxiliar": "CASCO OXIGENGO NEONATAL",
+"Mostrar": "210 - CASCO OXIGENGO NEONATAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 211,
+"Auxiliar": "RECIPIENTES METALICOS",
+"Mostrar": "211 - RECIPIENTES METALICOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 212,
+"Auxiliar": "TERMOMETRO DIGITAL",
+"Mostrar": "212 - TERMOMETRO DIGITAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 213,
+"Auxiliar": "INCUBADORA",
+"Mostrar": "213 - INCUBADORA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 214,
+"Auxiliar": "PORTA FRESERO",
+"Mostrar": "214 - PORTA FRESERO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 215,
+"Auxiliar": "PORTA LIMAS",
+"Mostrar": "215 - PORTA LIMAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 216,
+"Auxiliar": "TAMBORES METALICOS",
+"Mostrar": "216 - TAMBORES METALICOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 217,
+"Auxiliar": "MICROMODELO DENTAL",
+"Mostrar": "217 - MICROMODELO DENTAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 218,
+"Auxiliar": "COLLARIN FIJO PEDIATRICO",
+"Mostrar": "218 - COLLARIN FIJO PEDIATRICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 219,
+"Auxiliar": "RECIPIENTE",
+"Mostrar": "219 - RECIPIENTE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 220,
+"Auxiliar": "COLLARIN FIJO ADULTO",
+"Mostrar": "220 - COLLARIN FIJO ADULTO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 221,
+"Auxiliar": "JUEGO DE PINZAS ALGODONERAS",
+"Mostrar": "221 - JUEGO DE PINZAS ALGODONERAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 222,
+"Auxiliar": "ATACADORES",
+"Mostrar": "222 - ATACADORES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 223,
+"Auxiliar": "TIJERA RECTA",
+"Mostrar": "223 - TIJERA RECTA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 224,
+"Auxiliar": "MANGO DE ESPEJO",
+"Mostrar": "224 - MANGO DE ESPEJO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 225,
+"Auxiliar": "CAJA PARA AMEU",
+"Mostrar": "225 - CAJA PARA AMEU"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 226,
+"Auxiliar": "CUCHARETAS DE DENTINASS",
+"Mostrar": "226 - CUCHARETAS DE DENTINASS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 227,
+"Auxiliar": "CAMILLA",
+"Mostrar": "227 - CAMILLA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 228,
+"Auxiliar": "ECOGRAFO",
+"Mostrar": "228 - ECOGRAFO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 229,
+"Auxiliar": "CARRITO DE PARO",
+"Mostrar": "229 - CARRITO DE PARO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 230,
+"Auxiliar": "ECOGRAFO PORTATIL",
+"Mostrar": "230 - ECOGRAFO PORTATIL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 231,
+"Auxiliar": "CUNA",
+"Mostrar": "231 - CUNA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 232,
+"Auxiliar": "APARATO DE SUCCION",
+"Mostrar": "232 - APARATO DE SUCCION"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 233,
+"Auxiliar": "HORNO DE PASTEUR",
+"Mostrar": "233 - HORNO DE PASTEUR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 234,
+"Auxiliar": "CARRITOS DE CARGA DE OXIGENO",
+"Mostrar": "234 - CARRITOS DE CARGA DE OXIGENO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 359,
+"Auxiliar": "KIT PIEZAS DE ALTA",
+"Mostrar": "359 - KIT PIEZAS DE ALTA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 360,
+"Auxiliar": "KIT MANGO Y ESPEJO BUCAL",
+"Mostrar": "360 - KIT MANGO Y ESPEJO BUCAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 361,
+"Auxiliar": "KIT PINZAS PARA ALGODÓN",
+"Mostrar": "361 - KIT PINZAS PARA ALGODÓN"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 362,
+"Auxiliar": "APLICADORES DE TITANIO",
+"Mostrar": "362 - APLICADORES DE TITANIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 363,
+"Auxiliar": "APLICADOR DE TEFLON",
+"Mostrar": "363 - APLICADOR DE TEFLON"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 364,
+"Auxiliar": "KIT PICALERA BIPOLAR",
+"Mostrar": "364 - KIT PICALERA BIPOLAR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 365,
+"Auxiliar": "KIT CUADRUPLEX",
+"Mostrar": "365 - KIT CUADRUPLEX"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 366,
+"Auxiliar": "KIT GERINGO CARPULE",
+"Mostrar": "366 - KIT GERINGO CARPULE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 367,
+"Auxiliar": "KIT PINZA GUBIA",
+"Mostrar": "367 - KIT PINZA GUBIA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 368,
+"Auxiliar": "KIT LOSETA DE VIDRIO",
+"Mostrar": "368 - KIT LOSETA DE VIDRIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 369,
+"Auxiliar": "KIT SINDESMOTOMO",
+"Mostrar": "369 - KIT SINDESMOTOMO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 370,
+"Auxiliar": "ELEVADORES CLEVDENT CRIER",
+"Mostrar": "370 - ELEVADORES CLEVDENT CRIER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 371,
+"Auxiliar": "CUCHARETA PARA ALVEOLO",
+"Mostrar": "371 - CUCHARETA PARA ALVEOLO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 372,
+"Auxiliar": "KIT CUCHARETA CRACEIR",
+"Mostrar": "372 - KIT CUCHARETA CRACEIR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 373,
+"Auxiliar": "KIT DE RASPADORES",
+"Mostrar": "373 - KIT DE RASPADORES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 374,
+"Auxiliar": "KIT CLANS PARA ADULTO",
+"Mostrar": "374 - KIT CLANS PARA ADULTO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 375,
+"Auxiliar": "KIT FORCEP PEDIATRICO",
+"Mostrar": "375 - KIT FORCEP PEDIATRICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 376,
+"Auxiliar": "KIT FORCEP PARA ADULTO",
+"Mostrar": "376 - KIT FORCEP PARA ADULTO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 377,
+"Auxiliar": "KIT TIJERAS RECTAS",
+"Mostrar": "377 - KIT TIJERAS RECTAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 378,
+"Auxiliar": "KIT TIJERAS CURVAS",
+"Mostrar": "378 - KIT TIJERAS CURVAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 379,
+"Auxiliar": "DESTILADOR DE AGUA",
+"Mostrar": "379 - DESTILADOR DE AGUA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 380,
+"Auxiliar": "PERFORADORA DENTISTA",
+"Mostrar": "380 - PERFORADORA DENTISTA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 390,
+"Auxiliar": "EQUIPO DE ENEMA",
+"Mostrar": "390 - EQUIPO DE ENEMA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 391,
+"Auxiliar": "LARINGOSCOPIO",
+"Mostrar": "391 - LARINGOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 392,
+"Auxiliar": "PORTA PINZA",
+"Mostrar": "392 - PORTA PINZA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 393,
+"Auxiliar": "GENERADOR DE OXIGENO",
+"Mostrar": "393 - GENERADOR DE OXIGENO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 395,
+"Auxiliar": "PLACA DENTAL",
+"Mostrar": "395 - PLACA DENTAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 396,
+"Auxiliar": "KIT PIEZA DE MANO",
+"Mostrar": "396 - KIT PIEZA DE MANO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 397,
+"Auxiliar": "PIEZA DE MANO ULTRASONIDO",
+"Mostrar": "397 - PIEZA DE MANO ULTRASONIDO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 398,
+"Auxiliar": "KIT DE CURETAS DE DENTINA",
+"Mostrar": "398 - KIT DE CURETAS DE DENTINA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 399,
+"Auxiliar": "KIT DE CURETA DE ALVEOLA",
+"Mostrar": "399 - KIT DE CURETA DE ALVEOLA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 400,
+"Auxiliar": "KIT PORTA AGUJA MAYO",
+"Mostrar": "400 - KIT PORTA AGUJA MAYO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 401,
+"Auxiliar": "PORTA AGUJA MATHIEU",
+"Mostrar": "401 - PORTA AGUJA MATHIEU"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 402,
+"Auxiliar": "KIT JERINGA CARPULE",
+"Mostrar": "402 - KIT JERINGA CARPULE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 403,
+"Auxiliar": "KIT JUEGO DE ELEVADORES",
+"Mostrar": "403 - KIT JUEGO DE ELEVADORES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 404,
+"Auxiliar": "ARCO YOUNG",
+"Mostrar": "404 - ARCO YOUNG"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 405,
+"Auxiliar": "APLICADORES DE RECINA",
+"Mostrar": "405 - APLICADORES DE RECINA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 406,
+"Auxiliar": "KIT BASURERO METALICO",
+"Mostrar": "406 - KIT BASURERO METALICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 407,
+"Auxiliar": "EXTRACTOR DE CORONA",
+"Mostrar": "407 - EXTRACTOR DE CORONA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 408,
+"Auxiliar": "KIT CURETA DE GRACEY",
+"Mostrar": "408 - KIT CURETA DE GRACEY"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 409,
+"Auxiliar": "PINZA ROCHESTER",
+"Mostrar": "409 - PINZA ROCHESTER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 410,
+"Auxiliar": "KIT SEPARADORES",
+"Mostrar": "410 - KIT SEPARADORES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 411,
+"Auxiliar": "KIT SEPARADOR MINESOTA",
+"Mostrar": "411 - KIT SEPARADOR MINESOTA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 412,
+"Auxiliar": "CAJA EDODONTICA",
+"Mostrar": "412 - CAJA EDODONTICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 413,
+"Auxiliar": "KIT ESPACIADORES",
+"Mostrar": "413 - KIT ESPACIADORES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 414,
+"Auxiliar": "KIT CONDENSADORES",
+"Mostrar": "414 - KIT CONDENSADORES"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 415,
+"Auxiliar": "KIT CLAMPS",
+"Mostrar": "415 - KIT CLAMPS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 416,
+"Auxiliar": "GUTAPERCHERO",
+"Mostrar": "416 - GUTAPERCHERO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 423,
+"Auxiliar": "KIT DE CURACIÓN",
+"Mostrar": "423 - KIT DE CURACIÓN"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 424,
+"Auxiliar": "KIT DE SUTURA",
+"Mostrar": "424 - KIT DE SUTURA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 425,
+"Auxiliar": "KIT DE ESPÉCULO",
+"Mostrar": "425 - KIT DE ESPÉCULO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 426,
+"Auxiliar": "AMBU",
+"Mostrar": "426 - AMBU"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 427,
+"Auxiliar": "EQUIPO DE RADIOGRAFÍA",
+"Mostrar": "427 - EQUIPO DE RADIOGRAFÍA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 428,
+"Auxiliar": "KIT DE TACOS DE GOMA",
+"Mostrar": "428 - KIT DE TACOS DE GOMA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 429,
+"Auxiliar": "KIT DE DICALEROS",
+"Mostrar": "429 - KIT DE DICALEROS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 430,
+"Auxiliar": "PERIODONTÓMETRO",
+"Mostrar": "430 - PERIODONTÓMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 431,
+"Auxiliar": "KIT TIJERA MAYO",
+"Mostrar": "431 - KIT TIJERA MAYO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 432,
+"Auxiliar": "KIT TIJERA RETIRO PUNTOS",
+"Mostrar": "432 - KIT TIJERA RETIRO PUNTOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 433,
+"Auxiliar": "KIT LEGRA DENTAL",
+"Mostrar": "433 - KIT LEGRA DENTAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 434,
+"Auxiliar": "PORTACLAMPS",
+"Mostrar": "434 - PORTACLAMPS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 435,
+"Auxiliar": "OTOSCOPIO",
+"Mostrar": "435 - OTOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 436,
+"Auxiliar": "DOPLER",
+"Mostrar": "436 - DOPLER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 437,
+"Auxiliar": "DESTRUCTOR DE AGUJA",
+"Mostrar": "437 - DESTRUCTOR DE AGUJA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 450,
+"Auxiliar": "CONCENTRADOR DE OXIGENO",
+"Mostrar": "450 - CONCENTRADOR DE OXIGENO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 455,
+"Auxiliar": "FONENDOSCOPIO",
+"Mostrar": "455 - FONENDOSCOPIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 456,
+"Auxiliar": "ANDADOR - BURRO",
+"Mostrar": "456 - ANDADOR - BURRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 457,
+"Auxiliar": "SECADORA DE MANOS",
+"Mostrar": "457 - SECADORA DE MANOS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 458,
+"Auxiliar": "AUTOCLAVE",
+"Mostrar": "458 - AUTOCLAVE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 459,
+"Auxiliar": "MICROONDAS",
+"Mostrar": "459 - MICROONDAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 460,
+"Auxiliar": "CAMILLA GINECOLOGICA",
+"Mostrar": "460 - CAMILLA GINECOLOGICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 462,
+"Auxiliar": "KIT EPISTAXIS",
+"Mostrar": "462 - KIT EPISTAXIS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 463,
+"Auxiliar": "GASA VASELINA",
+"Mostrar": "463 - GASA VASELINA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 464,
+"Auxiliar": "EQUIPO DE FORMALIZACION",
+"Mostrar": "464 - EQUIPO DE FORMALIZACION"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 465,
+"Auxiliar": "EQUIPO DE TRANSFERENCIA",
+"Mostrar": "465 - EQUIPO DE TRANSFERENCIA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 466,
+"Auxiliar": "HISTORIAL CLINICO",
+"Mostrar": "466 - HISTORIAL CLINICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 467,
+"Auxiliar": "ELECTRODIAGRAMA",
+"Mostrar": "467 - ELECTRODIAGRAMA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 468,
+"Auxiliar": "LAVADORA",
+"Mostrar": "468 - LAVADORA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 469,
+"Auxiliar": "MAQUINA DE COSER",
+"Mostrar": "469 - MAQUINA DE COSER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 470,
+"Auxiliar": "ELEVATOR CRYER",
+"Mostrar": "470 - ELEVATOR CRYER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 471,
+"Auxiliar": "ELEVATOR WINTER",
+"Mostrar": "471 - ELEVATOR WINTER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 472,
+"Auxiliar": "BANDEJA DE ACANALADO",
+"Mostrar": "472 - BANDEJA DE ACANALADO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 473,
+"Auxiliar": "CAJA ENDONONTIVA MEDIANA",
+"Mostrar": "473 - CAJA ENDONONTIVA MEDIANA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 474,
+"Auxiliar": "CAJA ENDONONTIVA CON 7 SUB CAJA",
+"Mostrar": "474 - CAJA ENDONONTIVA CON 7 SUB CAJA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 475,
+"Auxiliar": "KIT ABREBOCAS",
+"Mostrar": "475 - KIT ABREBOCAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 476,
+"Auxiliar": "MECHERO DENTAL",
+"Mostrar": "476 - MECHERO DENTAL"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 477,
+"Auxiliar": "DISPENSADOR ROLLOS ALGODON",
+"Mostrar": "477 - DISPENSADOR ROLLOS ALGODON"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 478,
+"Auxiliar": "PORTA MATRIZ",
+"Mostrar": "478 - PORTA MATRIZ"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 479,
+"Auxiliar": "VASOS DAPPEN",
+"Mostrar": "479 - VASOS DAPPEN"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 480,
+"Auxiliar": "JERINGA BULBO",
+"Mostrar": "480 - JERINGA BULBO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 481,
+"Auxiliar": "KIT POSICIONADOR DE PLACA RADIOGRAFICA",
+"Mostrar": "481 - KIT POSICIONADOR DE PLACA RADIOGRAFICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 482,
+"Auxiliar": "POSILLO METALICO",
+"Mostrar": "482 - POSILLO METALICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 483,
+"Auxiliar": "KIT INSTRUMENTAL ROTATORIO",
+"Mostrar": "483 - KIT INSTRUMENTAL ROTATORIO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 484,
+"Auxiliar": "MUEBLE CON RUEDAS",
+"Mostrar": "484 - MUEBLE CON RUEDAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 485,
+"Auxiliar": "MAMPARA  PLUMADA",
+"Mostrar": "485 - MAMPARA  PLUMADA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 486,
+"Auxiliar": "EQUIPO DE QUIRÓFANO",
+"Mostrar": "486 - EQUIPO DE QUIRÓFANO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 487,
+"Auxiliar": "CARDIOTOCOGRAFIA",
+"Mostrar": "487 - CARDIOTOCOGRAFIA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 488,
+"Auxiliar": "PORTA ROPA",
+"Mostrar": "488 - PORTA ROPA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 490,
+"Auxiliar": "TURBINA DE ALTA VELOCIDAD",
+"Mostrar": "490 - TURBINA DE ALTA VELOCIDAD"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 491,
+"Auxiliar": "TURBINA DE BAJA VELOCIDAD",
+"Mostrar": "491 - TURBINA DE BAJA VELOCIDAD"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 492,
+"Auxiliar": "CONTRA ANGULO",
+"Mostrar": "492 - CONTRA ANGULO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 493,
+"Auxiliar": "MICROMOTOR",
+"Mostrar": "493 - MICROMOTOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 494,
+"Auxiliar": "KIT ULTRASONIDO",
+"Mostrar": "494 - KIT ULTRASONIDO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 495,
+"Auxiliar": "PIEZA DE BAJA VELOCIDAD",
+"Mostrar": "495 - PIEZA DE BAJA VELOCIDAD"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 498,
+"Auxiliar": "CAMILLA GINECOLÓGICA",
+"Mostrar": "498 - CAMILLA GINECOLÓGICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 499,
+"Auxiliar": "ROTADOR SEROLOGICO",
+"Mostrar": "499 - ROTADOR SEROLOGICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 500,
+"Auxiliar": "STAT FAX",
+"Mostrar": "500 - STAT FAX"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 501,
+"Auxiliar": "CONTADOR DE CÉLULAS",
+"Mostrar": "501 - CONTADOR DE CÉLULAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 502,
+"Auxiliar": "AGITADOR",
+"Mostrar": "502 - AGITADOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 503,
+"Auxiliar": "BAÑO MARIA",
+"Mostrar": "503 - BAÑO MARIA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 504,
+"Auxiliar": "ESPECTROFOTOMETRO",
+"Mostrar": "504 - ESPECTROFOTOMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 505,
+"Auxiliar": "ESTRACTOR DE JUGO",
+"Mostrar": "505 - ESTRACTOR DE JUGO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 506,
+"Auxiliar": "SONDA UNIPOLAR",
+"Mostrar": "506 - SONDA UNIPOLAR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 507,
+"Auxiliar": "BRUÑIDOR",
+"Mostrar": "507 - BRUÑIDOR"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 508,
+"Auxiliar": "REGLA DE ENDODONCIA",
+"Mostrar": "508 - REGLA DE ENDODONCIA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 509,
+"Auxiliar": "GUTAPERCHERO",
+"Mostrar": "509 - GUTAPERCHERO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 510,
+"Auxiliar": "PINZA DE MATHEU",
+"Mostrar": "510 - PINZA DE MATHEU"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 511,
+"Auxiliar": "PINZA KOCHER",
+"Mostrar": "511 - PINZA KOCHER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 512,
+"Auxiliar": "MORTERO",
+"Mostrar": "512 - MORTERO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 513,
+"Auxiliar": "FORCEPS",
+"Mostrar": "513 - FORCEPS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 514,
+"Auxiliar": "KIT NEUBAVER",
+"Mostrar": "514 - KIT NEUBAVER"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 515,
+"Auxiliar": "KIT MICROPIPETAS",
+"Mostrar": "515 - KIT MICROPIPETAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 516,
+"Auxiliar": "ASPIRADOR MEDICO",
+"Mostrar": "516 - ASPIRADOR MEDICO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 517,
+"Auxiliar": "KIT DE AGUJAS",
+"Mostrar": "517 - KIT DE AGUJAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 526,
+"Auxiliar": "KIT DE TRIADAS",
+"Mostrar": "526 - KIT DE TRIADAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 527,
+"Auxiliar": "ESPATULA PARA RECINA",
+"Mostrar": "527 - ESPATULA PARA RECINA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 528,
+"Auxiliar": "PERFORADOR GOMA DIQUE",
+"Mostrar": "528 - PERFORADOR GOMA DIQUE"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 532,
+"Auxiliar": "ESFIGMOMANOMETRO",
+"Mostrar": "532 - ESFIGMOMANOMETRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 533,
+"Auxiliar": "REGULADOR DE OXIGENO",
+"Mostrar": "533 - REGULADOR DE OXIGENO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 534,
+"Auxiliar": "MULETAS",
+"Mostrar": "534 - MULETAS"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 546,
+"Auxiliar": "CARRO DE PARO",
+"Mostrar": "546 - CARRO DE PARO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 547,
+"Auxiliar": "MESA CARRO",
+"Mostrar": "547 - MESA CARRO"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 550,
+"Auxiliar": "KIT DE OPTICA",
+"Mostrar": "550 - KIT DE OPTICA"
+},
+{
+"ID_Cta": 10,
+"ID_Aux": 551,
+"Auxiliar": "KIT DE CALOR",
+"Mostrar": "551 - KIT DE CALOR"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 235,
+"Auxiliar": "PARLANTE",
+"Mostrar": "235 - PARLANTE"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 236,
+"Auxiliar": "REPRODUCTOR DE DVD",
+"Mostrar": "236 - REPRODUCTOR DE DVD"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 237,
+"Auxiliar": "TELEVISOR",
+"Mostrar": "237 - TELEVISOR"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 238,
+"Auxiliar": "DATA SHOW / PROYECTOR",
+"Mostrar": "238 - DATA SHOW / PROYECTOR"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 239,
+"Auxiliar": "CAMARAS DE VIGILANCIA",
+"Mostrar": "239 - CAMARAS DE VIGILANCIA"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 240,
+"Auxiliar": "CONSOLA",
+"Mostrar": "240 - CONSOLA"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 241,
+"Auxiliar": "EQUIPO DE SONIDO",
+"Mostrar": "241 - EQUIPO DE SONIDO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 242,
+"Auxiliar": "GPS",
+"Mostrar": "242 - GPS"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 243,
+"Auxiliar": "OTRO EQUIPOS DE COMUNICACIÓN",
+"Mostrar": "243 - OTRO EQUIPOS DE COMUNICACIÓN"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 244,
+"Auxiliar": "DVD",
+"Mostrar": "244 - DVD"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 245,
+"Auxiliar": "PODER",
+"Mostrar": "245 - PODER"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 246,
+"Auxiliar": "RADIO",
+"Mostrar": "246 - RADIO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 247,
+"Auxiliar": "RADIO GRABADORA",
+"Mostrar": "247 - RADIO GRABADORA"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 248,
+"Auxiliar": "CODIFICADOR",
+"Mostrar": "248 - CODIFICADOR"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 249,
+"Auxiliar": "RADIO DE COMUNICACIÓN",
+"Mostrar": "249 - RADIO DE COMUNICACIÓN"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 250,
+"Auxiliar": "MEGAFONO/ALTAVOZ",
+"Mostrar": "250 - MEGAFONO/ALTAVOZ"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 251,
+"Auxiliar": "MICROFONO",
+"Mostrar": "251 - MICROFONO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 252,
+"Auxiliar": "MICROFONO INALAMBRICO",
+"Mostrar": "252 - MICROFONO INALAMBRICO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 253,
+"Auxiliar": "RUTER DE MICROFONO",
+"Mostrar": "253 - RUTER DE MICROFONO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 254,
+"Auxiliar": "RUTER DE SONIDO",
+"Mostrar": "254 - RUTER DE SONIDO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 255,
+"Auxiliar": "MESA TRAPOIDE",
+"Mostrar": "255 - MESA TRAPOIDE"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 256,
+"Auxiliar": "ECRAM",
+"Mostrar": "256 - ECRAM"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 257,
+"Auxiliar": "TELÉFONO INALAMBRICO",
+"Mostrar": "257 - TELÉFONO INALAMBRICO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 258,
+"Auxiliar": "CAMARA FILMADORA",
+"Mostrar": "258 - CAMARA FILMADORA"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 451,
+"Auxiliar": "TELEFONO",
+"Mostrar": "451 - TELEFONO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 452,
+"Auxiliar": "ROUTER",
+"Mostrar": "452 - ROUTER"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 453,
+"Auxiliar": "OPERADOR DE CCU",
+"Mostrar": "453 - OPERADOR DE CCU"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 454,
+"Auxiliar": "DVR",
+"Mostrar": "454 - DVR"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 524,
+"Auxiliar": "GRABADORA DE AUDIO",
+"Mostrar": "524 - GRABADORA DE AUDIO"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 529,
+"Auxiliar": "PEDESTAL",
+"Mostrar": "529 - PEDESTAL"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 531,
+"Auxiliar": "CAMARA DIGITAL",
+"Mostrar": "531 - CAMARA DIGITAL"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 538,
+"Auxiliar": "ENLACE DE MISIÓN",
+"Mostrar": "538 - ENLACE DE MISIÓN"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 539,
+"Auxiliar": "REPORTERA",
+"Mostrar": "539 - REPORTERA"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 540,
+"Auxiliar": "DRONE",
+"Mostrar": "540 - DRONE"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 541,
+"Auxiliar": "ENLACE",
+"Mostrar": "541 - ENLACE"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 542,
+"Auxiliar": "TRANSMISOR",
+"Mostrar": "542 - TRANSMISOR"
+},
+{
+"ID_Cta": 11,
+"ID_Aux": 553,
+"Auxiliar": "CAMARA",
+"Mostrar": "553 - CAMARA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 259,
+"Auxiliar": "PIZARRA ACRILICA",
+"Mostrar": "259 - PIZARRA ACRILICA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 260,
+"Auxiliar": "PUPITRE",
+"Mostrar": "260 - PUPITRE"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Mostrar": "261 - SILLA ESCOLAR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 262,
+"Auxiliar": "COLCHONETA",
+"Mostrar": "262 - COLCHONETA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 263,
+"Auxiliar": "COLCHON",
+"Mostrar": "263 - COLCHON"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 264,
+"Auxiliar": "LIRA",
+"Mostrar": "264 - LIRA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 265,
+"Auxiliar": "MESA MEDIA HEXAGONAL",
+"Mostrar": "265 - MESA MEDIA HEXAGONAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 266,
+"Auxiliar": "MESA BIPERSONAL",
+"Mostrar": "266 - MESA BIPERSONAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 267,
+"Auxiliar": "MESA HEXAGONAL",
+"Mostrar": "267 - MESA HEXAGONAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 268,
+"Auxiliar": "MESA RECTANGULAR",
+"Mostrar": "268 - MESA RECTANGULAR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 269,
+"Auxiliar": "PIZARRA",
+"Mostrar": "269 - PIZARRA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 270,
+"Auxiliar": "BAJO/CONTRABAJO",
+"Mostrar": "270 - BAJO/CONTRABAJO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 271,
+"Auxiliar": "PUPITRE UNIPERSONAL",
+"Mostrar": "271 - PUPITRE UNIPERSONAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 272,
+"Auxiliar": "TAMBOR MUSICAL",
+"Mostrar": "272 - TAMBOR MUSICAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 273,
+"Auxiliar": "TROMPETA",
+"Mostrar": "273 - TROMPETA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 274,
+"Auxiliar": "BALANZA",
+"Mostrar": "274 - BALANZA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 275,
+"Auxiliar": "BATERIA",
+"Mostrar": "275 - BATERIA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 276,
+"Auxiliar": "BANQUETA",
+"Mostrar": "276 - BANQUETA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 277,
+"Auxiliar": "ESTANDARTE",
+"Mostrar": "277 - ESTANDARTE"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 278,
+"Auxiliar": "NEGATOSCOPIO",
+"Mostrar": "278 - NEGATOSCOPIO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 279,
+"Auxiliar": "PARQUE RECREATIVO",
+"Mostrar": "279 - PARQUE RECREATIVO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 280,
+"Auxiliar": "TRIPODE DE EXPOSICIÓN",
+"Mostrar": "280 - TRIPODE DE EXPOSICIÓN"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 281,
+"Auxiliar": "CATRE",
+"Mostrar": "281 - CATRE"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 282,
+"Auxiliar": "MESA DE TRAPECIO",
+"Mostrar": "282 - MESA DE TRAPECIO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 283,
+"Auxiliar": "SOMBRILLA",
+"Mostrar": "283 - SOMBRILLA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 284,
+"Auxiliar": "CUNA",
+"Mostrar": "284 - CUNA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 285,
+"Auxiliar": "FRIGOBAR",
+"Mostrar": "285 - FRIGOBAR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 286,
+"Auxiliar": "CARRETILLA",
+"Mostrar": "286 - CARRETILLA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 287,
+"Auxiliar": "REFRIGERADOR",
+"Mostrar": "287 - REFRIGERADOR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 288,
+"Auxiliar": "DESGROSADORA",
+"Mostrar": "288 - DESGROSADORA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 289,
+"Auxiliar": "FUMIGADORA",
+"Mostrar": "289 - FUMIGADORA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 290,
+"Auxiliar": "OTRAS HERRAMIENTAS",
+"Mostrar": "290 - OTRAS HERRAMIENTAS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 291,
+"Auxiliar": "BOMBA DE AGUA",
+"Mostrar": "291 - BOMBA DE AGUA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 292,
+"Auxiliar": "PALAS",
+"Mostrar": "292 - PALAS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 293,
+"Auxiliar": "PICOTAS",
+"Mostrar": "293 - PICOTAS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 294,
+"Auxiliar": "ACHAS",
+"Mostrar": "294 - ACHAS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 295,
+"Auxiliar": "COCINA",
+"Mostrar": "295 - COCINA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 296,
+"Auxiliar": "ESTUFA",
+"Mostrar": "296 - ESTUFA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 297,
+"Auxiliar": "GARRAFA",
+"Mostrar": "297 - GARRAFA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 298,
+"Auxiliar": "HORNO A GAS",
+"Mostrar": "298 - HORNO A GAS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 299,
+"Auxiliar": "CAJA FUERTE",
+"Mostrar": "299 - CAJA FUERTE"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 300,
+"Auxiliar": "AIRE ACONDICIONADO",
+"Mostrar": "300 - AIRE ACONDICIONADO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 301,
+"Auxiliar": "BIOMETRICO",
+"Mostrar": "301 - BIOMETRICO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 302,
+"Auxiliar": "CONOS DE TRANSITO",
+"Mostrar": "302 - CONOS DE TRANSITO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 303,
+"Auxiliar": "LAMPARA LED",
+"Mostrar": "303 - LAMPARA LED"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 304,
+"Auxiliar": "GRAPAS DE TRANSITO",
+"Mostrar": "304 - GRAPAS DE TRANSITO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 305,
+"Auxiliar": "ESTRUCTURA HIDRAULICA",
+"Mostrar": "305 - ESTRUCTURA HIDRAULICA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 306,
+"Auxiliar": "VENTILADOR",
+"Mostrar": "306 - VENTILADOR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 307,
+"Auxiliar": "MOTOR DE AUTO",
+"Mostrar": "307 - MOTOR DE AUTO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 308,
+"Auxiliar": "PANEL SOLAR",
+"Mostrar": "308 - PANEL SOLAR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 309,
+"Auxiliar": "TABLERO DE AJEDREZ",
+"Mostrar": "309 - TABLERO DE AJEDREZ"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 310,
+"Auxiliar": "TANQUE DE AGUA",
+"Mostrar": "310 - TANQUE DE AGUA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 311,
+"Auxiliar": "TACHOS",
+"Mostrar": "311 - TACHOS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 312,
+"Auxiliar": "BATERIA ELECTRICA",
+"Mostrar": "312 - BATERIA ELECTRICA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 313,
+"Auxiliar": "BATERIA SOLAR",
+"Mostrar": "313 - BATERIA SOLAR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 314,
+"Auxiliar": "CASCOS",
+"Mostrar": "314 - CASCOS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 315,
+"Auxiliar": "CONVERSOR",
+"Mostrar": "315 - CONVERSOR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 316,
+"Auxiliar": "INVERSOR",
+"Mostrar": "316 - INVERSOR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 317,
+"Auxiliar": "LED IP 65",
+"Mostrar": "317 - LED IP 65"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 318,
+"Auxiliar": "FLEXO LASSER",
+"Mostrar": "318 - FLEXO LASSER"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 323,
+"Auxiliar": "CAMPANA",
+"Mostrar": "323 - CAMPANA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 329,
+"Auxiliar": "VASOS DE PRECIPITACIÓN",
+"Mostrar": "329 - VASOS DE PRECIPITACIÓN"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 330,
+"Auxiliar": "SOPORTE UNIVERSAL",
+"Mostrar": "330 - SOPORTE UNIVERSAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 331,
+"Auxiliar": "APARATO DE RISO",
+"Mostrar": "331 - APARATO DE RISO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 332,
+"Auxiliar": "KIT DE TEMPERATURA Y CALOR",
+"Mostrar": "332 - KIT DE TEMPERATURA Y CALOR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 333,
+"Auxiliar": "MULTIMETRO",
+"Mostrar": "333 - MULTIMETRO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 334,
+"Auxiliar": "ESQUELOTO HUMANO",
+"Mostrar": "334 - ESQUELOTO HUMANO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 335,
+"Auxiliar": "MODELO DE DORSO HUMANO",
+"Mostrar": "335 - MODELO DE DORSO HUMANO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 336,
+"Auxiliar": "BOMBO MUSICAL",
+"Mostrar": "336 - BOMBO MUSICAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 351,
+"Auxiliar": "TELESCOPIO",
+"Mostrar": "351 - TELESCOPIO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 352,
+"Auxiliar": "MODELO APARATO DIGESTIVO",
+"Mostrar": "352 - MODELO APARATO DIGESTIVO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 353,
+"Auxiliar": "TESTERS",
+"Mostrar": "353 - TESTERS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 382,
+"Auxiliar": "OVER",
+"Mostrar": "382 - OVER"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 383,
+"Auxiliar": "RECTAS",
+"Mostrar": "383 - RECTAS"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 384,
+"Auxiliar": "COLLARETA",
+"Mostrar": "384 - COLLARETA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 385,
+"Auxiliar": "ELASTIQUERA",
+"Mostrar": "385 - ELASTIQUERA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 386,
+"Auxiliar": "TIMBAL",
+"Mostrar": "386 - TIMBAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 387,
+"Auxiliar": "PLATILLOS MUSICAL",
+"Mostrar": "387 - PLATILLOS MUSICAL"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 388,
+"Auxiliar": "SAXOFON",
+"Mostrar": "388 - SAXOFON"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 389,
+"Auxiliar": "CLARINETE",
+"Mostrar": "389 - CLARINETE"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 417,
+"Auxiliar": "ACORDION",
+"Mostrar": "417 - ACORDION"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 418,
+"Auxiliar": "PENTATON",
+"Mostrar": "418 - PENTATON"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 419,
+"Auxiliar": "MODELO DE OJO OCULAR",
+"Mostrar": "419 - MODELO DE OJO OCULAR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 438,
+"Auxiliar": "MODELO DE ANATOMIA",
+"Mostrar": "438 - MODELO DE ANATOMIA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 439,
+"Auxiliar": "KIT ELECTROESTATICA",
+"Mostrar": "439 - KIT ELECTROESTATICA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 440,
+"Auxiliar": "KIT DE ELECTRICIDAD",
+"Mostrar": "440 - KIT DE ELECTRICIDAD"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 441,
+"Auxiliar": "KIT DE MAGNETISMO",
+"Mostrar": "441 - KIT DE MAGNETISMO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 442,
+"Auxiliar": "MODELO AUDITIVO",
+"Mostrar": "442 - MODELO AUDITIVO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 443,
+"Auxiliar": "MAQUETA SISTEMA SOLAR",
+"Mostrar": "443 - MAQUETA SISTEMA SOLAR"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 444,
+"Auxiliar": "EQUIPO DE MECANICA",
+"Mostrar": "444 - EQUIPO DE MECANICA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 445,
+"Auxiliar": "GLOBO TERRÁQUEO",
+"Mostrar": "445 - GLOBO TERRÁQUEO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 535,
+"Auxiliar": "COMBO",
+"Mostrar": "535 - COMBO"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 536,
+"Auxiliar": "LLAVE STILSON",
+"Mostrar": "536 - LLAVE STILSON"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 537,
+"Auxiliar": "TERRAJA",
+"Mostrar": "537 - TERRAJA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 548,
+"Auxiliar": "PODADORA",
+"Mostrar": "548 - PODADORA"
+},
+{
+"ID_Cta": 12,
+"ID_Aux": 556,
+"Auxiliar": "HORNO MICROONDAS",
+"Mostrar": "556 - HORNO MICROONDAS"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 68,
+"Auxiliar": "GRAPAS DE TRANSITO",
+"Mostrar": "068 - GRAPAS DE TRANSITO"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 319,
+"Auxiliar": "FUMIGADORA",
+"Mostrar": "319 - FUMIGADORA"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 337,
+"Auxiliar": "ARCO",
+"Mostrar": "337 - ARCO"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 338,
+"Auxiliar": "KIT DE LLAVE DE DADOS",
+"Mostrar": "338 - KIT DE LLAVE DE DADOS"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 339,
+"Auxiliar": "GATO HIDRAULICO",
+"Mostrar": "339 - GATO HIDRAULICO"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 340,
+"Auxiliar": "EXTINTOR",
+"Mostrar": "340 - EXTINTOR"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 341,
+"Auxiliar": "TORQUIMETRO",
+"Mostrar": "341 - TORQUIMETRO"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 342,
+"Auxiliar": "KIT DE LLAVES EN L",
+"Mostrar": "342 - KIT DE LLAVES EN L"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 343,
+"Auxiliar": "JUEGO DE LLAVES DE OJO",
+"Mostrar": "343 - JUEGO DE LLAVES DE OJO"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 344,
+"Auxiliar": "MEDIDOR DE COMPRENSIÓN",
+"Mostrar": "344 - MEDIDOR DE COMPRENSIÓN"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 345,
+"Auxiliar": "CALIGRADOR ANALÍGICO",
+"Mostrar": "345 - CALIGRADOR ANALÍGICO"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 346,
+"Auxiliar": "AMOLADORA",
+"Mostrar": "346 - AMOLADORA"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 347,
+"Auxiliar": "ANALIZADOR DE TIEMPO",
+"Mostrar": "347 - ANALIZADOR DE TIEMPO"
+},
+{
+"ID_Cta": 13,
+"ID_Aux": 348,
+"Auxiliar": "CASCO PARA SOLDAR",
+"Mostrar": "348 - CASCO PARA SOLDAR"
+},
+{
+"ID_Cta": 16,
+"ID_Aux": 549,
+"Auxiliar": "OTROS ACTIVOS",
+"Mostrar": "549 - OTROS ACTIVOS"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 322,
+"Auxiliar": "REFRIGERADOR",
+"Mostrar": "322 - REFRIGERADOR"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 324,
+"Auxiliar": "MANGUERA",
+"Mostrar": "324 - MANGUERA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 325,
+"Auxiliar": "BOTIQUIN",
+"Mostrar": "325 - BOTIQUIN"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 326,
+"Auxiliar": "PULIDOR",
+"Mostrar": "326 - PULIDOR"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 328,
+"Auxiliar": "COCINA INDUSTRIAL",
+"Mostrar": "328 - COCINA INDUSTRIAL"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 349,
+"Auxiliar": "AMASADORA",
+"Mostrar": "349 - AMASADORA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 350,
+"Auxiliar": "BATIDORA",
+"Mostrar": "350 - BATIDORA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 357,
+"Auxiliar": "ASPIRADORA LIMPIEZA",
+"Mostrar": "357 - ASPIRADORA LIMPIEZA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 358,
+"Auxiliar": "ESCALERA",
+"Mostrar": "358 - ESCALERA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 381,
+"Auxiliar": "COCINA",
+"Mostrar": "381 - COCINA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 394,
+"Auxiliar": "CARPA",
+"Mostrar": "394 - CARPA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 420,
+"Auxiliar": "HIDRO LAVADORA",
+"Mostrar": "420 - HIDRO LAVADORA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 421,
+"Auxiliar": "SOLDADOR",
+"Mostrar": "421 - SOLDADOR"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 422,
+"Auxiliar": "CALEFÓN",
+"Mostrar": "422 - CALEFÓN"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 446,
+"Auxiliar": "CIRCULAR",
+"Mostrar": "446 - CIRCULAR"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 447,
+"Auxiliar": "LLAVE DE CRUZ",
+"Mostrar": "447 - LLAVE DE CRUZ"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 448,
+"Auxiliar": "MESCLADORA",
+"Mostrar": "448 - MESCLADORA"
+},
+{
+"ID_Cta": 17,
+"ID_Aux": 449,
+"Auxiliar": "TEJEDORA",
+"Mostrar": "449 - TEJEDORA"
+}
+],
+"T_CAMPOS": [
+{
+"ID_Cta": 1,
+"Nro": 1,
+"Campo": "Denominación / Inmueble",
+"Descripcion": "Nombre oficial o denominación del edificio o bloque",
+"Clave": "1-1"
+},
+{
+"ID_Cta": 1,
+"Nro": 2,
+"Campo": "Nº Folio Real / Registro Catastral",
+"Descripcion": "Matrícula en Derechos Reales o código catastral municipal",
+"Clave": "1-2"
+},
+{
+"ID_Cta": 1,
+"Nro": 3,
+"Campo": "Superficie Construida (m²)",
+"Descripcion": "Área total techada o edificada en metros cuadrados",
+"Clave": "1-3"
+},
+{
+"ID_Cta": 1,
+"Nro": 4,
+"Campo": "Superficie de Terreno (m²)",
+"Descripcion": "Área total del predio sobre el que se emplaza",
+"Clave": "1-4"
+},
+{
+"ID_Cta": 1,
+"Nro": 5,
+"Campo": "Nº de Pisos / Niveles",
+"Descripcion": "Cantidad de plantas, sótanos y azoteas",
+"Clave": "1-5"
+},
+{
+"ID_Cta": 1,
+"Nro": 6,
+"Campo": "Tipo de Estructura",
+"Descripcion": "Hormigón armado, metálica, mixta, adobe, etc.",
+"Clave": "1-6"
+},
+{
+"ID_Cta": 1,
+"Nro": 7,
+"Campo": "Tipo de Muros y Tabiquería",
+"Descripcion": "Ladrillo gambote, tubular, placa drywall, adobe",
+"Clave": "1-7"
+},
+{
+"ID_Cta": 1,
+"Nro": 8,
+"Campo": "Tipo de Cubierta / Techo",
+"Descripcion": "Losa de HoAo, calamina galvanizada, teja, policarbonato",
+"Clave": "1-8"
+},
+{
+"ID_Cta": 1,
+"Nro": 9,
+"Campo": "Pisos y Revestimientos",
+"Descripcion": "Porcelanato, cerámica, parquet, cemento pulido",
+"Clave": "1-9"
+},
+{
+"ID_Cta": 1,
+"Nro": 10,
+"Campo": "Instalaciones Especiales",
+"Descripcion": "Ascensor, transformador propio, climatización, red contra incendios",
+"Clave": "1-10"
+},
+{
+"ID_Cta": 1,
+"Nro": 11,
+"Campo": "Año de Construcción",
+"Descripcion": "Año estimado o documental de conclusión de la obra",
+"Clave": "1-11"
+},
+{
+"ID_Cta": 1,
+"Nro": 12,
+"Campo": "Destino / Uso Actual",
+"Descripcion": "Administrativo, salud, almacén, operativo, cultural",
+"Clave": "1-12"
+},
+{
+"ID_Cta": 2,
+"Nro": 1,
+"Campo": "Denominación del Predio",
+"Descripcion": "Nombre comercial, predial o comunal del terreno",
+"Clave": "2-1"
+},
+{
+"ID_Cta": 2,
+"Nro": 2,
+"Campo": "Nº Folio Real (DDRR)",
+"Descripcion": "Número de matrícula computarizada de Derechos Reales",
+"Clave": "2-2"
+},
+{
+"ID_Cta": 2,
+"Nro": 3,
+"Campo": "Código Catastral",
+"Descripcion": "Código alfanumérico catastral oficial",
+"Clave": "2-3"
+},
+{
+"ID_Cta": 2,
+"Nro": 4,
+"Campo": "Superficie Total (m² / ha)",
+"Descripcion": "Área perimétrica total del predio",
+"Clave": "2-4"
+},
+{
+"ID_Cta": 2,
+"Nro": 5,
+"Campo": "Límites y Colindancias",
+"Descripcion": "Norte, Sur, Este y Oeste según título",
+"Clave": "2-5"
+},
+{
+"ID_Cta": 2,
+"Nro": 6,
+"Campo": "Coordenadas Georreferenciadas",
+"Descripcion": "Coordenadas UTM / WGS84 de polígono o punto central",
+"Clave": "2-6"
+},
+{
+"ID_Cta": 2,
+"Nro": 7,
+"Campo": "Topografía y Relieve",
+"Descripcion": "Plano, pendiente suave, terreno quebrado, serranía",
+"Clave": "2-7"
+},
+{
+"ID_Cta": 2,
+"Nro": 8,
+"Campo": "Uso de Suelo / Zonificación",
+"Descripcion": "Equipamiento urbano, residencial, reserva, rural",
+"Clave": "2-8"
+},
+{
+"ID_Cta": 2,
+"Nro": 9,
+"Campo": "Servicios Básicos Disponibles",
+"Descripcion": "Agua potable, energía eléctrica, alcantarillado, gas",
+"Clave": "2-9"
+},
+{
+"ID_Cta": 2,
+"Nro": 10,
+"Campo": "Tipo de Cerramiento Perimetral",
+"Descripcion": "Malla olímpica, muro de ladrillo, alambrado, sin cerco",
+"Clave": "2-10"
+},
+{
+"ID_Cta": 2,
+"Nro": 11,
+"Campo": "Estado Legal de Saneamiento",
+"Descripcion": "Título saneado, en trámite INRA, posesión, litigio",
+"Clave": "2-11"
+},
+{
+"ID_Cta": 2,
+"Nro": 12,
+"Campo": "Afectaciones / Servidumbres",
+"Descripcion": "Franja de seguridad río/quebrada, línea de alta tensión, ninguna",
+"Clave": "2-12"
+},
+{
+"ID_Cta": 3,
+"Nro": 1,
+"Campo": "Tipo de Mueble",
+"Descripcion": "Escritorio ejecutivo, sillón giratorio, estante mecalux, gavetero",
+"Clave": "3-1"
+},
+{
+"ID_Cta": 3,
+"Nro": 2,
+"Campo": "Material Principal",
+"Descripcion": "Melamina (18mm), madera maciza (roble/mara), metal, plástico inyectado",
+"Clave": "3-2"
+},
+{
+"ID_Cta": 3,
+"Nro": 3,
+"Campo": "Dimensiones (L x An x Al cm)",
+"Descripcion": "Ej: 150 cm x 75 cm x 75 cm",
+"Clave": "3-3"
+},
+{
+"ID_Cta": 3,
+"Nro": 4,
+"Campo": "Nº de Gavetas / Puertas",
+"Descripcion": "3 cajones con cerradura central, 2 puertas batientes, etc.",
+"Clave": "3-4"
+},
+{
+"ID_Cta": 3,
+"Nro": 5,
+"Campo": "Mecanismo / Ergonomía",
+"Descripcion": "Basculante neumático, apoyabrazos 3D, correderas telescópicas",
+"Clave": "3-5"
+},
+{
+"ID_Cta": 3,
+"Nro": 6,
+"Campo": "Tapicería / Cobertura",
+"Descripcion": "Cuerina sintética, tela microfibra transpirable, cuero genuino, melamina",
+"Clave": "3-6"
+},
+{
+"ID_Cta": 3,
+"Nro": 7,
+"Campo": "Accesorios Incorporados",
+"Descripcion": "Pasa-cables, faldón metálico, regatones niveladores, porta-teclado",
+"Clave": "3-7"
+},
+{
+"ID_Cta": 3,
+"Nro": 8,
+"Campo": "Estado Estructural",
+"Descripcion": "Firme, pernería ajustada, rayaduras leves, desportillado",
+"Clave": "3-8"
+},
+{
+"ID_Cta": 4,
+"Nro": 1,
+"Campo": "Tipo de Dispositivo",
+"Descripcion": "Laptop, PC Desktop, Servidor Rack, Monitor, Impresora multifuncional",
+"Clave": "4-1"
+},
+{
+"ID_Cta": 4,
+"Nro": 2,
+"Campo": "Procesador (CPU)",
+"Descripcion": "Intel Core i7-12700 / AMD Ryzen 7 5800H / Xeon Silver",
+"Clave": "4-2"
+},
+{
+"ID_Cta": 4,
+"Nro": 3,
+"Campo": "Memoria RAM",
+"Descripcion": "16 GB DDR4 3200MHz / 32 GB DDR5",
+"Clave": "4-3"
+},
+{
+"ID_Cta": 4,
+"Nro": 4,
+"Campo": "Almacenamiento (HDD / SSD)",
+"Descripcion": "SSD 512 GB NVMe M.2 / HDD 2TB SATA",
+"Clave": "4-4"
+},
+{
+"ID_Cta": 4,
+"Nro": 5,
+"Campo": "Sistema Operativo y Licencia",
+"Descripcion": "Windows 11 Pro 64-bit (Lic. OEM digital), Linux Ubuntu Server",
+"Clave": "4-5"
+},
+{
+"ID_Cta": 4,
+"Nro": 6,
+"Campo": "Dirección MAC (LAN / WiFi)",
+"Descripcion": "00:1B:44:11:3A:B7 / A4:BB:6D:88:9C:12",
+"Clave": "4-6"
+},
+{
+"ID_Cta": 4,
+"Nro": 7,
+"Campo": "Dimensiones Pantalla / Panel",
+"Descripcion": "14.0 pulg IPS FHD (Laptops) / 27 pulg 2K QHD (Monitores)",
+"Clave": "4-7"
+},
+{
+"ID_Cta": 4,
+"Nro": 8,
+"Campo": "Periféricos y Accesorios",
+"Descripcion": "Cargador original 65W USB-C, mouse óptico, maletín",
+"Clave": "4-8"
+},
+{
+"ID_Cta": 4,
+"Nro": 9,
+"Campo": "Dirección IP Fija / Asignada",
+"Descripcion": "192.168.10.45 (si aplica a servidores/impresoras)",
+"Clave": "4-9"
+},
+{
+"ID_Cta": 5,
+"Nro": 1,
+"Campo": "Denominación Técnica",
+"Descripcion": "Torno paralelo, planta de hormigón, chancadora de mandíbula, prensa hidráulica",
+"Clave": "5-1"
+},
+{
+"ID_Cta": 5,
+"Nro": 2,
+"Campo": "Capacidad de Producción",
+"Descripcion": "50 m³/hora, 120 Ton/día, 250 kN fuerza",
+"Clave": "5-2"
+},
+{
+"ID_Cta": 5,
+"Nro": 3,
+"Campo": "Tipo de Potencia y Motor",
+"Descripcion": "Motor diésel 6 cilindros turbo / Motor eléctrico trifásico",
+"Clave": "5-3"
+},
+{
+"ID_Cta": 5,
+"Nro": 4,
+"Campo": "Potencia Nominal (HP / kW)",
+"Descripcion": "180 HP / 135 kW @ 2,200 RPM",
+"Clave": "5-4"
+},
+{
+"ID_Cta": 5,
+"Nro": 5,
+"Campo": "Tensión de Alimentación (V / Hz)",
+"Descripcion": "380V Trifásico 50Hz / 440V Industrial",
+"Clave": "5-5"
+},
+{
+"ID_Cta": 5,
+"Nro": 6,
+"Campo": "Tipo de Combustible / Energía",
+"Descripcion": "Diésel Oíl, Energía Eléctrica Trifásica, GLP Industrial",
+"Clave": "5-6"
+},
+{
+"ID_Cta": 5,
+"Nro": 7,
+"Campo": "Horómetro / Odómetro Actual",
+"Descripcion": "1,450.6 horas acumuladas",
+"Clave": "5-7"
+},
+{
+"ID_Cta": 5,
+"Nro": 8,
+"Campo": "Sistemas de Transmisión",
+"Descripcion": "Hidrostática, correas en V industriales, engranajes cónicos helicoidales",
+"Clave": "5-8"
+},
+{
+"ID_Cta": 5,
+"Nro": 9,
+"Campo": "Dispositivos de Seguridad",
+"Descripcion": "Parada de emergencia tipo hongo, guarda de protección perimetral, sensor térmico",
+"Clave": "5-9"
+},
+{
+"ID_Cta": 6,
+"Nro": 1,
+"Campo": "Tipo de Vehículo",
+"Descripcion": "Camioneta doble cabina 4x4, vagoneta SUV, automóvil sedán",
+"Clave": "6-1"
+},
+{
+"ID_Cta": 6,
+"Nro": 2,
+"Campo": "Año de Fabricación / Modelo",
+"Descripcion": "Año contractual y año modelo en póliza",
+"Clave": "6-2"
+},
+{
+"ID_Cta": 6,
+"Nro": 3,
+"Campo": "Número de Placa de Control",
+"Descripcion": "Ej: 4589-KLD (Nacional)",
+"Clave": "6-3"
+},
+{
+"ID_Cta": 6,
+"Nro": 4,
+"Campo": "Número de Chasis (VIN)",
+"Descripcion": "17 caracteres alfanuméricos troquelados",
+"Clave": "6-4"
+},
+{
+"ID_Cta": 6,
+"Nro": 5,
+"Campo": "Número de Motor",
+"Descripcion": "Alfanumérico estampado en monoblock",
+"Clave": "6-5"
+},
+{
+"ID_Cta": 6,
+"Nro": 6,
+"Campo": "Cilindrada (cc) y Combustible",
+"Descripcion": "2,800 cc - Gasolina / Diésel / GNV",
+"Clave": "6-6"
+},
+{
+"ID_Cta": 6,
+"Nro": 7,
+"Campo": "Tipo de Transmisión y Tracción",
+"Descripcion": "Manual 6 velocidades / Automática secuencial; 4x4 con reductora 4L",
+"Clave": "6-7"
+},
+{
+"ID_Cta": 6,
+"Nro": 8,
+"Campo": "Nº de Pasajeros / Asientos",
+"Descripcion": "5 plazas con cinturones de 3 puntos",
+"Clave": "6-8"
+},
+{
+"ID_Cta": 6,
+"Nro": 9,
+"Campo": "Odómetro Actual (Km)",
+"Descripcion": "Kilometraje exacto al momento del relevamiento físico",
+"Clave": "6-9"
+},
+{
+"ID_Cta": 6,
+"Nro": 10,
+"Campo": "Accesorios de Control Vehicular",
+"Descripcion": "GPS satelital institucional, radio VHF base, llanta auxilio, gata hidráulica",
+"Clave": "6-10"
+},
+{
+"ID_Cta": 7,
+"Nro": 1,
+"Campo": "Código y Nombre del Proyecto",
+"Descripcion": "Código SISIN y denominación completa del proyecto de inversión",
+"Clave": "7-1"
+},
+{
+"ID_Cta": 7,
+"Nro": 2,
+"Campo": "Tipo de Vehículo",
+"Descripcion": "Camioneta 4x4 todo terreno, ambulancia médica, cuadratrack",
+"Clave": "7-2"
+},
+{
+"ID_Cta": 7,
+"Nro": 3,
+"Campo": "Año de Fabricación",
+"Descripcion": "Año de fabricación en póliza de importación",
+"Clave": "7-3"
+},
+{
+"ID_Cta": 7,
+"Nro": 4,
+"Campo": "Número de Placa",
+"Descripcion": "Placa oficial de circulación RUAT",
+"Clave": "7-4"
+},
+{
+"ID_Cta": 7,
+"Nro": 5,
+"Campo": "Número de Chasis (VIN)",
+"Descripcion": "17 caracteres alfanuméricos",
+"Clave": "7-5"
+},
+{
+"ID_Cta": 7,
+"Nro": 6,
+"Campo": "Número de Motor",
+"Descripcion": "Identificación grabada en fábrica",
+"Clave": "7-6"
+},
+{
+"ID_Cta": 7,
+"Nro": 7,
+"Campo": "Cilindrada y Tracción",
+"Descripcion": "4,164 cc - Tracción total 4x4 con bloqueo diferencial",
+"Clave": "7-7"
+},
+{
+"ID_Cta": 7,
+"Nro": 8,
+"Campo": "Equipamiento de Trabajo en Obra",
+"Descripcion": "Winche eléctrico, snorkel, barra LED faenera, defensa delantera, radio HF/VHF",
+"Clave": "7-8"
+},
+{
+"ID_Cta": 7,
+"Nro": 9,
+"Campo": "Odómetro Actual (Km)",
+"Descripcion": "Lectura de kilometraje en terreno",
+"Clave": "7-9"
+},
+{
+"ID_Cta": 7,
+"Nro": 10,
+"Campo": "Supervisor / Unidad Ejecutora",
+"Descripcion": "Ingeniero Residente / Supervisor de Proyecto asignado",
+"Clave": "7-10"
+},
+{
+"ID_Cta": 8,
+"Nro": 1,
+"Campo": "Tipo de Maquinaria",
+"Descripcion": "Motoniveladora, retroexcavadora, camión volquete 12m³, pala cargadora",
+"Clave": "8-1"
+},
+{
+"ID_Cta": 8,
+"Nro": 2,
+"Campo": "Año de Fabricación",
+"Descripcion": "Año de ensamblado y emisión según póliza",
+"Clave": "8-2"
+},
+{
+"ID_Cta": 8,
+"Nro": 3,
+"Campo": "Nº de Chasis / PIN",
+"Descripcion": "Número de Identificación del Producto (PIN) de 17 caracteres",
+"Clave": "8-3"
+},
+{
+"ID_Cta": 8,
+"Nro": 4,
+"Campo": "Nº de Motor",
+"Descripcion": "Alfanumérico estampado en monoblock",
+"Clave": "8-4"
+},
+{
+"ID_Cta": 8,
+"Nro": 5,
+"Campo": "Placa de Circulación (si aplica)",
+"Descripcion": "Placa de maquinaria pesada o camión",
+"Clave": "8-5"
+},
+{
+"ID_Cta": 8,
+"Nro": 6,
+"Campo": "Potencia del Motor (HP)",
+"Descripcion": "190 HP / 240 HP / 440 HP",
+"Clave": "8-6"
+},
+{
+"ID_Cta": 8,
+"Nro": 7,
+"Campo": "Capacidad de Tolva / Cuchilla / Balde",
+"Descripcion": "12 m³ (volqueta), balde 1.2 m³, vertedera 14 pies",
+"Clave": "8-7"
+},
+{
+"ID_Cta": 8,
+"Nro": 8,
+"Campo": "Tracción / Rodado",
+"Descripcion": "Orugas de acero con zapatas de 600mm / Neumáticos 14.00R24 / 6x4",
+"Clave": "8-8"
+},
+{
+"ID_Cta": 8,
+"Nro": 9,
+"Campo": "Horómetro / Odómetro",
+"Descripcion": "Horas acumuladas de motor de combustión",
+"Clave": "8-9"
+},
+{
+"ID_Cta": 8,
+"Nro": 10,
+"Campo": "Herramientas de Ataque / Aditamentos",
+"Descripcion": "Escarificador / Ripper trasero, martillo hidráulico, cuchillas de corte",
+"Clave": "8-10"
+},
+{
+"ID_Cta": 9,
+"Nro": 1,
+"Campo": "Tipo de Equipo",
+"Descripcion": "Montacargas contrabalanceado, grúa pluma hidráulica, plataforma tijera, tecle eléctrico",
+"Clave": "9-1"
+},
+{
+"ID_Cta": 9,
+"Nro": 2,
+"Campo": "Capacidad Máxima de Carga (kg / Ton)",
+"Descripcion": "2,500 kg (2.5 Ton), 5,000 kg, 70 Ton",
+"Clave": "9-2"
+},
+{
+"ID_Cta": 9,
+"Nro": 3,
+"Campo": "Altura Máxima de Elevación (m)",
+"Descripcion": "4.80 metros (mástil triple triplex), 12.00 metros",
+"Clave": "9-3"
+},
+{
+"ID_Cta": 9,
+"Nro": 4,
+"Campo": "Tipo de Mástil / Pluma",
+"Descripcion": "Mástil Triplex con desplazamiento lateral (side shifter) / Pluma telescópica",
+"Clave": "9-4"
+},
+{
+"ID_Cta": 9,
+"Nro": 5,
+"Campo": "Fuente de Energía / Motor",
+"Descripcion": "Combustión Dual GLP-Gasolina / Batería Eléctrica Ion-Litio 48V / Diésel",
+"Clave": "9-5"
+},
+{
+"ID_Cta": 9,
+"Nro": 6,
+"Campo": "Longitud y Tipo de Horquillas / Gancho",
+"Descripcion": "Horquillas de 1,200 mm con seguro antideslizante / Gancho forjado 5T",
+"Clave": "9-6"
+},
+{
+"ID_Cta": 9,
+"Nro": 7,
+"Campo": "Fecha Última Certificación de Carga",
+"Descripcion": "Certificación anual de seguridad de cables y cilindros hidráulicos",
+"Clave": "9-7"
+},
+{
+"ID_Cta": 9,
+"Nro": 8,
+"Campo": "Horómetro Actual",
+"Descripcion": "Horas de uso registradas en panel digital",
+"Clave": "9-8"
+},
+{
+"ID_Cta": 10,
+"Nro": 1,
+"Campo": "Denominación Clínica / Técnica",
+"Descripcion": "Ecógrafo Doppler color, monitor multiparamétrico, autoclave a vapor, espectrofotómetro",
+"Clave": "10-1"
+},
+{
+"ID_Cta": 10,
+"Nro": 2,
+"Campo": "Registro Sanitario / Certificación",
+"Descripcion": "Nº de registro sanitario de agencia de medicamentos (AGEMED / FDA / CE)",
+"Clave": "10-2"
+},
+{
+"ID_Cta": 10,
+"Nro": 3,
+"Campo": "Rango de Medición / Capacidad",
+"Descripcion": "Volumen 50 Litros, frecuencia transductores 2-12 MHz, 0-300 mmHg",
+"Clave": "10-3"
+},
+{
+"ID_Cta": 10,
+"Nro": 4,
+"Campo": "Tipo de Sensores / Transductores",
+"Descripcion": "Transductor convexo, lineal y endocavitario; sensores SpO2, brazalete PNI",
+"Clave": "10-4"
+},
+{
+"ID_Cta": 10,
+"Nro": 5,
+"Campo": "Alimentación Eléctrica y Respaldo",
+"Descripcion": "220V 50Hz con UPS grado médico con aislamiento galvánico",
+"Clave": "10-5"
+},
+{
+"ID_Cta": 10,
+"Nro": 6,
+"Campo": "Fecha Última Calibración Biomédica",
+"Descripcion": "Certificado de calibración de patrones metrológicos vigente",
+"Clave": "10-6"
+},
+{
+"ID_Cta": 10,
+"Nro": 7,
+"Campo": "Accesorios y Módulos Adicionales",
+"Descripcion": "Impresora térmica, carro de transporte rodable, pedal de accionamiento",
+"Clave": "10-7"
+},
+{
+"ID_Cta": 10,
+"Nro": 8,
+"Campo": "Software Bio-Médico / Firmware",
+"Descripcion": "Versión del firmware y paquetes de cálculo obstétrico/cardíaco instalados",
+"Clave": "10-8"
+},
+{
+"ID_Cta": 11,
+"Nro": 1,
+"Campo": "Tipo de Dispositivo",
+"Descripcion": "Radio base VHF/UHF, radio portátil handie, repetidora, antena parabólica satelital, PBX IP",
+"Clave": "11-1"
+},
+{
+"ID_Cta": 11,
+"Nro": 2,
+"Campo": "Banda de Frecuencia / Operación",
+"Descripcion": "VHF (136-174 MHz), UHF (403-527 MHz), Banda C / Ku satelital",
+"Clave": "11-2"
+},
+{
+"ID_Cta": 11,
+"Nro": 3,
+"Campo": "Potencia de Transmisión (W)",
+"Descripcion": "Portátil: 5 Watts / Radio Base: 45 Watts / Repetidora: 50 Watts",
+"Clave": "11-3"
+},
+{
+"ID_Cta": 11,
+"Nro": 4,
+"Campo": "Nº de Canales / Zonas",
+"Descripcion": "1,000 canales, hasta 250 zonas programables",
+"Clave": "11-4"
+},
+{
+"ID_Cta": 11,
+"Nro": 5,
+"Campo": "Protocolo / Estándar",
+"Descripcion": "DMR Digital Tier II, Analógico FM, SIP VoIP, TCP/IP Gigabit",
+"Clave": "11-5"
+},
+{
+"ID_Cta": 11,
+"Nro": 6,
+"Campo": "Accesorios Incluidos",
+"Descripcion": "Antena látigo, base cargadora rápida, micrófono de palma con clip",
+"Clave": "11-6"
+},
+{
+"ID_Cta": 11,
+"Nro": 7,
+"Campo": "Homologación / Licencia ATT",
+"Descripcion": "Nº de resolución administrativa de uso de espectro radioeléctrico",
+"Clave": "11-7"
+},
+{
+"ID_Cta": 11,
+"Nro": 8,
+"Campo": "Tipo de Batería y Autonomía",
+"Descripcion": "Batería Li-Ion IMPRES 2,900 mAh (18 a 22 horas autonomía)",
+"Clave": "11-8"
+},
+{
+"ID_Cta": 12,
+"Nro": 1,
+"Campo": "Tipo de Activo",
+"Descripcion": "Pizarra interactiva digital, proyector multimedia, parque infantil modular, kit robótica",
+"Clave": "12-1"
+},
+{
+"ID_Cta": 12,
+"Nro": 2,
+"Campo": "Dimensiones / Área Ocupada",
+"Descripcion": "Área instalada: 8.50 m x 6.00 m / Pantalla 75 pulgadas",
+"Clave": "12-2"
+},
+{
+"ID_Cta": 12,
+"Nro": 3,
+"Campo": "Tecnología / Especificación Interactiva",
+"Descripcion": "Táctil infrarroja 20 toques simultáneos / Láser 3LCD 3,600 lúmenes",
+"Clave": "12-3"
+},
+{
+"ID_Cta": 12,
+"Nro": 4,
+"Campo": "Material de Fabricación",
+"Descripcion": "Plástico rotomoldeado UV, perfiles de acero galvanizado, vidrio templado 4mm",
+"Clave": "12-4"
+},
+{
+"ID_Cta": 12,
+"Nro": 5,
+"Campo": "Capacidad / Usuarios Simultáneos",
+"Descripcion": "Juegos: 15 niños simultáneos / Pizarra: 4 usuarios táctiles",
+"Clave": "12-5"
+},
+{
+"ID_Cta": 12,
+"Nro": 6,
+"Campo": "Rango de Edad / Nivel Educativo",
+"Descripcion": "Nivel inicial (3-5 años) / Primaria-Secundaria / Educación Superior",
+"Clave": "12-6"
+},
+{
+"ID_Cta": 12,
+"Nro": 7,
+"Campo": "Certificación de Seguridad",
+"Descripcion": "Norma ASTM F1487 de seguridad en parques infantiles / Retardante al fuego",
+"Clave": "12-7"
+},
+{
+"ID_Cta": 12,
+"Nro": 8,
+"Campo": "Accesorios y Módulos Didácticos",
+"Descripcion": "2 lápices ópticos interactivos, soporte de pared articulado, sensores de giro",
+"Clave": "12-8"
+},
+{
+"ID_Cta": 13,
+"Nro": 1,
+"Campo": "Tipo de Equipo",
+"Descripcion": "Generador eléctrico diésel, bomba sumergible de achique, desbrozadora, compresor de aire",
+"Clave": "13-1"
+},
+{
+"ID_Cta": 13,
+"Nro": 2,
+"Campo": "Potencia Nominal (kVA / HP / kW)",
+"Descripcion": "150 kVA Standby (120 kW) / 2.9 HP motor 2 tiempos",
+"Clave": "13-2"
+},
+{
+"ID_Cta": 13,
+"Nro": 3,
+"Campo": "Tipo de Motor y Cilindrada",
+"Descripcion": "Motor Cummins 6BTAA5.9 diésel / 44.3 cc motor 2T",
+"Clave": "13-3"
+},
+{
+"ID_Cta": 13,
+"Nro": 4,
+"Campo": "Tipo de Combustible / Mezcla",
+"Descripcion": "Diésel Oíl automotriz / Gasolina mezcla con aceite sintético 50:1",
+"Clave": "13-4"
+},
+{
+"ID_Cta": 13,
+"Nro": 5,
+"Campo": "Capacidad de Tanque / Caudal",
+"Descripcion": "Tanque base 350 Litros (12 hrs trabajo) / Caudal 1,000 L/min",
+"Clave": "13-5"
+},
+{
+"ID_Cta": 13,
+"Nro": 6,
+"Campo": "Presión de Trabajo (bar / PSI)",
+"Descripcion": "Presión 250 Bar (3,600 PSI) / 8.5 Bar neumático",
+"Clave": "13-6"
+},
+{
+"ID_Cta": 13,
+"Nro": 7,
+"Campo": "Tablero de Transferencia / Control",
+"Descripcion": "Tablero automático de transferencia (ATS) DeepSea / Arranque manual piola",
+"Clave": "13-7"
+},
+{
+"ID_Cta": 13,
+"Nro": 8,
+"Campo": "Nivel de Insonorización",
+"Descripcion": "Cabina acústica super-insonorizada 68 dBA @ 7 metros",
+"Clave": "13-8"
+},
+{
+"ID_Cta": 14,
+"Nro": 1,
+"Campo": "Denominación del Intangible",
+"Descripcion": "Software ERP Financiero Municipal, Licencia CAD 3D, Cartografía Ortofoto",
+"Clave": "14-1"
+},
+{
+"ID_Cta": 14,
+"Nro": 2,
+"Campo": "Tipo de Intangible",
+"Descripcion": "Software aplicativo a medida, paquete de licencia perpetua, patente de invención, derecho autor",
+"Clave": "14-2"
+},
+{
+"ID_Cta": 14,
+"Nro": 3,
+"Campo": "Desarrollador / Proveedor Titular",
+"Descripcion": "Empresa desarrolladora o titular del derecho de autor",
+"Clave": "14-3"
+},
+{
+"ID_Cta": 14,
+"Nro": 4,
+"Campo": "Versión del Software / Release",
+"Descripcion": "Versión 4.2.1 Enterprise Edition",
+"Clave": "14-4"
+},
+{
+"ID_Cta": 14,
+"Nro": 5,
+"Campo": "Número de Licencia / Clave / Certificado",
+"Descripcion": "Hash alfanumérico o clave de registro corporativa",
+"Clave": "14-5"
+},
+{
+"ID_Cta": 14,
+"Nro": 6,
+"Campo": "Tipo de Uso y Concurrencia",
+"Descripcion": "Licencia Perpetua multi-usuario (50 concurrentes) / Servidor ilimitado",
+"Clave": "14-6"
+},
+{
+"ID_Cta": 14,
+"Nro": 7,
+"Campo": "Lenguaje / Base de Datos Base",
+"Descripcion": "PostgreSQL 15 / Backend C# .NET Core / Frontend Angular",
+"Clave": "14-7"
+},
+{
+"ID_Cta": 14,
+"Nro": 8,
+"Campo": "Disponibilidad de Código Fuente",
+"Descripcion": "Código fuente y repositorio entregado bajo custodia municipal (Sí / No)",
+"Clave": "14-8"
+},
+{
+"ID_Cta": 14,
+"Nro": 9,
+"Campo": "Vigencia y Soporte Técnico",
+"Descripcion": "Soporte y actualizaciones vigentes hasta el 31/12/2028",
+"Clave": "14-9"
+},
+{
+"ID_Cta": 14,
+"Nro": 10,
+"Campo": "Documento Legal de Transferencia",
+"Descripcion": "Contrato de cesión de derechos patrimoniales de autor N° 45/2024",
+"Clave": "14-10"
+},
+{
+"ID_Cta": 14,
+"Nro": 11,
+"Campo": "Servidor / Infraestructura donde Reside",
+"Descripcion": "Servidor Físico Datacenter Virtualizado SRV-DATA-01",
+"Clave": "14-11"
+},
+{
+"ID_Cta": 15,
+"Nro": 1,
+"Campo": "Especie y Raza",
+"Descripcion": "Canino Pastor Belga Malinois, Equino Pura Sangre / Mestizo, Bovino Holstein",
+"Clave": "15-1"
+},
+{
+"ID_Cta": 15,
+"Nro": 2,
+"Campo": "Nombre / Identificación del Animal",
+"Descripcion": "Nombre común o apodo asignado en entrenamiento",
+"Clave": "15-2"
+},
+{
+"ID_Cta": 15,
+"Nro": 3,
+"Campo": "Nº Microchip / Arete / Tatuaje",
+"Descripcion": "Código de transponder electrónico ISO 11784/11785 o código arete",
+"Clave": "15-3"
+},
+{
+"ID_Cta": 15,
+"Nro": 4,
+"Campo": "Sexo",
+"Descripcion": "Macho (entero / castrado) o Hembra",
+"Clave": "15-4"
+},
+{
+"ID_Cta": 15,
+"Nro": 5,
+"Campo": "Fecha de Nacimiento / Edad Estimada",
+"Descripcion": "Fecha de nacimiento en certificado o estimación dentaria",
+"Clave": "15-5"
+},
+{
+"ID_Cta": 15,
+"Nro": 6,
+"Campo": "Función / Especialidad Asignada",
+"Descripcion": "Detección antinarcóticos / explosivos, patrullaje urbano, reproducción",
+"Clave": "15-6"
+},
+{
+"ID_Cta": 15,
+"Nro": 7,
+"Campo": "Nº Cartilla Sanitaria / Vacunas",
+"Descripcion": "Libreta sanitaria veterinaria oficial y estado de vacunas antirrábicas/séxtuple",
+"Clave": "15-7"
+},
+{
+"ID_Cta": 15,
+"Nro": 8,
+"Campo": "Veterinario / Unidad Médica a Cargo",
+"Descripcion": "Médico Veterinario Zootecnista tratante y centro veterinario",
+"Clave": "15-8"
+},
+{
+"ID_Cta": 15,
+"Nro": 9,
+"Campo": "Peso Corporal Actual (kg)",
+"Descripcion": "Peso en balanza veterinaria (ej: 31.5 kg)",
+"Clave": "15-9"
+},
+{
+"ID_Cta": 15,
+"Nro": 10,
+"Campo": "Condición Corporal y Aptitud",
+"Descripcion": "Puntuación corporal 3/5 (Óptimo muscular para servicio)",
+"Clave": "15-10"
+},
+{
+"ID_Cta": 16,
+"Nro": 1,
+"Campo": "Título / Denominación de la Obra",
+"Descripcion": "Retrato Colonial del Fundador, Urna Funeraria Tiwanakota, etc.",
+"Clave": "16-1"
+},
+{
+"ID_Cta": 16,
+"Nro": 2,
+"Campo": "Autor / Artista / Cultura",
+"Descripcion": "Melchor Pérez de Holguín, Cultura Tiwanaku, Anónimo Siglo XVIII",
+"Clave": "16-2"
+},
+{
+"ID_Cta": 16,
+"Nro": 3,
+"Campo": "Período Histórico / Época / Año",
+"Descripcion": "Época Colonial (Siglo XVII) / Período Intermedio Tardío",
+"Clave": "16-3"
+},
+{
+"ID_Cta": 16,
+"Nro": 4,
+"Campo": "Técnica y Materiales",
+"Descripcion": "Óleo sobre lienzo de lino, cerámica policromada cocida, bronce fundido a la cera perdida",
+"Clave": "16-4"
+},
+{
+"ID_Cta": 16,
+"Nro": 5,
+"Campo": "Dimensiones de la Obra (Al x An x Prof cm)",
+"Descripcion": "125 cm x 98 cm x 4.5 cm (incluyendo marco tallado)",
+"Clave": "16-5"
+},
+{
+"ID_Cta": 16,
+"Nro": 6,
+"Campo": "Nº Registro / Inventario Patrimonial",
+"Descripcion": "Código del Sistema Nacional de Catalogación de Patrimonio Cultural",
+"Clave": "16-6"
+},
+{
+"ID_Cta": 16,
+"Nro": 7,
+"Campo": "Estado de Conservación Patrimonial",
+"Descripcion": "Estable, con craqueladuras de barniz, restauración previa documentada",
+"Clave": "16-7"
+},
+{
+"ID_Cta": 16,
+"Nro": 8,
+"Campo": "Ubicación Museográfica",
+"Descripcion": "Sala 2 'Arte Virreinal', Vitrina climatizada N° 4",
+"Clave": "16-8"
+},
+{
+"ID_Cta": 16,
+"Nro": 9,
+"Campo": "Condiciones de Conservación",
+"Descripcion": "Humedad relativa controlada 50% HR, temperatura 20°C, luz filtrada UV",
+"Clave": "16-9"
+},
+{
+"ID_Cta": 16,
+"Nro": 10,
+"Campo": "Tipo de Enmarcado / Pedestal",
+"Descripcion": "Marco original de madera de cedro sobredorado a la hoja de oro",
+"Clave": "16-10"
+},
+{
+"ID_Cta": 16,
+"Nro": 11,
+"Campo": "Avalúo Patrimonial / Valor Histórico",
+"Descripcion": "Incalculable / Declarado Patrimonio Cultural de la Humanidad o Municipal",
+"Clave": "16-11"
+},
+{
+"ID_Cta": 17,
+"Nro": 1,
+"Campo": "Denominación del Activo",
+"Descripcion": "Contenedor marítimo de 40 pies acondicionado para oficina móvil, carpa táctica inflable",
+"Clave": "17-1"
+},
+{
+"ID_Cta": 17,
+"Nro": 2,
+"Campo": "Materiales de Fabricación",
+"Descripcion": "Acero Corten anticorrosivo, lona vinílica impermeable ignífuga 650g/m²",
+"Clave": "17-2"
+},
+{
+"ID_Cta": 17,
+"Nro": 3,
+"Campo": "Dimensiones Exteriores (L x An x Al)",
+"Descripcion": "12.19 m x 2.44 m x 2.89 m",
+"Clave": "17-3"
+},
+{
+"ID_Cta": 17,
+"Nro": 4,
+"Campo": "Capacidad de Carga / Volumen",
+"Descripcion": "Volumen interior: 76.2 m³, Carga útil máxima 28,500 kg",
+"Clave": "17-4"
+},
+{
+"ID_Cta": 17,
+"Nro": 5,
+"Campo": "Acondicionamiento / Mejoras Internas",
+"Descripcion": "Aislación termoacústica en lana de vidrio, piso flotante, 2 ventanas de aluminio",
+"Clave": "17-5"
+},
+{
+"ID_Cta": 17,
+"Nro": 6,
+"Campo": "Tipo de Fijación / Instalación",
+"Descripcion": "Sobre apoyos de hormigón ciclópeo desmontable / anclaje de estacas metálicas",
+"Clave": "17-6"
+},
+{
+"ID_Cta": 17,
+"Nro": 7,
+"Campo": "Propósito Operativo",
+"Descripcion": "Oficina técnica itinerante en campamento de obra",
+"Clave": "17-7"
+}
+],
+"T_EDIF": [
+{
+"CodEdif": 1,
+"Edificio": "U.E. CARAZANI",
+"Sector": "EDUCACIÓN",
+"Comunidad": null,
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "001 - U.E. CARAZANI"
+},
+{
+"CodEdif": 2,
+"Edificio": "U.E. POROBAYA",
+"Sector": "EDUCACIÓN",
+"Comunidad": null,
+"Responsable": "MARIO CHOQUE CADENA",
+"Mostrar": "002 - U.E. POROBAYA"
+},
+{
+"CodEdif": 3,
+"Edificio": "U.E. CHUCHULAYA",
+"Sector": "EDUCACIÓN",
+"Comunidad": null,
+"Responsable": "PABLO ELIAS TITO ZEGARRUNDO",
+"Mostrar": "003 - U.E. CHUCHULAYA"
+},
+{
+"CodEdif": 4,
+"Edificio": "U.E. CHURIHUMANI",
+"Sector": "EDUCACIÓN",
+"Comunidad": null,
+"Responsable": "EDWIN ALANOCA SILVESTRE",
+"Mostrar": "004 - U.E. CHURIHUMANI"
+},
+{
+"CodEdif": 5,
+"Edificio": "U.E. MACHACAMARCA",
+"Sector": "EDUCACIÓN",
+"Comunidad": null,
+"Responsable": "PRIMITIVO HUANCA KELCA",
+"Mostrar": "005 - U.E. MACHACAMARCA"
+},
+{
+"CodEdif": 6,
+"Edificio": "U.E. KILINA",
+"Sector": "EDUCACIÓN",
+"Comunidad": null,
+"Responsable": "JORGE CHURA CHURA",
+"Mostrar": "006 - U.E. KILINA"
+},
+{
+"CodEdif": 7,
+"Edificio": "CENTRO DE SALUD ATAHUALLPANI",
+"Sector": "SALUD",
+"Comunidad": null,
+"Responsable": "RIGORBERTO WALDO YANARICO QUISPE",
+"Mostrar": "007 - CENTRO DE SALUD ATAHUALLPANI"
+},
+{
+"CodEdif": 8,
+"Edificio": "CENTRO DE SALUD TARAPI",
+"Sector": "SALUD",
+"Comunidad": null,
+"Responsable": "ARSENIO HUALLPA APAZA",
+"Mostrar": "008 - CENTRO DE SALUD TARAPI"
+},
+{
+"CodEdif": 9,
+"Edificio": "UNIDAD DE CONTABILIDAD",
+"Sector": "EJECUTIVO",
+"Comunidad": null,
+"Responsable": "EDWIN TONY CHUCA ORDOÑEZ",
+"Mostrar": "009 - UNIDAD DE CONTABILIDAD"
+}
+],
+"T_AMB": [
+{
+"CodEdif": 1,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 1,
+"CodAmb": 1,
+"Ambiente": "DIRECCIÓN",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "01 - DIRECCIÓN"
+},
+{
+"CodEdif": 1,
+"CodAmb": 2,
+"Ambiente": "AULA 2",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "02 - AULA 2"
+},
+{
+"CodEdif": 1,
+"CodAmb": 3,
+"Ambiente": "AULA 3",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "03 - AULA 3"
+},
+{
+"CodEdif": 1,
+"CodAmb": 4,
+"Ambiente": "AULA 4",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "04 - AULA 4"
+},
+{
+"CodEdif": 1,
+"CodAmb": 5,
+"Ambiente": "AULA 5",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "05 - AULA 5"
+},
+{
+"CodEdif": 1,
+"CodAmb": 6,
+"Ambiente": "AULA 6",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "06 - AULA 6"
+},
+{
+"CodEdif": 1,
+"CodAmb": 7,
+"Ambiente": "AULA 8",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "07 - AULA 8"
+},
+{
+"CodEdif": 1,
+"CodAmb": 8,
+"Ambiente": "AULA 7",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "08 - AULA 7"
+},
+{
+"CodEdif": 1,
+"CodAmb": 9,
+"Ambiente": "DEPÓSITO",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "09 - DEPÓSITO"
+},
+{
+"CodEdif": 1,
+"CodAmb": 10,
+"Ambiente": "AULA 10",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "10 - AULA 10"
+},
+{
+"CodEdif": 1,
+"CodAmb": 11,
+"Ambiente": "AULA 11",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "11 - AULA 11"
+},
+{
+"CodEdif": 1,
+"CodAmb": 12,
+"Ambiente": "AULA 12",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "12 - AULA 12"
+},
+{
+"CodEdif": 1,
+"CodAmb": 13,
+"Ambiente": "SALA DE COMPUTACIÓN",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "13 - SALA DE COMPUTACIÓN"
+},
+{
+"CodEdif": 1,
+"CodAmb": 14,
+"Ambiente": "LABORATORIO",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "14 - LABORATORIO"
+},
+{
+"CodEdif": 1,
+"CodAmb": 15,
+"Ambiente": "PATIO",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "15 - PATIO"
+},
+{
+"CodEdif": 1,
+"CodAmb": 16,
+"Ambiente": "VIVIENDA",
+"Responsable": "JAVIER CONDORI CHOQUE",
+"Mostrar": "16 - VIVIENDA"
+},
+{
+"CodEdif": 2,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "MARIO CHOQUE CADENA",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 2,
+"CodAmb": 1,
+"Ambiente": "AULA 1",
+"Responsable": "MARIO CHOQUE CADENA",
+"Mostrar": "01 - AULA 1"
+},
+{
+"CodEdif": 2,
+"CodAmb": 2,
+"Ambiente": "AULA 2",
+"Responsable": "MARIO CHOQUE CADENA",
+"Mostrar": "02 - AULA 2"
+},
+{
+"CodEdif": 2,
+"CodAmb": 3,
+"Ambiente": "DIRECCIÓN",
+"Responsable": "MARIO CHOQUE CADENA",
+"Mostrar": "03 - DIRECCIÓN"
+},
+{
+"CodEdif": 2,
+"CodAmb": 4,
+"Ambiente": "PATIO",
+"Responsable": "MARIO CHOQUE CADENA",
+"Mostrar": "04 - PATIO"
+},
+{
+"CodEdif": 3,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "PABLO ELIAS TITO ZEGARRUNDO",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 4,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "EDWIN ALANOCA SILVESTRE",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 5,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "PRIMITIVO HUANCA KELCA",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 6,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "JORGE CHURA CHURA",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 7,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "RIGORBERTO WALDO YANARICO QUISPE",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 8,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "ARSENIO HUALLPA APAZA",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 9,
+"CodAmb": 0,
+"Ambiente": "SIN ASIGNAR (ALMACÉN)",
+"Responsable": "EDWIN TONY CHUCA ORDOÑEZ",
+"Mostrar": "00 - SIN ASIGNAR (ALMACÉN)"
+},
+{
+"CodEdif": 9,
+"CodAmb": 1,
+"Ambiente": "OFICINA DE CONTABILIDAD",
+"Responsable": "EDWIN TONY CHUCA ORDOÑEZ",
+"Mostrar": "01 - OFICINA DE CONTABILIDAD"
+}
+],
+"T_FUNC": [
+{
+"CI": "4812301 LP",
+"Nombre": "ARSENIO HUALLPA APAZA",
+"Cargo": "RESPONSABLE DE CENTRO DE SALUD",
+"Unidad": "UNIDAD DE SALUD",
+"Celular": 74812301,
+"Estado": "ACTIVO"
+},
+{
+"CI": "4813438 LP",
+"Nombre": "EDWIN ALANOCA SILVESTRE",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Celular": 74813438,
+"Estado": "ACTIVO"
+},
+{
+"CI": "4814575 LP",
+"Nombre": "EDWIN TONY CHUCA ORDOÑEZ",
+"Cargo": "RESPONSABLE DE CONTABILIDAD",
+"Unidad": "UNIDAD DE CONTABILIDAD",
+"Celular": 74814575,
+"Estado": "ACTIVO"
+},
+{
+"CI": "4815712 LP",
+"Nombre": "JAVIER CONDORI CHOQUE",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Celular": 74815712,
+"Estado": "ACTIVO"
+},
+{
+"CI": "4816849 LP",
+"Nombre": "JORGE CHURA CHURA",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Celular": 74816849,
+"Estado": "ACTIVO"
+},
+{
+"CI": "4817986 LP",
+"Nombre": "MARIO CHOQUE CADENA",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Celular": 74817986,
+"Estado": "ACTIVO"
+},
+{
+"CI": "4819123 LP",
+"Nombre": "PABLO ELIAS TITO ZEGARRUNDO",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Celular": 74819123,
+"Estado": "ACTIVO"
+},
+{
+"CI": "4820260 LP",
+"Nombre": "PRIMITIVO HUANCA KELCA",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Celular": 74820260,
+"Estado": "ACTIVO"
+},
+{
+"CI": "4821397 LP",
+"Nombre": "RIGORBERTO WALDO YANARICO QUISPE",
+"Cargo": "RESPONSABLE DE CENTRO DE SALUD",
+"Unidad": "UNIDAD DE SALUD",
+"Celular": 74821397,
+"Estado": "ACTIVO"
+}
+],
+"T_PROV": [
+{
+"NIT": "1020304025",
+"RazonSocial": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Representante": "Carlos Mamani",
+"Telefono": 71234567,
+"Direccion": "Av. Buenos Aires 1234, La Paz"
+},
+{
+"NIT": "3040506017",
+"RazonSocial": "EQUIPOS MÉDICOS DEL SUR LTDA. (DEMO)",
+"Representante": "Jorge Vargas",
+"Telefono": 73456789,
+"Direccion": "Av. 6 de Agosto 789, La Paz"
+},
+{
+"NIT": "2030405016",
+"RazonSocial": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Representante": "Patricia Rojas",
+"Telefono": 72345678,
+"Direccion": "Calle Comercio 456, El Alto"
+}
+],
+"T_UNID": [
+{
+"Unidad": "DESPACHO DEL ALCALDE"
+},
+{
+"Unidad": "SECRETARÍA MUNICIPAL ADMINISTRATIVA Y FINANCIERA"
+},
+{
+"Unidad": "UNIDAD DE ACTIVOS FIJOS"
+},
+{
+"Unidad": "UNIDAD DE CONTABILIDAD"
+},
+{
+"Unidad": "UNIDAD DE CONTRATACIONES"
+},
+{
+"Unidad": "UNIDAD JURÍDICA"
+},
+{
+"Unidad": "DIRECCIÓN DE OBRAS PÚBLICAS"
+},
+{
+"Unidad": "UNIDAD DE EDUCACIÓN"
+},
+{
+"Unidad": "UNIDAD DE SALUD"
+},
+{
+"Unidad": "UNIDAD DE DESARROLLO PRODUCTIVO"
+},
+{
+"Unidad": "CONCEJO MUNICIPAL"
+}
+],
+"T_ESTADOS": [
+{
+"Cod": "01",
+"Estado": "Nuevo",
+"Factor": 1,
+"Descripcion": "Activo que aún no ha sido usado o cuyo uso ha sido muy limitado, sin desgaste."
+},
+{
+"Cod": "02",
+"Estado": "Bueno",
+"Factor": 0.75,
+"Descripcion": "En perfecto estado de funcionamiento; conservación invariable en el tiempo."
+},
+{
+"Cod": "03",
+"Estado": "Regular",
+"Factor": 0.5,
+"Descripcion": "En proceso de obsolescencia o con conservación afectada, pero mantiene valor de uso."
+},
+{
+"Cod": "04",
+"Estado": "Malo",
+"Factor": 0.25,
+"Descripcion": "Condiciones deficientes de operatividad; requiere mantenimiento o reparación."
+},
+{
+"Cod": "05",
+"Estado": "Pésimo",
+"Factor": 0,
+"Descripcion": "Sin condiciones mínimas de funcionamiento; reparación antieconómica."
+}
+],
+"T_INGRESOS": [
+{
+"NroIngreso": "ING-0001/2026",
+"Fecha": "2026-09-26T00:00:00",
+"TipoDoc": "ORDEN DE COMPRA",
+"NroDoc": "OC-015/2026",
+"Preventivo": "00125",
+"Proveedor": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"NIT": "1020304025",
+"Factura": "FAC-1541",
+"NroMemo": "MEMO/AF/015/2026",
+"Comision1": "JAVIER CONDORI CHOQUE",
+"Comision2": "MARIO CHOQUE CADENA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"FuenteFin": "RECURSOS ESPECÍFICOS",
+"Observaciones": null,
+"Total": 18100,
+"Estado": "CODIFICADO",
+"FechaReg": "2026-09-26T01:27:31"
+},
+{
+"NroIngreso": "ING-0002/2026",
+"Fecha": "2026-09-26T00:00:00",
+"TipoDoc": "ORDEN DE COMPRA",
+"NroDoc": "OC-022/2026",
+"Preventivo": "00131",
+"Proveedor": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"NIT": "2030405016",
+"Factura": "FAC-0877",
+"NroMemo": "MEMO/AF/019/2026",
+"Comision1": "EDWIN TONY CHUCA ORDOÑEZ",
+"Comision2": "JAVIER CONDORI CHOQUE",
+"Unidad": "UNIDAD DE CONTABILIDAD",
+"FuenteFin": "RECURSOS ESPECÍFICOS",
+"Observaciones": null,
+"Total": 22400,
+"Estado": "CODIFICADO",
+"FechaReg": "2026-09-26T01:27:38"
+},
+{
+"NroIngreso": "ING-0003/2026",
+"Fecha": "2026-09-26T00:00:00",
+"TipoDoc": "ORDEN DE COMPRA",
+"NroDoc": "OC-030/2026",
+"Preventivo": "00140",
+"Proveedor": "EQUIPOS MÉDICOS DEL SUR LTDA. (DEMO)",
+"NIT": "3040506017",
+"Factura": "FAC-3310",
+"NroMemo": "MEMO/AF/024/2026",
+"Comision1": "RIGORBERTO WALDO YANARICO QUISPE",
+"Comision2": "ARSENIO HUALLPA APAZA",
+"Unidad": "UNIDAD DE SALUD",
+"FuenteFin": "RECURSOS ESPECÍFICOS",
+"Observaciones": null,
+"Total": 6400,
+"Estado": "CODIFICADO",
+"FechaReg": "2026-09-26T01:27:45"
+},
+{
+"NroIngreso": "ING-0004/2026",
+"Fecha": "2026-09-26T00:00:00",
+"TipoDoc": "ORDEN DE COMPRA",
+"NroDoc": "OC-041/2026",
+"Preventivo": "00155",
+"Proveedor": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"NIT": "2030405016",
+"Factura": "0901",
+"NroMemo": "MEMO/AF/030/2026",
+"Comision1": "JAVIER CONDORI CHOQUE",
+"Comision2": "MARIO CHOQUE CADENA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"FuenteFin": "41/113",
+"Observaciones": null,
+"Total": 20100,
+"Estado": "CODIFICADO",
+"FechaReg": "2026-09-26T16:00:50"
+}
+],
+"T_INGDET": [
+{
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Unidad": "PIEZA",
+"Cantidad": 30,
+"PrecioUnit": 280,
+"Total": 8400,
+"CantCodif": 30
+},
+{
+"NroIngreso": "ING-0001/2026",
+"Item": 2,
+"ID_Cta": 3,
+"ID_Aux": 1,
+"Descripcion": "Escritorio de melamina 1.20 x 0.60 m con cajonera",
+"Unidad": "PIEZA",
+"Cantidad": 4,
+"PrecioUnit": 1800,
+"Total": 7200,
+"CantCodif": 4
+},
+{
+"NroIngreso": "ING-0001/2026",
+"Item": 3,
+"ID_Cta": 3,
+"ID_Aux": 2,
+"Descripcion": "Estante metálico de 5 niveles",
+"Unidad": "PIEZA",
+"Cantidad": 2,
+"PrecioUnit": 1250,
+"Total": 2500,
+"CantCodif": 2
+},
+{
+"NroIngreso": "ING-0002/2026",
+"Item": 1,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Descripcion": "Laptop Core i7, 16 GB RAM, SSD 512 GB, pantalla 14 pulg.",
+"Unidad": "PIEZA",
+"Cantidad": 2,
+"PrecioUnit": 7800,
+"Total": 15600,
+"CantCodif": 2
+},
+{
+"NroIngreso": "ING-0002/2026",
+"Item": 2,
+"ID_Cta": 4,
+"ID_Aux": 40,
+"Descripcion": "Impresora multifuncional láser monocromática",
+"Unidad": "PIEZA",
+"Cantidad": 1,
+"PrecioUnit": 2600,
+"Total": 2600,
+"CantCodif": 1
+},
+{
+"NroIngreso": "ING-0002/2026",
+"Item": 3,
+"ID_Cta": 11,
+"ID_Aux": 238,
+"Descripcion": "Proyector multimedia 4000 lúmenes HDMI",
+"Unidad": "PIEZA",
+"Cantidad": 1,
+"PrecioUnit": 4200,
+"Total": 4200,
+"CantCodif": 1
+},
+{
+"NroIngreso": "ING-0003/2026",
+"Item": 1,
+"ID_Cta": 10,
+"ID_Aux": 130,
+"Descripcion": "Tensiómetro digital de brazo",
+"Unidad": "PIEZA",
+"Cantidad": 2,
+"PrecioUnit": 650,
+"Total": 1300,
+"CantCodif": 2
+},
+{
+"NroIngreso": "ING-0003/2026",
+"Item": 2,
+"ID_Cta": 10,
+"ID_Aux": 169,
+"Descripcion": "Balanza de pie con tallímetro",
+"Unidad": "PIEZA",
+"Cantidad": 1,
+"PrecioUnit": 1900,
+"Total": 1900,
+"CantCodif": 1
+},
+{
+"NroIngreso": "ING-0003/2026",
+"Item": 3,
+"ID_Cta": 10,
+"ID_Aux": 227,
+"Descripcion": "Camilla de examen metálica con colchoneta",
+"Unidad": "PIEZA",
+"Cantidad": 1,
+"PrecioUnit": 3200,
+"Total": 3200,
+"CantCodif": 1
+},
+{
+"NroIngreso": "ING-0004/2026",
+"Item": 1,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Descripcion": "LAPTOPO CORE I5 8GB SSD 256 GB",
+"Unidad": "UNIDAD",
+"Cantidad": 3,
+"PrecioUnit": 5400,
+"Total": 16200,
+"CantCodif": 3
+},
+{
+"NroIngreso": "ING-0004/2026",
+"Item": 2,
+"ID_Cta": 11,
+"ID_Aux": 238,
+"Descripcion": "MARCA EPSON COLOR BLANCO 2200 LUM",
+"Unidad": "UNIDAD",
+"Cantidad": 1,
+"PrecioUnit": 3900,
+"Total": 3900,
+"CantCodif": 1
+}
+],
+"T_ACTIVOS": [
+{
+"Codigo": "001-02-12261-01",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 1,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": "MUEBLES ANDINOS",
+"Modelo": "ESCOLAR ME-02",
+"Serie": "S/N",
+"Color": "AZUL",
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "MARIO CHOQUE CADENA",
+"CI_Func": "4817986 LP",
+"NroActa": "TRF-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 2,
+"AmbActual": 1,
+"C01": "Silla escolar",
+"C02": "42 x 40 x 80 cm",
+"C03": "No aplica",
+"C04": "Estructura metálica y asiento de madera",
+"C05": "1 estudiante",
+"C06": "Primaria y secundaria",
+"C07": "No aplica",
+"C08": "Regatones de goma",
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": "001-02-12261-01_1.jpg",
+"Foto2": "001-02-12261-01_2.jpg",
+"Foto3": "001-02-12261-01_3.jpg",
+"Foto4": "001-02-12261-01_4.jpg",
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-02",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 2,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "MARIO CHOQUE CADENA",
+"CI_Func": "4817986 LP",
+"NroActa": "TRF-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 2,
+"AmbActual": 1,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-03",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 3,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "MARIO CHOQUE CADENA",
+"CI_Func": "4817986 LP",
+"NroActa": "TRF-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 2,
+"AmbActual": 1,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-04",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 4,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-05",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 5,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-06",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 6,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-07",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 7,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-08",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 8,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-09",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 9,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-10",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 10,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-11",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 11,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-12",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 12,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-13",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 13,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-14",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 14,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-02-12261-15",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 2,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 15,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-01-03001-01",
+"NroIngreso": "ING-0001/2026",
+"Item": 2,
+"CodEdif": 1,
+"CodAmb": 1,
+"ID_Cta": 3,
+"ID_Aux": 1,
+"Auxiliar": "ESCRITORIO",
+"Correl": 1,
+"Descripcion": "Escritorio de melamina 1.20 x 0.60 m con cajonera",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 1800,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-01-03001-02",
+"NroIngreso": "ING-0001/2026",
+"Item": 2,
+"CodEdif": 1,
+"CodAmb": 1,
+"ID_Cta": 3,
+"ID_Aux": 1,
+"Auxiliar": "ESCRITORIO",
+"Correl": 2,
+"Descripcion": "Escritorio de melamina 1.20 x 0.60 m con cajonera",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 1800,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 1,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-01-03001-03",
+"NroIngreso": "ING-0001/2026",
+"Item": 2,
+"CodEdif": 1,
+"CodAmb": 1,
+"ID_Cta": 3,
+"ID_Aux": 1,
+"Auxiliar": "ESCRITORIO",
+"Correl": 3,
+"Descripcion": "Escritorio de melamina 1.20 x 0.60 m con cajonera",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 1800,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 1,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-01-03001-04",
+"NroIngreso": "ING-0001/2026",
+"Item": 2,
+"CodEdif": 1,
+"CodAmb": 1,
+"ID_Cta": 3,
+"ID_Aux": 1,
+"Auxiliar": "ESCRITORIO",
+"Correl": 4,
+"Descripcion": "Escritorio de melamina 1.20 x 0.60 m con cajonera",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 1800,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 1,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "002-03-03002-01",
+"NroIngreso": "ING-0001/2026",
+"Item": 3,
+"CodEdif": 2,
+"CodAmb": 3,
+"ID_Cta": 3,
+"ID_Aux": 2,
+"Auxiliar": "ESTANTE",
+"Correl": 1,
+"Descripcion": "Estante metálico de 5 niveles",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 1250,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 2,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "002-03-03002-02",
+"NroIngreso": "ING-0001/2026",
+"Item": 3,
+"CodEdif": 2,
+"CodAmb": 3,
+"ID_Cta": 3,
+"ID_Aux": 2,
+"Auxiliar": "ESTANTE",
+"Correl": 2,
+"Descripcion": "Estante metálico de 5 niveles",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 1250,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 2,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-01",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 1,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-02",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 2,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-03",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 3,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-04",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 4,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-05",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 5,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-06",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 6,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-07",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 7,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-08",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 8,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-09",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 9,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-10",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 10,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-11",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 11,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-12",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 12,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-13",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 13,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-14",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 14,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-03-12261-15",
+"NroIngreso": "ING-0001/2026",
+"Item": 1,
+"CodEdif": 1,
+"CodAmb": 3,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Auxiliar": "SILLA ESCOLAR",
+"Correl": 15,
+"Descripcion": "Silla escolar de metal y madera, color azul",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 280,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 1,
+"AmbActual": 3,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "009-01-04032-01",
+"NroIngreso": "ING-0002/2026",
+"Item": 1,
+"CodEdif": 9,
+"CodAmb": 1,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Auxiliar": "LAPTOP",
+"Correl": 1,
+"Descripcion": "Laptop Core i7, 16 GB RAM, SSD 512 GB, pantalla 14 pulg.",
+"Marca": "LENOVO",
+"Modelo": "THINKPAD E14 GEN 5",
+"Serie": "PF-4X8K21",
+"Color": "NEGRO",
+"Estado": "Nuevo",
+"Valor": 7800,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "EDWIN TONY CHUCA ORDOÑEZ",
+"CI_Func": "4814575 LP",
+"NroActa": "ASG-0002/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 9,
+"AmbActual": 1,
+"C01": "Laptop",
+"C02": "Intel Core i7-1355U",
+"C03": "16 GB DDR4",
+"C04": "SSD 512 GB NVMe",
+"C05": "Windows 11 Pro OEM",
+"C06": "D4:5D:64:89:12:FE",
+"C07": "14 pulg FHD",
+"C08": "Cargador 65W, mouse",
+"C09": "DHCP",
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": "009-01-04032-01_1.jpg",
+"Foto2": "009-01-04032-01_2.jpg",
+"Foto3": "009-01-04032-01_3.jpg",
+"Foto4": "009-01-04032-01_4.jpg",
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "009-01-04032-02",
+"NroIngreso": "ING-0002/2026",
+"Item": 1,
+"CodEdif": 9,
+"CodAmb": 1,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Auxiliar": "LAPTOP",
+"Correl": 2,
+"Descripcion": "Laptop Core i7, 16 GB RAM, SSD 512 GB, pantalla 14 pulg.",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 7800,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "EDWIN TONY CHUCA ORDOÑEZ",
+"CI_Func": "4814575 LP",
+"NroActa": "ASG-0002/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 9,
+"AmbActual": 1,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "009-01-04040-01",
+"NroIngreso": "ING-0002/2026",
+"Item": 2,
+"CodEdif": 9,
+"CodAmb": 1,
+"ID_Cta": 4,
+"ID_Aux": 40,
+"Auxiliar": "IMPRESORA",
+"Correl": 1,
+"Descripcion": "Impresora multifuncional láser monocromática",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Regular",
+"Valor": 2600,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 9,
+"AmbActual": 1,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "001-13-11238-01",
+"NroIngreso": "ING-0002/2026",
+"Item": 3,
+"CodEdif": 1,
+"CodAmb": 13,
+"ID_Cta": 11,
+"ID_Aux": 238,
+"Auxiliar": "DATA SHOW / PROYECTOR",
+"Correl": 1,
+"Descripcion": "Proyector multimedia 4000 lúmenes HDMI",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 4200,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI_Func": "4815712 LP",
+"NroActa": "ASG-0001/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 1,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "007-00-10130-01",
+"NroIngreso": "ING-0003/2026",
+"Item": 1,
+"CodEdif": 7,
+"CodAmb": 0,
+"ID_Cta": 10,
+"ID_Aux": 130,
+"Auxiliar": "TENSIOMETRO DIGITAL",
+"Correl": 1,
+"Descripcion": "Tensiómetro digital de brazo",
+"Marca": "OMRON",
+"Modelo": "HEM-7120",
+"Serie": "20240315LG",
+"Color": "BLANCO",
+"Estado": "Nuevo",
+"Valor": 650,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "RIGORBERTO WALDO YANARICO QUISPE",
+"CI_Func": "4821397 LP",
+"NroActa": "ASG-0003/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 7,
+"AmbActual": 0,
+"C01": "Tensiómetro digital",
+"C02": "INV-SAN-2025-114",
+"C03": "0-299 mmHg",
+"C04": "Oscilométrico",
+"C05": "4 pilas AA / adaptador",
+"C06": "2026-01-15",
+"C07": "Brazalete adulto 22-32 cm",
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": "007-00-10130-01_1.jpg",
+"Foto2": "007-00-10130-01_2.jpg",
+"Foto3": "007-00-10130-01_3.jpg",
+"Foto4": "007-00-10130-01_4.jpg",
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "007-00-10130-02",
+"NroIngreso": "ING-0003/2026",
+"Item": 1,
+"CodEdif": 7,
+"CodAmb": 0,
+"ID_Cta": 10,
+"ID_Aux": 130,
+"Auxiliar": "TENSIOMETRO DIGITAL",
+"Correl": 2,
+"Descripcion": "Tensiómetro digital de brazo",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 650,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "RIGORBERTO WALDO YANARICO QUISPE",
+"CI_Func": "4821397 LP",
+"NroActa": "ASG-0003/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 7,
+"AmbActual": 0,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "007-00-10169-01",
+"NroIngreso": "ING-0003/2026",
+"Item": 2,
+"CodEdif": 7,
+"CodAmb": 0,
+"ID_Cta": 10,
+"ID_Aux": 169,
+"Auxiliar": "BALANZA CON TALLIMETRO",
+"Correl": 1,
+"Descripcion": "Balanza de pie con tallímetro",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 1900,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "RIGORBERTO WALDO YANARICO QUISPE",
+"CI_Func": "4821397 LP",
+"NroActa": "ASG-0003/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 7,
+"AmbActual": 0,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "007-00-10227-01",
+"NroIngreso": "ING-0003/2026",
+"Item": 3,
+"CodEdif": 7,
+"CodAmb": 0,
+"ID_Cta": 10,
+"ID_Aux": 227,
+"Auxiliar": "CAMILLA",
+"Correl": 1,
+"Descripcion": "Camilla de examen metálica con colchoneta",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 3200,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "ASIGNADO",
+"Funcionario": "RIGORBERTO WALDO YANARICO QUISPE",
+"CI_Func": "4821397 LP",
+"NroActa": "ASG-0003/2026",
+"FechaAsig": "2026-09-26T00:00:00",
+"EdifActual": 7,
+"AmbActual": 0,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "002-02-04032-01",
+"NroIngreso": "ING-0004/2026",
+"Item": 1,
+"CodEdif": 2,
+"CodAmb": 2,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Auxiliar": "LAPTOP",
+"Correl": 1,
+"Descripcion": "LAPTOPO CORE I5 8GB SSD 256 GB",
+"Marca": "DELL",
+"Modelo": "LATITUDE 3440",
+"Serie": "56666666624751",
+"Color": "NEGRO",
+"Estado": "Nuevo",
+"Valor": 5400,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 2,
+"AmbActual": 2,
+"C01": "CON CAMARA",
+"C02": "I5",
+"C03": "32 GIGAS",
+"C04": "1 TERA",
+"C05": "WINDOWS 11",
+"C06": null,
+"C07": "17 PULGADAS",
+"C08": "4 USB",
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": "002-02-04032-01_1.jpg",
+"Foto2": "002-02-04032-01_2.jpg",
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "002-02-04032-02",
+"NroIngreso": "ING-0004/2026",
+"Item": 1,
+"CodEdif": 2,
+"CodAmb": 2,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Auxiliar": "LAPTOP",
+"Correl": 2,
+"Descripcion": "LAPTOPO CORE I5 8GB SSD 256 GB",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 5400,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 2,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "002-02-04032-03",
+"NroIngreso": "ING-0004/2026",
+"Item": 1,
+"CodEdif": 2,
+"CodAmb": 2,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Auxiliar": "LAPTOP",
+"Correl": 3,
+"Descripcion": "LAPTOPO CORE I5 8GB SSD 256 GB",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 5400,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 2,
+"AmbActual": 2,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+},
+{
+"Codigo": "002-00-11238-01",
+"NroIngreso": "ING-0004/2026",
+"Item": 2,
+"CodEdif": 2,
+"CodAmb": 0,
+"ID_Cta": 11,
+"ID_Aux": 238,
+"Auxiliar": "DATA SHOW / PROYECTOR",
+"Correl": 1,
+"Descripcion": "MARCA EPSON COLOR BLANCO 2200 LUM",
+"Marca": null,
+"Modelo": null,
+"Serie": null,
+"Color": null,
+"Estado": "Nuevo",
+"Valor": 3900,
+"FechaIngreso": "2026-09-26T00:00:00",
+"FechaCodif": "2026-09-26T00:00:00",
+"Situacion": "EN ALMACEN",
+"Funcionario": null,
+"CI_Func": null,
+"NroActa": null,
+"FechaAsig": null,
+"EdifActual": 2,
+"AmbActual": 0,
+"C01": null,
+"C02": null,
+"C03": null,
+"C04": null,
+"C05": null,
+"C06": null,
+"C07": null,
+"C08": null,
+"C09": null,
+"C10": null,
+"C11": null,
+"C12": null,
+"C13": null,
+"Foto1": null,
+"Foto2": null,
+"Foto3": null,
+"Foto4": null,
+"EtqImpresa": "SI",
+"Observaciones": null
+}
+],
+"T_SOLIC": [
+{
+"NroSol": "SOL-0001/2026",
+"Fecha": "2026-09-26T00:00:00",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Justificacion": "Equipamiento del aula 2 y dirección de la U.E. Carazani para la gestión 2026",
+"AprobadoDAF": "SI",
+"Estado": "ATENDIDA",
+"NroActa": "ASG-0001/2026",
+"FechaReg": "2026-09-26T01:28:07"
+},
+{
+"NroSol": "SOL-0002/2026",
+"Fecha": "2026-09-26T00:00:00",
+"Unidad": "UNIDAD DE CONTABILIDAD",
+"Funcionario": "EDWIN TONY CHUCA ORDOÑEZ",
+"Cargo": "RESPONSABLE DE CONTABILIDAD",
+"Justificacion": "Renovación de equipos de computación de la Unidad de Contabilidad",
+"AprobadoDAF": "SI",
+"Estado": "ATENDIDA",
+"NroActa": "ASG-0002/2026",
+"FechaReg": "2026-09-26T01:28:13"
+},
+{
+"NroSol": "SOL-0003/2026",
+"Fecha": "2026-09-26T00:00:00",
+"Unidad": "UNIDAD DE SALUD",
+"Funcionario": "RIGORBERTO WALDO YANARICO QUISPE",
+"Cargo": "RESPONSABLE DE CENTRO DE SALUD",
+"Justificacion": "Equipamiento de consultorio del C.S. Atahuallpani (EJERCICIO DE CAPACITACIÓN: atender esta solicitud)",
+"AprobadoDAF": "SI",
+"Estado": "ATENDIDA",
+"NroActa": "ASG-0003/2026",
+"FechaReg": "2026-09-26T01:28:18"
+},
+{
+"NroSol": "SOL-0004/2026",
+"Fecha": "2026-09-26T00:00:00",
+"Unidad": "UNIDAD DE SALUD",
+"Funcionario": "ARSENIO HUALLPA APAZA",
+"Cargo": "RESPONSABLE DE CENTRO DE SALUD",
+"Justificacion": "Sillas de ruedas para traslado de pacientes",
+"AprobadoDAF": "SI",
+"Estado": "SIN EXISTENCIA",
+"NroActa": null,
+"FechaReg": "2026-09-26T01:28:21"
+},
+{
+"NroSol": "SOL-0005/2026",
+"Fecha": "2026-09-26T00:00:00",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Funcionario": "MARIO CHOQUE CADENA",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Justificacion": "EQUIPAMIENTO DE AULA 2",
+"AprobadoDAF": "SI",
+"Estado": "PENDIENTE",
+"NroActa": null,
+"FechaReg": "2026-09-26T15:54:02"
+}
+],
+"T_SOLDET": [
+{
+"NroSol": "SOL-0001/2026",
+"Item": 1,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Descripcion": "Silla escolar",
+"Cantidad": 15,
+"Saldo": 30
+},
+{
+"NroSol": "SOL-0001/2026",
+"Item": 2,
+"ID_Cta": 3,
+"ID_Aux": 1,
+"Descripcion": "Escritorio para dirección",
+"Cantidad": 1,
+"Saldo": 4
+},
+{
+"NroSol": "SOL-0001/2026",
+"Item": 3,
+"ID_Cta": 11,
+"ID_Aux": 238,
+"Descripcion": "Proyector para aula",
+"Cantidad": 1,
+"Saldo": 1
+},
+{
+"NroSol": "SOL-0002/2026",
+"Item": 1,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Descripcion": "Laptop",
+"Cantidad": 2,
+"Saldo": 2
+},
+{
+"NroSol": "SOL-0002/2026",
+"Item": 2,
+"ID_Cta": 4,
+"ID_Aux": 40,
+"Descripcion": "Impresora",
+"Cantidad": 1,
+"Saldo": 1
+},
+{
+"NroSol": "SOL-0004/2026",
+"Item": 1,
+"ID_Cta": 10,
+"ID_Aux": 107,
+"Descripcion": "Silla de ruedas plegable",
+"Cantidad": 2,
+"Saldo": 0
+},
+{
+"NroSol": "SOL-0005/2026",
+"Item": 1,
+"ID_Cta": 12,
+"ID_Aux": 261,
+"Descripcion": "DE MADERA COLOR AMARILLO",
+"Cantidad": 5,
+"Saldo": 15
+},
+{
+"NroSol": "SOL-0005/2026",
+"Item": 2,
+"ID_Cta": 4,
+"ID_Aux": 32,
+"Descripcion": "COLOR BLANCO PROCESADOR I5 MARCA HP",
+"Cantidad": 1,
+"Saldo": 0
+},
+{
+"NroSol": "SOL-0003/2026",
+"Item": 1,
+"ID_Cta": 10,
+"ID_Aux": 130,
+"Descripcion": "Tensiómetro digital",
+"Cantidad": 2,
+"Saldo": 0
+},
+{
+"NroSol": "SOL-0003/2026",
+"Item": 2,
+"ID_Cta": 10,
+"ID_Aux": 169,
+"Descripcion": "Balanza con tallímetro",
+"Cantidad": 1,
+"Saldo": 0
+},
+{
+"NroSol": "SOL-0003/2026",
+"Item": 3,
+"ID_Cta": 10,
+"ID_Aux": 227,
+"Descripcion": "Camilla",
+"Cantidad": 1,
+"Saldo": 0
+}
+],
+"T_ASIG": [
+{
+"NroActa": "ASG-0001/2026",
+"Fecha": "2026-09-26T00:00:00",
+"NroSol": "SOL-0001/2026",
+"Funcionario": "JAVIER CONDORI CHOQUE",
+"CI": "4815712 LP",
+"Cargo": "DIRECTOR DE UNIDAD EDUCATIVA",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"CodEdif": 1,
+"CodAmb": 2,
+"Cantidad": 17,
+"Valor": 10200,
+"Observaciones": "Entrega en aula 2",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"NroActa": "ASG-0002/2026",
+"Fecha": "2026-09-26T00:00:00",
+"NroSol": "SOL-0002/2026",
+"Funcionario": "EDWIN TONY CHUCA ORDOÑEZ",
+"CI": "4814575 LP",
+"Cargo": "RESPONSABLE DE CONTABILIDAD",
+"Unidad": "UNIDAD DE CONTABILIDAD",
+"CodEdif": 0,
+"CodAmb": 0,
+"Cantidad": 3,
+"Valor": 18200,
+"Observaciones": null,
+"FechaReg": "2026-09-26T01:28:16"
+},
+{
+"NroActa": "ASG-0003/2026",
+"Fecha": "2026-09-26T00:00:00",
+"NroSol": "SOL-0003/2026",
+"Funcionario": "RIGORBERTO WALDO YANARICO QUISPE",
+"CI": "4821397 LP",
+"Cargo": "RESPONSABLE DE CENTRO DE SALUD",
+"Unidad": "UNIDAD DE SALUD",
+"CodEdif": 0,
+"CodAmb": 0,
+"Cantidad": 4,
+"Valor": 6400,
+"Observaciones": null,
+"FechaReg": "2026-09-26T16:16:41"
+}
+],
+"T_ASIGDET": [
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-01"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-02"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-03"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-04"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-05"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-06"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-07"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-08"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-09"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-10"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-11"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-12"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-13"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-14"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-02-12261-15"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-01-03001-01"
+},
+{
+"NroActa": "ASG-0001/2026",
+"Codigo": "001-13-11238-01"
+},
+{
+"NroActa": "ASG-0002/2026",
+"Codigo": "009-01-04032-01"
+},
+{
+"NroActa": "ASG-0002/2026",
+"Codigo": "009-01-04032-02"
+},
+{
+"NroActa": "ASG-0002/2026",
+"Codigo": "009-01-04040-01"
+},
+{
+"NroActa": "ASG-0003/2026",
+"Codigo": "007-00-10130-01"
+},
+{
+"NroActa": "ASG-0003/2026",
+"Codigo": "007-00-10130-02"
+},
+{
+"NroActa": "ASG-0003/2026",
+"Codigo": "007-00-10169-01"
+},
+{
+"NroActa": "ASG-0003/2026",
+"Codigo": "007-00-10227-01"
+}
+],
+"T_MOV": [
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-02",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-03",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-04",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-05",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-06",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-07",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-08",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-09",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-10",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-11",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-12",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-13",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-14",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-15",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-01-03001-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / DIRECCIÓN",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-01-03001-02",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / DIRECCIÓN",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-01-03001-03",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / DIRECCIÓN",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-01-03001-04",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / DIRECCIÓN",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "002-03-03002-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. POROBAYA / DIRECCIÓN",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "002-03-03002-02",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. POROBAYA / DIRECCIÓN",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-02",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-03",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-04",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-05",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-06",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-07",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-08",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-09",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-10",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-11",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-12",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-13",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-14",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-03-12261-15",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0001/2026",
+"Origen": "COMERCIAL MUEBLES ANDINOS S.R.L. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / AULA 3",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "009-01-04032-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0002/2026",
+"Origen": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para UNIDAD DE CONTABILIDAD / OFICINA DE CONTABILIDAD",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "009-01-04032-02",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0002/2026",
+"Origen": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para UNIDAD DE CONTABILIDAD / OFICINA DE CONTABILIDAD",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "009-01-04040-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0002/2026",
+"Origen": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para UNIDAD DE CONTABILIDAD / OFICINA DE CONTABILIDAD",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-13-11238-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0002/2026",
+"Origen": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. CARAZANI / SALA DE COMPUTACIÓN",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:52"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "007-00-10130-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0003/2026",
+"Origen": "EQUIPOS MÉDICOS DEL SUR LTDA. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para CENTRO DE SALUD ATAHUALLPANI / SIN ASIGNAR (ALMACÉN)",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:53"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "007-00-10130-02",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0003/2026",
+"Origen": "EQUIPOS MÉDICOS DEL SUR LTDA. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para CENTRO DE SALUD ATAHUALLPANI / SIN ASIGNAR (ALMACÉN)",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:53"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "007-00-10169-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0003/2026",
+"Origen": "EQUIPOS MÉDICOS DEL SUR LTDA. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para CENTRO DE SALUD ATAHUALLPANI / SIN ASIGNAR (ALMACÉN)",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:53"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "007-00-10227-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0003/2026",
+"Origen": "EQUIPOS MÉDICOS DEL SUR LTDA. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para CENTRO DE SALUD ATAHUALLPANI / SIN ASIGNAR (ALMACÉN)",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:27:53"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-01",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-02",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-03",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-04",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-05",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-06",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-07",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-08",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-09",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-10",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-11",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-12",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-13",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-14",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-15",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-01-03001-01",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-13-11238-01",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0001/2026",
+"Origen": "ALMACÉN",
+"Destino": "JAVIER CONDORI CHOQUE",
+"Detalle": "Ubicación: U.E. CARAZANI / AULA 2 Solicitud SOL-0001/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:09"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "009-01-04032-01",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0002/2026",
+"Origen": "ALMACÉN",
+"Destino": "EDWIN TONY CHUCA ORDOÑEZ",
+"Detalle": "Solicitud SOL-0002/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:16"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "009-01-04032-02",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0002/2026",
+"Origen": "ALMACÉN",
+"Destino": "EDWIN TONY CHUCA ORDOÑEZ",
+"Detalle": "Solicitud SOL-0002/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:16"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "009-01-04040-01",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0002/2026",
+"Origen": "ALMACÉN",
+"Destino": "EDWIN TONY CHUCA ORDOÑEZ",
+"Detalle": "Solicitud SOL-0002/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:16"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-01",
+"Tipo": "TRANSFERENCIA",
+"Documento": "TRF-0001/2026",
+"Origen": "JAVIER CONDORI CHOQUE",
+"Destino": "MARIO CHOQUE CADENA",
+"Detalle": "Préstamo autorizado a la U.E. Porobaya por incremento de alumnos",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:24"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-02",
+"Tipo": "TRANSFERENCIA",
+"Documento": "TRF-0001/2026",
+"Origen": "JAVIER CONDORI CHOQUE",
+"Destino": "MARIO CHOQUE CADENA",
+"Detalle": "Préstamo autorizado a la U.E. Porobaya por incremento de alumnos",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:24"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "001-02-12261-03",
+"Tipo": "TRANSFERENCIA",
+"Documento": "TRF-0001/2026",
+"Origen": "JAVIER CONDORI CHOQUE",
+"Destino": "MARIO CHOQUE CADENA",
+"Detalle": "Préstamo autorizado a la U.E. Porobaya por incremento de alumnos",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:24"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "009-01-04040-01",
+"Tipo": "DEVOLUCIÓN",
+"Documento": "DEV-0001/2026",
+"Origen": "EDWIN TONY CHUCA ORDOÑEZ",
+"Destino": "ALMACÉN",
+"Detalle": "Falla en el tambor de impresión; se devuelve para mantenimiento | Estado: Regular",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T01:28:27"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "002-02-04032-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0004/2026",
+"Origen": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. POROBAYA / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T16:02:38"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "002-02-04032-02",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0004/2026",
+"Origen": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. POROBAYA / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T16:02:38"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "002-02-04032-03",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0004/2026",
+"Origen": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. POROBAYA / AULA 2",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T16:02:38"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "002-00-11238-01",
+"Tipo": "INGRESO Y CODIFICACIÓN",
+"Documento": "ING-0004/2026",
+"Origen": "TECNOLOGÍA ALTIPLANO S.A. (DEMO)",
+"Destino": "ALMACÉN",
+"Detalle": "Codificado para U.E. POROBAYA / SIN ASIGNAR (ALMACÉN)",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T16:02:38"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "007-00-10130-01",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0003/2026",
+"Origen": "ALMACÉN",
+"Destino": "RIGORBERTO WALDO YANARICO QUISPE",
+"Detalle": "Solicitud SOL-0003/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T16:16:41"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "007-00-10130-02",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0003/2026",
+"Origen": "ALMACÉN",
+"Destino": "RIGORBERTO WALDO YANARICO QUISPE",
+"Detalle": "Solicitud SOL-0003/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T16:16:41"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "007-00-10169-01",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0003/2026",
+"Origen": "ALMACÉN",
+"Destino": "RIGORBERTO WALDO YANARICO QUISPE",
+"Detalle": "Solicitud SOL-0003/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T16:16:41"
+},
+{
+"Fecha": "2026-09-26T00:00:00",
+"Codigo": "007-00-10227-01",
+"Tipo": "ASIGNACIÓN",
+"Documento": "ASG-0003/2026",
+"Origen": "ALMACÉN",
+"Destino": "RIGORBERTO WALDO YANARICO QUISPE",
+"Detalle": "Solicitud SOL-0003/2026",
+"Usuario": "JAIME",
+"FechaReg": "2026-09-26T16:16:41"
+}
+]
+}

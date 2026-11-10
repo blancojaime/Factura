@@ -1,0 +1,5981 @@
+{
+"T_BODEGAS": [
+{
+"CodBod": "01",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Responsable": "TÉC. MARIO CONDORI QUISPE",
+"Ubicacion": "Almacén Municipal",
+"Estado": "ACTIVO"
+},
+{
+"CodBod": "02",
+"Bodega": "BODEGA MATERIALES DE CONSTRUCCIÓN",
+"Responsable": "AUX. JULIO MAMANI CHOQUE",
+"Ubicacion": "Almacén Municipal",
+"Estado": "ACTIVO"
+},
+{
+"CodBod": "03",
+"Bodega": "BODEGA FERRETERÍA",
+"Responsable": "AUX. JULIO MAMANI CHOQUE",
+"Ubicacion": "Almacén Municipal",
+"Estado": "ACTIVO"
+},
+{
+"CodBod": "04",
+"Bodega": "BODEGA MEDICAMENTOS SUS",
+"Responsable": "DRA. SILVIA TORREZ ALANOCA",
+"Ubicacion": "Almacén Municipal",
+"Estado": "ACTIVO"
+}
+],
+"T_GRUPOS": [
+{
+"Grupo": 1,
+"NombreGrupo": "PAPELERÍA Y ÚTILES DE OFICINA"
+},
+{
+"Grupo": 2,
+"NombreGrupo": "MATERIAL DE LIMPIEZA Y ASEO"
+},
+{
+"Grupo": 3,
+"NombreGrupo": "MATERIALES DE CONSTRUCCIÓN"
+},
+{
+"Grupo": 4,
+"NombreGrupo": "FERRETERÍA Y HERRAMIENTAS MENORES"
+},
+{
+"Grupo": 5,
+"NombreGrupo": "MEDICAMENTOS E INSUMOS MÉDICOS (SUS)"
+},
+{
+"Grupo": 6,
+"NombreGrupo": "ALIMENTOS Y PRODUCTOS AGROFORESTALES"
+},
+{
+"Grupo": 7,
+"NombreGrupo": "COMBUSTIBLES, LUBRICANTES Y PRODUCTOS QUÍMICOS"
+},
+{
+"Grupo": 8,
+"NombreGrupo": "TEXTILES Y VESTUARIO"
+},
+{
+"Grupo": 9,
+"NombreGrupo": "OTROS MATERIALES Y SUMINISTROS"
+}
+],
+"T_SUBGRUPOS": [
+{
+"Grupo": 1,
+"SubGrupo": 1,
+"Nombre": "Papel y cartón",
+"Clave": "1-1",
+"Display": "1-1 - PAPEL Y CARTÓN"
+},
+{
+"Grupo": 1,
+"SubGrupo": 2,
+"Nombre": "Útiles de escritorio",
+"Clave": "1-2",
+"Display": "1-2 - ÚTILES DE ESCRITORIO"
+},
+{
+"Grupo": 1,
+"SubGrupo": 3,
+"Nombre": "Tintas, tóner y material de impresión",
+"Clave": "1-3",
+"Display": "1-3 - TINTAS, TÓNER Y MATERIAL DE IMPRESIÓN"
+},
+{
+"Grupo": 1,
+"SubGrupo": 4,
+"Nombre": "Material educativo y cultural",
+"Clave": "1-4",
+"Display": "1-4 - MATERIAL EDUCATIVO Y CULTURAL"
+},
+{
+"Grupo": 2,
+"SubGrupo": 1,
+"Nombre": "Material de limpieza",
+"Clave": "2-1",
+"Display": "2-1 - MATERIAL DE LIMPIEZA"
+},
+{
+"Grupo": 2,
+"SubGrupo": 2,
+"Nombre": "Higiene y aseo personal",
+"Clave": "2-2",
+"Display": "2-2 - HIGIENE Y ASEO PERSONAL"
+},
+{
+"Grupo": 2,
+"SubGrupo": 3,
+"Nombre": "Bolsas y descartables",
+"Clave": "2-3",
+"Display": "2-3 - BOLSAS Y DESCARTABLES"
+},
+{
+"Grupo": 3,
+"SubGrupo": 1,
+"Nombre": "Cemento y áridos",
+"Clave": "3-1",
+"Display": "3-1 - CEMENTO Y ÁRIDOS"
+},
+{
+"Grupo": 3,
+"SubGrupo": 2,
+"Nombre": "Fierro y metales de construcción",
+"Clave": "3-2",
+"Display": "3-2 - FIERRO Y METALES DE CONSTRUCCIÓN"
+},
+{
+"Grupo": 3,
+"SubGrupo": 3,
+"Nombre": "Ladrillos y bloques",
+"Clave": "3-3",
+"Display": "3-3 - LADRILLOS Y BLOQUES"
+},
+{
+"Grupo": 3,
+"SubGrupo": 4,
+"Nombre": "Madera",
+"Clave": "3-4",
+"Display": "3-4 - MADERA"
+},
+{
+"Grupo": 3,
+"SubGrupo": 5,
+"Nombre": "Pinturas y acabados",
+"Clave": "3-5",
+"Display": "3-5 - PINTURAS Y ACABADOS"
+},
+{
+"Grupo": 3,
+"SubGrupo": 6,
+"Nombre": "Instalaciones sanitarias y eléctricas",
+"Clave": "3-6",
+"Display": "3-6 - INSTALACIONES SANITARIAS Y ELÉCTRICAS"
+},
+{
+"Grupo": 4,
+"SubGrupo": 1,
+"Nombre": "Herramientas menores",
+"Clave": "4-1",
+"Display": "4-1 - HERRAMIENTAS MENORES"
+},
+{
+"Grupo": 4,
+"SubGrupo": 2,
+"Nombre": "Tornillería y fijaciones",
+"Clave": "4-2",
+"Display": "4-2 - TORNILLERÍA Y FIJACIONES"
+},
+{
+"Grupo": 4,
+"SubGrupo": 3,
+"Nombre": "Material eléctrico",
+"Clave": "4-3",
+"Display": "4-3 - MATERIAL ELÉCTRICO"
+},
+{
+"Grupo": 4,
+"SubGrupo": 4,
+"Nombre": "Repuestos y accesorios",
+"Clave": "4-4",
+"Display": "4-4 - REPUESTOS Y ACCESORIOS"
+},
+{
+"Grupo": 5,
+"SubGrupo": 1,
+"Nombre": "Medicamentos",
+"Clave": "5-1",
+"Display": "5-1 - MEDICAMENTOS"
+},
+{
+"Grupo": 5,
+"SubGrupo": 2,
+"Nombre": "Material de curación",
+"Clave": "5-2",
+"Display": "5-2 - MATERIAL DE CURACIÓN"
+},
+{
+"Grupo": 5,
+"SubGrupo": 3,
+"Nombre": "Insumos de laboratorio",
+"Clave": "5-3",
+"Display": "5-3 - INSUMOS DE LABORATORIO"
+},
+{
+"Grupo": 5,
+"SubGrupo": 4,
+"Nombre": "Instrumental menor médico-quirúrgico",
+"Clave": "5-4",
+"Display": "5-4 - INSTRUMENTAL MENOR MÉDICO-QUIRÚRGICO"
+},
+{
+"Grupo": 6,
+"SubGrupo": 1,
+"Nombre": "Alimentos y bebidas",
+"Clave": "6-1",
+"Display": "6-1 - ALIMENTOS Y BEBIDAS"
+},
+{
+"Grupo": 6,
+"SubGrupo": 2,
+"Nombre": "Productos agroforestales",
+"Clave": "6-2",
+"Display": "6-2 - PRODUCTOS AGROFORESTALES"
+},
+{
+"Grupo": 6,
+"SubGrupo": 3,
+"Nombre": "Alimento para animales",
+"Clave": "6-3",
+"Display": "6-3 - ALIMENTO PARA ANIMALES"
+},
+{
+"Grupo": 7,
+"SubGrupo": 1,
+"Nombre": "Combustibles y lubricantes",
+"Clave": "7-1",
+"Display": "7-1 - COMBUSTIBLES Y LUBRICANTES"
+},
+{
+"Grupo": 7,
+"SubGrupo": 2,
+"Nombre": "Productos químicos",
+"Clave": "7-2",
+"Display": "7-2 - PRODUCTOS QUÍMICOS"
+},
+{
+"Grupo": 8,
+"SubGrupo": 1,
+"Nombre": "Textiles",
+"Clave": "8-1",
+"Display": "8-1 - TEXTILES"
+},
+{
+"Grupo": 8,
+"SubGrupo": 2,
+"Nombre": "Vestuario y equipo de protección personal",
+"Clave": "8-2",
+"Display": "8-2 - VESTUARIO Y EQUIPO DE PROTECCIÓN PERSONAL"
+},
+{
+"Grupo": 8,
+"SubGrupo": 3,
+"Nombre": "Calzados",
+"Clave": "8-3",
+"Display": "8-3 - CALZADOS"
+},
+{
+"Grupo": 9,
+"SubGrupo": 1,
+"Nombre": "Utensilios de cocina y comedor",
+"Clave": "9-1",
+"Display": "9-1 - UTENSILIOS DE COCINA Y COMEDOR"
+},
+{
+"Grupo": 9,
+"SubGrupo": 2,
+"Nombre": "Material deportivo y recreativo",
+"Clave": "9-2",
+"Display": "9-2 - MATERIAL DEPORTIVO Y RECREATIVO"
+},
+{
+"Grupo": 9,
+"SubGrupo": 9,
+"Nombre": "Otros materiales y suministros",
+"Clave": "9-9",
+"Display": "9-9 - OTROS MATERIALES Y SUMINISTROS"
+}
+],
+"T_CATALOGO": [
+{
+"Codigo": "1-1-0000001",
+"Grupo": 1,
+"SubGrupo": 1,
+"Correlativo": 1,
+"Descripcion": "PAPEL BOND CARTA 75 G",
+"Unidad": "RESMA",
+"Partida": "32000",
+"CodBod": "01",
+"StockMin": 20,
+"StockMax": 100,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-1",
+"PrecioRef": 38,
+"Estado": "ACTIVO",
+"Display": "1-1-0000001 - PAPEL BOND CARTA 75 G",
+"FechaReg": "2026-10-02T13:29:06"
+},
+{
+"Codigo": "1-1-0000002",
+"Grupo": 1,
+"SubGrupo": 1,
+"Correlativo": 2,
+"Descripcion": "PAPEL BOND OFICIO 75 G",
+"Unidad": "RESMA",
+"Partida": "32000",
+"CodBod": "01",
+"StockMin": 10,
+"StockMax": 60,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-1",
+"PrecioRef": 45,
+"Estado": "ACTIVO",
+"Display": "1-1-0000002 - PAPEL BOND OFICIO 75 G",
+"FechaReg": "2026-10-02T13:29:07"
+},
+{
+"Codigo": "1-1-0000003",
+"Grupo": 1,
+"SubGrupo": 1,
+"Correlativo": 3,
+"Descripcion": "CARTULINA ESCOLAR DE COLORES",
+"Unidad": "PAQUETE",
+"Partida": "32000",
+"CodBod": "01",
+"StockMin": 5,
+"StockMax": 30,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-1",
+"PrecioRef": 25,
+"Estado": "ACTIVO",
+"Display": "1-1-0000003 - CARTULINA ESCOLAR DE COLORES",
+"FechaReg": "2026-10-02T13:29:07"
+},
+{
+"Codigo": "1-2-0000001",
+"Grupo": 1,
+"SubGrupo": 2,
+"Correlativo": 1,
+"Descripcion": "BOLÍGRAFO AZUL PUNTA MEDIA",
+"Unidad": "UNIDAD",
+"Partida": "39200",
+"CodBod": "01",
+"StockMin": 50,
+"StockMax": 300,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-2",
+"PrecioRef": 1.6,
+"Estado": "ACTIVO",
+"Display": "1-2-0000001 - BOLÍGRAFO AZUL PUNTA MEDIA",
+"FechaReg": "2026-10-02T13:29:07"
+},
+{
+"Codigo": "1-2-0000002",
+"Grupo": 1,
+"SubGrupo": 2,
+"Correlativo": 2,
+"Descripcion": "LÁPIZ NEGRO HB",
+"Unidad": "UNIDAD",
+"Partida": "39200",
+"CodBod": "01",
+"StockMin": 40,
+"StockMax": 200,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-2",
+"PrecioRef": 1,
+"Estado": "ACTIVO",
+"Display": "1-2-0000002 - LÁPIZ NEGRO HB",
+"FechaReg": "2026-10-02T13:29:08"
+},
+{
+"Codigo": "1-2-0000003",
+"Grupo": 1,
+"SubGrupo": 2,
+"Correlativo": 3,
+"Descripcion": "FOLDER MANILA TAMAÑO OFICIO",
+"Unidad": "UNIDAD",
+"Partida": "39200",
+"CodBod": "01",
+"StockMin": 100,
+"StockMax": 500,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-2",
+"PrecioRef": 1.2,
+"Estado": "ACTIVO",
+"Display": "1-2-0000003 - FOLDER MANILA TAMAÑO OFICIO",
+"FechaReg": "2026-10-02T13:29:08"
+},
+{
+"Codigo": "1-2-0000004",
+"Grupo": 1,
+"SubGrupo": 2,
+"Correlativo": 4,
+"Descripcion": "GRAPAS 26/6",
+"Unidad": "CAJA",
+"Partida": "39200",
+"CodBod": "01",
+"StockMin": 10,
+"StockMax": 50,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-2",
+"PrecioRef": 6,
+"Estado": "ACTIVO",
+"Display": "1-2-0000004 - GRAPAS 26/6",
+"FechaReg": "2026-10-02T13:29:08"
+},
+{
+"Codigo": "1-2-0000005",
+"Grupo": 1,
+"SubGrupo": 2,
+"Correlativo": 5,
+"Descripcion": "CINTA ADHESIVA 48 MM",
+"Unidad": "ROLLO",
+"Partida": "39200",
+"CodBod": "01",
+"StockMin": 10,
+"StockMax": 40,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-2",
+"PrecioRef": 7,
+"Estado": "ACTIVO",
+"Display": "1-2-0000005 - CINTA ADHESIVA 48 MM",
+"FechaReg": "2026-10-02T13:29:08"
+},
+{
+"Codigo": "1-2-0000006",
+"Grupo": 1,
+"SubGrupo": 2,
+"Correlativo": 6,
+"Descripcion": "MARCADOR ACRÍLICO PERMANENTE NEGRO",
+"Unidad": "UNIDAD",
+"Partida": "39200",
+"CodBod": "01",
+"StockMin": 12,
+"StockMax": 60,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-2",
+"PrecioRef": 5,
+"Estado": "ACTIVO",
+"Display": "1-2-0000006 - MARCADOR ACRÍLICO PERMANENTE NEGRO",
+"FechaReg": "2026-10-02T13:29:09"
+},
+{
+"Codigo": "1-3-0000001",
+"Grupo": 1,
+"SubGrupo": 3,
+"Correlativo": 1,
+"Descripcion": "TÓNER HP 85A NEGRO",
+"Unidad": "UNIDAD",
+"Partida": "39200",
+"CodBod": "01",
+"StockMin": 2,
+"StockMax": 8,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-3",
+"PrecioRef": 520,
+"Estado": "ACTIVO",
+"Display": "1-3-0000001 - TÓNER HP 85A NEGRO",
+"FechaReg": "2026-10-02T13:29:09"
+},
+{
+"Codigo": "1-3-0000002",
+"Grupo": 1,
+"SubGrupo": 3,
+"Correlativo": 2,
+"Descripcion": "TINTA EPSON 664 NEGRO",
+"Unidad": "FRASCO",
+"Partida": "39200",
+"CodBod": "01",
+"StockMin": 4,
+"StockMax": 20,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante B-3",
+"PrecioRef": 85,
+"Estado": "ACTIVO",
+"Display": "1-3-0000002 - TINTA EPSON 664 NEGRO",
+"FechaReg": "2026-10-02T13:29:09"
+},
+{
+"Codigo": "2-1-0000001",
+"Grupo": 2,
+"SubGrupo": 1,
+"Correlativo": 1,
+"Descripcion": "LEJÍA DE 1 LITRO",
+"Unidad": "UNIDAD",
+"Partida": "39100",
+"CodBod": "01",
+"StockMin": 12,
+"StockMax": 60,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante C-1",
+"PrecioRef": 8,
+"Estado": "ACTIVO",
+"Display": "2-1-0000001 - LEJÍA DE 1 LITRO",
+"FechaReg": "2026-10-02T13:29:10"
+},
+{
+"Codigo": "2-1-0000002",
+"Grupo": 2,
+"SubGrupo": 1,
+"Correlativo": 2,
+"Descripcion": "DETERGENTE EN POLVO 800 G",
+"Unidad": "BOLSA",
+"Partida": "39100",
+"CodBod": "01",
+"StockMin": 10,
+"StockMax": 50,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante C-1",
+"PrecioRef": 14,
+"Estado": "ACTIVO",
+"Display": "2-1-0000002 - DETERGENTE EN POLVO 800 G",
+"FechaReg": "2026-10-02T13:29:10"
+},
+{
+"Codigo": "2-3-0000001",
+"Grupo": 2,
+"SubGrupo": 3,
+"Correlativo": 1,
+"Descripcion": "BOLSAS DE BASURA 90X110 CM",
+"Unidad": "PAQUETE",
+"Partida": "39100",
+"CodBod": "01",
+"StockMin": 8,
+"StockMax": 40,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante C-3",
+"PrecioRef": 18,
+"Estado": "ACTIVO",
+"Display": "2-3-0000001 - BOLSAS DE BASURA 90X110 CM",
+"FechaReg": "2026-10-02T13:29:10"
+},
+{
+"Codigo": "3-1-0000001",
+"Grupo": 3,
+"SubGrupo": 1,
+"Correlativo": 1,
+"Descripcion": "CEMENTO PORTLAND IP-30 DE 50 KG",
+"Unidad": "BOLSA",
+"Partida": "35000",
+"CodBod": "02",
+"StockMin": 100,
+"StockMax": 600,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante D-1",
+"PrecioRef": 58,
+"Estado": "ACTIVO",
+"Display": "3-1-0000001 - CEMENTO PORTLAND IP-30 DE 50 KG",
+"FechaReg": "2026-10-02T13:29:11"
+},
+{
+"Codigo": "3-1-0000002",
+"Grupo": 3,
+"SubGrupo": 1,
+"Correlativo": 2,
+"Descripcion": "ARENA FINA LAVADA",
+"Unidad": "METRO CÚBICO",
+"Partida": "35000",
+"CodBod": "02",
+"StockMin": 5,
+"StockMax": 40,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante D-1",
+"PrecioRef": 120,
+"Estado": "ACTIVO",
+"Display": "3-1-0000002 - ARENA FINA LAVADA",
+"FechaReg": "2026-10-02T13:29:11"
+},
+{
+"Codigo": "3-1-0000003",
+"Grupo": 3,
+"SubGrupo": 1,
+"Correlativo": 3,
+"Descripcion": "GRAVA CHANCADA",
+"Unidad": "METRO CÚBICO",
+"Partida": "35000",
+"CodBod": "02",
+"StockMin": 5,
+"StockMax": 40,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante D-1",
+"PrecioRef": 150,
+"Estado": "ACTIVO",
+"Display": "3-1-0000003 - GRAVA CHANCADA",
+"FechaReg": "2026-10-02T13:29:11"
+},
+{
+"Codigo": "3-2-0000001",
+"Grupo": 3,
+"SubGrupo": 2,
+"Correlativo": 1,
+"Descripcion": "FIERRO CORRUGADO 3/8 DE 12 M",
+"Unidad": "BARRA",
+"Partida": "36000",
+"CodBod": "02",
+"StockMin": 50,
+"StockMax": 300,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante D-2",
+"PrecioRef": 42,
+"Estado": "ACTIVO",
+"Display": "3-2-0000001 - FIERRO CORRUGADO 3/8 DE 12 M",
+"FechaReg": "2026-10-02T13:29:11"
+},
+{
+"Codigo": "3-2-0000002",
+"Grupo": 3,
+"SubGrupo": 2,
+"Correlativo": 2,
+"Descripcion": "FIERRO CORRUGADO 1/2 DE 12 M",
+"Unidad": "BARRA",
+"Partida": "36000",
+"CodBod": "02",
+"StockMin": 50,
+"StockMax": 300,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante D-2",
+"PrecioRef": 75,
+"Estado": "ACTIVO",
+"Display": "3-2-0000002 - FIERRO CORRUGADO 1/2 DE 12 M",
+"FechaReg": "2026-10-02T13:29:12"
+},
+{
+"Codigo": "3-3-0000001",
+"Grupo": 3,
+"SubGrupo": 3,
+"Correlativo": 1,
+"Descripcion": "LADRILLO 6 HUECOS",
+"Unidad": "UNIDAD",
+"Partida": "35000",
+"CodBod": "02",
+"StockMin": 1000,
+"StockMax": 6000,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante D-3",
+"PrecioRef": 1.1,
+"Estado": "ACTIVO",
+"Display": "3-3-0000001 - LADRILLO 6 HUECOS",
+"FechaReg": "2026-10-02T13:29:12"
+},
+{
+"Codigo": "3-5-0000001",
+"Grupo": 3,
+"SubGrupo": 5,
+"Correlativo": 1,
+"Descripcion": "PINTURA LÁTEX BLANCA BALDE 18 L",
+"Unidad": "BIDÓN",
+"Partida": "39900",
+"CodBod": "02",
+"StockMin": 4,
+"StockMax": 20,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante D-5",
+"PrecioRef": 420,
+"Estado": "ACTIVO",
+"Display": "3-5-0000001 - PINTURA LÁTEX BLANCA BALDE 18 L",
+"FechaReg": "2026-10-02T13:29:12"
+},
+{
+"Codigo": "4-1-0000001",
+"Grupo": 4,
+"SubGrupo": 1,
+"Correlativo": 1,
+"Descripcion": "PALA CUADRADA CON MANGO",
+"Unidad": "UNIDAD",
+"Partida": "38000",
+"CodBod": "03",
+"StockMin": 5,
+"StockMax": 25,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante E-1",
+"PrecioRef": 65,
+"Estado": "ACTIVO",
+"Display": "4-1-0000001 - PALA CUADRADA CON MANGO",
+"FechaReg": "2026-10-02T13:29:12"
+},
+{
+"Codigo": "4-1-0000002",
+"Grupo": 4,
+"SubGrupo": 1,
+"Correlativo": 2,
+"Descripcion": "PICOTA CON MANGO",
+"Unidad": "UNIDAD",
+"Partida": "38000",
+"CodBod": "03",
+"StockMin": 5,
+"StockMax": 25,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante E-1",
+"PrecioRef": 70,
+"Estado": "ACTIVO",
+"Display": "4-1-0000002 - PICOTA CON MANGO",
+"FechaReg": "2026-10-02T13:29:13"
+},
+{
+"Codigo": "4-2-0000001",
+"Grupo": 4,
+"SubGrupo": 2,
+"Correlativo": 1,
+"Descripcion": "CLAVOS DE 2 PULGADAS",
+"Unidad": "KILOGRAMO",
+"Partida": "36000",
+"CodBod": "03",
+"StockMin": 10,
+"StockMax": 60,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante E-2",
+"PrecioRef": 14,
+"Estado": "ACTIVO",
+"Display": "4-2-0000001 - CLAVOS DE 2 PULGADAS",
+"FechaReg": "2026-10-02T13:29:13"
+},
+{
+"Codigo": "4-2-0000002",
+"Grupo": 4,
+"SubGrupo": 2,
+"Correlativo": 2,
+"Descripcion": "TORNILLOS AUTOROSCANTES 1 1/2 PULGADA",
+"Unidad": "CAJA",
+"Partida": "36000",
+"CodBod": "03",
+"StockMin": 5,
+"StockMax": 30,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante E-2",
+"PrecioRef": 35,
+"Estado": "ACTIVO",
+"Display": "4-2-0000002 - TORNILLOS AUTOROSCANTES 1 1/2 PULGADA",
+"FechaReg": "2026-10-02T13:29:13"
+},
+{
+"Codigo": "4-3-0000001",
+"Grupo": 4,
+"SubGrupo": 3,
+"Correlativo": 1,
+"Descripcion": "CABLE ELÉCTRICO 12 AWG ROLLO 100 M",
+"Unidad": "ROLLO",
+"Partida": "39400",
+"CodBod": "03",
+"StockMin": 3,
+"StockMax": 15,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante E-3",
+"PrecioRef": 380,
+"Estado": "ACTIVO",
+"Display": "4-3-0000001 - CABLE ELÉCTRICO 12 AWG ROLLO 100 M",
+"FechaReg": "2026-10-02T13:29:13"
+},
+{
+"Codigo": "4-3-0000002",
+"Grupo": 4,
+"SubGrupo": 3,
+"Correlativo": 2,
+"Descripcion": "FOCO LED 12 W",
+"Unidad": "UNIDAD",
+"Partida": "39400",
+"CodBod": "03",
+"StockMin": 20,
+"StockMax": 100,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante E-3",
+"PrecioRef": 12,
+"Estado": "ACTIVO",
+"Display": "4-3-0000002 - FOCO LED 12 W",
+"FechaReg": "2026-10-02T13:29:14"
+},
+{
+"Codigo": "4-4-0000001",
+"Grupo": 4,
+"SubGrupo": 4,
+"Correlativo": 1,
+"Descripcion": "CANDADO DE 50 MM",
+"Unidad": "UNIDAD",
+"Partida": "39800",
+"CodBod": "03",
+"StockMin": 5,
+"StockMax": 25,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante E-4",
+"PrecioRef": 28,
+"Estado": "ACTIVO",
+"Display": "4-4-0000001 - CANDADO DE 50 MM",
+"FechaReg": "2026-10-02T13:29:14"
+},
+{
+"Codigo": "5-1-0000001",
+"Grupo": 5,
+"SubGrupo": 1,
+"Correlativo": 1,
+"Descripcion": "PARACETAMOL 500 MG",
+"Unidad": "TABLETA",
+"Partida": "34200",
+"CodBod": "04",
+"StockMin": 500,
+"StockMax": 3000,
+"Perecible": "SI",
+"Peligroso": "NO",
+"Ubicacion": "Estante F-1",
+"PrecioRef": 0.32,
+"Estado": "ACTIVO",
+"Display": "5-1-0000001 - PARACETAMOL 500 MG",
+"FechaReg": "2026-10-02T13:29:15"
+},
+{
+"Codigo": "5-1-0000002",
+"Grupo": 5,
+"SubGrupo": 1,
+"Correlativo": 2,
+"Descripcion": "AMOXICILINA 500 MG",
+"Unidad": "TABLETA",
+"Partida": "34200",
+"CodBod": "04",
+"StockMin": 300,
+"StockMax": 2000,
+"Perecible": "SI",
+"Peligroso": "NO",
+"Ubicacion": "Estante F-1",
+"PrecioRef": 0.8,
+"Estado": "ACTIVO",
+"Display": "5-1-0000002 - AMOXICILINA 500 MG",
+"FechaReg": "2026-10-02T13:29:15"
+},
+{
+"Codigo": "5-1-0000003",
+"Grupo": 5,
+"SubGrupo": 1,
+"Correlativo": 3,
+"Descripcion": "IBUPROFENO 400 MG",
+"Unidad": "TABLETA",
+"Partida": "34200",
+"CodBod": "04",
+"StockMin": 300,
+"StockMax": 2000,
+"Perecible": "SI",
+"Peligroso": "NO",
+"Ubicacion": "Estante F-1",
+"PrecioRef": 0.45,
+"Estado": "ACTIVO",
+"Display": "5-1-0000003 - IBUPROFENO 400 MG",
+"FechaReg": "2026-10-02T13:29:15"
+},
+{
+"Codigo": "5-1-0000004",
+"Grupo": 5,
+"SubGrupo": 1,
+"Correlativo": 4,
+"Descripcion": "SALES DE REHIDRATACIÓN ORAL",
+"Unidad": "SOBRE",
+"Partida": "34200",
+"CodBod": "04",
+"StockMin": 50,
+"StockMax": 300,
+"Perecible": "SI",
+"Peligroso": "NO",
+"Ubicacion": "Estante F-1",
+"PrecioRef": 3.5,
+"Estado": "ACTIVO",
+"Display": "5-1-0000004 - SALES DE REHIDRATACIÓN ORAL",
+"FechaReg": "2026-10-02T13:29:16"
+},
+{
+"Codigo": "5-2-0000001",
+"Grupo": 5,
+"SubGrupo": 2,
+"Correlativo": 1,
+"Descripcion": "GASA ESTÉRIL 10X10 CM",
+"Unidad": "PAQUETE",
+"Partida": "39600",
+"CodBod": "04",
+"StockMin": 20,
+"StockMax": 100,
+"Perecible": "SI",
+"Peligroso": "NO",
+"Ubicacion": "Estante F-2",
+"PrecioRef": 9,
+"Estado": "ACTIVO",
+"Display": "5-2-0000001 - GASA ESTÉRIL 10X10 CM",
+"FechaReg": "2026-10-02T13:29:16"
+},
+{
+"Codigo": "5-2-0000002",
+"Grupo": 5,
+"SubGrupo": 2,
+"Correlativo": 2,
+"Descripcion": "ALCOHOL MEDICINAL 96 GRADOS",
+"Unidad": "LITRO",
+"Partida": "34200",
+"CodBod": "04",
+"StockMin": 10,
+"StockMax": 60,
+"Perecible": "SI",
+"Peligroso": "SI",
+"Ubicacion": "Estante F-2",
+"PrecioRef": 22,
+"Estado": "ACTIVO",
+"Display": "5-2-0000002 - ALCOHOL MEDICINAL 96 GRADOS",
+"FechaReg": "2026-10-02T13:29:16"
+},
+{
+"Codigo": "5-2-0000003",
+"Grupo": 5,
+"SubGrupo": 2,
+"Correlativo": 3,
+"Descripcion": "GUANTES DE LÁTEX TALLA M",
+"Unidad": "CAJA",
+"Partida": "39600",
+"CodBod": "04",
+"StockMin": 5,
+"StockMax": 30,
+"Perecible": "NO",
+"Peligroso": "NO",
+"Ubicacion": "Estante F-2",
+"PrecioRef": 55,
+"Estado": "ACTIVO",
+"Display": "5-2-0000003 - GUANTES DE LÁTEX TALLA M",
+"FechaReg": "2026-10-02T13:29:17"
+}
+],
+"T_UMEDIDA": [
+{
+"Unidad": "UNIDAD"
+},
+{
+"Unidad": "PIEZA"
+},
+{
+"Unidad": "RESMA"
+},
+{
+"Unidad": "CAJA"
+},
+{
+"Unidad": "PAQUETE"
+},
+{
+"Unidad": "DOCENA"
+},
+{
+"Unidad": "PAR"
+},
+{
+"Unidad": "JUEGO"
+},
+{
+"Unidad": "ROLLO"
+},
+{
+"Unidad": "BOLSA"
+},
+{
+"Unidad": "QUINTAL"
+},
+{
+"Unidad": "KILOGRAMO"
+},
+{
+"Unidad": "LITRO"
+},
+{
+"Unidad": "GALÓN"
+},
+{
+"Unidad": "METRO"
+},
+{
+"Unidad": "METRO CÚBICO"
+},
+{
+"Unidad": "PLANCHA"
+},
+{
+"Unidad": "BARRA"
+},
+{
+"Unidad": "FRASCO"
+},
+{
+"Unidad": "TUBO"
+},
+{
+"Unidad": "TABLETA"
+},
+{
+"Unidad": "AMPOLLA"
+},
+{
+"Unidad": "BLÍSTER"
+},
+{
+"Unidad": "SOBRE"
+},
+{
+"Unidad": "LATA"
+},
+{
+"Unidad": "BIDÓN"
+},
+{
+"Unidad": "CARTUCHO"
+}
+],
+"T_PARTIDAS": [
+{
+"Partida": "31100",
+"Descripcion": "Alimentos y bebidas para personas"
+},
+{
+"Partida": "31200",
+"Descripcion": "Alimento para animales"
+},
+{
+"Partida": "31300",
+"Descripcion": "Productos agroforestales"
+},
+{
+"Partida": "32000",
+"Descripcion": "Productos de papel, cartón e impresos"
+},
+{
+"Partida": "33000",
+"Descripcion": "Textiles y vestuario"
+},
+{
+"Partida": "34100",
+"Descripcion": "Combustibles y lubricantes"
+},
+{
+"Partida": "34200",
+"Descripcion": "Productos químicos y farmacéuticos"
+},
+{
+"Partida": "34300",
+"Descripcion": "Llantas y neumáticos"
+},
+{
+"Partida": "34400",
+"Descripcion": "Productos de cuero y caucho"
+},
+{
+"Partida": "35000",
+"Descripcion": "Productos de minerales no metálicos y plásticos"
+},
+{
+"Partida": "36000",
+"Descripcion": "Productos metálicos"
+},
+{
+"Partida": "37000",
+"Descripcion": "Minerales"
+},
+{
+"Partida": "38000",
+"Descripcion": "Herramientas menores"
+},
+{
+"Partida": "39100",
+"Descripcion": "Material de limpieza"
+},
+{
+"Partida": "39200",
+"Descripcion": "Útiles de escritorio y oficina"
+},
+{
+"Partida": "39300",
+"Descripcion": "Útiles educacionales, culturales y de capacitación"
+},
+{
+"Partida": "39400",
+"Descripcion": "Útiles y materiales eléctricos"
+},
+{
+"Partida": "39500",
+"Descripcion": "Utensilios de cocina y comedor"
+},
+{
+"Partida": "39600",
+"Descripcion": "Instrumental menor médico-quirúrgico"
+},
+{
+"Partida": "39800",
+"Descripcion": "Repuestos y accesorios"
+},
+{
+"Partida": "39900",
+"Descripcion": "Otros materiales y suministros"
+}
+],
+"T_UNIDADES": [
+{
+"Unidad": "DESPACHO DEL ALCALDE",
+"Responsable": null,
+"Cargo": null
+},
+{
+"Unidad": "SECRETARÍA MUNICIPAL ADMINISTRATIVA Y FINANCIERA",
+"Responsable": null,
+"Cargo": null
+},
+{
+"Unidad": "UNIDAD DE BIENES Y SERVICIOS",
+"Responsable": null,
+"Cargo": null
+},
+{
+"Unidad": "UNIDAD DE SALUD",
+"Responsable": "DRA. SILVIA TORREZ ALANOCA",
+"Cargo": null
+},
+{
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Responsable": "ANA MARÍA QUISPE LIMACHI",
+"Cargo": null
+},
+{
+"Unidad": "UNIDAD DE OBRAS PÚBLICAS",
+"Responsable": "CARLOS HUANCA MAMANI",
+"Cargo": null
+},
+{
+"Unidad": "UNIDAD DE DESARROLLO PRODUCTIVO",
+"Responsable": null,
+"Cargo": null
+},
+{
+"Unidad": "UNIDAD DE ASUNTOS JURÍDICOS",
+"Responsable": null,
+"Cargo": null
+},
+{
+"Unidad": "UNIDAD DE PLANIFICACIÓN",
+"Responsable": null,
+"Cargo": null
+},
+{
+"Unidad": "UNIDAD DE TRANSPARENCIA",
+"Responsable": null,
+"Cargo": null
+}
+],
+"T_FUNC": [
+{
+"Nombre": "ANA MARÍA QUISPE LIMACHI",
+"CI": "4567812",
+"Cargo": "DIRECTORA DE EDUCACIÓN",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Celular": "71234501",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "CARLOS HUANCA MAMANI",
+"CI": "5123490",
+"Cargo": "DIRECTOR DE OBRAS PÚBLICAS",
+"Unidad": "UNIDAD DE OBRAS PÚBLICAS",
+"Celular": "71234502",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "DRA. SILVIA TORREZ ALANOCA",
+"CI": "3897651",
+"Cargo": "RESPONSABLE DE SALUD",
+"Unidad": "UNIDAD DE SALUD",
+"Celular": "71234503",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "RENÉ CHAMBI COLQUE",
+"CI": "6012345",
+"Cargo": "TÉCNICO DE DESARROLLO PRODUCTIVO",
+"Unidad": "UNIDAD DE DESARROLLO PRODUCTIVO",
+"Celular": "71234504",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "LUCIANA CRUZ VARGAS",
+"CI": "7123456",
+"Cargo": "SECRETARIA DEL DESPACHO",
+"Unidad": "DESPACHO DEL ALCALDE",
+"Celular": "71234505",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "PEDRO APAZA ROJAS",
+"CI": "4890123",
+"Cargo": "RESPONSABLE DE PLANIFICACIÓN",
+"Unidad": "UNIDAD DE PLANIFICACIÓN",
+"Celular": "71234506",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "TÉC. MARIO CONDORI QUISPE",
+"CI": "5567890",
+"Cargo": "ENCARGADO DE ALMACENES",
+"Unidad": "UNIDAD DE BIENES Y SERVICIOS",
+"Celular": "71234507",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "LIC. ROSA MARÍA CHOQUE TICONA",
+"CI": "4012398",
+"Cargo": "JEFE DE BIENES Y SERVICIOS",
+"Unidad": "UNIDAD DE BIENES Y SERVICIOS",
+"Celular": "71234508",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "AUX. JULIO MAMANI CHOQUE",
+"CI": "6789012",
+"Cargo": "AUXILIAR DE BODEGA",
+"Unidad": "UNIDAD DE BIENES Y SERVICIOS",
+"Celular": "71234509",
+"Estado": "ACTIVO"
+},
+{
+"Nombre": "MARTHA CALLE ESPINOZA",
+"CI": "5234567",
+"Cargo": "ASESORA LEGAL",
+"Unidad": "UNIDAD DE ASUNTOS JURÍDICOS",
+"Celular": "71234510",
+"Estado": "ACTIVO"
+}
+],
+"T_PROV": [
+{
+"NIT": "1023456019",
+"RazonSocial": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L.",
+"Contacto": "Sr. Wilson Mamani",
+"Telefono": "2-2456789",
+"Estado": "ACTIVO"
+},
+{
+"NIT": "2034567014",
+"RazonSocial": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L.",
+"Contacto": "Sra. Teresa Flores",
+"Telefono": "2-5234567",
+"Estado": "ACTIVO"
+},
+{
+"NIT": "3045678011",
+"RazonSocial": "DROGUERÍA INTI FARMA S.A.",
+"Contacto": "Lic. Daniel Rojas",
+"Telefono": "2-2123456",
+"Estado": "ACTIVO"
+},
+{
+"NIT": "4056789018",
+"RazonSocial": "COMERCIAL SAN MARTÍN",
+"Contacto": "Sr. Julián Gutiérrez",
+"Telefono": "71555123",
+"Estado": "ACTIVO"
+}
+],
+"T_PROY": [
+{
+"Proyecto": "MANTENIMIENTO DE CAMINOS VECINALES - GESTIÓN 2026",
+"Estado": "ACTIVO"
+},
+{
+"Proyecto": "CONSTRUCCIÓN DE AULAS UNIDAD EDUCATIVA CENTRAL",
+"Estado": "ACTIVO"
+},
+{
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"Estado": "ACTIVO"
+}
+],
+"T_CAUSALES": [
+{
+"Causal": "Hurto",
+"Grupo": "A"
+},
+{
+"Causal": "Robo o pérdida fortuita",
+"Grupo": "A"
+},
+{
+"Causal": "Siniestro",
+"Grupo": "A"
+},
+{
+"Causal": "Merma",
+"Grupo": "B"
+},
+{
+"Causal": "Vencimiento",
+"Grupo": "B"
+},
+{
+"Causal": "Descomposición",
+"Grupo": "B"
+},
+{
+"Causal": "Alteración o deterioro",
+"Grupo": "B"
+},
+{
+"Causal": "Inutilización",
+"Grupo": "C"
+},
+{
+"Causal": "Obsolescencia",
+"Grupo": "C"
+},
+{
+"Causal": "Disposición definitiva",
+"Grupo": "C"
+},
+{
+"Causal": "Bien utilizado o contaminante",
+"Grupo": "D"
+}
+],
+"T_PASOS": [
+{
+"Grupo": "A",
+"Orden": 1,
+"Paso": "Acta de verificación del hecho (Encargado + inmediato superior)",
+"Doc": "ACTAVER",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "A",
+"Orden": 2,
+"Paso": "Informe de hurto, robo o pérdida dirigido a la Secretaría/Dirección Administrativa",
+"Doc": "INFSOL",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "A",
+"Orden": 3,
+"Paso": "Denuncia ante la Policía (copia de denuncia e informe policial)",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "A",
+"Orden": 4,
+"Paso": "Reporte a la Compañía Aseguradora (si el bien está asegurado)",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "NO"
+},
+{
+"Grupo": "A",
+"Orden": 5,
+"Paso": "Informe de Autoridad Sumariante: indicios de responsabilidad",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "A",
+"Orden": 6,
+"Paso": "Informe técnico de recomendación de baja",
+"Doc": "INFTEC",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "A",
+"Orden": 7,
+"Paso": "Informe Legal (Asuntos Jurídicos)",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "A",
+"Orden": 8,
+"Paso": "Resolución Administrativa que autoriza la baja",
+"Doc": null,
+"Clase": "RA",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "A",
+"Orden": 9,
+"Paso": "Baja física y contable de las existencias (Registro de Baja)",
+"Doc": "REGBAJA",
+"Clase": "BAJA",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "A",
+"Orden": 10,
+"Paso": "Restitución por aseguradora o acciones legales (si corresponde)",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "NO"
+},
+{
+"Grupo": "B",
+"Orden": 1,
+"Paso": "Acta de verificación (con observadores, si corresponde)",
+"Doc": "ACTAVER",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "B",
+"Orden": 2,
+"Paso": "Informe de solicitud de baja con la causal (conducto regular)",
+"Doc": "INFSOL",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "B",
+"Orden": 3,
+"Paso": "Informe técnico de recomendación de baja (Jefe de Bienes y Servicios)",
+"Doc": "INFTEC",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "B",
+"Orden": 4,
+"Paso": "Informe Legal (Asuntos Jurídicos)",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "B",
+"Orden": 5,
+"Paso": "Resolución Administrativa que autoriza la baja",
+"Doc": null,
+"Clase": "RA",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "B",
+"Orden": 6,
+"Paso": "Baja física y contable de las existencias (Registro de Baja)",
+"Doc": "REGBAJA",
+"Clase": "BAJA",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "B",
+"Orden": 7,
+"Paso": "Memorándum de designación de comisión para destrucción",
+"Doc": "MEMOCOM",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "B",
+"Orden": 8,
+"Paso": "Acta de destrucción suscrita por la comisión",
+"Doc": "ACTADEST",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "B",
+"Orden": 9,
+"Paso": "Archivo de la documentación del expediente",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 1,
+"Paso": "Listado de bienes inutilizables u obsoletos (inventario anual, sin movimiento 2 gestiones)",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 2,
+"Paso": "Informe de solicitud de baja con la causal",
+"Doc": "INFSOL",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 3,
+"Paso": "Consulta a las unidades: ¿alguna requiere los bienes? (transferencia entre bodegas)",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 4,
+"Paso": "Acta de verificación",
+"Doc": "ACTAVER",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 5,
+"Paso": "Informe técnico de recomendación de baja",
+"Doc": "INFTEC",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 6,
+"Paso": "Informe Legal (Asuntos Jurídicos)",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 7,
+"Paso": "Resolución Administrativa que autoriza la baja",
+"Doc": null,
+"Clase": "RA",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 8,
+"Paso": "Baja física y contable de las existencias (Registro de Baja)",
+"Doc": "REGBAJA",
+"Clase": "BAJA",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 9,
+"Paso": "Publicación SICOES: entrega gratuita a entidades públicas (mín. 15 días hábiles)",
+"Doc": "CONVOC",
+"Clase": "PUB",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 10,
+"Paso": "Publicación SICOES: entrega gratuita a instituciones privadas (mín. 15 días hábiles)",
+"Doc": "CONVOC",
+"Clase": "PUB",
+"Obligatorio": "NO"
+},
+{
+"Grupo": "C",
+"Orden": 11,
+"Paso": "Publicación SICOES: subasta al alza sin precio base (mín. 15 días hábiles)",
+"Doc": "CONVOC",
+"Clase": "PUB",
+"Obligatorio": "NO"
+},
+{
+"Grupo": "C",
+"Orden": 12,
+"Paso": "Memorándum de designación de comisión (Unidad Administrativa, Jurídica, veedor Transparencia)",
+"Doc": "MEMOCOM",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 13,
+"Paso": "Acta de entrega gratuita / subasta / destrucción",
+"Doc": "ACTAENT",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "C",
+"Orden": 14,
+"Paso": "Informe final al Director Administrativo Financiero y archivo",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "D",
+"Orden": 1,
+"Paso": "Verificación del inventario de bienes utilizados",
+"Doc": "ACTAVER",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "D",
+"Orden": 2,
+"Paso": "Informe de solicitud de baja con la causal (considerar normativa ambiental)",
+"Doc": "INFSOL",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "D",
+"Orden": 3,
+"Paso": "Informe técnico de recomendación (visado por inmediato superior)",
+"Doc": "INFTEC",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "D",
+"Orden": 4,
+"Paso": "Remisión a Medio Ambiente para tratamiento por empresa especializada",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "NO"
+},
+{
+"Grupo": "D",
+"Orden": 5,
+"Paso": "Resolución Administrativa que autoriza la baja",
+"Doc": null,
+"Clase": "RA",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "D",
+"Orden": 6,
+"Paso": "Baja física y contable de las existencias (Registro de Baja)",
+"Doc": "REGBAJA",
+"Clase": "BAJA",
+"Obligatorio": "SI"
+},
+{
+"Grupo": "D",
+"Orden": 7,
+"Paso": "Entrega a empresa de tratamiento con acta y fotografías, o memorándum de comisión",
+"Doc": "MEMOCOM",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "D",
+"Orden": 8,
+"Paso": "Acta de entrega o destrucción documentada con fotografías",
+"Doc": "ACTADEST",
+"Clase": null,
+"Obligatorio": "SI"
+},
+{
+"Grupo": "D",
+"Orden": 9,
+"Paso": "Informe documentado, aprobación y archivo",
+"Doc": null,
+"Clase": null,
+"Obligatorio": "SI"
+}
+],
+"T_DOCREQ": [
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 1,
+"Documento": "Solicitud de compra",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 2,
+"Documento": "Certificación POA validada",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 3,
+"Documento": "Certificación presupuestaria",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 4,
+"Documento": "Especificaciones técnicas",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 5,
+"Documento": "Orden de compra o contrato",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 6,
+"Documento": "Acta de conformidad (comisión de recepción)",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 7,
+"Documento": "Factura a nombre del GAM con NIT",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 8,
+"Documento": "Informe técnico / de recepción y conformidad",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 9,
+"Documento": "Reporte fotográfico",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Orden": 10,
+"Documento": "Registro de ejecución de gasto (SIGEP)",
+"Obligatorio": "NO"
+},
+{
+"Tipo": "CAJA CHICA",
+"Orden": 1,
+"Documento": "Formulario de solicitud de fondos y acta de conformidad",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "CAJA CHICA",
+"Orden": 2,
+"Documento": "Comprobante de descargo de caja chica",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "CAJA CHICA",
+"Orden": 3,
+"Documento": "Factura a nombre del GAM con NIT",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "CAJA CHICA",
+"Orden": 4,
+"Documento": "Certificaciones POA y presupuestaria",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "CAJA CHICA",
+"Orden": 5,
+"Documento": "Verificación de disponibilidad presupuestaria (Finanzas)",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "CAJA CHICA",
+"Orden": 6,
+"Documento": "Reporte fotográfico",
+"Obligatorio": "NO"
+},
+{
+"Tipo": "REEMBOLSO / FONDOS EN AVANCE",
+"Orden": 1,
+"Documento": "Solicitud de reembolso o informe de descargo de fondos en avance",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "REEMBOLSO / FONDOS EN AVANCE",
+"Orden": 2,
+"Documento": "Formulario de descargo (fondos en avance)",
+"Obligatorio": "NO"
+},
+{
+"Tipo": "REEMBOLSO / FONDOS EN AVANCE",
+"Orden": 3,
+"Documento": "Certificación POA validada",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "REEMBOLSO / FONDOS EN AVANCE",
+"Orden": 4,
+"Documento": "Certificación presupuestaria",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "REEMBOLSO / FONDOS EN AVANCE",
+"Orden": 5,
+"Documento": "Factura a nombre del GAM con NIT",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "REEMBOLSO / FONDOS EN AVANCE",
+"Orden": 6,
+"Documento": "Reporte fotográfico",
+"Obligatorio": "NO"
+},
+{
+"Tipo": "TRANSFERENCIA / DONACIÓN",
+"Orden": 1,
+"Documento": "Nota o convenio de transferencia / donación",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "TRANSFERENCIA / DONACIÓN",
+"Orden": 2,
+"Documento": "Acta de entrega-recepción",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "TRANSFERENCIA / DONACIÓN",
+"Orden": 3,
+"Documento": "Informe técnico de verificación",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "TRANSFERENCIA / DONACIÓN",
+"Orden": 4,
+"Documento": "Autorización de la máxima autoridad",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "TRANSFERENCIA / DONACIÓN",
+"Orden": 5,
+"Documento": "Reporte fotográfico",
+"Obligatorio": "NO"
+},
+{
+"Tipo": "AJUSTE - SOBRANTE DE INVENTARIO",
+"Orden": 1,
+"Documento": "Acta de inventario firmada (con sobrantes)",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "AJUSTE - SOBRANTE DE INVENTARIO",
+"Orden": 2,
+"Documento": "Informe de inventario con sobrantes",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "AJUSTE - SOBRANTE DE INVENTARIO",
+"Orden": 3,
+"Documento": "Autorización de ingreso (Dirección Administrativa Financiera)",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "AJUSTE - SOBRANTE DE INVENTARIO",
+"Orden": 4,
+"Documento": "Cotización de un bien de iguales características",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "AJUSTE - REINGRESO",
+"Orden": 1,
+"Documento": "Informe o acta que respalda el reingreso",
+"Obligatorio": "SI"
+},
+{
+"Tipo": "AJUSTE - REINGRESO",
+"Orden": 2,
+"Documento": "Autorización de la instancia competente",
+"Obligatorio": "SI"
+}
+],
+"T_EXTINT": [
+{
+"CodExt": "EXT-001",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Tipo": "PQS (polvo químico)",
+"Capacidad": "10 kg",
+"UltRecarga": "2025-12-06T00:00:00",
+"VencRecarga": "2026-12-06T00:00:00",
+"Estado": "ACTIVO"
+},
+{
+"CodExt": "EXT-002",
+"Bodega": "BODEGA MATERIALES DE CONSTRUCCIÓN",
+"Tipo": "PQS (polvo químico)",
+"Capacidad": "6 kg",
+"UltRecarga": "2025-08-28T00:00:00",
+"VencRecarga": "2026-10-17T00:00:00",
+"Estado": "ACTIVO"
+},
+{
+"CodExt": "EXT-003",
+"Bodega": "BODEGA MEDICAMENTOS SUS",
+"Tipo": "CO2",
+"Capacidad": "5 kg",
+"UltRecarga": "2025-09-17T00:00:00",
+"VencRecarga": "2026-09-24T00:00:00",
+"Estado": "ACTIVO"
+}
+],
+"T_SEGUROS": [
+{
+"Poliza": "POL-TR-0458/2026",
+"Aseguradora": "Seguros Alianza S.A. (ejemplo)",
+"Cobertura": "Todo riesgo - existencias de almacén",
+"Desde": "2026-03-16T00:00:00",
+"Hasta": "2027-03-11T00:00:00",
+"MontoAsegurado": 350000,
+"Archivo": null,
+"Estado": "VIGENTE"
+}
+],
+"T_ING": [
+{
+"NroCGI": "CGI-0001/2026",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Proveedor": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L.",
+"NIT": "1023456019",
+"NroOC": "OC-015/2026",
+"PlazoEntrega": "2026-07-24T00:00:00",
+"Factura": "458",
+"FechaFactura": "7/18/2026",
+"Unidad": "UNIDAD DE BIENES Y SERVICIOS",
+"Preventivo": "155",
+"NroPSE": null,
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"Fuente": "41 / 113 - Coparticipación Tributaria",
+"Partida": "32000",
+"Comision": "Comisión de recepción: LIC. ROSA MARÍA CHOQUE TICONA / TÉC. MARIO CONDORI QUISPE",
+"ObsPlazo": null,
+"Total": 10663,
+"Estado": "INGRESADO",
+"FechaReg": "2026-10-02T13:29:18",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Fecha": "2026-07-24T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Proveedor": "COMERCIAL SAN MARTÍN",
+"NIT": "4056789018",
+"NroOC": "OC-016/2026",
+"PlazoEntrega": "2026-07-29T00:00:00",
+"Factura": "1207",
+"FechaFactura": "7/23/2026",
+"Unidad": "UNIDAD DE BIENES Y SERVICIOS",
+"Preventivo": "160",
+"NroPSE": null,
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"Fuente": "41 / 113 - Coparticipación Tributaria",
+"Partida": "39100",
+"Comision": "Comisión de recepción: LIC. ROSA MARÍA CHOQUE TICONA / TÉC. MARIO CONDORI QUISPE",
+"ObsPlazo": null,
+"Total": 1320,
+"Estado": "INGRESADO",
+"FechaReg": "2026-10-02T13:29:24",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Fecha": "2026-07-26T00:00:00",
+"Bodega": "BODEGA MATERIALES DE CONSTRUCCIÓN",
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Proveedor": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L.",
+"NIT": "2034567014",
+"NroOC": "OC-017/2026",
+"PlazoEntrega": "2026-07-31T00:00:00",
+"Factura": "3311",
+"FechaFactura": "7/25/2026",
+"Unidad": "UNIDAD DE OBRAS PÚBLICAS",
+"Preventivo": "171",
+"NroPSE": null,
+"Proyecto": "MANTENIMIENTO DE CAMINOS VECINALES - GESTIÓN 2026",
+"Fuente": "41 / 113 - Coparticipación Tributaria",
+"Partida": "35000",
+"Comision": "Comisión de recepción: LIC. ROSA MARÍA CHOQUE TICONA / TÉC. MARIO CONDORI QUISPE",
+"ObsPlazo": null,
+"Total": 59550,
+"Estado": "INGRESADO",
+"FechaReg": "2026-10-02T13:29:30",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Fecha": "2026-08-03T00:00:00",
+"Bodega": "BODEGA FERRETERÍA",
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Proveedor": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L.",
+"NIT": "2034567014",
+"NroOC": "OC-021/2026",
+"PlazoEntrega": "2026-08-08T00:00:00",
+"Factura": "3390",
+"FechaFactura": "8/2/2026",
+"Unidad": "UNIDAD DE OBRAS PÚBLICAS",
+"Preventivo": "188",
+"NroPSE": null,
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"Fuente": "41 / 113 - Coparticipación Tributaria",
+"Partida": "38000",
+"Comision": "Comisión de recepción: LIC. ROSA MARÍA CHOQUE TICONA / TÉC. MARIO CONDORI QUISPE",
+"ObsPlazo": null,
+"Total": 7381,
+"Estado": "INGRESADO",
+"FechaReg": "2026-10-02T13:29:35",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Fecha": "2026-07-22T00:00:00",
+"Bodega": "BODEGA MEDICAMENTOS SUS",
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Proveedor": "DROGUERÍA INTI FARMA S.A.",
+"NIT": "3045678011",
+"NroOC": "OC-012/2026",
+"PlazoEntrega": "2026-07-27T00:00:00",
+"Factura": "9871",
+"FechaFactura": "7/21/2026",
+"Unidad": "UNIDAD DE SALUD",
+"Preventivo": "142",
+"NroPSE": null,
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"Fuente": "41 / 113 - Coparticipación Tributaria",
+"Partida": "34200",
+"Comision": "Comisión de recepción: LIC. ROSA MARÍA CHOQUE TICONA / TÉC. MARIO CONDORI QUISPE",
+"ObsPlazo": null,
+"Total": 4340,
+"Estado": "INGRESADO",
+"FechaReg": "2026-10-02T13:29:39",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Fecha": "2026-09-02T00:00:00",
+"Bodega": "BODEGA MEDICAMENTOS SUS",
+"Tipo": "COMPRA (ORDEN DE COMPRA / CONTRATO)",
+"Proveedor": "DROGUERÍA INTI FARMA S.A.",
+"NIT": "3045678011",
+"NroOC": "OC-029/2026",
+"PlazoEntrega": "2026-09-07T00:00:00",
+"Factura": "10432",
+"FechaFactura": "9/1/2026",
+"Unidad": "UNIDAD DE SALUD",
+"Preventivo": "201",
+"NroPSE": null,
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"Fuente": "41 / 113 - Coparticipación Tributaria",
+"Partida": "34200",
+"Comision": "Comisión de recepción: LIC. ROSA MARÍA CHOQUE TICONA / TÉC. MARIO CONDORI QUISPE",
+"ObsPlazo": null,
+"Total": 480,
+"Estado": "INGRESADO",
+"FechaReg": "2026-10-02T13:29:44",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Fecha": "2026-09-12T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Tipo": "CAJA CHICA",
+"Proveedor": "COMERCIAL SAN MARTÍN",
+"NIT": "4056789018",
+"NroOC": null,
+"PlazoEntrega": null,
+"Factura": "1388",
+"FechaFactura": "9/11/2026",
+"Unidad": "DESPACHO DEL ALCALDE",
+"Preventivo": null,
+"NroPSE": null,
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"Fuente": "41 / 113 - Coparticipación Tributaria",
+"Partida": "39200",
+"Comision": "Comisión de recepción: LIC. ROSA MARÍA CHOQUE TICONA / TÉC. MARIO CONDORI QUISPE",
+"ObsPlazo": null,
+"Total": 156,
+"Estado": "INGRESADO",
+"FechaReg": "2026-10-02T13:29:48",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroCGI": "CGI-0008/2026",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Tipo": "AJUSTE - SOBRANTE DE INVENTARIO",
+"Proveedor": null,
+"NIT": null,
+"NroOC": null,
+"PlazoEntrega": null,
+"Factura": null,
+"FechaFactura": null,
+"Unidad": null,
+"Preventivo": null,
+"NroPSE": null,
+"Proyecto": "Sobrantes del inventario INV-0001/2026",
+"Fuente": null,
+"Partida": null,
+"Comision": "TÉC. MARIO CONDORI QUISPE",
+"ObsPlazo": "Generado desde el inventario INV-0001/2026",
+"Total": 3,
+"Estado": "REGISTRADO",
+"FechaReg": "2026-10-02T13:30:40",
+"Usuario": "Mario Condori (demo)"
+}
+],
+"T_INGDET": [
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 1,
+"CodItem": "1-1-0000001",
+"Descripcion": "PAPEL BOND CARTA 75 G",
+"Unidad": "RESMA",
+"Cantidad": 80,
+"PrecioUnit": 38,
+"Total": 3040,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 2,
+"CodItem": "1-1-0000002",
+"Descripcion": "PAPEL BOND OFICIO 75 G",
+"Unidad": "RESMA",
+"Cantidad": 40,
+"PrecioUnit": 45,
+"Total": 1800,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 3,
+"CodItem": "1-1-0000003",
+"Descripcion": "CARTULINA ESCOLAR DE COLORES",
+"Unidad": "PAQUETE",
+"Cantidad": 20,
+"PrecioUnit": 25,
+"Total": 500,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 4,
+"CodItem": "1-2-0000001",
+"Descripcion": "BOLÍGRAFO AZUL PUNTA MEDIA",
+"Unidad": "UNIDAD",
+"Cantidad": 250,
+"PrecioUnit": 1.5,
+"Total": 375,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 5,
+"CodItem": "1-2-0000002",
+"Descripcion": "LÁPIZ NEGRO HB",
+"Unidad": "UNIDAD",
+"Cantidad": 150,
+"PrecioUnit": 1,
+"Total": 150,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 6,
+"CodItem": "1-2-0000003",
+"Descripcion": "FOLDER MANILA TAMAÑO OFICIO",
+"Unidad": "UNIDAD",
+"Cantidad": 400,
+"PrecioUnit": 1.2,
+"Total": 480,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 7,
+"CodItem": "1-2-0000004",
+"Descripcion": "GRAPAS 26/6",
+"Unidad": "CAJA",
+"Cantidad": 30,
+"PrecioUnit": 6,
+"Total": 180,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 8,
+"CodItem": "1-2-0000005",
+"Descripcion": "CINTA ADHESIVA 48 MM",
+"Unidad": "ROLLO",
+"Cantidad": 24,
+"PrecioUnit": 7,
+"Total": 168,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 9,
+"CodItem": "1-3-0000001",
+"Descripcion": "TÓNER HP 85A NEGRO",
+"Unidad": "UNIDAD",
+"Cantidad": 6,
+"PrecioUnit": 520,
+"Total": 3120,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Item": 10,
+"CodItem": "1-3-0000002",
+"Descripcion": "TINTA EPSON 664 NEGRO",
+"Unidad": "FRASCO",
+"Cantidad": 10,
+"PrecioUnit": 85,
+"Total": 850,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Item": 1,
+"CodItem": "2-1-0000001",
+"Descripcion": "LEJÍA DE 1 LITRO",
+"Unidad": "UNIDAD",
+"Cantidad": 48,
+"PrecioUnit": 8,
+"Total": 384,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Item": 2,
+"CodItem": "2-1-0000002",
+"Descripcion": "DETERGENTE EN POLVO 800 G",
+"Unidad": "BOLSA",
+"Cantidad": 36,
+"PrecioUnit": 14,
+"Total": 504,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Item": 3,
+"CodItem": "2-3-0000001",
+"Descripcion": "BOLSAS DE BASURA 90X110 CM",
+"Unidad": "PAQUETE",
+"Cantidad": 24,
+"PrecioUnit": 18,
+"Total": 432,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Item": 1,
+"CodItem": "3-1-0000001",
+"Descripcion": "CEMENTO PORTLAND IP-30 DE 50 KG",
+"Unidad": "BOLSA",
+"Cantidad": 400,
+"PrecioUnit": 58,
+"Total": 23200,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Item": 2,
+"CodItem": "3-1-0000002",
+"Descripcion": "ARENA FINA LAVADA",
+"Unidad": "METRO CÚBICO",
+"Cantidad": 30,
+"PrecioUnit": 120,
+"Total": 3600,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Item": 3,
+"CodItem": "3-1-0000003",
+"Descripcion": "GRAVA CHANCADA",
+"Unidad": "METRO CÚBICO",
+"Cantidad": 30,
+"PrecioUnit": 150,
+"Total": 4500,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Item": 4,
+"CodItem": "3-2-0000001",
+"Descripcion": "FIERRO CORRUGADO 3/8 DE 12 M",
+"Unidad": "BARRA",
+"Cantidad": 200,
+"PrecioUnit": 42,
+"Total": 8400,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Item": 5,
+"CodItem": "3-2-0000002",
+"Descripcion": "FIERRO CORRUGADO 1/2 DE 12 M",
+"Unidad": "BARRA",
+"Cantidad": 150,
+"PrecioUnit": 75,
+"Total": 11250,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Item": 6,
+"CodItem": "3-3-0000001",
+"Descripcion": "LADRILLO 6 HUECOS",
+"Unidad": "UNIDAD",
+"Cantidad": 4000,
+"PrecioUnit": 1.1,
+"Total": 4400,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Item": 7,
+"CodItem": "3-5-0000001",
+"Descripcion": "PINTURA LÁTEX BLANCA BALDE 18 L",
+"Unidad": "BIDÓN",
+"Cantidad": 10,
+"PrecioUnit": 420,
+"Total": 4200,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Item": 1,
+"CodItem": "4-1-0000001",
+"Descripcion": "PALA CUADRADA CON MANGO",
+"Unidad": "UNIDAD",
+"Cantidad": 15,
+"PrecioUnit": 65,
+"Total": 975,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Item": 2,
+"CodItem": "4-1-0000002",
+"Descripcion": "PICOTA CON MANGO",
+"Unidad": "UNIDAD",
+"Cantidad": 15,
+"PrecioUnit": 70,
+"Total": 1050,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Item": 3,
+"CodItem": "4-2-0000001",
+"Descripcion": "CLAVOS DE 2 PULGADAS",
+"Unidad": "KILOGRAMO",
+"Cantidad": 40,
+"PrecioUnit": 14,
+"Total": 560,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Item": 4,
+"CodItem": "4-2-0000002",
+"Descripcion": "TORNILLOS AUTOROSCANTES 1 1/2 PULGADA",
+"Unidad": "CAJA",
+"Cantidad": 20,
+"PrecioUnit": 35,
+"Total": 700,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Item": 5,
+"CodItem": "4-3-0000001",
+"Descripcion": "CABLE ELÉCTRICO 12 AWG ROLLO 100 M",
+"Unidad": "ROLLO",
+"Cantidad": 8,
+"PrecioUnit": 380,
+"Total": 3040,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Item": 6,
+"CodItem": "4-3-0000002",
+"Descripcion": "FOCO LED 12 W",
+"Unidad": "UNIDAD",
+"Cantidad": 60,
+"PrecioUnit": 12,
+"Total": 720,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Item": 7,
+"CodItem": "4-4-0000001",
+"Descripcion": "CANDADO DE 50 MM",
+"Unidad": "UNIDAD",
+"Cantidad": 12,
+"PrecioUnit": 28,
+"Total": 336,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Item": 1,
+"CodItem": "5-1-0000001",
+"Descripcion": "PARACETAMOL 500 MG",
+"Unidad": "TABLETA",
+"Cantidad": 2000,
+"PrecioUnit": 0.3,
+"Total": 600,
+"Vencimiento": "2026-10-30T00:00:00",
+"Lote": "PCT-A01"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Item": 2,
+"CodItem": "5-1-0000002",
+"Descripcion": "AMOXICILINA 500 MG",
+"Unidad": "TABLETA",
+"Cantidad": 800,
+"PrecioUnit": 0.8,
+"Total": 640,
+"Vencimiento": "2026-09-26T00:00:00",
+"Lote": "AMX-0425"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Item": 3,
+"CodItem": "5-1-0000003",
+"Descripcion": "IBUPROFENO 400 MG",
+"Unidad": "TABLETA",
+"Cantidad": 1200,
+"PrecioUnit": 0.45,
+"Total": 540,
+"Vencimiento": "2027-07-29T00:00:00",
+"Lote": "IBU-B12"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Item": 4,
+"CodItem": "5-1-0000004",
+"Descripcion": "SALES DE REHIDRATACIÓN ORAL",
+"Unidad": "SOBRE",
+"Cantidad": 200,
+"PrecioUnit": 3.5,
+"Total": 700,
+"Vencimiento": "2027-04-20T00:00:00",
+"Lote": null
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Item": 5,
+"CodItem": "5-2-0000001",
+"Descripcion": "GASA ESTÉRIL 10X10 CM",
+"Unidad": "PAQUETE",
+"Cantidad": 60,
+"PrecioUnit": 9,
+"Total": 540,
+"Vencimiento": "2027-11-06T00:00:00",
+"Lote": null
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Item": 6,
+"CodItem": "5-2-0000002",
+"Descripcion": "ALCOHOL MEDICINAL 96 GRADOS",
+"Unidad": "LITRO",
+"Cantidad": 30,
+"PrecioUnit": 22,
+"Total": 660,
+"Vencimiento": "2027-06-09T00:00:00",
+"Lote": null
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Item": 7,
+"CodItem": "5-2-0000003",
+"Descripcion": "GUANTES DE LÁTEX TALLA M",
+"Unidad": "CAJA",
+"Cantidad": 12,
+"PrecioUnit": 55,
+"Total": 660,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Item": 1,
+"CodItem": "5-1-0000001",
+"Descripcion": "PARACETAMOL 500 MG",
+"Unidad": "TABLETA",
+"Cantidad": 1500,
+"PrecioUnit": 0.32,
+"Total": 480,
+"Vencimiento": "2027-08-28T00:00:00",
+"Lote": "PCT-C07"
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Item": 1,
+"CodItem": "1-2-0000001",
+"Descripcion": "BOLÍGRAFO AZUL PUNTA MEDIA",
+"Unidad": "UNIDAD",
+"Cantidad": 60,
+"PrecioUnit": 1.6,
+"Total": 96,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Item": 2,
+"CodItem": "1-2-0000006",
+"Descripcion": "MARCADOR ACRÍLICO PERMANENTE NEGRO",
+"Unidad": "UNIDAD",
+"Cantidad": 12,
+"PrecioUnit": 5,
+"Total": 60,
+"Vencimiento": null,
+"Lote": null
+},
+{
+"NroCGI": "CGI-0008/2026",
+"Item": 1,
+"CodItem": "1-2-0000002",
+"Descripcion": "LÁPIZ NEGRO HB",
+"Unidad": "UNIDAD",
+"Cantidad": 3,
+"PrecioUnit": 1,
+"Total": 3,
+"Vencimiento": null,
+"Lote": null
+}
+],
+"T_INGDOC": [
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 1,
+"Documento": "Solicitud de compra  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 2,
+"Documento": "Certificación POA validada  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 3,
+"Documento": "Certificación presupuestaria  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 4,
+"Documento": "Especificaciones técnicas  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 5,
+"Documento": "Orden de compra o contrato  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 6,
+"Documento": "Acta de conformidad (comisión de recepción)  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 7,
+"Documento": "Factura a nombre del GAM con NIT  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 8,
+"Documento": "Informe técnico / de recepción y conformidad  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 9,
+"Documento": "Reporte fotográfico  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0001/2026",
+"Orden": 10,
+"Documento": "Registro de ejecución de gasto (SIGEP)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 1,
+"Documento": "Solicitud de compra  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 2,
+"Documento": "Certificación POA validada  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 3,
+"Documento": "Certificación presupuestaria  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 4,
+"Documento": "Especificaciones técnicas  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 5,
+"Documento": "Orden de compra o contrato  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 6,
+"Documento": "Acta de conformidad (comisión de recepción)  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 7,
+"Documento": "Factura a nombre del GAM con NIT  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 8,
+"Documento": "Informe técnico / de recepción y conformidad  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 9,
+"Documento": "Reporte fotográfico  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0002/2026",
+"Orden": 10,
+"Documento": "Registro de ejecución de gasto (SIGEP)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 1,
+"Documento": "Solicitud de compra  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 2,
+"Documento": "Certificación POA validada  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 3,
+"Documento": "Certificación presupuestaria  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 4,
+"Documento": "Especificaciones técnicas  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 5,
+"Documento": "Orden de compra o contrato  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 6,
+"Documento": "Acta de conformidad (comisión de recepción)  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 7,
+"Documento": "Factura a nombre del GAM con NIT  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 8,
+"Documento": "Informe técnico / de recepción y conformidad  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 9,
+"Documento": "Reporte fotográfico  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0003/2026",
+"Orden": 10,
+"Documento": "Registro de ejecución de gasto (SIGEP)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 1,
+"Documento": "Solicitud de compra  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 2,
+"Documento": "Certificación POA validada  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 3,
+"Documento": "Certificación presupuestaria  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 4,
+"Documento": "Especificaciones técnicas  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 5,
+"Documento": "Orden de compra o contrato  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 6,
+"Documento": "Acta de conformidad (comisión de recepción)  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 7,
+"Documento": "Factura a nombre del GAM con NIT  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 8,
+"Documento": "Informe técnico / de recepción y conformidad  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 9,
+"Documento": "Reporte fotográfico  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0004/2026",
+"Orden": 10,
+"Documento": "Registro de ejecución de gasto (SIGEP)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 1,
+"Documento": "Solicitud de compra  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 2,
+"Documento": "Certificación POA validada  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 3,
+"Documento": "Certificación presupuestaria  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 4,
+"Documento": "Especificaciones técnicas  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 5,
+"Documento": "Orden de compra o contrato  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 6,
+"Documento": "Acta de conformidad (comisión de recepción)  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 7,
+"Documento": "Factura a nombre del GAM con NIT  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 8,
+"Documento": "Informe técnico / de recepción y conformidad  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 9,
+"Documento": "Reporte fotográfico  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0005/2026",
+"Orden": 10,
+"Documento": "Registro de ejecución de gasto (SIGEP)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 1,
+"Documento": "Solicitud de compra  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 2,
+"Documento": "Certificación POA validada  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 3,
+"Documento": "Certificación presupuestaria  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 4,
+"Documento": "Especificaciones técnicas  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 5,
+"Documento": "Orden de compra o contrato  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 6,
+"Documento": "Acta de conformidad (comisión de recepción)  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 7,
+"Documento": "Factura a nombre del GAM con NIT  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 8,
+"Documento": "Informe técnico / de recepción y conformidad  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 9,
+"Documento": "Reporte fotográfico  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0006/2026",
+"Orden": 10,
+"Documento": "Registro de ejecución de gasto (SIGEP)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Orden": 1,
+"Documento": "Formulario de solicitud de fondos y acta de conformidad  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Orden": 2,
+"Documento": "Comprobante de descargo de caja chica  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Orden": 3,
+"Documento": "Factura a nombre del GAM con NIT  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Orden": 4,
+"Documento": "Certificaciones POA y presupuestaria  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Orden": 5,
+"Documento": "Verificación de disponibilidad presupuestaria (Finanzas)  (*)",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0007/2026",
+"Orden": 6,
+"Documento": "Reporte fotográfico",
+"Estado": "SI"
+},
+{
+"NroCGI": "CGI-0008/2026",
+"Orden": 1,
+"Documento": "Acta de inventario firmada (con sobrantes)  (*)",
+"Estado": null
+},
+{
+"NroCGI": "CGI-0008/2026",
+"Orden": 2,
+"Documento": "Informe de inventario con sobrantes  (*)",
+"Estado": null
+},
+{
+"NroCGI": "CGI-0008/2026",
+"Orden": 3,
+"Documento": "Autorización de ingreso (Dirección Administrativa Financiera)  (*)",
+"Estado": null
+},
+{
+"NroCGI": "CGI-0008/2026",
+"Orden": 4,
+"Documento": "Cotización de un bien de iguales características  (*)",
+"Estado": null
+}
+],
+"T_SAL": [
+{
+"NroVale": "VS-0001/2026",
+"FechaPedido": "2026-09-07T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Estado": "ENTREGADO",
+"Unidad": "UNIDAD DE EDUCACIÓN",
+"Solicitante": "ANA MARÍA QUISPE LIMACHI",
+"Cargo": "DIRECTORA DE EDUCACIÓN",
+"Superior": "LUCIANA CRUZ VARGAS",
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"NotaInterna": null,
+"Justificacion": "Material de escritorio para el funcionamiento mensual de la unidad",
+"Observ": null,
+"Excepcion": "Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)",
+"FechaAprob": "2026-10-02T13:29:52",
+"Aprobador": "LUCIANA CRUZ VARGAS",
+"FechaEntrega": "2026-10-02T13:29:52",
+"Entregador": "TÉC. MARIO CONDORI QUISPE",
+"Total": 476,
+"FechaReg": "2026-10-02T13:29:52",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroVale": "VS-0002/2026",
+"FechaPedido": "2026-09-10T00:00:00",
+"Bodega": "BODEGA MATERIALES DE CONSTRUCCIÓN",
+"Estado": "ENTREGADO",
+"Unidad": "UNIDAD DE OBRAS PÚBLICAS",
+"Solicitante": "CARLOS HUANCA MAMANI",
+"Cargo": "DIRECTOR DE OBRAS PÚBLICAS",
+"Superior": "PEDRO APAZA ROJAS",
+"Proyecto": "MANTENIMIENTO DE CAMINOS VECINALES - GESTIÓN 2026",
+"NotaInterna": "NI-014/2026",
+"Justificacion": "Materiales para alcantarillas y muros de contención del camino vecinal",
+"Observ": null,
+"Excepcion": "Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)",
+"FechaAprob": "2026-10-02T13:29:56",
+"Aprobador": "PEDRO APAZA ROJAS",
+"FechaEntrega": "2026-10-02T13:29:56",
+"Entregador": "TÉC. MARIO CONDORI QUISPE",
+"Total": 10440,
+"FechaReg": "2026-10-02T13:29:55",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroVale": "VS-0003/2026",
+"FechaPedido": "2026-09-14T00:00:00",
+"Bodega": "BODEGA MEDICAMENTOS SUS",
+"Estado": "ENTREGADO",
+"Unidad": "UNIDAD DE SALUD",
+"Solicitante": "DRA. SILVIA TORREZ ALANOCA",
+"Cargo": "RESPONSABLE DE SALUD",
+"Superior": "PEDRO APAZA ROJAS",
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"NotaInterna": null,
+"Justificacion": "Dotación mensual del botiquín del puesto de salud",
+"Observ": null,
+"Excepcion": "Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)",
+"FechaAprob": "2026-10-02T13:30:01",
+"Aprobador": "PEDRO APAZA ROJAS",
+"FechaEntrega": "2026-10-02T13:30:01",
+"Entregador": "TÉC. MARIO CONDORI QUISPE",
+"Total": 410,
+"FechaReg": "2026-10-02T13:30:01",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroVale": "VS-0004/2026",
+"FechaPedido": "2026-09-20T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Estado": "ENTREGADO",
+"Unidad": "DESPACHO DEL ALCALDE",
+"Solicitante": "LUCIANA CRUZ VARGAS",
+"Cargo": "SECRETARIA DEL DESPACHO",
+"Superior": "LIC. ROSA MARÍA CHOQUE TICONA",
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"NotaInterna": null,
+"Justificacion": "Útiles para reunión de autoridades originarias",
+"Observ": null,
+"Excepcion": "Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)",
+"FechaAprob": "2026-10-02T13:30:06",
+"Aprobador": "LIC. ROSA MARÍA CHOQUE TICONA",
+"FechaEntrega": "2026-10-02T13:30:07",
+"Entregador": "TÉC. MARIO CONDORI QUISPE",
+"Total": 46,
+"FechaReg": "2026-10-02T13:30:06",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroVale": "VS-0005/2026",
+"FechaPedido": "2026-09-26T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Estado": "ENTREGADO",
+"Unidad": "UNIDAD DE DESARROLLO PRODUCTIVO",
+"Solicitante": "RENÉ CHAMBI COLQUE",
+"Cargo": "TÉCNICO DE DESARROLLO PRODUCTIVO",
+"Superior": "PEDRO APAZA ROJAS",
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"NotaInterna": null,
+"Justificacion": "Material para taller de capacitación a productores",
+"Observ": null,
+"Excepcion": "Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)",
+"FechaAprob": "2026-10-02T13:30:12",
+"Aprobador": "PEDRO APAZA ROJAS",
+"FechaEntrega": "2026-10-02T13:30:12",
+"Entregador": "TÉC. MARIO CONDORI QUISPE",
+"Total": 180,
+"FechaReg": "2026-10-02T13:30:12",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroVale": "VS-0006/2026",
+"FechaPedido": "2026-09-30T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Estado": "PEDIDO",
+"Unidad": "UNIDAD DE PLANIFICACIÓN",
+"Solicitante": "PEDRO APAZA ROJAS",
+"Cargo": "RESPONSABLE DE PLANIFICACIÓN",
+"Superior": "LUCIANA CRUZ VARGAS",
+"Proyecto": "FUNCIONAMIENTO ADMINISTRATIVO",
+"NotaInterna": null,
+"Justificacion": "Tóner para la impresora del área",
+"Observ": null,
+"Excepcion": "Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)",
+"FechaAprob": null,
+"Aprobador": null,
+"FechaEntrega": null,
+"Entregador": null,
+"Total": null,
+"FechaReg": "2026-10-02T13:30:20",
+"Usuario": "Mario Condori (demo)"
+},
+{
+"NroVale": "VS-0007/2026",
+"FechaPedido": "2026-10-01T00:00:00",
+"Bodega": "BODEGA FERRETERÍA",
+"Estado": "PEDIDO",
+"Unidad": "UNIDAD DE OBRAS PÚBLICAS",
+"Solicitante": "CARLOS HUANCA MAMANI",
+"Cargo": "DIRECTOR DE OBRAS PÚBLICAS",
+"Superior": "PEDRO APAZA ROJAS",
+"Proyecto": "MANTENIMIENTO DE CAMINOS VECINALES - GESTIÓN 2026",
+"NotaInterna": null,
+"Justificacion": "Herramientas para cuadrilla de mantenimiento",
+"Observ": null,
+"Excepcion": "Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)",
+"FechaAprob": null,
+"Aprobador": null,
+"FechaEntrega": null,
+"Entregador": null,
+"Total": null,
+"FechaReg": "2026-10-02T13:30:21",
+"Usuario": "Mario Condori (demo)"
+}
+],
+"T_SALDET": [
+{
+"NroVale": "VS-0001/2026",
+"Item": 1,
+"CodItem": "1-1-0000001",
+"Descripcion": "PAPEL BOND CARTA 75 G",
+"Unidad": "RESMA",
+"CantPedida": 10,
+"CantEntregada": 10,
+"PrecioProm": 38,
+"Total": 380,
+"Obs": null
+},
+{
+"NroVale": "VS-0001/2026",
+"Item": 2,
+"CodItem": "1-2-0000001",
+"Descripcion": "BOLÍGRAFO AZUL PUNTA MEDIA",
+"Unidad": "UNIDAD",
+"CantPedida": 24,
+"CantEntregada": 24,
+"PrecioProm": 1.5,
+"Total": 36,
+"Obs": null
+},
+{
+"NroVale": "VS-0001/2026",
+"Item": 3,
+"CodItem": "1-2-0000003",
+"Descripcion": "FOLDER MANILA TAMAÑO OFICIO",
+"Unidad": "UNIDAD",
+"CantPedida": 50,
+"CantEntregada": 50,
+"PrecioProm": 1.2,
+"Total": 60,
+"Obs": null
+},
+{
+"NroVale": "VS-0002/2026",
+"Item": 1,
+"CodItem": "3-1-0000001",
+"Descripcion": "CEMENTO PORTLAND IP-30 DE 50 KG",
+"Unidad": "BOLSA",
+"CantPedida": 120,
+"CantEntregada": 120,
+"PrecioProm": 58,
+"Total": 6960,
+"Obs": null
+},
+{
+"NroVale": "VS-0002/2026",
+"Item": 2,
+"CodItem": "3-2-0000001",
+"Descripcion": "FIERRO CORRUGADO 3/8 DE 12 M",
+"Unidad": "BARRA",
+"CantPedida": 60,
+"CantEntregada": 60,
+"PrecioProm": 42,
+"Total": 2520,
+"Obs": null
+},
+{
+"NroVale": "VS-0002/2026",
+"Item": 3,
+"CodItem": "3-1-0000002",
+"Descripcion": "ARENA FINA LAVADA",
+"Unidad": "METRO CÚBICO",
+"CantPedida": 8,
+"CantEntregada": 8,
+"PrecioProm": 120,
+"Total": 960,
+"Obs": null
+},
+{
+"NroVale": "VS-0003/2026",
+"Item": 1,
+"CodItem": "5-1-0000001",
+"Descripcion": "PARACETAMOL 500 MG",
+"Unidad": "TABLETA",
+"CantPedida": 600,
+"CantEntregada": 600,
+"PrecioProm": 0.3,
+"Total": 180,
+"Obs": null
+},
+{
+"NroVale": "VS-0003/2026",
+"Item": 2,
+"CodItem": "5-1-0000004",
+"Descripcion": "SALES DE REHIDRATACIÓN ORAL",
+"Unidad": "SOBRE",
+"CantPedida": 40,
+"CantEntregada": 40,
+"PrecioProm": 3.5,
+"Total": 140,
+"Obs": null
+},
+{
+"NroVale": "VS-0003/2026",
+"Item": 3,
+"CodItem": "5-2-0000001",
+"Descripcion": "GASA ESTÉRIL 10X10 CM",
+"Unidad": "PAQUETE",
+"CantPedida": 10,
+"CantEntregada": 10,
+"PrecioProm": 9,
+"Total": 90,
+"Obs": null
+},
+{
+"NroVale": "VS-0004/2026",
+"Item": 1,
+"CodItem": "1-2-0000006",
+"Descripcion": "MARCADOR ACRÍLICO PERMANENTE NEGRO",
+"Unidad": "UNIDAD",
+"CantPedida": 5,
+"CantEntregada": 5,
+"PrecioProm": 5,
+"Total": 25,
+"Obs": null
+},
+{
+"NroVale": "VS-0004/2026",
+"Item": 2,
+"CodItem": "1-2-0000005",
+"Descripcion": "CINTA ADHESIVA 48 MM",
+"Unidad": "ROLLO",
+"CantPedida": 3,
+"CantEntregada": 3,
+"PrecioProm": 7,
+"Total": 21,
+"Obs": null
+},
+{
+"NroVale": "VS-0005/2026",
+"Item": 1,
+"CodItem": "1-1-0000003",
+"Descripcion": "CARTULINA ESCOLAR DE COLORES",
+"Unidad": "PAQUETE",
+"CantPedida": 6,
+"CantEntregada": 6,
+"PrecioProm": 25,
+"Total": 150,
+"Obs": null
+},
+{
+"NroVale": "VS-0005/2026",
+"Item": 2,
+"CodItem": "1-2-0000002",
+"Descripcion": "LÁPIZ NEGRO HB",
+"Unidad": "UNIDAD",
+"CantPedida": 30,
+"CantEntregada": 30,
+"PrecioProm": 1,
+"Total": 30,
+"Obs": null
+},
+{
+"NroVale": "VS-0006/2026",
+"Item": 1,
+"CodItem": "1-3-0000001",
+"Descripcion": "TÓNER HP 85A NEGRO",
+"Unidad": "UNIDAD",
+"CantPedida": 2,
+"CantEntregada": null,
+"PrecioProm": null,
+"Total": null,
+"Obs": null
+},
+{
+"NroVale": "VS-0007/2026",
+"Item": 1,
+"CodItem": "4-1-0000001",
+"Descripcion": "PALA CUADRADA CON MANGO",
+"Unidad": "UNIDAD",
+"CantPedida": 6,
+"CantEntregada": null,
+"PrecioProm": null,
+"Total": null,
+"Obs": null
+},
+{
+"NroVale": "VS-0007/2026",
+"Item": 2,
+"CodItem": "4-1-0000002",
+"Descripcion": "PICOTA CON MANGO",
+"Unidad": "UNIDAD",
+"CantPedida": 6,
+"CantEntregada": null,
+"PrecioProm": null,
+"Total": null,
+"Obs": null
+}
+],
+"T_LOTES": [
+{
+"IdLote": "L000001",
+"Bodega": "01",
+"CodItem": "1-1-0000001",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 80,
+"Saldo": 70,
+"PrecioUnit": 38,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000002",
+"Bodega": "01",
+"CodItem": "1-1-0000002",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 40,
+"Saldo": 40,
+"PrecioUnit": 45,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000003",
+"Bodega": "01",
+"CodItem": "1-1-0000003",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 20,
+"Saldo": 14,
+"PrecioUnit": 25,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000004",
+"Bodega": "01",
+"CodItem": "1-2-0000001",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 250,
+"Saldo": 226,
+"PrecioUnit": 1.5,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000005",
+"Bodega": "01",
+"CodItem": "1-2-0000002",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 150,
+"Saldo": 120,
+"PrecioUnit": 1,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000006",
+"Bodega": "01",
+"CodItem": "1-2-0000003",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 400,
+"Saldo": 350,
+"PrecioUnit": 1.2,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000007",
+"Bodega": "01",
+"CodItem": "1-2-0000004",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 30,
+"Saldo": 30,
+"PrecioUnit": 6,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000008",
+"Bodega": "01",
+"CodItem": "1-2-0000005",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 24,
+"Saldo": 21,
+"PrecioUnit": 7,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000009",
+"Bodega": "01",
+"CodItem": "1-3-0000001",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 6,
+"Saldo": 6,
+"PrecioUnit": 520,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000010",
+"Bodega": "01",
+"CodItem": "1-3-0000002",
+"DocOrigen": "CGI-0001/2026",
+"FechaIng": "2026-07-19T00:00:00",
+"Vencimiento": null,
+"CantInicial": 10,
+"Saldo": 10,
+"PrecioUnit": 85,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000011",
+"Bodega": "01",
+"CodItem": "2-1-0000001",
+"DocOrigen": "CGI-0002/2026",
+"FechaIng": "2026-07-24T00:00:00",
+"Vencimiento": null,
+"CantInicial": 48,
+"Saldo": 48,
+"PrecioUnit": 8,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000012",
+"Bodega": "01",
+"CodItem": "2-1-0000002",
+"DocOrigen": "CGI-0002/2026",
+"FechaIng": "2026-07-24T00:00:00",
+"Vencimiento": null,
+"CantInicial": 36,
+"Saldo": 36,
+"PrecioUnit": 14,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000013",
+"Bodega": "01",
+"CodItem": "2-3-0000001",
+"DocOrigen": "CGI-0002/2026",
+"FechaIng": "2026-07-24T00:00:00",
+"Vencimiento": null,
+"CantInicial": 24,
+"Saldo": 24,
+"PrecioUnit": 18,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000014",
+"Bodega": "02",
+"CodItem": "3-1-0000001",
+"DocOrigen": "CGI-0003/2026",
+"FechaIng": "2026-07-26T00:00:00",
+"Vencimiento": null,
+"CantInicial": 400,
+"Saldo": 280,
+"PrecioUnit": 58,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000015",
+"Bodega": "02",
+"CodItem": "3-1-0000002",
+"DocOrigen": "CGI-0003/2026",
+"FechaIng": "2026-07-26T00:00:00",
+"Vencimiento": null,
+"CantInicial": 30,
+"Saldo": 22,
+"PrecioUnit": 120,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000016",
+"Bodega": "02",
+"CodItem": "3-1-0000003",
+"DocOrigen": "CGI-0003/2026",
+"FechaIng": "2026-07-26T00:00:00",
+"Vencimiento": null,
+"CantInicial": 30,
+"Saldo": 30,
+"PrecioUnit": 150,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000017",
+"Bodega": "02",
+"CodItem": "3-2-0000001",
+"DocOrigen": "CGI-0003/2026",
+"FechaIng": "2026-07-26T00:00:00",
+"Vencimiento": null,
+"CantInicial": 200,
+"Saldo": 140,
+"PrecioUnit": 42,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000018",
+"Bodega": "02",
+"CodItem": "3-2-0000002",
+"DocOrigen": "CGI-0003/2026",
+"FechaIng": "2026-07-26T00:00:00",
+"Vencimiento": null,
+"CantInicial": 150,
+"Saldo": 150,
+"PrecioUnit": 75,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000019",
+"Bodega": "02",
+"CodItem": "3-3-0000001",
+"DocOrigen": "CGI-0003/2026",
+"FechaIng": "2026-07-26T00:00:00",
+"Vencimiento": null,
+"CantInicial": 4000,
+"Saldo": 4000,
+"PrecioUnit": 1.1,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000020",
+"Bodega": "02",
+"CodItem": "3-5-0000001",
+"DocOrigen": "CGI-0003/2026",
+"FechaIng": "2026-07-26T00:00:00",
+"Vencimiento": null,
+"CantInicial": 10,
+"Saldo": 10,
+"PrecioUnit": 420,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000021",
+"Bodega": "03",
+"CodItem": "4-1-0000001",
+"DocOrigen": "CGI-0004/2026",
+"FechaIng": "2026-08-03T00:00:00",
+"Vencimiento": null,
+"CantInicial": 15,
+"Saldo": 15,
+"PrecioUnit": 65,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000022",
+"Bodega": "03",
+"CodItem": "4-1-0000002",
+"DocOrigen": "CGI-0004/2026",
+"FechaIng": "2026-08-03T00:00:00",
+"Vencimiento": null,
+"CantInicial": 15,
+"Saldo": 15,
+"PrecioUnit": 70,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000023",
+"Bodega": "03",
+"CodItem": "4-2-0000001",
+"DocOrigen": "CGI-0004/2026",
+"FechaIng": "2026-08-03T00:00:00",
+"Vencimiento": null,
+"CantInicial": 40,
+"Saldo": 40,
+"PrecioUnit": 14,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000024",
+"Bodega": "03",
+"CodItem": "4-2-0000002",
+"DocOrigen": "CGI-0004/2026",
+"FechaIng": "2026-08-03T00:00:00",
+"Vencimiento": null,
+"CantInicial": 20,
+"Saldo": 20,
+"PrecioUnit": 35,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000025",
+"Bodega": "03",
+"CodItem": "4-3-0000001",
+"DocOrigen": "CGI-0004/2026",
+"FechaIng": "2026-08-03T00:00:00",
+"Vencimiento": null,
+"CantInicial": 8,
+"Saldo": 6,
+"PrecioUnit": 380,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000026",
+"Bodega": "03",
+"CodItem": "4-3-0000002",
+"DocOrigen": "CGI-0004/2026",
+"FechaIng": "2026-08-03T00:00:00",
+"Vencimiento": null,
+"CantInicial": 60,
+"Saldo": 60,
+"PrecioUnit": 12,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000027",
+"Bodega": "03",
+"CodItem": "4-4-0000001",
+"DocOrigen": "CGI-0004/2026",
+"FechaIng": "2026-08-03T00:00:00",
+"Vencimiento": null,
+"CantInicial": 12,
+"Saldo": 12,
+"PrecioUnit": 28,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000028",
+"Bodega": "04",
+"CodItem": "5-1-0000001",
+"DocOrigen": "CGI-0005/2026",
+"FechaIng": "2026-07-22T00:00:00",
+"Vencimiento": "2026-10-30T00:00:00",
+"CantInicial": 2000,
+"Saldo": 1400,
+"PrecioUnit": 0.3,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000029",
+"Bodega": "04",
+"CodItem": "5-1-0000002",
+"DocOrigen": "CGI-0005/2026",
+"FechaIng": "2026-07-22T00:00:00",
+"Vencimiento": "2026-09-26T00:00:00",
+"CantInicial": 800,
+"Saldo": 0,
+"PrecioUnit": 0.8,
+"Estado": "AGOTADO"
+},
+{
+"IdLote": "L000030",
+"Bodega": "04",
+"CodItem": "5-1-0000003",
+"DocOrigen": "CGI-0005/2026",
+"FechaIng": "2026-07-22T00:00:00",
+"Vencimiento": "2027-07-29T00:00:00",
+"CantInicial": 1200,
+"Saldo": 1200,
+"PrecioUnit": 0.45,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000031",
+"Bodega": "04",
+"CodItem": "5-1-0000004",
+"DocOrigen": "CGI-0005/2026",
+"FechaIng": "2026-07-22T00:00:00",
+"Vencimiento": "2027-04-20T00:00:00",
+"CantInicial": 200,
+"Saldo": 160,
+"PrecioUnit": 3.5,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000032",
+"Bodega": "04",
+"CodItem": "5-2-0000001",
+"DocOrigen": "CGI-0005/2026",
+"FechaIng": "2026-07-22T00:00:00",
+"Vencimiento": "2027-11-06T00:00:00",
+"CantInicial": 60,
+"Saldo": 50,
+"PrecioUnit": 9,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000033",
+"Bodega": "04",
+"CodItem": "5-2-0000002",
+"DocOrigen": "CGI-0005/2026",
+"FechaIng": "2026-07-22T00:00:00",
+"Vencimiento": "2027-06-09T00:00:00",
+"CantInicial": 30,
+"Saldo": 30,
+"PrecioUnit": 22,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000034",
+"Bodega": "04",
+"CodItem": "5-2-0000003",
+"DocOrigen": "CGI-0005/2026",
+"FechaIng": "2026-07-22T00:00:00",
+"Vencimiento": null,
+"CantInicial": 12,
+"Saldo": 12,
+"PrecioUnit": 55,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000035",
+"Bodega": "04",
+"CodItem": "5-1-0000001",
+"DocOrigen": "CGI-0006/2026",
+"FechaIng": "2026-09-02T00:00:00",
+"Vencimiento": "2027-08-28T00:00:00",
+"CantInicial": 1500,
+"Saldo": 1500,
+"PrecioUnit": 0.32,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000036",
+"Bodega": "01",
+"CodItem": "1-2-0000001",
+"DocOrigen": "CGI-0007/2026",
+"FechaIng": "2026-09-12T00:00:00",
+"Vencimiento": null,
+"CantInicial": 60,
+"Saldo": 60,
+"PrecioUnit": 1.6,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000037",
+"Bodega": "01",
+"CodItem": "1-2-0000006",
+"DocOrigen": "CGI-0007/2026",
+"FechaIng": "2026-09-12T00:00:00",
+"Vencimiento": null,
+"CantInicial": 12,
+"Saldo": 7,
+"PrecioUnit": 5,
+"Estado": "ACTIVO"
+},
+{
+"IdLote": "L000038",
+"Bodega": "02",
+"CodItem": "4-3-0000001",
+"DocOrigen": "TRF-0001/2026",
+"FechaIng": "2026-08-03T00:00:00",
+"Vencimiento": null,
+"CantInicial": 2,
+"Saldo": 2,
+"PrecioUnit": 380,
+"Estado": "ACTIVO"
+}
+],
+"T_MOV": [
+{
+"IdMov": "M000001",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-1-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000001",
+"CantEnt": 80,
+"CantSal": null,
+"PrecioUnit": 38,
+"ImpEnt": 3040,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000002",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-1-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000002",
+"CantEnt": 40,
+"CantSal": null,
+"PrecioUnit": 45,
+"ImpEnt": 1800,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000003",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-1-0000003",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000003",
+"CantEnt": 20,
+"CantSal": null,
+"PrecioUnit": 25,
+"ImpEnt": 500,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000004",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000004",
+"CantEnt": 250,
+"CantSal": null,
+"PrecioUnit": 1.5,
+"ImpEnt": 375,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000005",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000005",
+"CantEnt": 150,
+"CantSal": null,
+"PrecioUnit": 1,
+"ImpEnt": 150,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000006",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000003",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000006",
+"CantEnt": 400,
+"CantSal": null,
+"PrecioUnit": 1.2,
+"ImpEnt": 480,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000007",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000004",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000007",
+"CantEnt": 30,
+"CantSal": null,
+"PrecioUnit": 6,
+"ImpEnt": 180,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000008",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000005",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000008",
+"CantEnt": 24,
+"CantSal": null,
+"PrecioUnit": 7,
+"ImpEnt": 168,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000009",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-3-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000009",
+"CantEnt": 6,
+"CantSal": null,
+"PrecioUnit": 520,
+"ImpEnt": 3120,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000010",
+"Fecha": "2026-07-19T00:00:00",
+"Bodega": "01",
+"CodItem": "1-3-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0001/2026",
+"IdLote": "L000010",
+"CantEnt": 10,
+"CantSal": null,
+"PrecioUnit": 85,
+"ImpEnt": 850,
+"ImpSal": null,
+"Referencia": "LIBRERÍA Y PAPELERÍA EL ALTIPLANO S.R.L. Fact. 458",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:19"
+},
+{
+"IdMov": "M000011",
+"Fecha": "2026-07-24T00:00:00",
+"Bodega": "01",
+"CodItem": "2-1-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0002/2026",
+"IdLote": "L000011",
+"CantEnt": 48,
+"CantSal": null,
+"PrecioUnit": 8,
+"ImpEnt": 384,
+"ImpSal": null,
+"Referencia": "COMERCIAL SAN MARTÍN Fact. 1207",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:25"
+},
+{
+"IdMov": "M000012",
+"Fecha": "2026-07-24T00:00:00",
+"Bodega": "01",
+"CodItem": "2-1-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0002/2026",
+"IdLote": "L000012",
+"CantEnt": 36,
+"CantSal": null,
+"PrecioUnit": 14,
+"ImpEnt": 504,
+"ImpSal": null,
+"Referencia": "COMERCIAL SAN MARTÍN Fact. 1207",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:25"
+},
+{
+"IdMov": "M000013",
+"Fecha": "2026-07-24T00:00:00",
+"Bodega": "01",
+"CodItem": "2-3-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0002/2026",
+"IdLote": "L000013",
+"CantEnt": 24,
+"CantSal": null,
+"PrecioUnit": 18,
+"ImpEnt": 432,
+"ImpSal": null,
+"Referencia": "COMERCIAL SAN MARTÍN Fact. 1207",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:25"
+},
+{
+"IdMov": "M000014",
+"Fecha": "2026-07-26T00:00:00",
+"Bodega": "02",
+"CodItem": "3-1-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0003/2026",
+"IdLote": "L000014",
+"CantEnt": 400,
+"CantSal": null,
+"PrecioUnit": 58,
+"ImpEnt": 23200,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3311",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:30"
+},
+{
+"IdMov": "M000015",
+"Fecha": "2026-07-26T00:00:00",
+"Bodega": "02",
+"CodItem": "3-1-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0003/2026",
+"IdLote": "L000015",
+"CantEnt": 30,
+"CantSal": null,
+"PrecioUnit": 120,
+"ImpEnt": 3600,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3311",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:30"
+},
+{
+"IdMov": "M000016",
+"Fecha": "2026-07-26T00:00:00",
+"Bodega": "02",
+"CodItem": "3-1-0000003",
+"Tipo": "INGRESO",
+"Documento": "CGI-0003/2026",
+"IdLote": "L000016",
+"CantEnt": 30,
+"CantSal": null,
+"PrecioUnit": 150,
+"ImpEnt": 4500,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3311",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:30"
+},
+{
+"IdMov": "M000017",
+"Fecha": "2026-07-26T00:00:00",
+"Bodega": "02",
+"CodItem": "3-2-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0003/2026",
+"IdLote": "L000017",
+"CantEnt": 200,
+"CantSal": null,
+"PrecioUnit": 42,
+"ImpEnt": 8400,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3311",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:30"
+},
+{
+"IdMov": "M000018",
+"Fecha": "2026-07-26T00:00:00",
+"Bodega": "02",
+"CodItem": "3-2-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0003/2026",
+"IdLote": "L000018",
+"CantEnt": 150,
+"CantSal": null,
+"PrecioUnit": 75,
+"ImpEnt": 11250,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3311",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:30"
+},
+{
+"IdMov": "M000019",
+"Fecha": "2026-07-26T00:00:00",
+"Bodega": "02",
+"CodItem": "3-3-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0003/2026",
+"IdLote": "L000019",
+"CantEnt": 4000,
+"CantSal": null,
+"PrecioUnit": 1.1,
+"ImpEnt": 4400,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3311",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:30"
+},
+{
+"IdMov": "M000020",
+"Fecha": "2026-07-26T00:00:00",
+"Bodega": "02",
+"CodItem": "3-5-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0003/2026",
+"IdLote": "L000020",
+"CantEnt": 10,
+"CantSal": null,
+"PrecioUnit": 420,
+"ImpEnt": 4200,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3311",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:30"
+},
+{
+"IdMov": "M000021",
+"Fecha": "2026-08-03T00:00:00",
+"Bodega": "03",
+"CodItem": "4-1-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0004/2026",
+"IdLote": "L000021",
+"CantEnt": 15,
+"CantSal": null,
+"PrecioUnit": 65,
+"ImpEnt": 975,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3390",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:35"
+},
+{
+"IdMov": "M000022",
+"Fecha": "2026-08-03T00:00:00",
+"Bodega": "03",
+"CodItem": "4-1-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0004/2026",
+"IdLote": "L000022",
+"CantEnt": 15,
+"CantSal": null,
+"PrecioUnit": 70,
+"ImpEnt": 1050,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3390",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:35"
+},
+{
+"IdMov": "M000023",
+"Fecha": "2026-08-03T00:00:00",
+"Bodega": "03",
+"CodItem": "4-2-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0004/2026",
+"IdLote": "L000023",
+"CantEnt": 40,
+"CantSal": null,
+"PrecioUnit": 14,
+"ImpEnt": 560,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3390",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:35"
+},
+{
+"IdMov": "M000024",
+"Fecha": "2026-08-03T00:00:00",
+"Bodega": "03",
+"CodItem": "4-2-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0004/2026",
+"IdLote": "L000024",
+"CantEnt": 20,
+"CantSal": null,
+"PrecioUnit": 35,
+"ImpEnt": 700,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3390",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:35"
+},
+{
+"IdMov": "M000025",
+"Fecha": "2026-08-03T00:00:00",
+"Bodega": "03",
+"CodItem": "4-3-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0004/2026",
+"IdLote": "L000025",
+"CantEnt": 8,
+"CantSal": null,
+"PrecioUnit": 380,
+"ImpEnt": 3040,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3390",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:35"
+},
+{
+"IdMov": "M000026",
+"Fecha": "2026-08-03T00:00:00",
+"Bodega": "03",
+"CodItem": "4-3-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0004/2026",
+"IdLote": "L000026",
+"CantEnt": 60,
+"CantSal": null,
+"PrecioUnit": 12,
+"ImpEnt": 720,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3390",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:35"
+},
+{
+"IdMov": "M000027",
+"Fecha": "2026-08-03T00:00:00",
+"Bodega": "03",
+"CodItem": "4-4-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0004/2026",
+"IdLote": "L000027",
+"CantEnt": 12,
+"CantSal": null,
+"PrecioUnit": 28,
+"ImpEnt": 336,
+"ImpSal": null,
+"Referencia": "FERRETERÍA Y MATERIALES DE CONSTRUCCIÓN ORURO S.R.L. Fact. 3390",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:35"
+},
+{
+"IdMov": "M000028",
+"Fecha": "2026-07-22T00:00:00",
+"Bodega": "04",
+"CodItem": "5-1-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0005/2026",
+"IdLote": "L000028",
+"CantEnt": 2000,
+"CantSal": null,
+"PrecioUnit": 0.3,
+"ImpEnt": 600,
+"ImpSal": null,
+"Referencia": "DROGUERÍA INTI FARMA S.A. Fact. 9871",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:40"
+},
+{
+"IdMov": "M000029",
+"Fecha": "2026-07-22T00:00:00",
+"Bodega": "04",
+"CodItem": "5-1-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0005/2026",
+"IdLote": "L000029",
+"CantEnt": 800,
+"CantSal": null,
+"PrecioUnit": 0.8,
+"ImpEnt": 640,
+"ImpSal": null,
+"Referencia": "DROGUERÍA INTI FARMA S.A. Fact. 9871",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:40"
+},
+{
+"IdMov": "M000030",
+"Fecha": "2026-07-22T00:00:00",
+"Bodega": "04",
+"CodItem": "5-1-0000003",
+"Tipo": "INGRESO",
+"Documento": "CGI-0005/2026",
+"IdLote": "L000030",
+"CantEnt": 1200,
+"CantSal": null,
+"PrecioUnit": 0.45,
+"ImpEnt": 540,
+"ImpSal": null,
+"Referencia": "DROGUERÍA INTI FARMA S.A. Fact. 9871",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:40"
+},
+{
+"IdMov": "M000031",
+"Fecha": "2026-07-22T00:00:00",
+"Bodega": "04",
+"CodItem": "5-1-0000004",
+"Tipo": "INGRESO",
+"Documento": "CGI-0005/2026",
+"IdLote": "L000031",
+"CantEnt": 200,
+"CantSal": null,
+"PrecioUnit": 3.5,
+"ImpEnt": 700,
+"ImpSal": null,
+"Referencia": "DROGUERÍA INTI FARMA S.A. Fact. 9871",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:40"
+},
+{
+"IdMov": "M000032",
+"Fecha": "2026-07-22T00:00:00",
+"Bodega": "04",
+"CodItem": "5-2-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0005/2026",
+"IdLote": "L000032",
+"CantEnt": 60,
+"CantSal": null,
+"PrecioUnit": 9,
+"ImpEnt": 540,
+"ImpSal": null,
+"Referencia": "DROGUERÍA INTI FARMA S.A. Fact. 9871",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:40"
+},
+{
+"IdMov": "M000033",
+"Fecha": "2026-07-22T00:00:00",
+"Bodega": "04",
+"CodItem": "5-2-0000002",
+"Tipo": "INGRESO",
+"Documento": "CGI-0005/2026",
+"IdLote": "L000033",
+"CantEnt": 30,
+"CantSal": null,
+"PrecioUnit": 22,
+"ImpEnt": 660,
+"ImpSal": null,
+"Referencia": "DROGUERÍA INTI FARMA S.A. Fact. 9871",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:40"
+},
+{
+"IdMov": "M000034",
+"Fecha": "2026-07-22T00:00:00",
+"Bodega": "04",
+"CodItem": "5-2-0000003",
+"Tipo": "INGRESO",
+"Documento": "CGI-0005/2026",
+"IdLote": "L000034",
+"CantEnt": 12,
+"CantSal": null,
+"PrecioUnit": 55,
+"ImpEnt": 660,
+"ImpSal": null,
+"Referencia": "DROGUERÍA INTI FARMA S.A. Fact. 9871",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:40"
+},
+{
+"IdMov": "M000035",
+"Fecha": "2026-09-02T00:00:00",
+"Bodega": "04",
+"CodItem": "5-1-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0006/2026",
+"IdLote": "L000035",
+"CantEnt": 1500,
+"CantSal": null,
+"PrecioUnit": 0.32,
+"ImpEnt": 480,
+"ImpSal": null,
+"Referencia": "DROGUERÍA INTI FARMA S.A. Fact. 10432",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:44"
+},
+{
+"IdMov": "M000036",
+"Fecha": "2026-09-12T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000001",
+"Tipo": "INGRESO",
+"Documento": "CGI-0007/2026",
+"IdLote": "L000036",
+"CantEnt": 60,
+"CantSal": null,
+"PrecioUnit": 1.6,
+"ImpEnt": 96,
+"ImpSal": null,
+"Referencia": "COMERCIAL SAN MARTÍN Fact. 1388",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:48"
+},
+{
+"IdMov": "M000037",
+"Fecha": "2026-09-12T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000006",
+"Tipo": "INGRESO",
+"Documento": "CGI-0007/2026",
+"IdLote": "L000037",
+"CantEnt": 12,
+"CantSal": null,
+"PrecioUnit": 5,
+"ImpEnt": 60,
+"ImpSal": null,
+"Referencia": "COMERCIAL SAN MARTÍN Fact. 1388",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:48"
+},
+{
+"IdMov": "M000038",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "01",
+"CodItem": "1-1-0000001",
+"Tipo": "SALIDA",
+"Documento": "VS-0001/2026",
+"IdLote": "L000001",
+"CantEnt": null,
+"CantSal": 10,
+"PrecioUnit": 38,
+"ImpEnt": null,
+"ImpSal": 380,
+"Referencia": "UNIDAD DE EDUCACIÓN / ANA MARÍA QUISPE LIMACHI",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:52"
+},
+{
+"IdMov": "M000039",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000001",
+"Tipo": "SALIDA",
+"Documento": "VS-0001/2026",
+"IdLote": "L000004",
+"CantEnt": null,
+"CantSal": 24,
+"PrecioUnit": 1.5,
+"ImpEnt": null,
+"ImpSal": 36,
+"Referencia": "UNIDAD DE EDUCACIÓN / ANA MARÍA QUISPE LIMACHI",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:52"
+},
+{
+"IdMov": "M000040",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000003",
+"Tipo": "SALIDA",
+"Documento": "VS-0001/2026",
+"IdLote": "L000006",
+"CantEnt": null,
+"CantSal": 50,
+"PrecioUnit": 1.2,
+"ImpEnt": null,
+"ImpSal": 60,
+"Referencia": "UNIDAD DE EDUCACIÓN / ANA MARÍA QUISPE LIMACHI",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:52"
+},
+{
+"IdMov": "M000041",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "02",
+"CodItem": "3-1-0000001",
+"Tipo": "SALIDA",
+"Documento": "VS-0002/2026",
+"IdLote": "L000014",
+"CantEnt": null,
+"CantSal": 120,
+"PrecioUnit": 58,
+"ImpEnt": null,
+"ImpSal": 6960,
+"Referencia": "UNIDAD DE OBRAS PÚBLICAS / CARLOS HUANCA MAMANI",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:56"
+},
+{
+"IdMov": "M000042",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "02",
+"CodItem": "3-2-0000001",
+"Tipo": "SALIDA",
+"Documento": "VS-0002/2026",
+"IdLote": "L000017",
+"CantEnt": null,
+"CantSal": 60,
+"PrecioUnit": 42,
+"ImpEnt": null,
+"ImpSal": 2520,
+"Referencia": "UNIDAD DE OBRAS PÚBLICAS / CARLOS HUANCA MAMANI",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:56"
+},
+{
+"IdMov": "M000043",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "02",
+"CodItem": "3-1-0000002",
+"Tipo": "SALIDA",
+"Documento": "VS-0002/2026",
+"IdLote": "L000015",
+"CantEnt": null,
+"CantSal": 8,
+"PrecioUnit": 120,
+"ImpEnt": null,
+"ImpSal": 960,
+"Referencia": "UNIDAD DE OBRAS PÚBLICAS / CARLOS HUANCA MAMANI",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:29:56"
+},
+{
+"IdMov": "M000044",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "04",
+"CodItem": "5-1-0000001",
+"Tipo": "SALIDA",
+"Documento": "VS-0003/2026",
+"IdLote": "L000028",
+"CantEnt": null,
+"CantSal": 600,
+"PrecioUnit": 0.3,
+"ImpEnt": null,
+"ImpSal": 180,
+"Referencia": "UNIDAD DE SALUD / DRA. SILVIA TORREZ ALANOCA",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:01"
+},
+{
+"IdMov": "M000045",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "04",
+"CodItem": "5-1-0000004",
+"Tipo": "SALIDA",
+"Documento": "VS-0003/2026",
+"IdLote": "L000031",
+"CantEnt": null,
+"CantSal": 40,
+"PrecioUnit": 3.5,
+"ImpEnt": null,
+"ImpSal": 140,
+"Referencia": "UNIDAD DE SALUD / DRA. SILVIA TORREZ ALANOCA",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:01"
+},
+{
+"IdMov": "M000046",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "04",
+"CodItem": "5-2-0000001",
+"Tipo": "SALIDA",
+"Documento": "VS-0003/2026",
+"IdLote": "L000032",
+"CantEnt": null,
+"CantSal": 10,
+"PrecioUnit": 9,
+"ImpEnt": null,
+"ImpSal": 90,
+"Referencia": "UNIDAD DE SALUD / DRA. SILVIA TORREZ ALANOCA",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:01"
+},
+{
+"IdMov": "M000047",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000006",
+"Tipo": "SALIDA",
+"Documento": "VS-0004/2026",
+"IdLote": "L000037",
+"CantEnt": null,
+"CantSal": 5,
+"PrecioUnit": 5,
+"ImpEnt": null,
+"ImpSal": 25,
+"Referencia": "DESPACHO DEL ALCALDE / LUCIANA CRUZ VARGAS",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:07"
+},
+{
+"IdMov": "M000048",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000005",
+"Tipo": "SALIDA",
+"Documento": "VS-0004/2026",
+"IdLote": "L000008",
+"CantEnt": null,
+"CantSal": 3,
+"PrecioUnit": 7,
+"ImpEnt": null,
+"ImpSal": 21,
+"Referencia": "DESPACHO DEL ALCALDE / LUCIANA CRUZ VARGAS",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:07"
+},
+{
+"IdMov": "M000049",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "01",
+"CodItem": "1-1-0000003",
+"Tipo": "SALIDA",
+"Documento": "VS-0005/2026",
+"IdLote": "L000003",
+"CantEnt": null,
+"CantSal": 6,
+"PrecioUnit": 25,
+"ImpEnt": null,
+"ImpSal": 150,
+"Referencia": "UNIDAD DE DESARROLLO PRODUCTIVO / RENÉ CHAMBI COLQUE",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:12"
+},
+{
+"IdMov": "M000050",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "01",
+"CodItem": "1-2-0000002",
+"Tipo": "SALIDA",
+"Documento": "VS-0005/2026",
+"IdLote": "L000005",
+"CantEnt": null,
+"CantSal": 30,
+"PrecioUnit": 1,
+"ImpEnt": null,
+"ImpSal": 30,
+"Referencia": "UNIDAD DE DESARROLLO PRODUCTIVO / RENÉ CHAMBI COLQUE",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:12"
+},
+{
+"IdMov": "M000051",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "03",
+"CodItem": "4-3-0000001",
+"Tipo": "TRANSF-SAL",
+"Documento": "TRF-0001/2026",
+"IdLote": "L000025",
+"CantEnt": null,
+"CantSal": 2,
+"PrecioUnit": 380,
+"ImpEnt": null,
+"ImpSal": 760,
+"Referencia": "BODEGA FERRETERÍA a BODEGA MATERIALES DE CONSTRUCCIÓN",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:21"
+},
+{
+"IdMov": "M000052",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "02",
+"CodItem": "4-3-0000001",
+"Tipo": "TRANSF-ENT",
+"Documento": "TRF-0001/2026",
+"IdLote": "L000038",
+"CantEnt": 2,
+"CantSal": null,
+"PrecioUnit": 380,
+"ImpEnt": 760,
+"ImpSal": null,
+"Referencia": "BODEGA FERRETERÍA a BODEGA MATERIALES DE CONSTRUCCIÓN",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:21"
+},
+{
+"IdMov": "M000053",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "04",
+"CodItem": "5-1-0000002",
+"Tipo": "BAJA",
+"Documento": "BAJ-0001/2026",
+"IdLote": "L000029",
+"CantEnt": null,
+"CantSal": 800,
+"PrecioUnit": 0.8,
+"ImpEnt": null,
+"ImpSal": 640,
+"Referencia": "Vencimiento - RA RA-045/2026",
+"Anulado": null,
+"Usuario": "Mario Condori (demo)",
+"FechaReg": "2026-10-02T13:30:42"
+}
+],
+"T_INV": [
+{
+"NroInv": "INV-0001/2026",
+"Fecha": "2026-09-29T00:00:00",
+"Bodega": "BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO",
+"Tipo": "PROGRAMADO",
+"Responsable": "TÉC. MARIO CONDORI QUISPE",
+"Designado": "LIC. ROSA MARÍA CHOQUE TICONA (JBS) y LIC. ELVIRA FLORES CRUZ (Contabilidad)",
+"Observador": "PEDRO APAZA ROJAS - Responsable de Planificación",
+"CorteIng": "Últ. ingreso: CGI-0007/2026  |  Últ. vale de salida: VS-0005/2026  |  Corte: 02/10/2026 13:30",
+"CorteSal": null,
+"Estado": "CERRADO",
+"FaltanteBs": 7.6,
+"SobranteBs": 3,
+"FechaReg": "2026-10-02T13:30:26"
+}
+],
+"T_INVDET": [
+{
+"NroInv": "INV-0001/2026",
+"Item": 1,
+"CodItem": "1-1-0000001",
+"Descripcion": "PAPEL BOND CARTA 75 G",
+"Unidad": "RESMA",
+"SaldoSist": 70,
+"Conteo": 70,
+"Diferencia": 0,
+"PrecioUnit": 38,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 2,
+"CodItem": "1-1-0000002",
+"Descripcion": "PAPEL BOND OFICIO 75 G",
+"Unidad": "RESMA",
+"SaldoSist": 40,
+"Conteo": 40,
+"Diferencia": 0,
+"PrecioUnit": 45,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 3,
+"CodItem": "1-1-0000003",
+"Descripcion": "CARTULINA ESCOLAR DE COLORES",
+"Unidad": "PAQUETE",
+"SaldoSist": 14,
+"Conteo": 14,
+"Diferencia": 0,
+"PrecioUnit": 25,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 4,
+"CodItem": "1-2-0000001",
+"Descripcion": "BOLÍGRAFO AZUL PUNTA MEDIA",
+"Unidad": "UNIDAD",
+"SaldoSist": 286,
+"Conteo": 281,
+"Diferencia": -5,
+"PrecioUnit": 1.521,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 5,
+"CodItem": "1-2-0000002",
+"Descripcion": "LÁPIZ NEGRO HB",
+"Unidad": "UNIDAD",
+"SaldoSist": 120,
+"Conteo": 123,
+"Diferencia": 3,
+"PrecioUnit": 1,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 6,
+"CodItem": "1-2-0000003",
+"Descripcion": "FOLDER MANILA TAMAÑO OFICIO",
+"Unidad": "UNIDAD",
+"SaldoSist": 350,
+"Conteo": 350,
+"Diferencia": 0,
+"PrecioUnit": 1.2,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 7,
+"CodItem": "1-2-0000004",
+"Descripcion": "GRAPAS 26/6",
+"Unidad": "CAJA",
+"SaldoSist": 30,
+"Conteo": 30,
+"Diferencia": 0,
+"PrecioUnit": 6,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 8,
+"CodItem": "1-2-0000005",
+"Descripcion": "CINTA ADHESIVA 48 MM",
+"Unidad": "ROLLO",
+"SaldoSist": 21,
+"Conteo": 21,
+"Diferencia": 0,
+"PrecioUnit": 7,
+"EstadoBien": "DETERIORADO",
+"Obs": "3 rollos con adhesivo reseco por humedad"
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 9,
+"CodItem": "1-2-0000006",
+"Descripcion": "MARCADOR ACRÍLICO PERMANENTE NEGRO",
+"Unidad": "UNIDAD",
+"SaldoSist": 7,
+"Conteo": 7,
+"Diferencia": 0,
+"PrecioUnit": 5,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 10,
+"CodItem": "1-3-0000001",
+"Descripcion": "TÓNER HP 85A NEGRO",
+"Unidad": "UNIDAD",
+"SaldoSist": 6,
+"Conteo": 6,
+"Diferencia": 0,
+"PrecioUnit": 520,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 11,
+"CodItem": "1-3-0000002",
+"Descripcion": "TINTA EPSON 664 NEGRO",
+"Unidad": "FRASCO",
+"SaldoSist": 10,
+"Conteo": 10,
+"Diferencia": 0,
+"PrecioUnit": 85,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 12,
+"CodItem": "2-1-0000001",
+"Descripcion": "LEJÍA DE 1 LITRO",
+"Unidad": "UNIDAD",
+"SaldoSist": 48,
+"Conteo": 48,
+"Diferencia": 0,
+"PrecioUnit": 8,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 13,
+"CodItem": "2-1-0000002",
+"Descripcion": "DETERGENTE EN POLVO 800 G",
+"Unidad": "BOLSA",
+"SaldoSist": 36,
+"Conteo": 36,
+"Diferencia": 0,
+"PrecioUnit": 14,
+"EstadoBien": null,
+"Obs": null
+},
+{
+"NroInv": "INV-0001/2026",
+"Item": 14,
+"CodItem": "2-3-0000001",
+"Descripcion": "BOLSAS DE BASURA 90X110 CM",
+"Unidad": "PAQUETE",
+"SaldoSist": 24,
+"Conteo": 24,
+"Diferencia": 0,
+"PrecioUnit": 18,
+"EstadoBien": null,
+"Obs": null
+}
+],
+"T_BAJA": [
+{
+"NroBaja": "BAJ-0001/2026",
+"Fecha": "2026-09-28T00:00:00",
+"Bodega": "BODEGA MEDICAMENTOS SUS",
+"Causal": "Vencimiento",
+"Grupo": "B",
+"Responsable": "DRA. SILVIA TORREZ ALANOCA",
+"Justificacion": "Lote AMX-0425 de amoxicilina 500 mg vencido en la fecha 26/09/2026. Se encuentra segregado del stock de entrega.",
+"NroRA": "RA-045/2026",
+"FechaRA": "2026-10-01T00:00:00",
+"Total": 640,
+"Estado": "BAJA EJECUTADA",
+"Origen": null,
+"FechaReg": "2026-10-02T13:30:41"
+}
+],
+"T_BAJADET": [
+{
+"NroBaja": "BAJ-0001/2026",
+"Item": 1,
+"CodItem": "5-1-0000002",
+"Descripcion": "AMOXICILINA 500 MG",
+"Unidad": "TABLETA",
+"IdLote": null,
+"Cantidad": 800,
+"PrecioUnit": 0.8,
+"Total": 640
+}
+],
+"T_BAJAPASO": [
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 1,
+"Paso": "Acta de verificación (con observadores, si corresponde)  (*)",
+"Doc": "ACTAVER",
+"Clase": null,
+"Referencia": "Doc. 01/2026",
+"Fecha": "2026-09-28T00:00:00",
+"Estado": "HECHO",
+"Respaldo": null
+},
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 2,
+"Paso": "Informe de solicitud de baja con la causal (conducto regular)  (*)",
+"Doc": "INFSOL",
+"Clase": null,
+"Referencia": "Doc. 02/2026",
+"Fecha": "2026-09-29T00:00:00",
+"Estado": "HECHO",
+"Respaldo": null
+},
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 3,
+"Paso": "Informe técnico de recomendación de baja (Jefe de Bienes y Servicios)  (*)",
+"Doc": "INFTEC",
+"Clase": null,
+"Referencia": "Doc. 03/2026",
+"Fecha": "2026-09-30T00:00:00",
+"Estado": "HECHO",
+"Respaldo": null
+},
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 4,
+"Paso": "Informe Legal (Asuntos Jurídicos)  (*)",
+"Doc": null,
+"Clase": null,
+"Referencia": "Doc. 04/2026",
+"Fecha": "2026-10-01T00:00:00",
+"Estado": "HECHO",
+"Respaldo": null
+},
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 5,
+"Paso": "Resolución Administrativa que autoriza la baja  (*)",
+"Doc": null,
+"Clase": "RA",
+"Referencia": "Doc. 05/2026",
+"Fecha": "2026-10-02T00:00:00",
+"Estado": "HECHO",
+"Respaldo": null
+},
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 6,
+"Paso": "Baja física y contable de las existencias (Registro de Baja)  (*)",
+"Doc": "REGBAJA",
+"Clase": "BAJA",
+"Referencia": "RA RA-045/2026",
+"Fecha": "2026-10-02T00:00:00",
+"Estado": "HECHO",
+"Respaldo": null
+},
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 7,
+"Paso": "Memorándum de designación de comisión para destrucción  (*)",
+"Doc": "MEMOCOM",
+"Clase": null,
+"Referencia": null,
+"Fecha": null,
+"Estado": "PENDIENTE",
+"Respaldo": null
+},
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 8,
+"Paso": "Acta de destrucción suscrita por la comisión  (*)",
+"Doc": "ACTADEST",
+"Clase": null,
+"Referencia": null,
+"Fecha": null,
+"Estado": "PENDIENTE",
+"Respaldo": null
+},
+{
+"NroBaja": "BAJ-0001/2026",
+"Orden": 9,
+"Paso": "Archivo de la documentación del expediente  (*)",
+"Doc": null,
+"Clase": null,
+"Referencia": null,
+"Fecha": null,
+"Estado": "PENDIENTE",
+"Respaldo": null
+}
+],
+"T_TRF": [
+{
+"NroTrf": "TRF-0001/2026",
+"Fecha": "2026-09-22T00:00:00",
+"BodOrigen": "BODEGA FERRETERÍA",
+"BodDestino": "BODEGA MATERIALES DE CONSTRUCCIÓN",
+"Entrega": "TÉC. MARIO CONDORI QUISPE",
+"Recibe": "AUX. JULIO MAMANI CHOQUE",
+"Motivo": "Requerimiento de la obra del camino vecinal para instalación de iluminación",
+"Total": 760,
+"Estado": "EJECUTADA",
+"FechaReg": "2026-10-02T13:30:21"
+}
+],
+"T_TRFDET": [
+{
+"NroTrf": "TRF-0001/2026",
+"Item": 1,
+"CodItem": "4-3-0000001",
+"Descripcion": "CABLE ELÉCTRICO 12 AWG ROLLO 100 M",
+"Unidad": "ROLLO",
+"Cantidad": 2,
+"PrecioUnit": 380,
+"Total": 760
+}
+],
+"T_REQ": [
+{
+"NroReq": "REQ-0001/2026",
+"Fecha": "2026-10-02T00:00:00",
+"Bodega": "TODAS",
+"Tipo": "PREVISTO - REPOSICIÓN DE STOCK",
+"Total": 1865,
+"Estado": "REGISTRADO",
+"Justificacion": "Reposición de existencias en o bajo el stock mínimo para garantizar la provisión del segundo semestre.",
+"FechaReg": "2026-10-02T13:30:59"
+}
+],
+"T_REQDET": [
+{
+"NroReq": "REQ-0001/2026",
+"Item": 1,
+"CodItem": "1-2-0000006",
+"Descripcion": "MARCADOR ACRÍLICO PERMANENTE NEGRO",
+"Unidad": "UNIDAD",
+"Stock": 7,
+"CantSolic": 53,
+"PrecioRef": 5,
+"Total": 265,
+"Partida": "39200"
+},
+{
+"NroReq": "REQ-0001/2026",
+"Item": 2,
+"CodItem": "5-1-0000002",
+"Descripcion": "AMOXICILINA 500 MG",
+"Unidad": "TABLETA",
+"Stock": 0,
+"CantSolic": 2000,
+"PrecioRef": 0.8,
+"Total": 1600,
+"Partida": "34200"
+}
+],
+"T_INSP": [
+{
+"NroInsp": "INS-0001/2026",
+"Fecha": "2026-09-27T00:00:00",
+"Bodega": "BODEGA MEDICAMENTOS SUS",
+"Inspector": "TÉC. MARIO CONDORI QUISPE",
+"Cumple": 13,
+"NoCumple": 2,
+"Observ": null,
+"FechaReg": "2026-10-02T13:31:05"
+}
+],
+"T_INSPDET": [
+{
+"NroInsp": "INS-0001/2026",
+"Item": 1,
+"Criterio": "Materiales ordenados y clasificados según su naturaleza y peligrosidad",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 2,
+"Criterio": "Espacio libre para el movimiento y tránsito de los bienes",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 3,
+"Criterio": "Ventilación adecuada",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 4,
+"Criterio": "Iluminación adecuada",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 5,
+"Criterio": "Humedad y temperatura dentro de lo adecuado (sin filtraciones)",
+"Resultado": "NO CUMPLE",
+"Obs": "Humedad en la pared norte: reparar filtración y pintar con impermeabilizante."
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 6,
+"Criterio": "Libre de plagas y roedores",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 7,
+"Criterio": "Extintores vigentes, con carga y accesibles",
+"Resultado": "NO CUMPLE",
+"Obs": "Extintor EXT-003 con recarga vencida: solicitar recarga."
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 8,
+"Criterio": "Salidas y accesos de emergencia libres y señalizados",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 9,
+"Criterio": "Instalaciones eléctricas en buen estado",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 10,
+"Criterio": "Estantes y mobiliario en buen estado y estables",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 11,
+"Criterio": "Sustancias peligrosas en espacio separado y señalizado",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 12,
+"Criterio": "Equipo de protección personal disponible (guantes, barbijo, chaleco)",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 13,
+"Criterio": "Botiquín de primeros auxilios completo",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 14,
+"Criterio": "Seguridad física: puertas, cerraduras y control de acceso",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 15,
+"Criterio": "Medidas contra incendios e inundaciones",
+"Resultado": "CUMPLE",
+"Obs": null
+},
+{
+"NroInsp": "INS-0001/2026",
+"Item": 16,
+"Criterio": "Medicamentos: almacenamiento y cadena de frío (bodega SUS)",
+"Resultado": "N/A",
+"Obs": null
+}
+],
+"T_BITAC": [
+{
+"Fecha": "2026-10-02T13:29:06",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-1-0000001",
+"Detalle": "PAPEL BOND CARTA 75 G"
+},
+{
+"Fecha": "2026-10-02T13:29:07",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-1-0000002",
+"Detalle": "PAPEL BOND OFICIO 75 G"
+},
+{
+"Fecha": "2026-10-02T13:29:07",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-1-0000003",
+"Detalle": "CARTULINA ESCOLAR DE COLORES"
+},
+{
+"Fecha": "2026-10-02T13:29:07",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-2-0000001",
+"Detalle": "BOLÍGRAFO AZUL PUNTA MEDIA"
+},
+{
+"Fecha": "2026-10-02T13:29:08",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-2-0000002",
+"Detalle": "LÁPIZ NEGRO HB"
+},
+{
+"Fecha": "2026-10-02T13:29:08",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-2-0000003",
+"Detalle": "FOLDER MANILA TAMAÑO OFICIO"
+},
+{
+"Fecha": "2026-10-02T13:29:08",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-2-0000004",
+"Detalle": "GRAPAS 26/6"
+},
+{
+"Fecha": "2026-10-02T13:29:08",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-2-0000005",
+"Detalle": "CINTA ADHESIVA 48 MM"
+},
+{
+"Fecha": "2026-10-02T13:29:09",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-2-0000006",
+"Detalle": "MARCADOR ACRÍLICO PERMANENTE NEGRO"
+},
+{
+"Fecha": "2026-10-02T13:29:09",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-3-0000001",
+"Detalle": "TÓNER HP 85A NEGRO"
+},
+{
+"Fecha": "2026-10-02T13:29:09",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "1-3-0000002",
+"Detalle": "TINTA EPSON 664 NEGRO"
+},
+{
+"Fecha": "2026-10-02T13:29:10",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "2-1-0000001",
+"Detalle": "LEJÍA DE 1 LITRO"
+},
+{
+"Fecha": "2026-10-02T13:29:10",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "2-1-0000002",
+"Detalle": "DETERGENTE EN POLVO 800 G"
+},
+{
+"Fecha": "2026-10-02T13:29:10",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "2-3-0000001",
+"Detalle": "BOLSAS DE BASURA 90X110 CM"
+},
+{
+"Fecha": "2026-10-02T13:29:11",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "3-1-0000001",
+"Detalle": "CEMENTO PORTLAND IP-30 DE 50 KG"
+},
+{
+"Fecha": "2026-10-02T13:29:11",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "3-1-0000002",
+"Detalle": "ARENA FINA LAVADA"
+},
+{
+"Fecha": "2026-10-02T13:29:11",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "3-1-0000003",
+"Detalle": "GRAVA CHANCADA"
+},
+{
+"Fecha": "2026-10-02T13:29:11",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "3-2-0000001",
+"Detalle": "FIERRO CORRUGADO 3/8 DE 12 M"
+},
+{
+"Fecha": "2026-10-02T13:29:12",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "3-2-0000002",
+"Detalle": "FIERRO CORRUGADO 1/2 DE 12 M"
+},
+{
+"Fecha": "2026-10-02T13:29:12",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "3-3-0000001",
+"Detalle": "LADRILLO 6 HUECOS"
+},
+{
+"Fecha": "2026-10-02T13:29:12",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "3-5-0000001",
+"Detalle": "PINTURA LÁTEX BLANCA BALDE 18 L"
+},
+{
+"Fecha": "2026-10-02T13:29:12",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "4-1-0000001",
+"Detalle": "PALA CUADRADA CON MANGO"
+},
+{
+"Fecha": "2026-10-02T13:29:13",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "4-1-0000002",
+"Detalle": "PICOTA CON MANGO"
+},
+{
+"Fecha": "2026-10-02T13:29:13",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "4-2-0000001",
+"Detalle": "CLAVOS DE 2 PULGADAS"
+},
+{
+"Fecha": "2026-10-02T13:29:13",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "4-2-0000002",
+"Detalle": "TORNILLOS AUTOROSCANTES 1 1/2 PULGADA"
+},
+{
+"Fecha": "2026-10-02T13:29:13",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "4-3-0000001",
+"Detalle": "CABLE ELÉCTRICO 12 AWG ROLLO 100 M"
+},
+{
+"Fecha": "2026-10-02T13:29:14",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "4-3-0000002",
+"Detalle": "FOCO LED 12 W"
+},
+{
+"Fecha": "2026-10-02T13:29:14",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "4-4-0000001",
+"Detalle": "CANDADO DE 50 MM"
+},
+{
+"Fecha": "2026-10-02T13:29:15",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "5-1-0000001",
+"Detalle": "PARACETAMOL 500 MG"
+},
+{
+"Fecha": "2026-10-02T13:29:15",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "5-1-0000002",
+"Detalle": "AMOXICILINA 500 MG"
+},
+{
+"Fecha": "2026-10-02T13:29:15",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "5-1-0000003",
+"Detalle": "IBUPROFENO 400 MG"
+},
+{
+"Fecha": "2026-10-02T13:29:16",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "5-1-0000004",
+"Detalle": "SALES DE REHIDRATACIÓN ORAL"
+},
+{
+"Fecha": "2026-10-02T13:29:16",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "5-2-0000001",
+"Detalle": "GASA ESTÉRIL 10X10 CM"
+},
+{
+"Fecha": "2026-10-02T13:29:16",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "5-2-0000002",
+"Detalle": "ALCOHOL MEDICINAL 96 GRADOS"
+},
+{
+"Fecha": "2026-10-02T13:29:17",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "CATALOGO",
+"Accion": "ALTA DE ÍTEM",
+"Documento": "5-2-0000003",
+"Detalle": "GUANTES DE LÁTEX TALLA M"
+},
+{
+"Fecha": "2026-10-02T13:29:18",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "REGISTRO DE CGI",
+"Documento": "CGI-0001/2026",
+"Detalle": "COMPRA (ORDEN DE COMPRA / CONTRATO) - BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO - Bs 10.663,00"
+},
+{
+"Fecha": "2026-10-02T13:29:19",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "CONFIRMACIÓN DE INGRESO",
+"Documento": "CGI-0001/2026",
+"Detalle": "Bs 10.663,00"
+},
+{
+"Fecha": "2026-10-02T13:29:25",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "REGISTRO DE CGI",
+"Documento": "CGI-0002/2026",
+"Detalle": "COMPRA (ORDEN DE COMPRA / CONTRATO) - BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO - Bs 1.320,00"
+},
+{
+"Fecha": "2026-10-02T13:29:25",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "CONFIRMACIÓN DE INGRESO",
+"Documento": "CGI-0002/2026",
+"Detalle": "Bs 1.320,00"
+},
+{
+"Fecha": "2026-10-02T13:29:30",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "REGISTRO DE CGI",
+"Documento": "CGI-0003/2026",
+"Detalle": "COMPRA (ORDEN DE COMPRA / CONTRATO) - BODEGA MATERIALES DE CONSTRUCCIÓN - Bs 59.550,00"
+},
+{
+"Fecha": "2026-10-02T13:29:30",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "CONFIRMACIÓN DE INGRESO",
+"Documento": "CGI-0003/2026",
+"Detalle": "Bs 59.550,00"
+},
+{
+"Fecha": "2026-10-02T13:29:35",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "REGISTRO DE CGI",
+"Documento": "CGI-0004/2026",
+"Detalle": "COMPRA (ORDEN DE COMPRA / CONTRATO) - BODEGA FERRETERÍA - Bs 7.381,00"
+},
+{
+"Fecha": "2026-10-02T13:29:35",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "CONFIRMACIÓN DE INGRESO",
+"Documento": "CGI-0004/2026",
+"Detalle": "Bs 7.381,00"
+},
+{
+"Fecha": "2026-10-02T13:29:39",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "REGISTRO DE CGI",
+"Documento": "CGI-0005/2026",
+"Detalle": "COMPRA (ORDEN DE COMPRA / CONTRATO) - BODEGA MEDICAMENTOS SUS - Bs 4.340,00"
+},
+{
+"Fecha": "2026-10-02T13:29:40",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "CONFIRMACIÓN DE INGRESO",
+"Documento": "CGI-0005/2026",
+"Detalle": "Bs 4.340,00"
+},
+{
+"Fecha": "2026-10-02T13:29:44",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "REGISTRO DE CGI",
+"Documento": "CGI-0006/2026",
+"Detalle": "COMPRA (ORDEN DE COMPRA / CONTRATO) - BODEGA MEDICAMENTOS SUS - Bs 480,00"
+},
+{
+"Fecha": "2026-10-02T13:29:44",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "CONFIRMACIÓN DE INGRESO",
+"Documento": "CGI-0006/2026",
+"Detalle": "Bs 480,00"
+},
+{
+"Fecha": "2026-10-02T13:29:48",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "REGISTRO DE CGI",
+"Documento": "CGI-0007/2026",
+"Detalle": "CAJA CHICA - BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO - Bs 156,00"
+},
+{
+"Fecha": "2026-10-02T13:29:48",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INGRESO",
+"Accion": "CONFIRMACIÓN DE INGRESO",
+"Documento": "CGI-0007/2026",
+"Detalle": "Bs 156,00"
+},
+{
+"Fecha": "2026-10-02T13:29:52",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "REGISTRO DE PEDIDO",
+"Documento": "VS-0001/2026",
+"Detalle": "ANA MARÍA QUISPE LIMACHI - UNIDAD DE EDUCACIÓN"
+},
+{
+"Fecha": "2026-10-02T13:29:52",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "APROBACIÓN DE PEDIDO",
+"Documento": "VS-0001/2026",
+"Detalle": "aprobación y entrega en un solo paso"
+},
+{
+"Fecha": "2026-10-02T13:29:52",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "ENTREGA DE MATERIALES",
+"Documento": "VS-0001/2026",
+"Detalle": "Bs 476,00 a UNIDAD DE EDUCACIÓN / ANA MARÍA QUISPE LIMACHI"
+},
+{
+"Fecha": "2026-10-02T13:29:55",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "REGISTRO DE PEDIDO",
+"Documento": "VS-0002/2026",
+"Detalle": "CARLOS HUANCA MAMANI - UNIDAD DE OBRAS PÚBLICAS"
+},
+{
+"Fecha": "2026-10-02T13:29:56",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "APROBACIÓN DE PEDIDO",
+"Documento": "VS-0002/2026",
+"Detalle": "aprobación y entrega en un solo paso"
+},
+{
+"Fecha": "2026-10-02T13:29:56",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "ENTREGA DE MATERIALES",
+"Documento": "VS-0002/2026",
+"Detalle": "Bs 10.440,00 a UNIDAD DE OBRAS PÚBLICAS / CARLOS HUANCA MAMANI"
+},
+{
+"Fecha": "2026-10-02T13:30:01",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "REGISTRO DE PEDIDO",
+"Documento": "VS-0003/2026",
+"Detalle": "DRA. SILVIA TORREZ ALANOCA - UNIDAD DE SALUD"
+},
+{
+"Fecha": "2026-10-02T13:30:01",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "APROBACIÓN DE PEDIDO",
+"Documento": "VS-0003/2026",
+"Detalle": "aprobación y entrega en un solo paso"
+},
+{
+"Fecha": "2026-10-02T13:30:01",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "ENTREGA DE MATERIALES",
+"Documento": "VS-0003/2026",
+"Detalle": "Bs 410,00 a UNIDAD DE SALUD / DRA. SILVIA TORREZ ALANOCA"
+},
+{
+"Fecha": "2026-10-02T13:30:06",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "REGISTRO DE PEDIDO",
+"Documento": "VS-0004/2026",
+"Detalle": "LUCIANA CRUZ VARGAS - DESPACHO DEL ALCALDE"
+},
+{
+"Fecha": "2026-10-02T13:30:06",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "APROBACIÓN DE PEDIDO",
+"Documento": "VS-0004/2026",
+"Detalle": "aprobación y entrega en un solo paso"
+},
+{
+"Fecha": "2026-10-02T13:30:07",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "ENTREGA DE MATERIALES",
+"Documento": "VS-0004/2026",
+"Detalle": "Bs 46,00 a DESPACHO DEL ALCALDE / LUCIANA CRUZ VARGAS"
+},
+{
+"Fecha": "2026-10-02T13:30:12",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "REGISTRO DE PEDIDO",
+"Documento": "VS-0005/2026",
+"Detalle": "RENÉ CHAMBI COLQUE - UNIDAD DE DESARROLLO PRODUCTIVO [EXCEPCION: Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)]"
+},
+{
+"Fecha": "2026-10-02T13:30:12",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "APROBACIÓN DE PEDIDO",
+"Documento": "VS-0005/2026",
+"Detalle": "aprobación y entrega en un solo paso"
+},
+{
+"Fecha": "2026-10-02T13:30:12",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "ENTREGA DE MATERIALES",
+"Documento": "VS-0005/2026",
+"Detalle": "Bs 180,00 a UNIDAD DE DESARROLLO PRODUCTIVO / RENÉ CHAMBI COLQUE"
+},
+{
+"Fecha": "2026-10-02T13:30:20",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "REGISTRO DE PEDIDO",
+"Documento": "VS-0006/2026",
+"Detalle": "PEDRO APAZA ROJAS - UNIDAD DE PLANIFICACIÓN [EXCEPCION: Autorizado por LIC. ROSA MARÍA CHOQUE TICONA (demostración)]"
+},
+{
+"Fecha": "2026-10-02T13:30:21",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SALIDA",
+"Accion": "REGISTRO DE PEDIDO",
+"Documento": "VS-0007/2026",
+"Detalle": "CARLOS HUANCA MAMANI - UNIDAD DE OBRAS PÚBLICAS"
+},
+{
+"Fecha": "2026-10-02T13:30:21",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "TRANSFERENCIA",
+"Accion": "REGISTRO",
+"Documento": "TRF-0001/2026",
+"Detalle": "BODEGA FERRETERÍA a BODEGA MATERIALES DE CONSTRUCCIÓN - Bs 760,00"
+},
+{
+"Fecha": "2026-10-02T13:30:21",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "TRANSFERENCIA",
+"Accion": "EJECUCIÓN",
+"Documento": "TRF-0001/2026",
+"Detalle": "BODEGA FERRETERÍA a BODEGA MATERIALES DE CONSTRUCCIÓN"
+},
+{
+"Fecha": "2026-10-02T13:30:26",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INVENTARIO",
+"Accion": "GUARDADO",
+"Documento": "INV-0001/2026",
+"Detalle": "PROGRAMADO - BODEGA PAPELERÍA Y ÚTILES DE ESCRITORIO - contados 14/14"
+},
+{
+"Fecha": "2026-10-02T13:30:40",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INVENTARIO",
+"Accion": "SOBRANTES A CGI DE AJUSTE",
+"Documento": "INV-0001/2026",
+"Detalle": "CGI-0008/2026 Bs 3,00"
+},
+{
+"Fecha": "2026-10-02T13:30:41",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "INVENTARIO",
+"Accion": "CIERRE DE INVENTARIO",
+"Documento": "INV-0001/2026",
+"Detalle": "Contados: 14 de 14   |   Faltantes: Bs 7,61   |   Sobrantes: Bs 3,00"
+},
+{
+"Fecha": "2026-10-02T13:30:41",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "BAJAS",
+"Accion": "GUARDADO DE EXPEDIENTE",
+"Documento": "BAJ-0001/2026",
+"Detalle": "Vencimiento - BODEGA MEDICAMENTOS SUS"
+},
+{
+"Fecha": "2026-10-02T13:30:42",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "BAJAS",
+"Accion": "GUARDADO DE EXPEDIENTE",
+"Documento": "BAJ-0001/2026",
+"Detalle": "Vencimiento - BODEGA MEDICAMENTOS SUS"
+},
+{
+"Fecha": "2026-10-02T13:30:42",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "BAJAS",
+"Accion": "BAJA EJECUTADA",
+"Documento": "BAJ-0001/2026",
+"Detalle": "Vencimiento - Bs 640,00 - RA RA-045/2026"
+},
+{
+"Fecha": "2026-10-02T13:30:59",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "REQUERIMIENTO",
+"Accion": "REGISTRO",
+"Documento": "REQ-0001/2026",
+"Detalle": "PREVISTO - REPOSICIÓN DE STOCK - Bs 1.865,00"
+},
+{
+"Fecha": "2026-10-02T13:31:05",
+"UsuarioWin": "JAIME",
+"UsuarioApp": "Mario Condori (demo)",
+"Modulo": "SEGURIDAD",
+"Accion": "INSPECCIÓN",
+"Documento": "INS-0001/2026",
+"Detalle": "BODEGA MEDICAMENTOS SUS - no cumple 2"
+}
+]
+}

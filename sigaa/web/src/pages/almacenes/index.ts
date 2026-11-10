@@ -1,0 +1,10 @@
+export { default as AlmCatalogo } from './Catalogo';
+export { default as AlmExistencias } from './Existencias';
+export { default as AlmIngresos } from './Ingresos';
+export { default as AlmSalidas } from './Salidas';
+export { default as AlmInventarios } from './Inventarios';
+export { default as AlmBajas } from './Bajas';
+export { default as AlmTransferencias } from './Transferencias';
+export { default as AlmReposicion } from './Reposicion';
+export { default as AlmSeguridad } from './Seguridad';
+export { default as AlmCierre } from './Cierre';

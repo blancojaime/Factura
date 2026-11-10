@@ -1,0 +1,86 @@
+import type { Db, Usuario } from './context.js';
+import { nowIso, num, txt, year, today } from './util.js';
+import { fail } from './errors.js';
+
+// ───────── Configuración ─────────
+export async function cfg(db: Db, clave: string, def = ''): Promise<string> {
+  const r = await db('core_config').where({ clave }).first('valor');
+  return r && r.valor !== null && r.valor !== undefined ? String(r.valor) : def;
+}
+export async function cfgNum(db: Db, clave: string, def = 0): Promise<number> {
+  const v = await cfg(db, clave, '');
+  return v === '' ? def : num(v);
+}
+export async function cfgAll(db: Db): Promise<Record<string, string>> {
+  const rows = await db('core_config').select('clave', 'valor');
+  return Object.fromEntries(rows.map((r: any) => [r.clave, r.valor ?? '']));
+}
+export async function setCfg(db: Db, clave: string, valor: string, modulo = 'core', descripcion?: string) {
+  const ex = await db('core_config').where({ clave }).first('clave');
+  if (ex) await db('core_config').where({ clave }).update({ valor });
+  else await db('core_config').insert({ clave, valor, modulo, descripcion: descripcion ?? null });
+}
+export async function gestion(db: Db): Promise<number> {
+  const g = await cfgNum(db, 'Gestion', 0);
+  return g > 2000 ? g : year(today());
+}
+
+// ───────── Numeración correlativa por gestión: CGI-0001/2026 ─────────
+/**
+ * Genera el siguiente número `PREFIJO-0001/GESTIÓN`. El contador se lleva por `serie`
+ * (por defecto el propio prefijo); se usa una serie distinta cuando dos módulos comparten prefijo (p. ej. TRF, BAJ).
+ */
+export async function siguienteNro(db: Db, prefijo: string, g?: number, serie: string = prefijo): Promise<string> {
+  const gest = g ?? (await gestion(db));
+  const clave = { prefijo: serie, gestion: gest };
+  // Incremento ATÓMICO: la fila queda bloqueada hasta confirmar la transacción, así dos usuarios que guardan a la vez
+  // nunca reciben el mismo número (leer-y-sumar por separado permitía duplicados con PostgreSQL).
+  const incrementar = async (): Promise<number | null> => {
+    const r: any[] = await db('core_secuencias').where(clave).increment('ultimo', 1).returning('ultimo');
+    if (!r.length) return null;
+    return Number(typeof r[0] === 'object' ? r[0].ultimo : r[0]);
+  };
+  let n = await incrementar();
+  if (n === null) {
+    // primera vez de la serie: se crea la fila (si otra operación la creó al mismo tiempo, se ignora) y se incrementa
+    await db('core_secuencias').insert({ ...clave, ultimo: 0 }).onConflict(['prefijo', 'gestion']).ignore();
+    n = await incrementar();
+    if (n === null) fail('No se pudo generar el número del documento. Intente nuevamente.');
+  }
+  return `${prefijo}-${String(n).padStart(4, '0')}/${gest}`;
+}
+/** Registra en la secuencia un número ya existente (carga de datos históricos). */
+export async function registrarNro(db: Db, nro: string, serie?: string) {
+  const m = /^([A-Z]+)-(\d+)\/(\d{4})$/.exec(nro);
+  if (!m) return;
+  const [, prefijo, n, g] = m;
+  const key = serie ?? prefijo;
+  const row = await db('core_secuencias').where({ prefijo: key, gestion: Number(g) }).first();
+  if (!row) await db('core_secuencias').insert({ prefijo: key, gestion: Number(g), ultimo: Number(n) });
+  else if (Number(row.ultimo) < Number(n)) await db('core_secuencias').where({ prefijo: key, gestion: Number(g) }).update({ ultimo: Number(n) });
+}
+/** Id correlativo con prefijo de una letra (L000001, M000001, ...). */
+export async function siguienteId(db: Db, tabla: string, col: string, letra: string, ancho = 6): Promise<() => string> {
+  const r = await db(tabla).max({ m: col }).first();
+  let n = r?.m ? Number(String(r.m).slice(letra.length)) : 0;
+  return () => `${letra}${String(++n).padStart(ancho, '0')}`;
+}
+
+// ───────── Bitácora / auditoría ─────────
+export async function bitacora(db: Db, u: Pick<Usuario, 'usuario'> | string, modulo: string, accion: string, documento = '', detalle = '') {
+  await db('core_bitacora').insert({
+    fecha: nowIso(),
+    usuario: typeof u === 'string' ? u : u.usuario,
+    modulo,
+    accion,
+    documento,
+    detalle: String(detalle).slice(0, 2000),
+  });
+}
+
+export async function requerir<T>(v: T | undefined | null, msg: string): Promise<T> {
+  if (v === undefined || v === null) fail(msg);
+  return v;
+}
+export const nom = (u: Usuario | string): string => (typeof u === 'string' ? u : u.nombre || u.usuario);
+export { txt };

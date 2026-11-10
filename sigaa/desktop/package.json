@@ -1,0 +1,73 @@
+{
+  "name": "sigaa-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SIGAA Escritorio — Almacenes, Combustible y Activos Fijos (base de datos SQLite local)",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsup src/main.ts --format cjs --out-dir dist --external electron && node scripts/copiar.mjs",
+    "start": "npm run build && electron .",
+    "dist": "npm run build && electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^37.0.0",
+    "electron-builder": "^25.0.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  },
+  "build": {
+    "appId": "bo.gob.sigaa",
+    "productName": "SIGAA",
+    "directories": {
+      "output": "release"
+    },
+    "npmRebuild": false,
+    "files": [
+      "dist/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "signAndEditExecutable": false
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Office"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.business"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "extraResources": [
+      {
+        "from": "build-deps/node_modules",
+        "to": "node_modules"
+      }
+    ]
+  },
+  "runtimeDeps": {
+    "@fastify/jwt": "^10.2.7",
+    "@fastify/static": "^10.1.10",
+    "better-sqlite3": "^13.0.3",
+    "exceljs": "^4.4.0",
+    "fastify": "^5.12.8",
+    "knex": "^3.1.0",
+    "pdfkit": "^0.15.0",
+    "pg": "^8.13.0",
+    "qrcode": "^1.5.4",
+    "decimal.js": "^10.4.3",
+    "iconv-lite": "^0.7.3",
+    "adm-zip": "^0.6.1"
+  },
+  "author": "GAM Calamarca"
+}
