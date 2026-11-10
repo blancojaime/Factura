@@ -20,6 +20,14 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000"
     public_base_url: str = "http://localhost:3000"  # URL publica para los QR de verificacion
 
+    # Modo servidor Windows: la API tambien sirve la pantalla web exportada (una sola aplicacion) y exige licencia
+    static_dir: str = ""
+    licencia_obligatoria: bool = False
+    licencia_dias_prueba: int = 30
+    licencia_llave_publica: str = ""  # ruta de una llave publica alternativa (por defecto app/licencia_publica.pem)
+    servidor_host: str = "0.0.0.0"
+    servidor_puerto: int = 8080
+
     max_failed_logins: int = 5
     lockout_minutes: int = 15
 

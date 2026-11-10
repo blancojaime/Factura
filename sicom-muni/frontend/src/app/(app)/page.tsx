@@ -70,7 +70,7 @@ export default function Dashboard() {
                       <Td><EstadoBadge estado={c.estado} /></Td>
                       <Td>{ACCION_PENDIENTE[user.rol][c.estado] ?? "—"}</Td>
                       <Td className="whitespace-nowrap text-slate-500">{fechaHora(c.updated_at)}</Td>
-                      <Td><Link href={`/contrataciones/${c.id}`} className="inline-flex items-center gap-1 text-brand-700 hover:underline">Abrir <ArrowRight className="h-3 w-3" aria-hidden /></Link></Td>
+                      <Td><a href={`/contrataciones/${c.id}`} className="inline-flex items-center gap-1 text-brand-700 hover:underline">Abrir <ArrowRight className="h-3 w-3" aria-hidden /></a></Td>
                     </tr>
                   ))}
                 </tbody>

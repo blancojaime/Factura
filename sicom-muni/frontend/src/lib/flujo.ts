@@ -31,4 +31,5 @@ export const NAV: NavItem[] = [
   { href: "/admin/parametros", etiqueta: "Parámetros del GAM", roles: ["ROL_ADMIN"] },
   { href: "/admin/catalogo", etiqueta: "Catálogo CHB", roles: ["ROL_ADMIN", "ROL_CONTRATACIONES"] },
   { href: "/admin/auditoria", etiqueta: "Auditoría", roles: ["ROL_ADMIN"] },
+  { href: "/admin/licencia", etiqueta: "Licencia", roles: ["ROL_ADMIN"] },
 ];

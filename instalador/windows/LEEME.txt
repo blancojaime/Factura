@@ -1,0 +1,12 @@
+SICOM-MUNI - Instalador para Windows (servidor de red local)
+=============================================================
+
+1. Copie la carpeta/ZIP al equipo que será el SERVIDOR (una PC encendida durante el horario de trabajo).
+2. Haga doble clic en  SICOM-MUNI-Instalador-X.Y.Z.exe  (acepte el permiso de administrador).
+   Si Windows muestra "Windows protegió su PC": pulse "Más información" y luego "Ejecutar de todas formas".
+3. Siga las pantallas: datos de la entidad, administrador, puerto y (opcional) licencia.
+4. Al terminar verá las direcciones para entrar desde los demás equipos, por ejemplo http://192.168.1.10:8080/
+
+Los demás equipos NO necesitan instalar nada: entran con su navegador (Chrome, Edge o Firefox).
+Los datos quedan en C:\ProgramData\SICOM-MUNI (base de datos, documentos y respaldos).
+Lea el "Manual de instalación en red local" incluido en esta carpeta.

@@ -11,7 +11,7 @@ from ..deps import ip_cliente, requiere_roles, usuario_actual
 from ..enums import Rol
 from ..models import AuditLog, ParametroInstitucional, Usuario
 from ..schemas import ParametroIn, ParametroOut, UsuarioCreate, UsuarioOut, UsuarioUpdate
-from ..services import auditoria, parametros
+from ..services import auditoria, licencia, parametros
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 solo_admin = requiere_roles(Rol.ADMIN)
@@ -30,6 +30,7 @@ def crear_usuario(datos: UsuarioCreate, request: Request, db: Session = Depends(
         raise HTTPException(422, err)
     if db.scalar(select(Usuario).where(Usuario.username == datos.username)):
         raise HTTPException(409, "El usuario ya existe")
+    licencia.exigir_cupo_usuarios(db)
     u = Usuario(username=datos.username, password_hash=security.hash_password(datos.password),
                 nombre_completo=datos.nombre_completo, cargo=datos.cargo, rol=datos.rol.value, email=datos.email)
     db.add(u)
@@ -55,6 +56,8 @@ def actualizar_usuario(uid: uuid.UUID, datos: UsuarioUpdate, request: Request, d
         u.password_hash = security.hash_password(cambios.pop("password"))
         u.intentos_fallidos, u.bloqueado_hasta = 0, None
     cambios.pop("password", None)
+    if cambios.get("activo") is True and not u.activo:
+        licencia.exigir_cupo_usuarios(db)
     if "activo" in cambios and u.id == admin.id and cambios["activo"] is False:
         raise HTTPException(422, "No puede desactivar su propia cuenta")
     if "rol" in cambios and cambios["rol"] is not None:

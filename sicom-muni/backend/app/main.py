@@ -3,13 +3,16 @@ import logging
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from .config import get_settings
 from .database import engine, preparar_sqlite
+from .services import licencia as servicio_licencia
+from .estaticos import montar_frontend
 from .errors import EstadoInvalidoError, NoEncontradoError, ReglaNegocioError
-from .routers import admin, auth, catalogos, contrataciones, importaciones, reportes, verificacion
+from .routers import admin, auth, catalogos, contrataciones, importaciones, licencia as licencia_router, reportes, verificacion
 
 log = logging.getLogger("sicom")
 API = "/api/v1"
@@ -30,8 +33,20 @@ def crear_app() -> FastAPI:
         resp.headers.setdefault("X-Content-Type-Options", "nosniff")
         resp.headers.setdefault("X-Frame-Options", "DENY")
         resp.headers.setdefault("Referrer-Policy", "no-referrer")
-        resp.headers.setdefault("Cache-Control", "no-store")
+        if request.url.path.startswith("/api"):
+            resp.headers.setdefault("Cache-Control", "no-store")
         return resp
+
+    @app.middleware("http")
+    async def control_licencia(request: Request, call_next):
+        """Con licencia obligatoria (instalador de Windows) la API solo responde si hay licencia o prueba vigente."""
+        ruta = request.url.path
+        if s.licencia_obligatoria and ruta.startswith(API) and not ruta.startswith((f"{API}/licencia", f"{API}/salud")):
+            if not await run_in_threadpool(servicio_licencia.operativo):
+                return JSONResponse(status_code=402, content={"detail": {
+                    "codigo": "LICENCIA_REQUERIDA", "errores": [],
+                    "mensaje": "Se requiere una licencia vigente de SICOM-MUNI. Active la licencia para continuar."}})
+        return await call_next(request)
 
     @app.exception_handler(ReglaNegocioError)
     async def _regla(_: Request, exc: ReglaNegocioError):
@@ -53,8 +68,10 @@ def crear_app() -> FastAPI:
         return {"estado": "ok"}
 
     for r in (auth.router, admin.router, catalogos.router, importaciones.router, contrataciones.router, reportes.router,
-              verificacion.router):
+              verificacion.router, licencia_router.router):
         app.include_router(r, prefix=API)
+    if s.static_dir:  # debe ir al final: la ruta comodin no debe tapar a la API
+        montar_frontend(app, s.static_dir)
     return app
 
 

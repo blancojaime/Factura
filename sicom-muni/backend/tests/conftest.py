@@ -50,6 +50,14 @@ def engine():
         eng.dispose()
 
 
+@pytest.fixture(autouse=True)
+def _sin_cache_licencia():
+    from app.services import licencia
+    licencia.invalidar_cache()
+    yield
+    licencia.invalidar_cache()
+
+
 @pytest.fixture()
 def SessionTest(engine):
     return sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)

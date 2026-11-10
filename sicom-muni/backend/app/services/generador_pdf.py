@@ -21,6 +21,12 @@ import qrcode
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+import os
+import sys
+
+if sys.platform.startswith("win") and os.environ.get("SICOM_GTK_DIR"):  # librerias de Pango empaquetadas por el instalador
+    os.environ.setdefault("WEASYPRINT_DLL_DIRECTORIES", os.environ["SICOM_GTK_DIR"])
+
 try:  # WeasyPrint necesita librerias del sistema (pango); si faltan se guarda el documento en HTML imprimible
     from weasyprint import HTML, URLFetcher
     PDF_DISPONIBLE = True

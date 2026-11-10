@@ -4,7 +4,8 @@ import { FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent } from "react";
 import { Alert, Button, Card, CardBody, Field, Input } from "@/components/ui";
-import { mensajeError } from "@/lib/api";
+import { api, mensajeError } from "@/lib/api";
+import type { EstadoLicencia } from "@/lib/tipos";
 import { useAuth } from "@/lib/auth";
 
 export default function LoginPage() {
@@ -14,6 +15,14 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [enviando, setEnviando] = useState(false);
+  const [lic, setLic] = useState<EstadoLicencia | null>(null);
+
+  useEffect(() => {
+    api.publico<EstadoLicencia>("/licencia").then((e) => {
+      setLic(e);
+      if (!e.operativo) window.location.assign("/activacion/");
+    }).catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     if (!cargando && user) router.replace("/");
@@ -55,6 +64,9 @@ export default function LoginPage() {
             </form>
           </CardBody>
         </Card>
+        {lic?.modo === "PRUEBA" && (
+          <Alert tipo="warning">{lic.mensaje} <a className="font-semibold underline" href="/activacion/">Activar licencia</a></Alert>
+        )}
         <p className="text-center text-xs text-brand-100">Acceso restringido a personal autorizado. Las acciones se auditan.</p>
       </div>
     </main>

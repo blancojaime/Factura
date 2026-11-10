@@ -1,7 +1,6 @@
 "use client";
 
 import { Search } from "lucide-react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import EstadoBadge from "@/components/EstadoBadge";
@@ -54,7 +53,7 @@ function Lista() {
               <tbody>
                 {filas.map((c) => (
                   <tr key={c.id} className="hover:bg-slate-50">
-                    <Td className="font-medium"><Link className="text-brand-700 hover:underline" href={`/contrataciones/${c.id}`}>{c.correlativo_interno}</Link></Td>
+                    <Td className="font-medium"><a className="text-brand-700 hover:underline" href={`/contrataciones/${c.id}`}>{c.correlativo_interno}</a></Td>
                     <Td className="max-w-sm">{c.objeto_contratacion}</Td>
                     <Td>{TIPO_OBJETO_LABEL[c.tipo_objeto]}</Td>
                     <Td className="num text-right">{bs(c.monto_referencial_total)}</Td>

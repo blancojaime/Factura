@@ -72,8 +72,19 @@ async function json<T>(path: string, init: RequestInit = {}): Promise<T> {
   const r = await peticion(path, init);
   if (r.status === 204) return undefined as T;
   const cuerpo = await r.json().catch(() => null);
-  if (!r.ok) throw parseError(r.status, cuerpo);
+  if (!r.ok) {
+    licenciaRequerida(r.status, cuerpo);
+    throw parseError(r.status, cuerpo);
+  }
   return cuerpo as T;
+}
+
+/** 402: sin licencia ni periodo de prueba (instalador de Windows) -> pantalla de activacion. */
+function licenciaRequerida(status: number, cuerpo: unknown) {
+  const d = (cuerpo as { detail?: { codigo?: string } } | null)?.detail;
+  if (status === 402 && d?.codigo === "LICENCIA_REQUERIDA" && typeof window !== "undefined" && !window.location.pathname.startsWith("/activacion")) {
+    window.location.assign("/activacion/");
+  }
 }
 
 const body = (d: unknown) => (d === undefined ? undefined : JSON.stringify(d));
@@ -105,7 +116,10 @@ export async function login(username: string, password: string): Promise<void> {
     body: JSON.stringify({ username, password }),
   });
   const cuerpo = await r.json().catch(() => null);
-  if (!r.ok) throw parseError(r.status, cuerpo);
+  if (!r.ok) {
+    licenciaRequerida(r.status, cuerpo);
+    throw parseError(r.status, cuerpo);
+  }
   accessToken = cuerpo.access_token;
 }
 

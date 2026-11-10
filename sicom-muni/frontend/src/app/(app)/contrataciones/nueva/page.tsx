@@ -29,7 +29,7 @@ export default function NuevaPage() {
         justificacion: String(f.get("justificacion")).trim(), lugar_entrega: String(f.get("lugar")).trim(),
         especificaciones_tecnicas: String(f.get("et")).trim(),
       });
-      router.push(`/contrataciones/${c.id}`);
+      window.location.assign(`/contrataciones/${c.id}/`);
     } catch (err) {
       setError(err instanceof ApiError ? err : mensajeError(err));
     } finally {

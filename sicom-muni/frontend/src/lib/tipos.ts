@@ -114,3 +114,9 @@ export interface ProgramaPoa {
   programa: string; denominacion_programa: string; partidas: string[]; monto: string;
   codigo_objetivo: string | null; descripcion_objetivo: string | null; objetivo_registrado: boolean;
 }
+
+export interface EstadoLicencia {
+  obligatoria: boolean; modo: "NO_REQUERIDA" | "LICENCIADA" | "PRUEBA" | "PRUEBA_VENCIDA" | "VENCIDA"; operativo: boolean;
+  id_equipo: string; entidad: string; vence: string | null; dias_restantes: number | null; max_usuarios: number | null;
+  licencia_id: string | null; mensaje: string;
+}
