@@ -27,7 +27,10 @@ try {
     # 2. Carpetas de datos (fuera de Program Files) con permisos restringidos
     foreach ($d in 'pgdata', 'archivos', 'respaldos', 'logs', 'config', 'cache') { New-Item -ItemType Directory -Force -Path (Join-Path $DataDir $d) | Out-Null }
     function Restringir([string]$ruta, [string]$nivelSvc = 'F') {
-        Invocar-Nativo 'icacls.exe' @($ruta, '/inheritance:r', '/grant:r', 'SYSTEM:(OI)(CI)F', 'BUILTIN\Administrators:(OI)(CI)F', ("NT AUTHORITY\NetworkService:(OI)(CI)$nivelSvc"), '/T', '/C', '/Q') | Out-Null
+        # SID conocidos: SYSTEM (S-1-5-18), Administradores (S-1-5-32-544), NetworkService (S-1-5-20)
+        Invocar-Nativo 'icacls.exe' @($ruta, '/inheritance:r', '/grant:r', '*S-1-5-18:(OI)(CI)F', '*S-1-5-32-544:(OI)(CI)F', "*S-1-5-20:(OI)(CI)$nivelSvc", '/C', '/Q') | Out-Null
+        # Archivos y carpetas ya existentes: se les quita la herencia y se les da acceso explícito
+        Invocar-Nativo 'icacls.exe' @((Join-Path $ruta '*'), '/inheritance:r', '/grant:r', '*S-1-5-18:F', '*S-1-5-32-544:F', "*S-1-5-20:$nivelSvc", '/T', '/C', '/Q') | Out-Null
     }
 
     # 3. Secretos (se crean una sola vez y se conservan en las actualizaciones)
@@ -90,6 +93,7 @@ log_min_duration_statement = 2000
             try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'System'; ProviderName = 'Service Control Manager' } -MaxEvents 6 | ForEach-Object { $_.Message }) -join "`n") } catch { }
             Log ((Invocar-Nativo 'icacls.exe' @($pgdata)).Salida)
             Log ((Invocar-Nativo 'sc.exe' @('qc', $SvcBd)).Salida)
+            Log ((Invocar-Nativo 'icacls.exe' @((Join-Path $pgdata 'postgresql.conf'))).Salida)
             try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'Application' } -MaxEvents 15 | Where-Object { $_.ProviderName -match 'Postgre|pg_ctl|Application Error' } | ForEach-Object { $_.ProviderName + ': ' + $_.Message }) -join "`n") } catch { }
             Log ('postgres -C: ' + (Invocar-Nativo (Join-Path $bin 'postgres.exe') @('-D', $pgdata, '-C', 'data_directory')).Salida)
             Log ('pg_ctl start (administrador): ' + (Invocar-Nativo (Join-Path $bin 'pg_ctl.exe') @('start', '-D', $pgdata, '-w', '-t', '20', '-l', (Join-Path $env:TEMP 'pgprueba.log'))).Salida)
