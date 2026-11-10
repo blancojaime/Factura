@@ -193,7 +193,17 @@ LICENCIA_DIAS_PRUEBA=30
         Invocar-Nativo 'sc.exe' @('failure', $SvcApp, 'reset=', '86400', 'actions=', 'restart/5000/restart/10000/restart/30000') | Out-Null
     }
     Restringir $dirServicio 'R'
-    Start-Service -Name $SvcApp -ErrorAction Stop
+    try { Start-Service -Name $SvcApp -ErrorAction Stop }
+    catch {
+        Log ("No inició el servicio de la aplicación: " + $_.Exception.Message)
+        foreach ($f in Get-ChildItem (Join-Path $DataDir 'logs') -Filter 'SICOM-MUNI-Servicio*' -ErrorAction SilentlyContinue) { Log ("--- " + $f.Name + " ---"); Log ((Get-Content $f.FullName -Tail 40 -ErrorAction SilentlyContinue) -join "`n") }
+        try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'Application' } -MaxEvents 20 | Where-Object { $_.Message -match 'SICOM|python|WinSW' } | ForEach-Object { $_.ProviderName + ': ' + $_.Message }) -join "`n") } catch { }
+        try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'System'; ProviderName = 'Service Control Manager' } -MaxEvents 6 | ForEach-Object { $_.Message }) -join "`n") } catch { }
+        Log ((Invocar-Nativo 'sc.exe' @('qc', $SvcApp)).Salida)
+        Log ((Invocar-Nativo 'icacls.exe' @($dirServicio)).Salida)
+        Log (Get-Content $xml -Raw)
+        throw
+    }
 
     # 11. Firewall: solo la red local
     Get-NetFirewallRule -DisplayName 'SICOM-MUNI*' -ErrorAction SilentlyContinue | Remove-NetFirewallRule
