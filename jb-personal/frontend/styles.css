@@ -1,0 +1,52 @@
+:root{--azul:#8A3B12;--azul2:#B5541E;--gris:#FBF5EC;--borde:#E3D3BF;--ok:#2F7D3B;--mal:#B3261E;--aviso:#A15C00;--txt:#3A2A1E;--acento:#E8A33D;--crema:#FFFDF9;--suave:#F4E6D3}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);background:var(--gris)}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+nav{background:linear-gradient(180deg,#7A3210,#5E2509);color:#fff;padding:12px 0;position:sticky;top:0;height:100vh;overflow:auto}
+nav h1{font-size:14px;margin:4px 16px 14px;line-height:1.3}
+nav a{display:block;padding:9px 16px;color:#F6E3CC;text-decoration:none;cursor:pointer;border-left:3px solid transparent}
+nav a:hover,nav a:focus{background:#8F4219;outline:none}
+nav a.on{background:#9C4A1A;border-left-color:var(--acento);color:#fff;font-weight:600}
+nav .u{margin:18px 16px 0;font-size:12px;color:#E9C9A6}
+nav .marca{background:#fff;margin:0 12px 14px;border-radius:10px;padding:6px 8px}
+nav .marca img{width:100%;display:block}
+main{padding:20px 26px;max-width:1400px;width:100%;min-width:0}
+h2{margin:0 0 14px;color:var(--azul);font-size:20px}
+h3{margin:18px 0 8px;color:var(--azul);font-size:15px}
+.card{background:var(--crema);border:1px solid var(--borde);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+label{display:flex;flex-direction:column;font-size:12px;color:#445;gap:3px}
+input,select,textarea{font:inherit;padding:7px 8px;border:1px solid #D2BBA0;border-radius:6px;background:#fff;min-width:0}
+textarea{width:100%;min-height:110px}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid #D9822B;outline-offset:1px}
+button,.btn{font:inherit;padding:7px 13px;border:1px solid var(--azul);background:var(--azul);color:#fff;border-radius:6px;cursor:pointer;text-decoration:none;display:inline-block}
+button.sec,.btn.sec{background:var(--crema);color:var(--azul)}
+button:hover:not(:disabled){filter:brightness(1.08)}
+button.mal{background:var(--mal);border-color:var(--mal)}
+button:disabled{opacity:.5;cursor:not-allowed}
+table{border-collapse:collapse;width:100%;background:var(--crema);font-size:13px}
+th{background:var(--azul);color:#fff;text-align:left;padding:7px 8px;position:sticky;top:0;white-space:nowrap}
+td{padding:6px 8px;border-bottom:1px solid #F0E3D2;vertical-align:top}
+tr:nth-child(even) td{background:#FFF9F1}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.scroll{overflow:auto;max-height:68vh;border:1px solid var(--borde);border-radius:8px}
+.tag{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;background:var(--suave)}
+.tag.ok{background:#d9f2e1;color:var(--ok)}.tag.mal{background:#f8d7d4;color:var(--mal)}.tag.av{background:#fff0cc;color:var(--aviso)}
+.NORMAL{}.RETRASO_LEVE td{background:#fff8dd!important}.RETRASO_GRAVE td{background:#fbdcc6!important}
+.FALTA_INJUSTIFICADA td{background:#f8d7d4!important}.FALTA_JUSTIFICADA td{background:#E4EEF7!important}
+.OMISION_MARCACION td{background:#ececec!important}.NO_LABORABLE td,.FERIADO td{color:#889;background:#f1f1f1!important}
+#toast{position:fixed;right:16px;bottom:16px;max-width:420px;z-index:9}
+#toast div{background:#4A2E1B;color:#fff;padding:10px 14px;border-radius:8px;margin-top:8px;box-shadow:0 3px 10px #0004}
+#toast div.err{background:var(--mal)}#toast div.ok{background:var(--ok)}
+.login{max-width:400px;margin:7vh auto;text-align:center}
+.login img{width:230px;margin:0 auto 6px;display:block}
+.login label,.login p,.login button{text-align:left}
+.banner{background:#FFF0D2;border:1px solid #E8C37A;color:#6B4300;padding:8px 14px;border-radius:8px;margin-bottom:12px}
+.banner.mal{background:#FBDCD8;border-color:#E0948C;color:#7A1710}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi{background:var(--crema);border:1px solid var(--borde);border-radius:8px;padding:10px 12px}.kpi b{display:block;font-size:22px;color:var(--azul)}
+.muted{color:#7A6451;font-size:12px}
+dialog{border:1px solid var(--borde);border-radius:10px;padding:18px;max-width:760px;width:92vw}
+dialog::backdrop{background:#0006}
+@media(max-width:800px){.layout{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap}nav h1{width:100%}main{padding:12px}}
+@media print{nav,#toast,button{display:none}.layout{display:block}}

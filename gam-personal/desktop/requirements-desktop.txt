@@ -1,3 +1,0 @@
--r ../backend/requirements.txt
-pywebview>=5.0
-pyinstaller>=6.5
