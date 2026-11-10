@@ -21,6 +21,7 @@ if ($EliminarDatos -and (Test-Path $DataDir)) {
     # Cierra procesos que aún tengan archivos abiertos y reintenta (PostgreSQL tarda en soltar la carpeta)
     Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.Path -and ($_.Path -like "$InstallDir\*") } | Stop-Process -Force -ErrorAction SilentlyContinue
     for ($i = 0; $i -lt 15 -and (Test-Path $DataDir); $i++) {
+        & takeown.exe /F $DataDir /R /A /D Y 2>&1 | Out-Null
         & icacls.exe $DataDir '/grant' '*S-1-5-32-544:(OI)(CI)F' '/T' '/C' '/Q' 2>&1 | Out-Null
         Remove-Item -Recurse -Force $DataDir -ErrorAction SilentlyContinue
         if (Test-Path $DataDir) { Start-Sleep -Seconds 2 }
