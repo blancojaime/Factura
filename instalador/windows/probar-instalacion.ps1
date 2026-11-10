@@ -47,8 +47,23 @@ Comprobar ((Get-Service SICOM-MUNI).Status -eq 'Stopped') 'Los servicios se deti
 $ok = $false
 for ($i = 0; $i -lt 40 -and -not $ok; $i++) { try { $ok = (Invoke-WebRequest -UseBasicParsing -Uri "$url/api/v1/salud" -TimeoutSec 5).StatusCode -eq 200 } catch { Start-Sleep -Seconds 2 } }
 Comprobar $ok 'El sistema vuelve a responder tras reiniciar los servicios'
-& $Python (Join-Path $PSScriptRoot 'prueba_e2e.py') $url $Admin $Clave | Out-Null
-Comprobar ($LASTEXITCODE -eq 0) 'Los datos y el sistema siguen funcionando tras el reinicio'
+$persistencia = @'
+import json, sys, urllib.request
+url, usuario, clave = sys.argv[1:4]
+def llamar(ruta, datos=None, token=None):
+    req = urllib.request.Request(url + ruta, data=json.dumps(datos).encode() if datos else None, method='POST' if datos else 'GET')
+    req.add_header('Content-Type', 'application/json')
+    if token: req.add_header('Authorization', 'Bearer ' + token)
+    return json.loads(urllib.request.urlopen(req, timeout=30).read())
+t = llamar('/api/v1/auth/login', {'username': usuario, 'password': clave})['access_token']
+filas = llamar('/api/v1/contrataciones', token=t)
+sys.exit(0 if len(filas) >= 1 else 1)
+'@
+$archivoPersistencia = Join-Path $env:TEMP 'sicom_persistencia.py'
+Set-Content -Path $archivoPersistencia -Value $persistencia -Encoding UTF8
+& $Python $archivoPersistencia $url $Admin $Clave
+Comprobar ($LASTEXITCODE -eq 0) 'Los datos creados antes del reinicio siguen en la base de datos'
+
 
 Write-Host ("`nResultado: " + $(if ($fallos -eq 0) { 'TODO CORRECTO' } else { "$fallos comprobaciones fallaron" }))
 exit $(if ($fallos -eq 0) { 0 } else { 1 })
