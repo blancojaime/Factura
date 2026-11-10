@@ -16,8 +16,8 @@ from docx.shared import Cm, Pt, RGBColor
 
 AQUI = Path(__file__).resolve().parent
 AZUL = RGBColor(0x8A, 0x3B, 0x12)
-VERSION = "1.1.0"
-NTEST = 86
+VERSION = "1.1.1"
+NTEST = 92
 doc = Document()
 
 # ---------------------------------------------------------------- estilos
@@ -534,7 +534,8 @@ B(["Un usuario por persona; no comparta la cuenta `admin`. Use el rol CONSULTA p
 # ================================================================= 11
 H("11. Solución de problemas")
 T(["Síntoma", "Causa probable y solución"], [
-    ["El navegador no abre `http://127.0.0.1:8765/`", "Inicie el servicio: menú Inicio → JB-Personal → Administrar el servicio → 1. Revise `C:\\ProgramData\\JB-Personal\\logs\\servicio.log`. Si el puerto 8765 está ocupado, cambie `port` en `config.ini`"],
+    ["El navegador dice «127.0.0.1 rechazó la conexión» (ERR_CONNECTION_REFUSED)", "El servicio no está en ejecución. Ejecute **menú Inicio → JB-Personal → Diagnostico (si no abre)**: muestra el estado de la tarea, los últimos fallos (`logs\\fallos.log`) y arranca el sistema en esa ventana para ver el error. Versiones anteriores a 1.1.1 fallaban si `config.ini` traía una marca BOM: actualice con el instalador nuevo"],
+    ["El navegador no abre `http://127.0.0.1:8765/` (otros casos)", "Inicie el servicio: menú Inicio → JB-Personal → Administrar el servicio → 1. Revise `C:\\ProgramData\\JB-Personal\\logs\\servicio.log`. Si el puerto 8765 está ocupado, cambie `port` en `config.ini`"],
     ["El instalador dice que el servicio no respondió a tiempo", "Revise el registro; suele ser un antivirus bloqueando `pythonw.exe` o el puerto en uso. Agregue una excepción para `C:\\Program Files\\JB-Personal`"],
     ["Otras PC no acceden", "Ejecute el acceso directo «Habilitar acceso desde la red» (o ponga `host = 0.0.0.0` en `config.ini`, reinicie el servicio y cree la regla de firewall del puerto 8765). Pruebe con la IP del equipo, no con `127.0.0.1`"],
     ["Windows SmartScreen bloquea el instalador", "Más información → Ejecutar de todas formas (no está firmado). La institución puede firmarlo con su certificado de código"],

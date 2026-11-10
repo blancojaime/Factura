@@ -61,6 +61,6 @@ Script SQL cifrado AES-256-GCM + `.sha256`. Manual: menú *Respaldos*. Programad
 
 ## 8. Pruebas automáticas
 ```bash
-cd jb-personal/backend && pip install -r requirements-dev.txt && python -m pytest tests -q          # 86 pruebas (SQLite)
+cd jb-personal/backend && pip install -r requirements-dev.txt && python -m pytest tests -q          # 92 pruebas (SQLite)
 GAM_DATABASE_URL=postgresql+psycopg://usuario@host/base_vacia python -m pytest tests -q            # PostgreSQL (base VACÍA)
 ```

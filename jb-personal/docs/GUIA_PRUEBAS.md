@@ -48,4 +48,4 @@ Dataset **ficticio** de **octubre de 2026** (22 días hábiles, sin feriados). S
 ## Pruebas negativas y de control
 Permiso de consultor sin fiscal → rechazado · reimportar el mismo archivo → rechazado · mes sin personal → error claro · personal cargado **después** de procesar → la planilla lo incluye · periodo cerrado → bloqueado · `UPDATE`/`DELETE` de la bitácora o `UPDATE` de marcas → rechazado por la base · respaldo alterado/hash/contraseña incorrectos → no restaura · código de activación de otro equipo/vencido/alterado → rechazado · prueba vencida → escrituras y reportes con error 402, consultas y respaldos funcionan · usuario CONSULTA → 403 · nombre `=HYPERLINK(...)` → texto en Excel.
 
-Automáticas: `cd backend && python -m pytest tests -q` → **86 pruebas** (SQLite y PostgreSQL 16).
+Automáticas: `cd backend && python -m pytest tests -q` → **92 pruebas** (SQLite y PostgreSQL 16).

@@ -1,4 +1,4 @@
-<# Detiene JB-Personal (tarea y procesos de la carpeta de instalación). Uso: -Dir <carpeta> [-Quitar] (-Quitar elimina la tarea y la regla de firewall) #>
+<# Detiene JB-Personal (tarea y procesos de la carpeta de instalacion). Uso: -Dir <carpeta> [-Quitar] (-Quitar elimina la tarea y la regla de firewall) #>
 param([Parameter(Mandatory=$true)][string]$Dir, [switch]$Quitar)
 $ErrorActionPreference = 'SilentlyContinue'
 Stop-ScheduledTask -TaskName 'JB-Personal'

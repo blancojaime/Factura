@@ -25,7 +25,7 @@ En Windows use el instalador (`desktop/JBPersonal_Setup.exe`, ver el manual). La
 ## Contenido
 | Carpeta | Qué hay |
 |---|---|
-| `backend/` | API FastAPI, motor de reglas, reportes, licencia, **86 pruebas automáticas** |
+| `backend/` | API FastAPI, motor de reglas, reportes, licencia, **92 pruebas automáticas** |
 | `frontend/` | Interfaz (JS puro, sin Internet) y logotipo |
 | `desktop/` | Lanzador/servicio de Windows, scripts PowerShell, instalador NSIS, constructores (`build_installer.py`, `build_activador.py`) |
 | `activador/` | **JB-Activador** (herramienta del emisor de licencias) |
@@ -42,7 +42,7 @@ python build_activador.py --clave-privada RUTA/clave_privada.pem                
 Requieren Python 3.9+, NSIS (`makensis`) e Internet. **Los `.exe` no se versionan** (ni la clave privada del activador).
 
 ## Estado verificado
-* 86 pruebas automáticas en verde en **SQLite y PostgreSQL 16**; cifras de liquidación contrastadas con cálculo manual.
+* 92 pruebas automáticas en verde en **SQLite y PostgreSQL 16**; cifras de liquidación contrastadas con cálculo manual.
 * Interfaz recorrida con navegador automatizado (login, asistente de estructura, licencia, reportes) sin errores de JavaScript.
 * Reportes `.docx`/`.xlsx` abiertos y renderizados con LibreOffice.
 * **No verificado:** ejecución del instalador en Windows (se construyó en Linux) y archivos reales de Anviz/Dahua/Hikvision/Suprema. Ver `docs/ARQUITECTURA.md` §6.

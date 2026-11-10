@@ -47,6 +47,7 @@ Section "JB-Personal (servicio)" SEC_APP
   WriteINIStr "$DESKTOP\JB-Personal.url" "InternetShortcut" "IconFile" "$INSTDIR\jb-personal.ico"
   WriteINIStr "$DESKTOP\JB-Personal.url" "InternetShortcut" "IconIndex" "0"
   CreateShortcut "$SMPROGRAMS\JB-Personal\Administrar el servicio.lnk" "$INSTDIR\desktop\windows\Administrar JB-Personal.bat" "" "$INSTDIR\jb-personal.ico"
+  CreateShortcut "$SMPROGRAMS\JB-Personal\Diagnostico (si no abre).lnk" "$INSTDIR\desktop\windows\Diagnostico.bat" "" "$INSTDIR\jb-personal.ico"
   CreateShortcut "$SMPROGRAMS\JB-Personal\Habilitar acceso desde la red.lnk" "$INSTDIR\desktop\windows\Habilitar acceso en red.bat" "" "$INSTDIR\jb-personal.ico"
   CreateShortcut "$SMPROGRAMS\JB-Personal\Solo esta PC (quitar acceso de red).lnk" "$INSTDIR\desktop\windows\Solo esta PC.bat" "" "$INSTDIR\jb-personal.ico"
   CreateShortcut "$SMPROGRAMS\JB-Personal\Manuales.lnk" "$INSTDIR\docs"
@@ -65,7 +66,7 @@ Section "-Registrar servicio"
   nsExec::ExecToLog 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$INSTDIR\desktop\windows\instalar_servicio.ps1" -Dir "$INSTDIR" -Puerto ${PUERTO}'
   Pop $2
   StrCmp $2 "0" ok
-    MessageBox MB_ICONEXCLAMATION "El servicio se instaló pero no respondió a tiempo (código $2).$\r$\nRevise C:\ProgramData\JB-Personal\logs\servicio.log o use «Administrar el servicio» del menú Inicio."
+    MessageBox MB_ICONEXCLAMATION "El servicio se instaló pero no respondió a tiempo (código $2).$\r$\nRevise C:\ProgramData\JB-Personal\logs\servicio.log o ejecute «Diagnostico (si no abre)» del menú Inicio."
   ok:
 SectionEnd
 

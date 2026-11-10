@@ -43,12 +43,27 @@ def data_dir() -> Path:
 
 
 def leer_config(dd: Path) -> tuple[str, int]:
-    cfg = configparser.ConfigParser()
+    """host/puerto de config.ini. Tolera BOM (PowerShell 5.1 lo escribe con -Encoding UTF8) y archivos dañados."""
     f = dd / "config.ini"
     if not f.exists():
-        f.write_text(f"[servidor]\nhost = 127.0.0.1\nport = {PUERTO_DEFECTO}\n", encoding="utf-8")
-    cfg.read(f, encoding="utf-8")
-    return cfg.get("servidor", "host", fallback="127.0.0.1"), cfg.getint("servidor", "port", fallback=PUERTO_DEFECTO)
+        f.write_text(f"[servidor]\nhost = 127.0.0.1\nport = {PUERTO_DEFECTO}\n", encoding="ascii")
+    cfg = configparser.ConfigParser()
+    try:
+        cfg.read_string(f.read_text(encoding="utf-8-sig", errors="replace"))
+        return cfg.get("servidor", "host", fallback="127.0.0.1"), cfg.getint("servidor", "port", fallback=PUERTO_DEFECTO)
+    except (configparser.Error, ValueError):
+        registrar_fallo(dd, "config.ini ilegible; se usan los valores por defecto (127.0.0.1:%d)" % PUERTO_DEFECTO)
+        return "127.0.0.1", PUERTO_DEFECTO
+
+
+def registrar_fallo(dd: Path, texto: str):
+    """Deja constancia en <datos>\\logs\\fallos.log aunque el logging aún no esté configurado (pythonw no tiene consola)."""
+    try:
+        (dd / "logs").mkdir(exist_ok=True)
+        with open(dd / "logs" / "fallos.log", "a", encoding="utf-8") as fh:
+            fh.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} {texto}\n")
+    except OSError:
+        pass
 
 
 def responde(puerto: int, host: str = "127.0.0.1") -> bool:
@@ -152,4 +167,11 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit:
+        raise
+    except BaseException:
+        import traceback
+        registrar_fallo(data_dir(), "ERROR FATAL al iniciar:\n" + traceback.format_exc())
+        raise
