@@ -127,7 +127,7 @@ jobs:
           Start-Sleep -Seconds 5
           if (Get-Service SICOM-MUNI -ErrorAction SilentlyContinue) { throw 'El servicio SICOM-MUNI sigue instalado' }
           if (Get-Service SICOM-MUNI-BD -ErrorAction SilentlyContinue) { throw 'El servicio SICOM-MUNI-BD sigue instalado' }
-          if (Test-Path "$env:ProgramData\SICOM-MUNI") { throw 'No se eliminaron los datos' }
+          if (Test-Path "$env:ProgramData\SICOM-MUNI") { Get-Content "$env:SystemRoot\Temp\sicom-desinstalacion.log" -ErrorAction SilentlyContinue; throw 'No se eliminaron los datos' }
           Write-Host 'Desinstalación correcta.'
 
       - name: Emisor de licencias (ejecutable externo)
