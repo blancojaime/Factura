@@ -11,7 +11,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from .. import audit
-from ..models import (AsistenciaDia, Contrato, Correlativo, Empleado, Entidad, EscalaSancion, Feriado, Horario,
+from ..models import (Ajuste, AsistenciaDia, Contrato, Correlativo, Empleado, Entidad, EscalaSancion, Feriado, Horario,
                       ImportBiometrico, Liquidacion, Marca, Periodo, Permiso, PermisoTipo)
 from . import motor
 from .biometrico import _ident, parsear_biometrico
@@ -23,16 +23,19 @@ class ReglaNegocio(Exception):
 
 # ----------------------------------------------------------------------------- correlativos
 def siguiente_correlativo(db: Session, tipo: str, gestion: int) -> int:
-    """Incremento atómico: UPDATE ... SET ultimo = ultimo + 1 dentro de la transacción."""
+    """Incremento atómico: UPDATE ... SET ultimo = ultimo + 1 dentro de la transacción.
+    Se hace flush ANTES para no perder cambios pendientes de la sesión (no se usa expire_all)."""
     from sqlalchemy import update
+    db.flush()
     fila = db.get(Correlativo, (tipo, gestion))
     if fila is None:
         db.add(Correlativo(tipo=tipo, gestion=gestion, ultimo=0))
         db.flush()
     db.execute(update(Correlativo).where(Correlativo.tipo == tipo, Correlativo.gestion == gestion)
                .values(ultimo=Correlativo.ultimo + 1))
-    db.expire_all()
-    return db.execute(select(Correlativo.ultimo).where(Correlativo.tipo == tipo, Correlativo.gestion == gestion)).scalar_one()
+    n = db.execute(select(Correlativo.ultimo).where(Correlativo.tipo == tipo, Correlativo.gestion == gestion)
+                   .execution_options(populate_existing=True)).scalar_one()
+    return n
 
 
 def formato_cite(prefijo: str, sigla_tipo: str, n: int, gestion: int) -> str:
@@ -198,6 +201,9 @@ def procesar_periodo(db: Session, anio: int, mes: int, usuario: str, auditar: bo
     for ident, fh in db.execute(q).all():
         por_id[_ident(ident)][fh.date()].append(fh.hour * 60 + fh.minute)
 
+    multas: dict[int, Decimal] = defaultdict(lambda: Decimal("0"))
+    for a in db.execute(select(Ajuste).where(Ajuste.anio == anio, Ajuste.mes == mes, Ajuste.estado == "ACTIVO")).scalars().unique():
+        multas[a.empleado_id] += a.monto
     db.execute(delete(AsistenciaDia).where(AsistenciaDia.fecha.between(ini, fin)))
     db.execute(delete(Liquidacion).where(Liquidacion.anio == anio, Liquidacion.mes == mes))
     db.flush()
@@ -220,13 +226,14 @@ def procesar_periodo(db: Session, anio: int, mes: int, usuario: str, auditar: bo
             db.add(AsistenciaDia(
                 empleado_id=emp.id, fecha=d, estado=r.estado, marcas=r.marcas_txt, min_retraso=r.min_retraso,
                 nro_retrasos=r.nro_retrasos, min_salida_anticipada=r.min_salida_anticipada, falta=r.falta,
-                justificado=r.justificado, justificado_sin_goce=r.justificado_sin_goce, categoria_just=r.categoria,
+                justificado=r.justificado, justificado_sin_goce=r.justificado_sin_goce, parcial=r.parcial,
+                parcial_sin_goce=r.parcial_sin_goce, categoria_just=r.categoria,
                 permiso_id=r.permiso_id, observacion="; ".join(r.observaciones)[:250]))
             d += timedelta(days=1)
         cc = motor.ContratoCalc(c.modalidad, c.haber_basico, c.bono_antiguedad, c.rc_iva, c.aplica_aporte,
                                 c.tasa_afp, c.tasa_patronal)
         dias_trab = motor.dias_comerciales(v_ini, v_fin, ini, fin, ent.dias_mes_comercial)
-        m = motor.liquidar_mes(cc, resultados, params, dias_trab)
+        m = motor.liquidar_mes(cc, resultados, params, dias_trab, multas.get(emp.id, Decimal('0')))
         db.add(Liquidacion(
             anio=anio, mes=mes, empleado_id=emp.id, contrato_id=c.id, modalidad=c.modalidad, haber_basico=c.haber_basico,
             dias_trabajados=m.dias_trabajados, bono_antiguedad=m.bono, total_ganado=m.total_ganado,
@@ -235,7 +242,8 @@ def procesar_periodo(db: Session, anio: int, mes: int, usuario: str, auditar: bo
             min_retraso=m.min_retraso, nro_retrasos=m.nro_retrasos, dias_justificados=m.dias_justificados,
             dias_desc_faltas=m.dias_desc_faltas, dias_desc_atrasos=m.dias_desc_atrasos,
             dias_desc_sin_goce=m.dias_desc_sin_goce, dias_desc_exceso_consultor=m.dias_desc_exceso,
-            desc_faltas=m.desc_faltas, desc_atrasos=m.desc_atrasos, desc_otros=m.desc_otros,
+            desc_faltas=m.desc_faltas, desc_atrasos=m.desc_atrasos, desc_otros=m.desc_otros, desc_multas=m.multas,
+            horas_permiso=m.horas_permiso,
             dias_descuento=m.dias_descuento, desc_asistencia=m.desc_asistencia, total_descuentos=m.total_descuentos,
             liquido_pagable=m.liquido, sancion=m.sancion, observacion="; ".join(m.observaciones)[:400]))
         n_emp += 1
@@ -244,6 +252,14 @@ def procesar_periodo(db: Session, anio: int, mes: int, usuario: str, auditar: bo
         audit.registrar(db, usuario, "PROCESAR_PERIODO", "periodo", f"{anio}-{mes:02d}", {"empleados": n_emp})
     db.flush()
     return {"anio": anio, "mes": mes, "empleados": n_emp}
+
+
+def asegurar_actualizado(db: Session, anio: int, mes: int, usuario: str = "sistema") -> None:
+    """Pantallas y reportes de un periodo ABIERTO se recalculan antes de mostrarse (una sola fuente de verdad)."""
+    per = db.get(Periodo, (anio, mes))
+    if not per or per.estado != "CERRADO":
+        procesar_periodo(db, anio, mes, usuario, auditar=False)
+        db.commit()
 
 
 def cerrar_periodo(db: Session, anio: int, mes: int, usuario: str) -> Periodo:

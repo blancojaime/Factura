@@ -188,3 +188,45 @@ def test_abandono():
     assert detectar_abandono([date(2026, 10, 1), date(2026, 10, 8)], lab) == ""
     seis = [date(2026, 10, 1), date(2026, 10, 5), date(2026, 10, 7), date(2026, 10, 12), date(2026, 10, 14), date(2026, 10, 19)]
     assert detectar_abandono(seis, lab) == "DISCONTINUO"
+
+
+# ------------------------------------------------------------------ permisos POR HORAS (v1.2): efecto económico
+def test_permiso_sin_goce_por_horas_descuenta():
+    r = dia(["10:05", "12:03", "14:28", "18:35"], [Justif(480, 600, "PERMISO", False)])
+    assert r.parcial == D("0.25") and r.parcial_sin_goce == D("0.25") and r.min_retraso == 0 and r.estado == m.NORMAL
+
+
+def test_permiso_con_goce_por_horas_no_descuenta_pero_se_registra():
+    r = dia(["10:05", "12:03", "14:28", "18:35"], [Justif(480, 600, "PERMISO", True)])
+    assert r.parcial == D("0.25") and r.parcial_sin_goce == 0
+
+
+def test_permiso_que_cubre_el_turno_completo_con_asistencia_prevalece_la_asistencia():
+    r = dia(["08:00", "12:00", "14:30", "18:30"], [Justif(480, 720, "COMISION", False)])
+    assert r.parcial == 0 and r.parcial_sin_goce == 0 and r.estado == m.NORMAL
+
+
+def test_permiso_por_horas_en_la_tarde_y_dos_permisos_el_mismo_dia():
+    r = dia(["08:00", "12:00", "16:35", "18:35"], [Justif(870, 990, "PERMISO", False), Justif(480, 540, "PERMISO", True)])
+    assert r.parcial == D("0.38") and r.parcial_sin_goce == D("0.25")           # 180 min / 480 = 0,375 -> 0,38 ; 120 min sin goce / 480 = 0,25
+
+
+def test_liquidacion_incluye_permiso_sin_goce_por_horas_y_multas():
+    dias = _dias()
+    dias[0] = m.ResDia(m.NORMAL, parcial=D("0.25"), parcial_sin_goce=D("0.25"))
+    r = liquidar_mes(ContratoCalc("PERMANENTE", D(6000)), dias, P, D(30), multas=D("150"))
+    assert r.dias_desc_sin_goce == D("0.25") and r.desc_otros == D("50.00") and r.multas == D("150.00")
+    assert r.total_descuentos == D("762.60") + D("50.00") + D("150.00") and r.liquido == D("6000.00") - r.total_descuentos
+
+
+def test_consultor_cuenta_horas_de_permiso_en_el_limite_mensual():
+    c = ContratoCalc("CONSULTOR_LINEA", D(6000), aplica_aporte=False)
+    dias = _dias(justif=1)                                     # 1 día justificado (libre)
+    dias[0] = m.ResDia(m.NORMAL, parcial=D("0.25"))
+    r = liquidar_mes(c, dias, P, D(30))
+    assert r.dias_desc_exceso == D("0.25") and r.desc_otros == D("50.00")
+
+
+def test_multas_no_dejan_liquido_negativo():
+    r = liquidar_mes(ContratoCalc("PERMANENTE", D(1000)), _dias(), P, D(30), multas=D("5000"))
+    assert r.liquido == 0 and r.multas == D("872.90") and any("limitados" in o for o in r.observaciones)

@@ -60,14 +60,22 @@ def test_cabeceras_combinadas_sin_solapes(client, agosto):
                 assert not solapa, (url, a, b)
 
 
-def test_auditoria_xlsx_plano(client, agosto):
+def test_auditoria_xlsx_plano_ampliado(client, agosto):
+    from app.reports.auditoria_txt import COLUMNAS_XLSX
     ws = _wb(client.get("/api/reportes/2026/8/auditoria.xlsx"))["Consolidado"]
     filas = list(ws.iter_rows(values_only=True))
-    assert filas[0] == ("PERIODO", "CI", "CODIGO_EMPLEADO", "TIPO_CONTRATO", "TOTAL_DIAS_LABORABLES", "DIAS_ASISTIDOS", "FALTAS",
-                        "MINUTOS_RETRASO", "DIAS_PERMISO_JUSTIFICADO", "IMPORTE_DESCUENTOS_APLICADOS")
-    assert not ws.merged_cells.ranges and ws.max_row == len(filas) and len(filas) >= 3
-    assert all(isinstance(f[4], (int, float)) and isinstance(f[9], (int, float)) for f in filas[1:])
-    assert {f[1] for f in filas[1:]} >= {"7000001", "7000002"}
+    assert list(filas[0]) == COLUMNAS_XLSX and len(COLUMNAS_XLSX) == 42
+    for exigida in ("NOMBRES", "APELLIDOS", "CARGO", "HABER_BASICO", "TOTAL_GANADO", "APORTE_LABORAL", "APORTE_PATRONAL", "RC_IVA", "DESC_FALTAS", "DESC_ATRASOS",
+                    "MULTAS_Y_DESCUENTOS_ADICIONALES", "FALTAS_ATRASOS_Y_OTROS_PLANILLA", "TOTAL_DESCUENTOS", "LIQUIDO_PAGABLE", "FECHA_BAJA", "CAUSAL_BAJA"):
+        assert exigida in COLUMNAS_XLSX
+    assert not ws.merged_cells.ranges and ws.max_row == len(filas) and len(filas) >= 3        # plano: sin combinadas ni fila de totales
+    assert all(len(f) == 42 for f in filas)
+    idx = {c: i for i, c in enumerate(COLUMNAS_XLSX)}
+    assert {f[idx["CI"]] for f in filas[1:]} >= {"7000001", "7000002"}
+    beto = next(f for f in filas[1:] if f[idx["CI"]] == "7000002")
+    assert (beto[idx["NOMBRES"]], beto[idx["APELLIDOS"]]) == ("Beto", "Tardío Prueba") and beto[idx["FECHA_BAJA"]] == "2026-08-20" and beto[idx["CAUSAL_BAJA"]] == "Renuncia"
+    assert beto[idx["TOTAL_GANADO"]] == 1100.0 and beto[idx["DIAS_TRABAJADOS"]] == 11
+    assert all(isinstance(f[idx["TOTAL_GANADO"]], (int, float)) and isinstance(f[idx["CI"]], str) for f in filas[1:])
 
 
 def test_periodo_cerrado_usa_lo_congelado(client, agosto):

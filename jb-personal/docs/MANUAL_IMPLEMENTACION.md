@@ -22,12 +22,12 @@
 | Administrar (iniciar/detener/ver registro) | Menú Inicio → JB-Personal → *Administrar el servicio* · `schtasks /Run|/End|/Query /TN "JB-Personal"` |
 | Puerto / red | `config.ini`: `host = 127.0.0.1` (solo esta PC) o `0.0.0.0` (red); `port = 8765` |
 
-Actualizar: ejecute el instalador nuevo sobre el anterior (conserva datos y licencia). **No pudo probarse en Windows durante el desarrollo**: valídelo en una PC piloto (lista de aceptación del manual §9.7, incluida la prueba «reiniciar sin iniciar sesión»).
+Actualizar: ejecute el instalador nuevo sobre el anterior (conserva datos y licencia). **La base de datos se migra sola al iniciar** (agrega tablas y columnas nuevas sin tocar los datos); haga un respaldo antes. **No pudo probarse en Windows durante el desarrollo**: valídelo en una PC piloto (lista de aceptación del manual §9.7, incluida la prueba «reiniciar sin iniciar sesión»).
 
 ## 3. Construir los instaladores
 ```bash
 cd jb-personal/desktop
-python build_installer.py --version 1.1.0 --manual ../docs/Manual_JB-Personal.pdf ../docs/Manual_JB-Personal.docx   # -> JBPersonal_Setup.exe
+python build_installer.py --version 1.2.0 --manual ../docs/Manual_JB-Personal.pdf ../docs/Manual_JB-Personal.docx   # -> JBPersonal_Setup.exe
 python build_activador.py --clave-privada RUTA/clave_privada.pem                                                    # -> JBActivador_Setup.exe (solo emisor)
 ```
 Requiere Python 3.9+, NSIS (`makensis`) e Internet. Los `.exe` y la clave privada **no se versionan**.
@@ -52,15 +52,19 @@ Cree usuario y base UTF8, `pip install "psycopg[binary]"`, defina `GAM_DATABASE_
 ## 6. Respaldos
 Script SQL cifrado AES-256-GCM + `.sha256`. Manual: menú *Respaldos*. Programado — Windows: variable de sistema `GAM_BACKUP_PASSWORD` y `schtasks /create /tn "JB Respaldo" /tr "\\"C:\\Program Files\\JB-Personal\\desktop\\respaldo_programado.bat\\"" /sc daily /st 18:45 /ru SYSTEM`; Linux: cron con `python -m app.cli backup` y `retencion --dias 90`. Verificar mensualmente; restaurar exige hash + contraseña (la contraseña perdida no se recupera). Restaurar en otro equipo requiere nuevo código de activación.
 
+## 6b. Memorándums (configuración inicial)
+Menú **Memorándums → Membrete y plantillas**: prefijo del cite (p. ej. `GAM-RRHH/MAE/RRHH` → `GAM-RRHH/MAE/RRHH/N°001/2026`), decreto de la estructura organizacional, firmante y cargo, líneas del membrete, lema, pie y **escudo** (PNG/JPG ≤ 3 MB). Para continuar una numeración llevada en papel use **Control de cites → Continuar una numeración** (solo ADMIN; nunca retrocede). Las plantillas (de los modelos del municipio) deben ser **validadas por la Unidad Jurídica**.
+
 ## 7. Seguridad (lista previa a producción)
 - [ ] Un usuario por persona; rol CONSULTA para auditoría.
 - [ ] Acceso de red solo si es necesario; HTTP sin cifrar → VPN o proxy HTTPS.
 - [ ] `GAM_SECRET_KEY` propia (Linux); respaldos diarios + copia externa + prueba trimestral de restauración.
 - [ ] Cerrar el periodo tras aprobar planillas; verificar la cadena de auditoría mensualmente.
-- [ ] Validar los parámetros legales con la Unidad Jurídica (`ARQUITECTURA.md` §5).
+- [ ] Validar los parámetros legales y los textos de los memorándums con la Unidad Jurídica (`ARQUITECTURA.md` §5).
+- [ ] Revisar mensualmente el **Control de cites** (números anulados y saltados) y la cadena de auditoría.
 
 ## 8. Pruebas automáticas
 ```bash
-cd jb-personal/backend && pip install -r requirements-dev.txt && python -m pytest tests -q          # 92 pruebas (SQLite)
+cd jb-personal/backend && pip install -r requirements-dev.txt && python -m pytest tests -q          # 125 pruebas (SQLite)
 GAM_DATABASE_URL=postgresql+psycopg://usuario@host/base_vacia python -m pytest tests -q            # PostgreSQL (base VACÍA)
 ```

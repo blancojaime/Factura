@@ -155,7 +155,7 @@ def test_reporte_asistencia_detalle(client, cargado):
     assert wb["Detalle diario"].max_row == 4 + 4 * 31 + 30
     imput = [r for r in wb["Faltas y retrasos"].iter_rows(min_row=5, values_only=True)]
     from collections import Counter
-    assert Counter(r[3] for r in imput) == {"Retraso leve": 4, "Retraso grave": 2, "Falta injustificada": 3, "Falta justificada": 5, "Omisión de marcación": 2}
+    assert Counter(r[3] for r in imput) == {"Retraso leve": 4, "Retraso grave": 2, "Falta injustificada": 3, "Falta justificada": 5, "Omisión de marcación": 2, "Permiso por horas": 1}
 
 
 def test_reporte_plano_auditoria(client, cargado):
@@ -200,7 +200,7 @@ def test_vacaciones_en_informe_y_se_revierte(client, cargado):
     x = liq(client)["1000002"]
     assert (x["faltas"], x["dias_justificados"], x["desc_asistencia"], x["dias_asistidos"]) == (0, 1, 75.0, 21)   # solo queda el descuento por atrasos
     d = docx.Document(io.BytesIO(_ok(client.get("/api/reportes/2026/10/informe.docx")).content))
-    fila = [c.text for c in d.tables[3].rows[1].cells]
+    fila = [c.text for c in d.tables[4].rows[1].cells]      # tabla 4 = vacaciones (la 2 es el resumen económico)
     assert fila[1] == "Vargas Rojas María Elena" and fila[3] == "2025-2026" and fila[4] == "15/10/2026 al 15/10/2026" and fila[5] == "1 día(s)" and fila[6] == "17 días"
     _ok(client.post(f"/api/permisos/{p['id']}/anular"))
     assert liq(client)["1000002"] == antes

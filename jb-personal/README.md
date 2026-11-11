@@ -4,6 +4,15 @@
 
 Sistema para Gobiernos Autónomos Municipales: personal permanente, eventual y consultores en línea; importación de relojes biométricos de **distintas marcas**, motor de asistencia, permisos con boleta PDF, instructivos con cite correlativo, planillas, informe `.docx`, consolidado para la UAI/CGE (`.txt/.csv` y `.xlsx`), respaldos cifrados y **activación por licencia**.
 
+## Novedades de la versión 1.2
+1. **Módulo de Memorándums** (Designación de Cargo, Aceptación de Renuncia, Agradecimiento de Funciones): redacción desde plantillas basadas en los modelos del municipio, **PDF y Word**, escudo/membrete configurables, recepción y anulación.
+2. **Control de cites:** serie única por gestión asignada al emitir, números anulados sin reutilización, números saltados visibles, continuación de numeración (ADMIN), libro de registro `.xlsx` y vista de todas las series.
+3. **Efecto en el expediente:** la designación actualiza cargo y documento del contrato; la renuncia/agradecimiento registran la baja (alimentan la Planilla de Desvinculados).
+4. **Coherencia verificada** entre permisos (también por horas), faltas, atrasos y multas, y todas las planillas e informes; se corrigió que un permiso sin goce por horas no descontaba. El informe Word trae el **resumen económico** y el reporte detallado los **importes en Bs**.
+5. **Multas y descuentos adicionales** por servidor y mes.
+6. **Consolidado de auditoría `.xlsx` ampliado** (42 columnas con toda la información de las planillas; plano: solo títulos y datos).
+7. Migración automática de bases de la versión anterior, manuales con capturas y descarga en **un solo ZIP**.
+
 ## Novedades de la versión 1.1
 1. **Instalador como servicio de Windows**, independiente de la sesión de usuario (`JBPersonal_Setup.exe`).
 2. Nueva identidad **JB-Personal** con el logotipo e icono de Jaime Blanco.
@@ -25,13 +34,14 @@ En Windows use el instalador (`desktop/JBPersonal_Setup.exe`, ver el manual). La
 ## Contenido
 | Carpeta | Qué hay |
 |---|---|
-| `backend/` | API FastAPI, motor de reglas, reportes, licencia, **92 pruebas automáticas** |
+| `backend/` | API FastAPI, motor de reglas, reportes, licencia, **125 pruebas automáticas** |
 | `frontend/` | Interfaz (JS puro, sin Internet) y logotipo |
 | `desktop/` | Lanzador/servicio de Windows, scripts PowerShell, instalador NSIS, constructores (`build_installer.py`, `build_activador.py`) |
 | `activador/` | **JB-Activador** (herramienta del emisor de licencias) |
 | `db/` | DDL SQL de SQLite y PostgreSQL |
 | `datos_prueba/` | Dataset de 5 servidores (CSV/DAT/XLSX) y script de carga |
-| `docs/` | **`Manual_JB-Personal.docx` / `.pdf`** (manual completo) · `ARQUITECTURA.md` · `MANUAL_IMPLEMENTACION.md` · `GUIA_PRUEBAS.md` |
+| `docs/` | **`Manual_JB-Personal.docx` / `.pdf`** (manual completo con capturas) · `ARQUITECTURA.md` · `MANUAL_IMPLEMENTACION.md` · `GUIA_PRUEBAS.md` |
+| `descargas/` | **`JB-Personal_v1.2.0.zip`**: instalador, manuales, hash y leeme en un solo comprimido |
 
 ## Instaladores
 ```bash
@@ -42,7 +52,7 @@ python build_activador.py --clave-privada RUTA/clave_privada.pem                
 Requieren Python 3.9+, NSIS (`makensis`) e Internet. **Los `.exe` no se versionan** (ni la clave privada del activador).
 
 ## Estado verificado
-* 92 pruebas automáticas en verde en **SQLite y PostgreSQL 16**; cifras de liquidación contrastadas con cálculo manual.
+* 125 pruebas automáticas en verde en **SQLite y PostgreSQL 16**; cifras de liquidación contrastadas con cálculo manual.
 * Interfaz recorrida con navegador automatizado (login, asistente de estructura, licencia, reportes) sin errores de JavaScript.
 * Reportes `.docx`/`.xlsx` abiertos y renderizados con LibreOffice.
 * **No verificado:** ejecución del instalador en Windows (se construyó en Linux) y archivos reales de Anviz/Dahua/Hikvision/Suprema. Ver `docs/ARQUITECTURA.md` §6.

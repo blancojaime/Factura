@@ -4,8 +4,8 @@ from __future__ import annotations
 from datetime import date, datetime, time
 from decimal import Decimal
 
-from sqlalchemy import (Boolean, CheckConstraint, Date, DateTime, ForeignKey, Index, Integer, Numeric, String,
-                        Text, Time, UniqueConstraint, func)
+from sqlalchemy import (Boolean, LargeBinary, CheckConstraint, Date, DateTime, ForeignKey, Index, Integer, Numeric, String,
+                        Text, Time, UniqueConstraint, func, text)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 MONEY = Numeric(14, 2)
@@ -289,6 +289,8 @@ class AsistenciaDia(Base):
     falta: Mapped[Decimal] = mapped_column(DIAS, default=Decimal("0"))      # fracción de día injustificada
     justificado: Mapped[Decimal] = mapped_column(DIAS, default=Decimal("0"))
     justificado_sin_goce: Mapped[Decimal] = mapped_column(DIAS, default=Decimal("0"))
+    parcial: Mapped[Decimal] = mapped_column(DIAS, default=Decimal("0"), server_default=text("0"))
+    parcial_sin_goce: Mapped[Decimal] = mapped_column(DIAS, default=Decimal("0"), server_default=text("0"))
     categoria_just: Mapped[str] = mapped_column(String(15), default="")
     permiso_id: Mapped[int | None] = mapped_column(ForeignKey("permiso.id"), nullable=True)
     observacion: Mapped[str] = mapped_column(String(250), default="")
@@ -326,6 +328,8 @@ class Liquidacion(Base):
     desc_faltas: Mapped[Decimal] = mapped_column(MONEY, default=Decimal("0"))
     desc_atrasos: Mapped[Decimal] = mapped_column(MONEY, default=Decimal("0"))
     desc_otros: Mapped[Decimal] = mapped_column(MONEY, default=Decimal("0"))
+    desc_multas: Mapped[Decimal] = mapped_column(MONEY, default=Decimal("0"), server_default=text("0"))
+    horas_permiso: Mapped[Decimal] = mapped_column(DIAS, default=Decimal("0"), server_default=text("0"))
     dias_descuento: Mapped[Decimal] = mapped_column(DIAS, default=Decimal("0"))
     desc_asistencia: Mapped[Decimal] = mapped_column(MONEY, default=Decimal("0"))
     total_descuentos: Mapped[Decimal] = mapped_column(MONEY)
@@ -381,3 +385,82 @@ class Licencia(Base):
     entidad: Mapped[str] = mapped_column(String(200), default="")
     vence: Mapped[date | None] = mapped_column(Date, nullable=True)
     activada: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+
+class Ajuste(Base):
+    """Multas y descuentos adicionales (manuales) que se descuentan en la planilla del mes: aparecen en TODOS los reportes."""
+    __tablename__ = "ajuste"
+    __table_args__ = (CheckConstraint("tipo in ('MULTA','DESCUENTO')", name="ck_ajuste_tipo"),
+                      CheckConstraint("estado in ('ACTIVO','ANULADO')", name="ck_ajuste_estado"),
+                      Index("ix_ajuste_periodo", "anio", "mes", "empleado_id"))
+    id: Mapped[int] = mapped_column(primary_key=True)
+    anio: Mapped[int] = mapped_column(Integer)
+    mes: Mapped[int] = mapped_column(Integer)
+    empleado_id: Mapped[int] = mapped_column(ForeignKey("empleado.id"))
+    tipo: Mapped[str] = mapped_column(String(10), default="MULTA")
+    concepto: Mapped[str] = mapped_column(String(200))
+    monto: Mapped[Decimal] = mapped_column(MONEY)
+    referencia: Mapped[str] = mapped_column(String(100), default="")          # memorándum / resolución que lo sustenta
+    estado: Mapped[str] = mapped_column(String(10), default="ACTIVO")
+    creado_por: Mapped[str] = mapped_column(String(60), default="")
+    creado: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    empleado: Mapped[Empleado] = relationship(lazy="joined")
+
+
+# ----------------------------------------------------------------- Memorándums
+class MemoConfig(Base):
+    """Membrete y parámetros de los memorándums (una fila, id=1)."""
+    __tablename__ = "memo_config"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    prefijo: Mapped[str] = mapped_column(String(60), default="GAM/MAE/RRHH")   # cite: <prefijo>/N°001/2026
+    encabezado: Mapped[str] = mapped_column(Text, default="")                  # líneas bajo el nombre (una por línea)
+    lema: Mapped[str] = mapped_column(String(200), default="")
+    pie: Mapped[str] = mapped_column(Text, default="")                         # dirección / contactos (una por línea)
+    decreto_estructura: Mapped[str] = mapped_column(String(120), default="")   # p. ej. Decreto Municipal N° 018/2025
+    firmante_nombre: Mapped[str] = mapped_column(String(150), default="")
+    firmante_cargo: Mapped[str] = mapped_column(String(150), default="Alcalde Municipal")
+    logo: Mapped[bytes | None] = mapped_column(LargeBinary, nullable=True)
+    logo_mime: Mapped[str] = mapped_column(String(40), default="")
+
+
+class MemoPlantilla(Base):
+    """Redacción editable de cada tipo de memorándum (variables entre llaves: {cargo}, {fecha_efectiva}...)."""
+    __tablename__ = "memo_plantilla"
+    tipo: Mapped[str] = mapped_column(String(25), primary_key=True)
+    referencia: Mapped[str] = mapped_column(String(200))
+    cuerpo: Mapped[str] = mapped_column(Text)
+
+
+class Memorandum(Base):
+    __tablename__ = "memorandum"
+    __table_args__ = (
+        CheckConstraint("tipo in ('DESIGNACION','ACEPTACION_RENUNCIA','AGRADECIMIENTO')", name="ck_memo_tipo"),
+        CheckConstraint("estado in ('BORRADOR','EMITIDO','ANULADO')", name="ck_memo_estado"),
+        UniqueConstraint("gestion", "correlativo", name="uq_memo_correlativo"),
+        Index("ix_memo_gestion", "gestion", "correlativo"))
+    id: Mapped[int] = mapped_column(primary_key=True)
+    tipo: Mapped[str] = mapped_column(String(25))
+    estado: Mapped[str] = mapped_column(String(10), default="BORRADOR")
+    cite: Mapped[str] = mapped_column(String(100), default="")                  # se asigna al EMITIR (correlativo oficial)
+    gestion: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    correlativo: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    fecha: Mapped[date] = mapped_column(Date)
+    fecha_efectiva: Mapped[date] = mapped_column(Date)
+    empleado_id: Mapped[int | None] = mapped_column(ForeignKey("empleado.id"), nullable=True)
+    destinatario: Mapped[str] = mapped_column(String(200))
+    destinatario_ci: Mapped[str] = mapped_column(String(40), default="")
+    cargo: Mapped[str] = mapped_column(String(250))
+    referencia: Mapped[str] = mapped_column(String(300), default="")
+    datos: Mapped[str] = mapped_column(Text, default="{}")                      # JSON: variables adicionales (fecha_renuncia, plazos...)
+    cuerpo: Mapped[str] = mapped_column(Text)
+    firmante_nombre: Mapped[str] = mapped_column(String(150), default="")
+    firmante_cargo: Mapped[str] = mapped_column(String(150), default="")
+    efecto_aplicado: Mapped[str] = mapped_column(String(200), default="")      # p. ej. "Baja registrada (contrato 12)"
+    recibido_fecha: Mapped[date | None] = mapped_column(Date, nullable=True)
+    recibido_por: Mapped[str] = mapped_column(String(150), default="")
+    motivo_anulacion: Mapped[str] = mapped_column(String(300), default="")
+    creado_por: Mapped[str] = mapped_column(String(60), default="")
+    creado: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+    emitido_por: Mapped[str] = mapped_column(String(60), default="")
+    emitido_en: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    empleado: Mapped[Empleado | None] = relationship(lazy="joined")

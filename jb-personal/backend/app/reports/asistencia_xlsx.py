@@ -22,10 +22,10 @@ THIN = Side(style="thin", color="AAAAAA")
 B = Border(left=THIN, right=THIN, top=THIN, bottom=THIN)
 COLOR = {motor.NORMAL: None, motor.RETRASO_LEVE: "FFF2CC", motor.RETRASO_GRAVE: "F8CBAD",
          motor.FALTA_INJUSTIFICADA: "F4B6B6", motor.FALTA_JUSTIFICADA: "DDEBF7", motor.OMISION: "EDEDED",
-         motor.NO_LABORABLE: "F2F2F2", motor.FERIADO: "E2EFDA"}
+         motor.NO_LABORABLE: "F2F2F2", motor.FERIADO: "E2EFDA", "PERMISO_HORAS": "FBE7C6"}
 ETIQ = {motor.NORMAL: "Asistencia normal", motor.RETRASO_LEVE: "Retraso leve", motor.RETRASO_GRAVE: "Retraso grave",
         motor.FALTA_INJUSTIFICADA: "Falta injustificada", motor.FALTA_JUSTIFICADA: "Falta justificada",
-        motor.OMISION: "Omisión de marcación", motor.NO_LABORABLE: "No laborable", motor.FERIADO: "Feriado"}
+        motor.OMISION: "Omisión de marcación", motor.NO_LABORABLE: "No laborable", motor.FERIADO: "Feriado", "PERMISO_HORAS": "Permiso por horas"}
 DIAS_ES = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
 
 
@@ -76,38 +76,43 @@ def reporte_asistencia(d: DatosPeriodo) -> bytes:
     _titulo(ws, d, "REPORTE DETALLADO DE ASISTENCIA, FALTAS Y RETRASOS", 14)
     cab = ["N°", "C.I.", "Código", "Apellidos y nombres", "Cargo / Unidad", "Modalidad", "Días laborables",
            "Días asistidos", "Faltas injust.", "Días justificados", "N° retrasos", "Min. retraso", "Sanción RIP",
-           "Días de descuento"]
-    _tabla(ws, 4, cab, [5, 13, 9, 30, 34, 20, 10, 10, 9, 11, 9, 9, 40, 11])
-    ws.row_dimensions[4].height = 32
+           "Días de descuento", "Total ganado Bs", "Desc. faltas Bs", "Desc. atrasos Bs", "Desc. permisos s/goce y otros Bs",
+           "Multas y desc. adicionales Bs", "Aporte laboral Bs", "RC-IVA Bs", "Total descuentos Bs", "Líquido pagable Bs"]
+    _tabla(ws, 4, cab, [5, 13, 9, 30, 34, 20, 10, 10, 9, 11, 9, 9, 36, 11, 13, 12, 12, 16, 15, 12, 10, 13, 14])
+    ws.row_dimensions[4].height = 44
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=14)
     r = 5
+    M = '#,##0.00'
     for n, l in enumerate(d.liquidaciones, 1):
         e = l.empleado
         fill = "F4B6B6" if l.faltas > 0 else ("FFF2CC" if l.min_retraso else None)
         _fila(ws, r, [n, e.ci_completo, e.codigo, e.nombre_completo,
                       f"{e.cargo} / {e.unidad.nombre}" if e.unidad else e.cargo, NOMBRE_MOD[l.modalidad],
                       float(l.dias_laborables), float(l.dias_asistidos), float(l.faltas), float(l.dias_justificados),
-                      l.nro_retrasos, l.min_retraso, l.sancion, float(l.dias_descuento)], fill)
+                      l.nro_retrasos, l.min_retraso, l.sancion, float(l.dias_descuento), float(l.total_ganado), float(l.desc_faltas),
+                      float(l.desc_atrasos), float(l.desc_otros), float(l.desc_multas), float(l.aporte_laboral), float(l.rc_iva),
+                      float(l.total_descuentos), float(l.liquido_pagable)], fill, {i: M for i in range(15, 24)})
         r += 1
-    _fila(ws, r, ["TOTAL", "", "", "", "", "", f"=SUM(G5:G{r - 1})", f"=SUM(H5:H{r - 1})", f"=SUM(I5:I{r - 1})",
-                  f"=SUM(J5:J{r - 1})", f"=SUM(K5:K{r - 1})", f"=SUM(L5:L{r - 1})", "", f"=SUM(N5:N{r - 1})"], "F6E4CC")
+    tot = ["TOTAL", "", "", "", "", ""] + [f"=SUM({L(i)}5:{L(i)}{r - 1})" if i not in (13,) else "" for i in range(7, 24)]
+    _fila(ws, r, tot, "F6E4CC", {i: M for i in range(15, 24)})
     ws.freeze_panes = "E5"
     ws.page_setup.orientation, ws.page_setup.fitToWidth, ws.page_setup.fitToHeight = "landscape", 1, 0
     ws.sheet_properties.pageSetUpPr.fitToPage = True
 
     # --- 2. Detalle diario
     w2 = wb.create_sheet("Detalle diario")
-    _titulo(w2, d, "DETALLE DIARIO DE MARCACIONES", 10)
+    _titulo(w2, d, "DETALLE DIARIO DE MARCACIONES", 11)
     _tabla(w2, 4, ["C.I.", "Apellidos y nombres", "Fecha", "Día", "Marcas (HH:MM)", "Estado", "Min. retraso",
-                   "Falta (días)", "Justif. (días)", "Observaciones"], [13, 30, 11, 6, 30, 22, 10, 10, 10, 50])
+                   "Falta (días)", "Justif. (días)", "Permiso por horas (días)", "Observaciones"], [13, 30, 11, 6, 30, 22, 10, 10, 10, 12, 50])
     r = 5
     for l in d.liquidaciones:
         for a in d.asistencia.get(l.empleado_id, []):
             _fila(w2, r, [l.empleado.ci_completo, l.empleado.nombre_completo, a.fecha, DIAS_ES[a.fecha.weekday()],
                           a.marcas, ETIQ.get(a.estado, a.estado), a.min_retraso, float(a.falta), float(a.justificado),
-                          a.observacion], COLOR.get(a.estado), {3: "dd/mm/yyyy"})
+                          float(a.parcial), a.observacion], COLOR.get(a.estado), {3: "dd/mm/yyyy"})
             r += 1
     w2.freeze_panes = "C5"
-    w2.auto_filter.ref = f"A4:J{r - 1}"
+    w2.auto_filter.ref = f"A4:K{r - 1}"
 
     # --- 3. Faltas y retrasos
     w3 = wb.create_sheet("Faltas y retrasos")
@@ -122,6 +127,13 @@ def reporte_asistencia(d: DatosPeriodo) -> bytes:
                 _fila(w3, r, [l.empleado.ci_completo, l.empleado.nombre_completo, a.fecha, ETIQ[a.estado],
                               a.min_retraso, _imputacion(a, l, l.modalidad == "CONSULTOR_LINEA"), a.observacion],
                       COLOR.get(a.estado), {3: "dd/mm/yyyy"})
+                r += 1
+            if a.parcial > 0:          # permiso por horas dentro de un día con asistencia (con o sin goce)
+                sg = a.parcial_sin_goce > 0
+                _fila(w3, r, [l.empleado.ci_completo, l.empleado.nombre_completo, a.fecha, ETIQ["PERMISO_HORAS"], a.min_retraso,
+                              f"Permiso por horas: {a.parcial} día(s) equivalente(s) ({float(a.parcial) * float(d.entidad.horas_jornada):g} h)"
+                              + (f" SIN goce → descuento de {a.parcial_sin_goce} día(s) de haber" if sg else " con goce → sin descuento"), a.observacion],
+                      COLOR["PERMISO_HORAS"], {3: "dd/mm/yyyy"})
                 r += 1
     w3.freeze_panes = "C5"
     # --- 4. Individual (una hoja por persona con su detalle) -> se resuelve con filtro; hoja de leyenda
@@ -143,6 +155,8 @@ def reporte_asistencia(d: DatosPeriodo) -> bytes:
               f"Descuento por falta injustificada: ×{d.entidad.factor_falta_planta} del haber diario (planta/eventual), "
               f"×{d.entidad.factor_falta_consultor} (consultores).",
               f"Consultores en línea: hasta {d.entidad.max_justificados_consultor} día(s) justificado(s) al mes sin descuento.",
+              "Permisos por horas: un permiso SIN goce dentro de un turno con asistencia descuenta las horas cubiertas (horas ÷ jornada = días de haber); con goce no descuenta.",
+              "Multas y descuentos adicionales: manuales por servidor y mes; se suman a la columna «Faltas, atrasos y otros» de las planillas.",
               "Los segundos de cada marca se descartan; las marcas de días no laborables no computan."]:
         w4.cell(r, 1, t).font = Font(name="Arial", size=9)
         r += 1

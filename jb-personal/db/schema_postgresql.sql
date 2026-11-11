@@ -138,6 +138,29 @@ CREATE TABLE licencia (
 );
 
 
+CREATE TABLE memo_config (
+	id SERIAL NOT NULL, 
+	prefijo VARCHAR(60) NOT NULL, 
+	encabezado TEXT NOT NULL, 
+	lema VARCHAR(200) NOT NULL, 
+	pie TEXT NOT NULL, 
+	decreto_estructura VARCHAR(120) NOT NULL, 
+	firmante_nombre VARCHAR(150) NOT NULL, 
+	firmante_cargo VARCHAR(150) NOT NULL, 
+	logo BYTEA, 
+	logo_mime VARCHAR(40) NOT NULL, 
+	PRIMARY KEY (id)
+);
+
+
+CREATE TABLE memo_plantilla (
+	tipo VARCHAR(25) NOT NULL, 
+	referencia VARCHAR(200) NOT NULL, 
+	cuerpo TEXT NOT NULL, 
+	PRIMARY KEY (tipo)
+);
+
+
 CREATE TABLE perfil_biometrico (
 	id SERIAL NOT NULL, 
 	nombre VARCHAR(80) NOT NULL, 
@@ -245,6 +268,26 @@ CREATE TABLE turno (
 );
 
 
+CREATE TABLE ajuste (
+	id SERIAL NOT NULL, 
+	anio INTEGER NOT NULL, 
+	mes INTEGER NOT NULL, 
+	empleado_id INTEGER NOT NULL, 
+	tipo VARCHAR(10) NOT NULL, 
+	concepto VARCHAR(200) NOT NULL, 
+	monto NUMERIC(14, 2) NOT NULL, 
+	referencia VARCHAR(100) NOT NULL, 
+	estado VARCHAR(10) NOT NULL, 
+	creado_por VARCHAR(60) NOT NULL, 
+	creado TIMESTAMP WITHOUT TIME ZONE DEFAULT now() NOT NULL, 
+	PRIMARY KEY (id), 
+	CONSTRAINT ck_ajuste_tipo CHECK (tipo in ('MULTA','DESCUENTO')), 
+	CONSTRAINT ck_ajuste_estado CHECK (estado in ('ACTIVO','ANULADO')), 
+	FOREIGN KEY(empleado_id) REFERENCES empleado (id)
+);
+
+CREATE INDEX ix_ajuste_periodo ON ajuste (anio, mes, empleado_id);
+
 CREATE TABLE contrato (
 	id SERIAL NOT NULL, 
 	empleado_id INTEGER NOT NULL, 
@@ -281,6 +324,41 @@ CREATE TABLE instructivo_destinatario (
 	FOREIGN KEY(empleado_id) REFERENCES empleado (id)
 );
 
+
+CREATE TABLE memorandum (
+	id SERIAL NOT NULL, 
+	tipo VARCHAR(25) NOT NULL, 
+	estado VARCHAR(10) NOT NULL, 
+	cite VARCHAR(100) NOT NULL, 
+	gestion INTEGER, 
+	correlativo INTEGER, 
+	fecha DATE NOT NULL, 
+	fecha_efectiva DATE NOT NULL, 
+	empleado_id INTEGER, 
+	destinatario VARCHAR(200) NOT NULL, 
+	destinatario_ci VARCHAR(40) NOT NULL, 
+	cargo VARCHAR(250) NOT NULL, 
+	referencia VARCHAR(300) NOT NULL, 
+	datos TEXT NOT NULL, 
+	cuerpo TEXT NOT NULL, 
+	firmante_nombre VARCHAR(150) NOT NULL, 
+	firmante_cargo VARCHAR(150) NOT NULL, 
+	efecto_aplicado VARCHAR(200) NOT NULL, 
+	recibido_fecha DATE, 
+	recibido_por VARCHAR(150) NOT NULL, 
+	motivo_anulacion VARCHAR(300) NOT NULL, 
+	creado_por VARCHAR(60) NOT NULL, 
+	creado TIMESTAMP WITHOUT TIME ZONE DEFAULT now() NOT NULL, 
+	emitido_por VARCHAR(60) NOT NULL, 
+	emitido_en TIMESTAMP WITHOUT TIME ZONE, 
+	PRIMARY KEY (id), 
+	CONSTRAINT ck_memo_tipo CHECK (tipo in ('DESIGNACION','ACEPTACION_RENUNCIA','AGRADECIMIENTO')), 
+	CONSTRAINT ck_memo_estado CHECK (estado in ('BORRADOR','EMITIDO','ANULADO')), 
+	CONSTRAINT uq_memo_correlativo UNIQUE (gestion, correlativo), 
+	FOREIGN KEY(empleado_id) REFERENCES empleado (id)
+);
+
+CREATE INDEX ix_memo_gestion ON memorandum (gestion, correlativo);
 
 CREATE TABLE permiso (
 	id SERIAL NOT NULL, 
@@ -320,6 +398,8 @@ CREATE TABLE asistencia_dia (
 	falta NUMERIC(8, 2) NOT NULL, 
 	justificado NUMERIC(8, 2) NOT NULL, 
 	justificado_sin_goce NUMERIC(8, 2) NOT NULL, 
+	parcial NUMERIC(8, 2) DEFAULT 0 NOT NULL, 
+	parcial_sin_goce NUMERIC(8, 2) DEFAULT 0 NOT NULL, 
 	categoria_just VARCHAR(15) NOT NULL, 
 	permiso_id INTEGER, 
 	observacion VARCHAR(250) NOT NULL, 
@@ -358,6 +438,8 @@ CREATE TABLE liquidacion (
 	desc_faltas NUMERIC(14, 2) NOT NULL, 
 	desc_atrasos NUMERIC(14, 2) NOT NULL, 
 	desc_otros NUMERIC(14, 2) NOT NULL, 
+	desc_multas NUMERIC(14, 2) DEFAULT 0 NOT NULL, 
+	horas_permiso NUMERIC(8, 2) DEFAULT 0 NOT NULL, 
 	dias_descuento NUMERIC(8, 2) NOT NULL, 
 	desc_asistencia NUMERIC(14, 2) NOT NULL, 
 	total_descuentos NUMERIC(14, 2) NOT NULL, 

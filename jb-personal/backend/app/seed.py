@@ -74,6 +74,8 @@ ESCALA_CANTIDAD = [  # ejemplo de la especificación: 1 a 3 retrasos = amonestac
 
 
 def seed_defaults(s: Session) -> None:
+    from .services import memos
+    memos.sembrar(s)
     if not s.get(Entidad, 1):
         s.add(Entidad(id=1))
     if not s.execute(select(Horario)).first():

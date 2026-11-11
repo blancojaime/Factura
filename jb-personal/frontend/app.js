@@ -131,7 +131,7 @@ async function pantallaLogin() {
 
 /* ---------- vistas ---------- */
 const VISTAS = [["inicio", "Inicio / Planilla"], ["personal", "Personal"], ["marcas", "Marcaciones"], ["asistencia", "Asistencia diaria"],
-  ["permisos", "Permisos y boletas"], ["instructivos", "Instructivos"], ["reportes", "Reportes"], ["config", "Configuración"],
+  ["permisos", "Permisos y boletas"], ["multas", "Multas y descuentos"], ["memos", "Memorándums"], ["instructivos", "Instructivos"], ["reportes", "Reportes"], ["config", "Configuración"],
   ["respaldos", "Respaldos", "ADMIN"], ["auditoria", "Auditoría"], ["licencia", "Licencia"], ["usuarios", "Usuarios", "ADMIN"]];
 
 async function render() {
@@ -164,15 +164,15 @@ V.inicio = async () => {
       puede() && p?.procesado_en && p.estado !== "CERRADO" ? h("button", { class: "sec", onclick: async () => { if (confirm("¿Cerrar el periodo? Se bloquearán importaciones, permisos y reproceso.") && await accion(() => api(`/api/periodos/${S.anio}/${S.mes}/cerrar`, { method: "POST" }), "Periodo cerrado")) refrescar(); } }, "Cerrar periodo") : null,
       S.user.rol === "ADMIN" && p?.estado === "CERRADO" ? h("button", { class: "mal", onclick: async () => { const m = prompt("Motivo de la reapertura (queda en la bitácora):"); if (m && await accion(() => api(`/api/periodos/${S.anio}/${S.mes}/reabrir`, { method: "POST", json: { motivo: m } }), "Periodo reabierto")) refrescar(); } }, "Reabrir") : null),
     h("div", { class: "kpis" }, [["Personal", liq.length], ["Faltas (días)", num(tot("faltas"))], ["Min. de retraso", tot("min_retraso")], ["Total ganado Bs", money(tot("total_ganado"))],
-      ["Desc. asistencia Bs", money(tot("desc_asistencia"))], ["Líquido Bs", money(tot("liquido_pagable"))]].map(([t, v]) => h("div", { class: "kpi" }, t, h("b", {}, v)))),
+      ["Desc. asistencia Bs", money(tot("desc_asistencia"))], ["Multas Bs", money(tot("desc_multas"))], ["Líquido Bs", money(tot("liquido_pagable"))]].map(([t, v]) => h("div", { class: "kpi" }, t, h("b", {}, v)))),
     h("h3", {}, "Liquidación individual"),
     tabla([{ t: "Servidor", f: (x) => x.empleado }, { t: "C.I.", f: (x) => x.ci }, { t: "Modalidad", f: (x) => MOD[x.modalidad] },
       { t: "Días lab.", n: 1, f: (x) => num(x.dias_laborables) }, { t: "Faltas", n: 1, f: (x) => num(x.faltas) }, { t: "Min. retraso", n: 1, f: (x) => x.min_retraso },
       { t: "Justif.", n: 1, f: (x) => num(x.dias_justificados) }, { t: "Días desc.", n: 1, f: (x) => num(x.dias_descuento) },
       { t: "Total ganado", n: 1, f: (x) => money(x.total_ganado) }, { t: "Aporte lab.", n: 1, f: (x) => money(x.aporte_laboral) },
-      { t: "Desc. asist.", n: 1, f: (x) => money(x.desc_asistencia) }, { t: "Líquido", n: 1, f: (x) => h("b", {}, money(x.liquido_pagable)) },
+      { t: "Desc. asist.", n: 1, f: (x) => money(x.desc_asistencia) }, { t: "Multas", n: 1, f: (x) => money(x.desc_multas) }, { t: "Líquido", n: 1, f: (x) => h("b", {}, money(x.liquido_pagable)) },
       { t: "Sanción / obs.", f: (x) => [x.sancion, x.observacion].filter(Boolean).join(" · ") }], liq),
-    h("p", { class: "muted" }, "El descuento por día = haber ÷ 30. Falta injustificada = factor configurable (por defecto ×2 planta/eventual, ×1 consultor)."));
+    h("p", { class: "muted" }, "El descuento por día = haber ÷ 30. Falta injustificada = factor configurable (por defecto ×2 planta/eventual, ×1 consultor). Permisos sin goce (también por horas), atrasos y multas se descuentan en todas las planillas e informes. Esta pantalla y los reportes se recalculan solos."));
 };
 
 V.personal = async () => {
@@ -550,6 +550,164 @@ function formUsuario(u) {
     campo(u ? "Nueva contraseña (opcional)" : "Contraseña (mín. 8)", "password", { type: "password", req: !u }), campo("Activo", "activo", { type: "checkbox", value: u ? u.activo : true })),
     h("div", { class: "row", style: "margin-top:12px" }, h("button", { type: "submit" }, "Guardar"), h("button", { type: "button", class: "sec", onclick: () => dlg.close() }, "Cancelar")));
   const dlg = dialogo(u ? "Editar usuario" : "Nuevo usuario", f);
+}
+
+/* ============================ MULTAS Y DESCUENTOS ============================ */
+V.multas = async () => {
+  const [lista, emps] = await Promise.all([api(`/api/ajustes?anio=${S.anio}&mes=${S.mes}`), api("/api/empleados")]);
+  const f = h("form", { class: "card", onsubmit: async (ev) => {
+    ev.preventDefault();
+    const d = leer(f);
+    const r = await accion(() => api("/api/ajustes", { method: "POST", json: { anio: S.anio, mes: S.mes, empleado_id: +d.empleado_id, tipo: d.tipo, concepto: d.concepto, monto: d.monto, referencia: d.referencia } }), "Registrado y aplicado a la planilla");
+    if (r) refrescar();
+  } },
+    h("h3", { style: "margin-top:0" }, `Registrar multa o descuento adicional — ${MESES[S.mes - 1]} ${S.anio}`),
+    h("div", { class: "row" }, campo("Servidor", "empleado_id", { opts: emps.map((e) => [e.id, e.apellidos + " " + e.nombres]) }), campo("Tipo", "tipo", { opts: [["MULTA", "Multa"], ["DESCUENTO", "Descuento adicional"]] }),
+      campo("Monto Bs", "monto", { type: "number", step: "0.01", min: 0.01, req: true }), campo("Concepto", "concepto", { req: true, style: "min-width:300px" }), campo("Memorándum / resolución de respaldo", "referencia")),
+    puede() ? h("button", { type: "submit", style: "margin-top:10px" }, "Registrar") : null,
+    h("p", { class: "muted" }, "Se suma a la columna «Faltas, atrasos y otros» de las planillas y aparece en el informe, el reporte detallado y el consolidado de auditoría. No puede dejar el líquido en negativo."));
+  return h("div", {}, h("h2", {}, "Multas y descuentos adicionales"), h("div", { class: "card row" }, selPeriodo(refrescar)), puede() ? f : null,
+    tabla([{ t: "Servidor", f: (a) => a.empleado }, { t: "C.I.", f: (a) => a.ci }, { t: "Tipo", f: (a) => a.tipo }, { t: "Concepto", f: (a) => a.concepto }, { t: "Referencia", f: (a) => a.referencia },
+      { t: "Monto Bs", n: 1, f: (a) => money(a.monto) }, { t: "Estado", f: (a) => h("span", { class: "tag " + (a.estado === "ACTIVO" ? "ok" : "mal") }, a.estado) },
+      { t: "", f: (a) => (puede() && a.estado === "ACTIVO" ? h("button", { class: "mal", onclick: async () => { if (confirm("¿Anular? La planilla se recalcula.") && await accion(() => api(`/api/ajustes/${a.id}/anular`, { method: "POST" }), "Anulado")) refrescar(); } }, "Anular") : "") }], lista));
+};
+
+/* ============================ MEMORÁNDUMS ============================ */
+const MEMO_TIPOS = { DESIGNACION: "Designación de cargo", ACEPTACION_RENUNCIA: "Aceptación de renuncia", AGRADECIMIENTO: "Agradecimiento de funciones" };
+const tagMemo = (e) => h("span", { class: "tag " + (e === "EMITIDO" ? "ok" : e === "ANULADO" ? "mal" : "av") }, e);
+
+V.memos = async () => {
+  S.memoTab = S.memoTab || "lista";
+  const tabs = h("div", { class: "row", style: "margin-bottom:12px" }, [["lista", "Memorándums"], ["cites", "Control de cites"], ["config", "Membrete y plantillas"]].map(([k, t]) =>
+    h("button", { class: S.memoTab === k ? "" : "sec", onclick: () => { S.memoTab = k; refrescar(); } }, t)));
+  const cuerpo = S.memoTab === "cites" ? await memoCites() : S.memoTab === "config" ? await memoConfig() : await memoLista();
+  return h("div", {}, h("h2", {}, "Memorándums de Recursos Humanos"), tabs, cuerpo);
+};
+
+async function memoLista() {
+  const f = S.memoFiltro || (S.memoFiltro = { tipo: "", estado: "", gestion: "", q: "" });
+  const qs = new URLSearchParams(Object.entries(f).filter(([, v]) => v)).toString();
+  const lista = await api("/api/memorandums" + (qs ? "?" + qs : ""));
+  const sel = (k, opts) => h("select", { onchange: (e) => { f[k] = e.target.value; refrescar(); } }, opts.map(([v, t]) => h("option", { value: v, selected: f[k] === v }, t)));
+  return h("div", {}, h("div", { class: "card row" },
+    puede() ? h("button", { onclick: () => formMemo(null) }, "Nuevo memorándum") : null,
+    h("label", {}, "Tipo", sel("tipo", [["", "Todos"], ...Object.entries(MEMO_TIPOS)])), h("label", {}, "Estado", sel("estado", [["", "Todos"], ["BORRADOR", "Borrador"], ["EMITIDO", "Emitido"], ["ANULADO", "Anulado"]])),
+    h("label", {}, "Gestión", h("input", { type: "number", value: f.gestion, style: "width:90px", onchange: (e) => { f.gestion = e.target.value; refrescar(); } })),
+    h("label", {}, "Buscar (cite, nombre, cargo)", h("input", { value: f.q, onchange: (e) => { f.q = e.target.value; refrescar(); } }))),
+    tabla([{ t: "CITE", f: (m) => m.cite || h("span", { class: "muted" }, "(sin número: borrador)") }, { t: "Tipo", f: (m) => m.tipo_nombre }, { t: "Fecha", f: (m) => fdate(m.fecha) }, { t: "Destinatario", f: (m) => m.destinatario },
+      { t: "Cargo", f: (m) => m.cargo }, { t: "Efectiva", f: (m) => fdate(m.fecha_efectiva) }, { t: "Estado", f: (m) => tagMemo(m.estado) },
+      { t: "Recepción", f: (m) => (m.recibido_fecha ? fdate(m.recibido_fecha) : m.estado === "EMITIDO" ? "pendiente" : "") }, { t: "", f: (m) => h("button", { class: "sec", onclick: () => formMemo(m.id) }, "Abrir") }], lista));
+}
+
+async function formMemo(id) {
+  const [emps, m] = await Promise.all([api("/api/empleados"), id ? api("/api/memorandums/" + id) : Promise.resolve(null)]);
+  const ro = m && m.estado !== "BORRADOR";
+  const hoy = new Date().toISOString().slice(0, 10);
+  const v = m || { tipo: "DESIGNACION", fecha: hoy, fecha_efectiva: hoy, destinatario: "", destinatario_ci: "", cargo: "", referencia: "", cuerpo: "", datos: {}, empleado_id: null };
+  const dts = v.datos || {};
+  const f = h("form", { onsubmit: (e) => e.preventDefault() });
+  const dis = ro ? { disabled: true } : {};
+  const tipoSel = h("select", { name: "tipo", ...dis, onchange: () => { pinta(); redactar(); } }, Object.entries(MEMO_TIPOS).map(([k, t]) => h("option", { value: k, selected: v.tipo === k }, t)));
+  const empSel = h("select", { name: "empleado_id", ...dis, onchange: () => {
+    const e = emps.find((x) => x.id === +empSel.value);
+    if (e) { f.elements.destinatario.value = e.nombres + " " + e.apellidos; f.elements.destinatario_ci.value = e.ci + (e.complemento ? "-" + e.complemento : ""); if (tipoSel.value !== "DESIGNACION" || !f.elements.cargo.value) f.elements.cargo.value = e.cargo; redactar(); }
+  } }, h("option", { value: "" }, "— Persona no registrada (escribir datos) —"), emps.map((e) => h("option", { value: e.id, selected: v.empleado_id === e.id }, e.apellidos + " " + e.nombres + " · " + e.cargo)));
+  const extra = h("div", {});
+  const cuerpo = h("textarea", { name: "cuerpo", style: "min-height:300px;font:13px/1.5 Consolas,monospace", ...dis }, v.cuerpo);
+  cuerpo.value = v.cuerpo;
+  const ref = h("input", { name: "referencia", value: v.referencia, ...dis });
+  const redactar = async () => {
+    if (ro) return;
+    const d = leer(f);
+    const r = await accion(() => api("/api/memorandums/texto", { method: "POST", json: { tipo: d.tipo, fecha: d.fecha || null, fecha_efectiva: d.fecha_efectiva || null, fecha_renuncia: d.fecha_renuncia || null, destinatario: d.destinatario, cargo: d.cargo,
+      datos: { plazo_entrega_dias: d.plazo_entrega_dias || 3, plazo_dj_dias: d.plazo_dj_dias || 30, copias_dj: d.copias_dj || 3 } } }));
+    if (r) { cuerpo.value = r.cuerpo; ref.value = r.referencia; }
+  };
+  const pinta = () => {
+    const t = tipoSel.value;
+    extra.replaceChildren(...[
+      t === "ACEPTACION_RENUNCIA" ? h("div", { class: "row" }, campo("Fecha de la renuncia", "fecha_renuncia", { type: "date", value: dts.fecha_renuncia || "" }), campo("Plazo de entrega (días hábiles)", "plazo_entrega_dias", { type: "number", min: 1, value: dts.plazo_entrega_dias || 3 }),
+        campo("Declaración jurada: plazo (días)", "plazo_dj_dias", { type: "number", min: 1, value: dts.plazo_dj_dias || 30 }), campo("Copias", "copias_dj", { type: "number", min: 1, value: dts.copias_dj || 3 })) : null,
+      !ro && t !== "DESIGNACION" ? h("div", { class: "row" }, campo("Registrar la baja del servidor al emitir", "registrar_baja", { type: "checkbox", value: dts.registrar_baja !== false }),
+        t === "AGRADECIMIENTO" ? campo("Causal de la baja", "causal", { opts: [["CONCLUSION_CONTRATO", "Conclusión de funciones/contrato"], ["DESTITUCION", "Destitución"], ["OTRO", "Otro"]], value: dts.causal || "CONCLUSION_CONTRATO" }) : null) : null,
+      !ro && t === "DESIGNACION" ? h("div", { class: "row" }, campo("Actualizar el cargo del servidor y el N° de documento del contrato al emitir", "actualizar_cargo", { type: "checkbox", value: dts.actualizar_cargo !== false })) : null].filter(Boolean));
+    if (ro) extra.querySelectorAll("input,select").forEach((x) => (x.disabled = true));
+  };
+  const nn = (...xs) => xs.filter((x) => x != null && x !== false);
+  f.append(...nn(
+    m ? h("p", {}, tagMemo(m.estado), " ", h("b", {}, m.cite || "Borrador sin número"), m.efecto ? " · " + m.efecto : "", m.estado === "ANULADO" ? " · Motivo: " + m.motivo_anulacion : "") : null,
+    h("div", { class: "row" }, h("label", {}, "Tipo", tipoSel), h("label", { style: "min-width:340px" }, "Servidor", empSel)),
+    h("div", { class: "row" }, campo("Destinatario (nombre completo)", "destinatario", { req: true, value: v.destinatario, style: "min-width:320px" }), campo("C.I.", "destinatario_ci", { value: v.destinatario_ci }),
+      campo("Cargo (en una designación: el cargo al que se designa)", "cargo", { req: true, value: v.cargo, style: "min-width:320px" })),
+    h("div", { class: "row" }, campo("Fecha del memorándum", "fecha", { type: "date", req: true, value: v.fecha }), campo("Fecha efectiva", "fecha_efectiva", { type: "date", req: true, value: v.fecha_efectiva })), extra,
+    h("div", { class: "row", style: "margin-top:8px" }, h("label", { style: "flex:1" }, "Referencia (REF.-)", ref), !ro ? h("button", { type: "button", class: "sec", onclick: redactar }, "Redactar desde plantilla") : null),
+    h("label", {}, "Texto del memorándum (**negrita**, «## título centrado», «- viñeta»)", cuerpo),
+    h("div", { class: "row", style: "margin-top:12px" },
+      !ro && puede() ? h("button", { type: "button", onclick: async () => { const r = await guardar(); if (r) { dlg.close(); refrescar(); } } }, "Guardar borrador") : null,
+      !ro && puede() ? h("button", { type: "button", class: "sec", onclick: async () => { const r = await guardar(); if (r) verPdf(`/api/memorandums/${r.id}/pdf`); } }, "Vista previa PDF") : null,
+      !ro && puede() ? h("button", { type: "button", onclick: async () => { const r = await guardar(); if (!r) return; if (!confirm("Al emitir se asigna el número de CITE oficial (no se puede deshacer; solo anular). ¿Emitir?")) return; const d = leer(f);
+        const e = await accion(() => api(`/api/memorandums/${r.id}/emitir`, { method: "POST", json: { registrar_baja: tipoSel.value === "DESIGNACION" ? false : !!d.registrar_baja, causal: d.causal || "CONCLUSION_CONTRATO" } }), "Memorándum emitido");
+        if (e) { dlg.close(); verPdf(`/api/memorandums/${e.id}/pdf`); refrescar(); } } }, "Emitir (asignar CITE)") : null,
+      !ro && m && puede() ? h("button", { type: "button", class: "mal", onclick: async () => { if (confirm("¿Eliminar el borrador?") && await accion(() => api("/api/memorandums/" + m.id, { method: "DELETE" }), "Eliminado")) { dlg.close(); refrescar(); } } }, "Eliminar borrador") : null,
+      m && m.estado !== "BORRADOR" ? h("button", { type: "button", class: "sec", onclick: () => verPdf(`/api/memorandums/${m.id}/pdf`) }, "Ver PDF") : null,
+      m && m.estado !== "BORRADOR" ? h("button", { type: "button", class: "sec", onclick: () => descargar(`/api/memorandums/${m.id}/docx`, "memorandum.docx") }, "Descargar Word") : null,
+      m && m.estado === "EMITIDO" && puede() ? h("button", { type: "button", class: "sec", onclick: async () => { const fecha = prompt("Fecha de recepción (AAAA-MM-DD):", hoy); if (!fecha) return; const por = prompt("Recibido por:", m.destinatario) || ""; if (await accion(() => api(`/api/memorandums/${m.id}/recepcion`, { method: "POST", json: { fecha, recibido_por: por } }), "Recepción registrada")) { dlg.close(); refrescar(); } } }, "Registrar recepción") : null,
+      m && m.estado === "EMITIDO" && puede() ? h("button", { type: "button", class: "mal", onclick: async () => { const mo = prompt("Motivo de la anulación (mínimo 10 caracteres; el número NO se reutiliza):"); if (mo && await accion(() => api(`/api/memorandums/${m.id}/anular`, { method: "POST", json: { motivo: mo } }), "Anulado")) { dlg.close(); refrescar(); } } }, "Anular") : null,
+      h("button", { type: "button", class: "sec", onclick: () => dlg.close() }, "Cerrar"))));
+  async function guardar() {
+    const d = leer(f);
+    const datos = { fecha_renuncia: d.fecha_renuncia || undefined, plazo_entrega_dias: d.plazo_entrega_dias || undefined, plazo_dj_dias: d.plazo_dj_dias || undefined, copias_dj: d.copias_dj || undefined,
+      registrar_baja: d.registrar_baja, causal: d.causal, actualizar_cargo: d.actualizar_cargo };
+    const body = { tipo: d.tipo, fecha: d.fecha, fecha_efectiva: d.fecha_efectiva, empleado_id: d.empleado_id ? +d.empleado_id : null, destinatario: d.destinatario, destinatario_ci: d.destinatario_ci, cargo: d.cargo,
+      referencia: d.referencia, cuerpo: d.cuerpo, datos };
+    return accion(() => api(m ? "/api/memorandums/" + m.id : "/api/memorandums", { method: m ? "PUT" : "POST", json: body }));
+  }
+  pinta();
+  const dlg = dialogo(m ? (m.cite || "Borrador de memorándum") + " · " + m.tipo_nombre : "Nuevo memorándum", f);
+  dlg.style.maxWidth = "980px";
+  if (!m) redactar();
+}
+
+async function memoCites() {
+  const anio = S.citesAnio || new Date().getFullYear();
+  const [r, series] = await Promise.all([api("/api/cites/memorandum/" + anio), api("/api/cites")]);
+  const nuevo = h("input", { type: "number", min: r.siguiente, value: r.siguiente, style: "width:110px" }), mot = h("input", { placeholder: "Motivo (mín. 10 caracteres)", style: "min-width:300px" });
+  return h("div", {}, h("div", { class: "card row" }, h("label", {}, "Gestión", h("input", { type: "number", value: anio, style: "width:100px", onchange: (e) => { S.citesAnio = +e.target.value; refrescar(); } })),
+    h("button", { class: "sec", onclick: () => descargar(`/api/memorandums-registro.xlsx?gestion=${anio}`, "registro_cites.xlsx") }, "Descargar libro de registro (.xlsx)")),
+    h("div", { class: "kpis" }, [["Último número", r.ultimo], ["Siguiente", r.siguiente], ["Emitidos", r.emitidos], ["Anulados", r.anulados], ["Saltados", r.saltados.length]].map(([t, x]) => h("div", { class: "kpi" }, t, h("b", {}, x)))),
+    r.saltados.length ? h("div", { class: "banner" }, "Números saltados (sin memorándum): " + r.saltados.join(", ") + ". Quedan registrados para la auditoría.") : null,
+    S.user.rol === "ADMIN" ? h("div", { class: "card" }, h("b", {}, "Continuar una numeración llevada en papel"), h("p", { class: "muted" }, "Define el número del PRÓXIMO memorándum de la gestión. Nunca retrocede y queda en la bitácora."),
+      h("div", { class: "row" }, h("label", {}, "Próximo N°", nuevo), h("label", {}, "Motivo", mot),
+        h("button", { onclick: async () => { if (await accion(() => api("/api/cites/memorandum/siguiente", { method: "POST", json: { gestion: anio, numero: +nuevo.value, motivo: mot.value } }), "Numeración actualizada")) refrescar(); } }, "Aplicar"))) : null,
+    h("h3", {}, `Registro de cites ${anio}`), tabla([{ t: "N°", n: 1, f: (d) => d.n }, { t: "CITE", f: (d) => d.cite }, { t: "Estado", f: (d) => (d.estado === "SALTADO" ? h("span", { class: "tag av" }, "SALTADO") : tagMemo(d.estado)) }, { t: "Tipo", f: (d) => d.tipo },
+      { t: "Fecha", f: (d) => fdate(d.fecha) }, { t: "Destinatario", f: (d) => d.destinatario }], r.detalle.slice().reverse()),
+    h("h3", {}, "Todas las series de cites del sistema"), tabla([{ t: "Serie", f: (s) => s.nombre }, { t: "Gestión", f: (s) => s.gestion }, { t: "Último", n: 1, f: (s) => s.ultimo }, { t: "Siguiente", n: 1, f: (s) => s.siguiente }], series));
+}
+
+async function memoConfig() {
+  const [c, pls] = await Promise.all([api("/api/memo-config"), api("/api/memo-plantillas")]);
+  const logoBox = h("div", { style: "min-height:60px" });
+  if (c.tiene_logo) { const r = await api("/api/memo-config/logo", { blob: true }); logoBox.append(h("img", { src: URL.createObjectURL(await r.blob()), style: "max-height:90px;border:1px solid #E3D3BF;border-radius:6px;padding:4px;background:#fff" })); }
+  const fl = h("input", { type: "file", accept: "image/png,image/jpeg" });
+  const f = h("form", { class: "card", onsubmit: async (ev) => { ev.preventDefault(); if (await accion(() => api("/api/memo-config", { method: "PUT", json: leer(f) }), "Membrete guardado")) refrescar(); } },
+    h("h3", { style: "margin-top:0" }, "Membrete, cite y firma"),
+    h("div", { class: "row" }, campo("Prefijo del CITE (resultado: PREFIJO/N°077/2026)", "prefijo", { value: c.prefijo, req: true, style: "min-width:280px" }), campo("Decreto de la estructura organizacional", "decreto_estructura", { value: c.decreto_estructura, style: "min-width:300px" })),
+    h("div", { class: "row" }, campo("Firmante (MAE)", "firmante_nombre", { value: c.firmante_nombre }), campo("Cargo del firmante", "firmante_cargo", { value: c.firmante_cargo })),
+    h("label", {}, "Líneas del membrete bajo el nombre (una por línea)", h("textarea", { name: "encabezado", style: "min-height:90px" }, c.encabezado)),
+    campo("Lema (pie)", "lema", { value: c.lema }), h("label", {}, "Pie: dirección y contactos (una por línea)", h("textarea", { name: "pie", style: "min-height:70px" }, c.pie)),
+    puede() ? h("button", { type: "submit", style: "margin-top:10px" }, "Guardar membrete") : null);
+  f.elements.encabezado.value = c.encabezado; f.elements.pie.value = c.pie;
+  const logo = h("div", { class: "card" }, h("b", {}, "Escudo / logotipo del municipio (PNG o JPG, máx. 3 MB)"), logoBox, puede() ? h("div", { class: "row" }, fl, h("button", { onclick: async () => {
+    if (!fl.files[0]) return toast("Seleccione una imagen", "err"); const fd = new FormData(); fd.append("archivo", fl.files[0]);
+    if (await accion(() => api("/api/memo-config/logo", { method: "POST", form: fd }), "Logotipo guardado")) refrescar(); } }, "Subir logotipo")) : null);
+  const plantillas = pls.map((p) => {
+    const ref = h("input", { value: p.referencia, style: "width:100%" }), tx = h("textarea", { style: "min-height:220px;font:12.5px/1.45 Consolas,monospace" }); tx.value = p.cuerpo;
+    return h("div", { class: "card" }, h("b", {}, "Plantilla: " + p.nombre), h("p", { class: "muted" }, "Variables: {entidad} {cargo} {cargo_mayus} {destinatario} {fecha} {fecha_efectiva} {fecha_renuncia} {gestion} {decreto_estructura} {mae_nombre} {mae_cargo} {plazo_entrega_texto} {plazo_dj_dias} {copias_dj_texto}"),
+      h("label", {}, "Referencia", ref), h("label", {}, "Redacción", tx), puede() ? h("div", { class: "row", style: "margin-top:8px" },
+        h("button", { onclick: async () => { if (await accion(() => api("/api/memo-plantillas/" + p.tipo, { method: "PUT", json: { referencia: ref.value, cuerpo: tx.value } }), "Plantilla guardada")) refrescar(); } }, "Guardar plantilla"),
+        h("button", { class: "sec", onclick: async () => { if (confirm("¿Restaurar la redacción original?") && await accion(() => api(`/api/memo-plantillas/${p.tipo}/restaurar`, { method: "POST" }), "Restaurada")) refrescar(); } }, "Restaurar original")) : null);
+  });
+  return h("div", {}, f, logo, plantillas);
 }
 
 render();

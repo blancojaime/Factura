@@ -100,6 +100,11 @@ def _num(x) -> str:
     return f"{x:g}"
 
 
+def bs(x) -> str:
+    """Importe en formato boliviano: 1.085,00"""
+    return f"{float(x):,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+
+
 def construir(d: DatosPeriodo, cite_nro: str | None, fecha_emision: date) -> bytes:
     doc = docx.Document(str(config.TEMPLATE_INFORME))
     ent = d.entidad
@@ -118,6 +123,7 @@ def construir(d: DatosPeriodo, cite_nro: str | None, fecha_emision: date) -> byt
     normales = defaultdict(int)
     cat_dias = defaultdict(float)
     cat_emp = defaultdict(set)
+    parcial = defaultdict(float)
     faltas_f = defaultdict(list)
     omisiones = defaultdict(list)
     for eid, rows in d.asistencia.items():
@@ -126,6 +132,8 @@ def construir(d: DatosPeriodo, cite_nro: str | None, fecha_emision: date) -> byt
         for a in rows:
             if a.estado == motor.NORMAL:
                 normales[eid] += 1
+            if a.parcial > 0:
+                parcial[eid] += float(a.parcial)
             if a.justificado > 0:
                 cat_dias[a.categoria_just] += float(a.justificado)
                 cat_emp[a.categoria_just].add(eid)
@@ -155,6 +163,8 @@ def construir(d: DatosPeriodo, cite_nro: str | None, fecha_emision: date) -> byt
          f"{_num(cat_dias['LICENCIA'])} días", pct(cat_dias["LICENCIA"])],
         ["Permisos Particulares / Comisiones Oficiales (Papeletas aprobadas)", str(len(perm_emp)),
          f"{_num(perm_dias)} días ({_num(perm_dias * float(ent.horas_jornada))} h)", pct(perm_dias)],
+        ["Permisos por horas (papeletas parciales, con y sin goce)", str(len(parcial)),
+         f"{_num(sum(parcial.values()) * float(ent.horas_jornada))} horas", pct(sum(parcial.values()))],
         ["Faltas / Ausencias Injustificadas (Sujetas a descuento/sanción)", str(len(faltas_f)),
          f"{_num(falta_dias)} días", pct(falta_dias)],
     ]
@@ -163,7 +173,8 @@ def construir(d: DatosPeriodo, cite_nro: str | None, fecha_emision: date) -> byt
                 f"{l.empleado.cargo} / {l.empleado.unidad.nombre}" if l.empleado.unidad else l.empleado.cargo,
                 str(l.nro_retrasos), f"{l.min_retraso} min",
                 (l.sancion or "Sin sanción (dentro de la escala)") +
-                (f" — {_num(l.dias_desc_atrasos)} día(s) de haber" if l.dias_desc_atrasos > 0 and "Descuento" not in l.sancion else "")]
+                (f" — {_num(l.dias_desc_atrasos)} día(s) de haber" if l.dias_desc_atrasos > 0 and "Descuento" not in l.sancion else "") +
+                (f" = Bs {bs(l.desc_atrasos)}" if l.desc_atrasos > 0 else "")]
                for i, l in enumerate(sorted(con_atraso, key=lambda x: -x.min_retraso), 1)]
 
     def dias_habiles_en(p):
@@ -200,7 +211,7 @@ def construir(d: DatosPeriodo, cite_nro: str | None, fecha_emision: date) -> byt
         l = por_emp[eid]
         e = l.empleado
         ab = motor.detectar_abandono(fechas, es_lab)
-        accion = f"Descuento ×{_num(l.dias_desc_faltas / l.faltas)} del haber diario ({_num(l.dias_desc_faltas)} día(s))"
+        accion = f"Descuento ×{_num(l.dias_desc_faltas / l.faltas)} del haber diario ({_num(l.dias_desc_faltas)} día(s)) = Bs {bs(l.desc_faltas)}"
         if ab:
             accion = "Remisión a Autoridad Sumariante (Abandono de funciones)"
             abandonos.append(e)
@@ -257,6 +268,34 @@ def construir(d: DatosPeriodo, cite_nro: str | None, fecha_emision: date) -> byt
             r.text = r.text.replace("equivalente al doble del haber diario", f"equivalente a {_num(ent.factor_falta_planta)} veces el haber diario")
 
     rebuild_table(tables[1], indic, 0)
+    S = lambda k: sum((getattr(l, k) for l in liqs), type(liqs[0].total_ganado)(0)) if liqs else 0  # noqa: E731
+    ganado = float(S("total_ganado")) or 1.0
+    n_con = lambda k: str(sum(1 for l in liqs if getattr(l, k) > 0))  # noqa: E731
+    econ = [
+        ["Total ganado del mes (haber proporcional + bono)", str(len(liqs)), bs(S("total_ganado")), "100.00%"],
+        ["Aporte laboral AFP/Gestora (descuento de ley)", n_con("aporte_laboral"), bs(S("aporte_laboral")), f"{100 * float(S('aporte_laboral')) / ganado:.2f}%"],
+        ["RC-IVA retenido", n_con("rc_iva"), bs(S("rc_iva")), f"{100 * float(S('rc_iva')) / ganado:.2f}%"],
+        ["Descuento por faltas injustificadas", n_con("desc_faltas"), bs(S("desc_faltas")), f"{100 * float(S('desc_faltas')) / ganado:.2f}%"],
+        ["Descuento por atrasos acumulados (escala RIP)", n_con("desc_atrasos"), bs(S("desc_atrasos")), f"{100 * float(S('desc_atrasos')) / ganado:.2f}%"],
+        ["Descuento por permisos sin goce y exceso de ausencias de consultores", n_con("desc_otros"), bs(S("desc_otros")), f"{100 * float(S('desc_otros')) / ganado:.2f}%"],
+        ["Multas y descuentos adicionales", n_con("desc_multas"), bs(S("desc_multas")), f"{100 * float(S('desc_multas')) / ganado:.2f}%"],
+        ["TOTAL DESCUENTOS", n_con("total_descuentos"), bs(S("total_descuentos")), f"{100 * float(S('total_descuentos')) / ganado:.2f}%"],
+        ["LÍQUIDO PAGABLE (coincide con la Planilla de Sueldos y Salarios)", str(len(liqs)), bs(S("liquido_pagable")), f"{100 * float(S('liquido_pagable')) / ganado:.2f}%"],
+        ["Aporte patronal (informativo, no se descuenta al servidor)", n_con("aporte_patronal"), bs(S("aporte_patronal")), "—"],
+    ]
+    intro = copy.deepcopy(paras[16]._p)
+    tables[1]._tbl.addnext(intro)
+    Paragraph(intro, doc).runs[0].text = ("Efecto económico de las incidencias de asistencia (faltas, atrasos, permisos sin goce y multas) en la planilla "
+                                          "del mes. Importes en bolivianos (Bs); coinciden con la Planilla de Sueldos y Salarios del mismo periodo:")
+    for r_ in Paragraph(intro, doc).runs[1:]:
+        r_.text = ""
+    t_econ = copy.deepcopy(tables[1]._tbl)
+    intro.addnext(t_econ)
+    te = docx.table.Table(t_econ, doc)
+    hdr_e = t_econ.findall(qn("w:tr"))[0].findall(qn("w:tc"))
+    for tc, txt in zip(hdr_e, ["CONCEPTO ECONÓMICO", "N° SERVIDORES", "MONTO (Bs)", "% DEL TOTAL GANADO"]):
+        set_cell_text(tc, txt)
+    rebuild_table(te, econ, 0)
     rebuild_table(tables[2], atrasos, 2)
     rebuild_table(tables[3], vac, 1)
     rebuild_table(tables[4], lic, 1)
@@ -287,7 +326,9 @@ def construir(d: DatosPeriodo, cite_nro: str | None, fecha_emision: date) -> byt
         f"Se recomienda instruir al Área de Planillas y Remuneraciones proceder con la aplicación de los descuentos por "
         f"concepto de atrasos acumulados ({sum(1 for l in liqs if l.dias_desc_atrasos > 0)} servidores) e inasistencias "
         f"injustificadas ({len(faltas_f)} servidores) detallados en los numerales 4 y 7 del presente informe, para su "
-        f"incorporación en la planilla salarial del mes."]
+        f"incorporación en la planilla salarial del mes. El efecto económico de las incidencias es de Bs {bs(S('desc_asistencia') + S('desc_multas'))} "
+        f"(faltas Bs {bs(S('desc_faltas'))}, atrasos Bs {bs(S('desc_atrasos'))}, permisos sin goce y exceso de consultores Bs {bs(S('desc_otros'))}, "
+        f"multas y descuentos adicionales Bs {bs(S('desc_multas'))}), con un líquido pagable total de Bs {bs(S('liquido_pagable'))}."]
     exceso = [l for l in liqs if l.dias_desc_exceso_consultor > 0]
     if exceso:
         concl.append(f"Se recomienda aplicar el descuento por exceso del máximo contractual de ausencias justificadas a "

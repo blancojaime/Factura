@@ -59,7 +59,7 @@ def _cols(extras: list[tuple[str, str, int]], honor=False):
 def _valores(l):
     return {"haber": l.haber_basico, "dias": l.dias_trabajados, "bono": l.bono_antiguedad, "ganado": l.total_ganado,
             "afp": l.aporte_laboral, "patronal": l.aporte_patronal, "rciva": l.rc_iva, "ripdias": l.dias_descuento,
-            "ripmonto": l.desc_asistencia, "totdesc": l.total_descuentos, "liquido": l.liquido_pagable}
+            "ripmonto": l.desc_asistencia + l.desc_multas, "totdesc": l.total_descuentos, "liquido": l.liquido_pagable}
 
 
 SUMABLES = {"haber", "bono", "ganado", "afp", "patronal", "rciva", "ripdias", "ripmonto", "totdesc", "liquido"}

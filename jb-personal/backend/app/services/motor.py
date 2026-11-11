@@ -74,6 +74,8 @@ class ResDia:
     falta: Decimal = D0
     justificado: Decimal = D0
     justificado_sin_goce: Decimal = D0
+    parcial: Decimal = D0                 # fracción de día cubierta por permisos POR HORAS (turnos con asistencia)
+    parcial_sin_goce: Decimal = D0        # idem, solo permisos sin goce de haberes (descuentan)
     categoria: str = ""
     permiso_id: int | None = None
     observaciones: list[str] = field(default_factory=list)
@@ -128,6 +130,10 @@ def depurar_marcas(marcas: list[int]) -> list[int]:
     return out
 
 
+def _cubierto_sg(a: int, b: int, justifs) -> int:
+    return _cubierto(a, b, [j for j in justifs if not j.con_goce])
+
+
 def asignar_marcas(turnos, marcas: list[int], justifs=(), tolerancia: int = 0):
     """Asigna las marcas a (entrada, salida) de cada turno.
 
@@ -164,6 +170,7 @@ def evaluar_dia(reglas: Reglas, marcas: list[int], justifs: list[Justif], labora
 
     turnos = reglas.turnos
     pesos = pesos_turnos(turnos)
+    total_min = sum(x.salida - x.entrada for x in turnos)
     asign = asignar_marcas(turnos, marcas, justifs, reglas.tolerancia)
     r = ResDia(NORMAL, marcas)
     grave = False
@@ -197,10 +204,18 @@ def evaluar_dia(reglas: Reglas, marcas: list[int], justifs: list[Justif], labora
                 r.observaciones.append(f"Salida anticipada {early} min ({t.nombre})")
         else:
             r.observaciones.append(f"Omisión de marca de salida ({t.nombre})")
+        # permiso POR HORAS dentro de un turno con asistencia: las horas cubiertas no se trabajaron
+        # (si el permiso cubre el turno completo y la persona asistió, prevalece la asistencia)
+        dur = t.salida - t.entrada
+        cub, cub_sg = _cubierto(t.entrada, t.salida, justifs), _cubierto_sg(t.entrada, t.salida, justifs)
+        if 0 < cub < dur:
+            r.parcial += Decimal(cub) / Decimal(total_min)
+            r.parcial_sin_goce += Decimal(cub_sg) / Decimal(total_min)
 
     if cubiertos:
         j = max(cubiertos, key=lambda c: c[1])[0]
         r.categoria, r.permiso_id = j.categoria, j.permiso_id
+    r.parcial, r.parcial_sin_goce = _q(r.parcial), _q(r.parcial_sin_goce)
     omision = any(o.startswith("Omisión") for o in r.observaciones)
     if r.falta > 0:
         r.estado = FALTA_INJUSTIFICADA
@@ -273,6 +288,8 @@ class ResMes:
     liquido: Decimal
     sancion: str
     observaciones: list[str]
+    multas: Decimal = D0                  # multas / descuentos adicionales aplicados (manuales)
+    horas_permiso: Decimal = D0           # días-equivalentes por permisos por horas
 
 
 def buscar_escala(escala, valor: int) -> FilaEscala | None:
@@ -289,12 +306,14 @@ def dias_comerciales(inicio, fin, mes_ini, mes_fin, dias_mes: int = 30) -> Decim
     return Decimal(max(0, b - a + 1))
 
 
-def liquidar_mes(c: ContratoCalc, dias: list[ResDia], p: ParamsCalculo, dias_trab: Decimal) -> ResMes:
+def liquidar_mes(c: ContratoCalc, dias: list[ResDia], p: ParamsCalculo, dias_trab: Decimal, multas: Decimal = D0) -> ResMes:
     es_cons = c.modalidad == "CONSULTOR_LINEA"
     lab = [d for d in dias if d.estado not in (NO_LABORABLE, FERIADO)]
     faltas = sum((d.falta for d in lab), D0)
     justif = sum((d.justificado for d in lab), D0)
     sin_goce = sum((d.justificado_sin_goce for d in lab), D0)
+    parc = sum((d.parcial for d in lab), D0)
+    parc_sg = sum((d.parcial_sin_goce for d in lab), D0)
     minutos_ = sum(d.min_retraso for d in lab)
     if p.contar_salida_anticipada:
         minutos_ += sum(d.min_salida_anticipada for d in lab)
@@ -310,12 +329,12 @@ def liquidar_mes(c: ContratoCalc, dias: list[ResDia], p: ParamsCalculo, dias_tra
     d_falt = faltas * factor
     d_sg, d_exc = D0, D0
     if es_cons:
-        d_exc = max(D0, justif - p.max_justificados_consultor)
+        d_exc = max(D0, justif + parc - p.max_justificados_consultor)
         if d_exc > 0:
-            obs.append(f"Consultor: {justif} día(s) justificado(s); excede el máximo contractual de "
+            obs.append(f"Consultor: {justif + parc} día(s) justificado(s); excede el máximo contractual de "
                        f"{p.max_justificados_consultor} día(s)/mes")
     else:
-        d_sg = sin_goce
+        d_sg = sin_goce + parc_sg
     dias_desc = d_falt + d_atr + d_sg + d_exc
 
     dia_valor = c.haber / Decimal(p.dias_mes)
@@ -332,11 +351,16 @@ def liquidar_mes(c: ContratoCalc, dias: list[ResDia], p: ParamsCalculo, dias_tra
     tasa_p = c.tasa_patronal if c.tasa_patronal is not None else p.tasa_patronal
     aporte = _q(ganado * tasa) if c.aplica_aporte else D0
     patronal = _q(ganado * tasa_p) if c.aplica_aporte else D0
-    total_desc = aporte + c.rc_iva + desc_asis
+    # multas / descuentos adicionales: no pueden dejar el líquido en negativo
+    tope = max(D0, ganado - desc_asis - aporte - c.rc_iva)
+    multas_ap = min(_q(multas), tope)
+    if multas_ap < _q(multas):
+        obs.append(f"Multas/descuentos limitados a {multas_ap} para no dejar líquido negativo (solicitado {_q(multas)})")
+    total_desc = aporte + c.rc_iva + desc_asis + multas_ap
     asist = max(D0, Decimal(len(lab)) - faltas - justif)
     return ResMes(Decimal(len(lab)), asist, faltas, minutos_, nro, justif, dias_trab, bono, ganado, aporte, patronal,
                   c.rc_iva, d_falt, d_atr, d_sg, d_exc, desc_f, desc_a, desc_o, dias_desc, desc_asis, total_desc,
-                  ganado - total_desc, sancion, obs)
+                  ganado - total_desc, sancion, obs, multas_ap, parc)
 
 
 def detectar_abandono(fechas_falta: list, es_laborable) -> str:

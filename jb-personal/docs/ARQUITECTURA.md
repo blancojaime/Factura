@@ -15,7 +15,7 @@
 
 ```
 backend/app/
-  models.py            Modelo relacional (23 tablas)         db.py   Motor, sesión, triggers de inalterabilidad
+  models.py            Modelo relacional (27 tablas)         db.py   Motor, sesión, triggers de inalterabilidad
   audit.py             Bitácora encadenada SHA-256            security.py  Autenticación y roles
   seed.py              Parámetros, horario, escalas, tipos de permiso, feriados nacionales 2026-2030
   licencia.py          Activación: código de equipo, verificación Ed25519, prueba 30 días, modo solo lectura
@@ -34,7 +34,7 @@ backend/app/
 
 `entidad` · `unidad_organizacional` · `horario` + `turno` · `escala_sancion` · `feriado` · `empleado` · `contrato` ·
 `import_biometrico` + `marca` · `permiso_tipo` + `permiso` · `correlativo` · `instructivo` + `instructivo_destinatario` ·
-`perfil_biometrico` · `licencia` · `periodo` · `asistencia_dia` · `liquidacion` · `usuario` · `audit_log` · `backup_registro`.
+`perfil_biometrico` · `licencia` · `ajuste` · `memorandum` · `memo_config` · `memo_plantilla` · `periodo` · `asistencia_dia` · `liquidacion` · `usuario` · `audit_log` · `backup_registro`.
 DDL completo: `db/schema_sqlite.sql` y `db/schema_postgresql.sql` (generados con `python -m app.cli ddl` desde el mismo modelo).
 
 ### Inalterabilidad (Ley 1178 – auditoría posterior)
@@ -51,6 +51,15 @@ Código de equipo = `JBP-` + 15 hex de SHA-256(«JB-Personal|MachineGuid»). Có
 
 ## 3d. Reportes siempre actualizados (v1.1)
 Los reportes de un periodo ABIERTO recalculan el periodo antes de generarse (`consultas.cargar`), corrigiendo el defecto por el cual las planillas salían sin empleados si el personal se importaba después de «Procesar». Un periodo CERRADO usa lo congelado. Si no hay personal con contrato vigente, se devuelve un error 422 explicativo.
+
+## 3e. Memorándums y control de cites (v1.2)
+`services/memos.py` (reglas) + `reports/memorandum.py` (PDF reportlab y Word python-docx) + `routers/memorandums.py`. Tres tipos (designación, aceptación de renuncia, agradecimiento) con redacción en `memo_plantilla` (editable; sustitución **estricta** de `{identificador}`, sin evaluar expresiones). El **cite** `<prefijo>/N°NNN/<gestión>` usa una serie única `MEMORANDUM` por gestión en la tabla `correlativo`: se asigna **al emitir** con incremento atómico, el borrador no consume número, el anulado conserva el suyo y no se reutiliza, `UNIQUE(gestion, correlativo)` evita duplicados y los huecos se reportan como SALTADOS; `fijar_siguiente` (solo ADMIN) nunca retrocede y deja bitácora. Un memorándum emitido es inalterable (solo recepción y anulación). Efectos opcionales al emitir: designación → `contrato.nro_documento` y cargo; renuncia/agradecimiento → baja del contrato (validada **antes** de consumir el número; periodo cerrado la impide); anular revierte la baja. El membrete (prefijo, líneas, lema, pie, firmante, logo PNG/JPG validado por firma de archivo) vive en `memo_config`.
+
+## 3f. Coherencia de cifras (v1.2)
+Fuente única: `liquidacion` (calculada por `motor.liquidar_mes`). Planillas, informe, detallado, auditoría y pantallas la leen; las de periodos abiertos se recalculan al consultarse. Permisos por horas: dentro de un turno con asistencia, las horas cubiertas por un permiso (`parcial`) descuentan solo si el permiso es sin goce (`parcial_sin_goce` → días de haber = horas ÷ jornada); para consultores suman al límite mensual libre. Multas/descuentos manuales (`ajuste`) se limitan para no dejar líquido negativo y viajan a todos los reportes (`desc_multas`). `tests/test_zz_coherencia.py` verifica, sobre un mes con todos los casos y valores calculados a mano, que todas las salidas coinciden con la liquidación.
+
+## 3g. Migración automática (v1.2)
+`db.migrar_columnas` compara el modelo con las tablas existentes y agrega con `ALTER TABLE … ADD COLUMN` las columnas nuevas (con valor por defecto); las tablas nuevas las crea `create_all`. Probado en SQLite y PostgreSQL con una base «antigua» (sin perder datos, idempotente). No elimina ni modifica columnas existentes.
 
 ## 4. Reglas del motor de asistencia (configurables en pantalla)
 
@@ -85,6 +94,7 @@ Los reportes de un periodo ABIERTO recalculan el periodo antes de generarse (`co
 * **El instalador de Windows se construyó en Linux y no pudo ejecutarse en Windows.** El modo servicio del lanzador se probó en Linux; los scripts de PowerShell (`desktop/windows/`) y el script NSIS están escritos pero **sin ejecutar en Windows**: pruébelos en una PC piloto (manual §9.7). El servicio es una **tarea programada de arranque** (SYSTEM), no un servicio SCM nativo.
 * Los formatos de reloj se probaron con archivos sintéticos basados en su Excel, en ZKTeco ATTLOG y en cabeceras típicas de otras marcas; **no con exportaciones reales de Anviz/Dahua/Hikvision/Suprema**. Si un modelo exporta otra estructura, el **asistente de mapeo** lo resuelve sin programar.
 * Un empleado liquida con **un solo contrato por mes** (el de inicio más reciente); un cambio de haber a mitad de mes no se prorratea entre dos contratos.
+* Los textos legales de las plantillas de **memorándum** provienen de los modelos del municipio; no se validaron contra la normativa vigente. El memorándum de designación no crea al servidor ni su contrato.
 * Los **saldos de vacaciones** no se calculan: se registran gestión y saldo como texto informativo en cada permiso.
 * Retenciones de consultores (IT/IVA/RC‑IVA por factura) y bono de antigüedad automático **no** se calculan: el bono y el RC‑IVA son datos de entrada.
 * La restauración en SQLite/PostgreSQL requiere que no haya otros usuarios operando; se recomienda reiniciar el servicio después.

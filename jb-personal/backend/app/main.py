@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from . import __version__, config, licencia as lic
 from .db import SessionLocal, init_db
-from .routers import asistencia, auth, catalogos, licencia, permisos, personal, reportes, sistema
+from .routers import ajustes, asistencia, auth, catalogos, licencia, memorandums, permisos, personal, reportes, sistema
 from .services.proceso import ReglaNegocio
 
 
@@ -52,7 +52,7 @@ async def cabeceras(request: Request, call_next):
     return r
 
 
-for m in (auth, catalogos, personal, asistencia, permisos, reportes, sistema, licencia):
+for m in (auth, catalogos, personal, asistencia, permisos, reportes, sistema, licencia, ajustes, memorandums):
     app.include_router(m.router)
 
 

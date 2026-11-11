@@ -189,6 +189,7 @@ def reabrir(anio: int, mes: int, d: Reapertura, u: Usuario = Depends(SOLO_ADMIN)
 
 @router.get("/asistencia/{anio}/{mes}")
 def asistencia(anio: int, mes: int, empleado_id: int | None = None, u: Usuario = Depends(LEE), db: Session = Depends(get_db)):
+    proceso.asegurar_actualizado(db, anio, mes, u.username)
     ini, fin = proceso.rango_mes(anio, mes)
     q = select(AsistenciaDia).where(AsistenciaDia.fecha.between(ini, fin)).order_by(AsistenciaDia.fecha)
     if empleado_id:
@@ -202,11 +203,13 @@ def asistencia(anio: int, mes: int, empleado_id: int | None = None, u: Usuario =
 @router.get("/liquidacion/{anio}/{mes}")
 def liquidacion(anio: int, mes: int, u: Usuario = Depends(LEE), db: Session = Depends(get_db)):
     from ..services.consultas import ORDEN_MOD
+    proceso.asegurar_actualizado(db, anio, mes, u.username)
     ls = db.execute(select(Liquidacion).where(Liquidacion.anio == anio, Liquidacion.mes == mes)).scalars().unique().all()
     ls.sort(key=lambda l: (ORDEN_MOD[l.modalidad], l.empleado.apellidos))
     cols = ["haber_basico", "dias_trabajados", "bono_antiguedad", "total_ganado", "aporte_laboral", "aporte_patronal", "rc_iva",
             "dias_laborables", "dias_asistidos", "faltas", "min_retraso", "nro_retrasos", "dias_justificados", "dias_descuento",
-            "desc_faltas", "desc_atrasos", "desc_otros", "desc_asistencia", "total_descuentos", "liquido_pagable"]
+            "desc_faltas", "desc_atrasos", "desc_otros", "desc_multas", "desc_asistencia", "total_descuentos", "liquido_pagable",
+            "dias_desc_faltas", "dias_desc_atrasos", "dias_desc_sin_goce", "dias_desc_exceso_consultor", "horas_permiso"]
     return [{"empleado_id": l.empleado_id, "empleado": l.empleado.nombre_completo, "ci": l.empleado.ci_completo,
              "modalidad": l.modalidad, "sancion": l.sancion, "observacion": l.observacion,
              **{c: float(getattr(l, c)) for c in cols}} for l in ls]

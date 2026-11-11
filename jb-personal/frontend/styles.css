@@ -50,3 +50,5 @@ dialog{border:1px solid var(--borde);border-radius:10px;padding:18px;max-width:7
 dialog::backdrop{background:#0006}
 @media(max-width:800px){.layout{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap}nav h1{width:100%}main{padding:12px}}
 @media print{nav,#toast,button{display:none}.layout{display:block}}
+
+label:has(> input[type=checkbox]){flex-direction:row;align-items:center;gap:8px;font-size:13px}

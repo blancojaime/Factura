@@ -35,7 +35,7 @@ Dataset **ficticio** de **octubre de 2026** (22 días hábiles, sin feriados). S
 | 3001 Salazar | 1 | 50 | 2 | 7.000,00 | 0,00 | 466,66 | **6.533,34** |
 | **Total** | | | | **24.800,00** | **2.262,38** | **1.085,00** | **21.452,62** |
 
-**Reportes:** (1) informe `.docx`: 5 servidores / 110 días-hombre, regular 94 días (85,45 %), atrasos 4 (172 min), licencias 2 / 3 días, faltas 3 / 2,5 días; (2) Nuevo personal: Flores; (3) Desvinculados: Salazar (30/10, conclusión de contrato); (4) Planilla de sueldos con **los 5 empleados**: Permanentes 10.500,00 / 8.790,45, Eventuales 7.300,00 / 6.128,83, Consultores 7.000,00 / 6.533,34, total 24.800,00 / 21.452,62; (5) detallado: 154 filas de detalle, 16 imputaciones; (6a) consolidado `.txt` UTF‑8 (5 filas, tabulador) y (6b) **`.xlsx` plano** (fila 1 = 10 títulos + 5 filas, sin formato).
+**Reportes:** (1) informe `.docx`: 5 servidores / 110 días-hombre, regular 94 días (85,45 %), atrasos 4 (172 min), licencias 2 / 3 días, **permisos por horas 1 / 2 h**, faltas 3 / 2,5 días y **resumen económico** (faltas 660,00 · atrasos 75,00 · permisos sin goce y exceso de consultor 350,00 · total descuentos 3.347,38 · líquido 21.452,62); (2) Nuevo personal: Flores; (3) Desvinculados: Salazar (30/10, conclusión de contrato); (4) Planilla de sueldos con **los 5 empleados**: Permanentes 10.500,00 / 8.790,45, Eventuales 7.300,00 / 6.128,83, Consultores 7.000,00 / 6.533,34, total 24.800,00 / 21.452,62; (5) detallado con importes por servidor: 154 filas de detalle, **17** imputaciones (incluye 1 permiso por horas); (6a) consolidado `.txt` UTF‑8 (5 filas, tabulador) y (6b) **`.xlsx` plano ampliado** (fila 1 = **42 títulos** con toda la información de las planillas + 5 filas, sin formato ni fórmulas).
 
 ## Estructuras de reloj (marcaciones)
 | Archivo | Esperado |
@@ -48,4 +48,21 @@ Dataset **ficticio** de **octubre de 2026** (22 días hábiles, sin feriados). S
 ## Pruebas negativas y de control
 Permiso de consultor sin fiscal → rechazado · reimportar el mismo archivo → rechazado · mes sin personal → error claro · personal cargado **después** de procesar → la planilla lo incluye · periodo cerrado → bloqueado · `UPDATE`/`DELETE` de la bitácora o `UPDATE` de marcas → rechazado por la base · respaldo alterado/hash/contraseña incorrectos → no restaura · código de activación de otro equipo/vencido/alterado → rechazado · prueba vencida → escrituras y reportes con error 402, consultas y respaldos funcionan · usuario CONSULTA → 403 · nombre `=HYPERLINK(...)` → texto en Excel.
 
-Automáticas: `cd backend && python -m pytest tests -q` → **92 pruebas** (SQLite y PostgreSQL 16).
+## Memorándums, cites y multas
+| Acción | Esperado |
+|---|---|
+| Redactar los 3 tipos desde plantilla | Cargo en mayúsculas, fechas en palabras, decreto, plazos (3 días hábiles / 30 días calendario); sin `{variable}` sin resolver |
+| Emitir dos memorándums de distinto tipo | Cites `PREFIJO/N°001/2026`, `…/N°002/2026` (serie única, número asignado al emitir) |
+| Editar/eliminar uno emitido | Error 409 (inalterable) |
+| Emitir con `[COMPLETAR: …]` pendiente | Error; no consume número |
+| Aceptación de renuncia con «registrar la baja» | Contrato con baja y causal Renuncia; el cite queda como documento; sale en Desvinculados (días e importe proporcionales) |
+| Anular (motivo ≥ 10 caracteres) | ANULADO, baja revertida, el siguiente cite es +1 |
+| Fijar próximo número adelante / atrás / sin ser ADMIN | Adelante: saltados visibles · atrás: error · 403 |
+| Emitir con baja en periodo cerrado | Error y **no se consume** el número |
+| Multa de Bs 150 | Líquido −150 en planilla, informe, detallado y auditoría; anular restituye |
+
+## Coherencia (mes junio/2019, valores calculados a mano)
+A (permanente 6.000: 1 falta, 52 min, 2 h sin goce, multa 150) → **4.637,40** · B (eventual 3.000: ½ falta, 1 día sin goce, 2 días de licencia) → **2.418,70** · C (consultora 7.000: 1 falta, 2 días + 2 h justificados) → **6.475,00** · D (alta 17/06, 4.500) → **1.533,09** · E (baja 14/06, 5.000) → **2.036,76**. La suite verifica que planillas, reporte detallado, consolidado `.txt/.xlsx` e informe Word coincidan con la liquidación.
+
+Automáticas: `cd backend && python -m pytest tests -q` → **125 pruebas** (SQLite y PostgreSQL 16).
+

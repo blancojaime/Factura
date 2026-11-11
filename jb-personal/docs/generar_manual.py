@@ -3,6 +3,7 @@
 
 Uso:  python generar_manual.py        (requiere python-docx; el PDF usa LibreOffice 'soffice' si está instalado)
 """
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -16,8 +17,8 @@ from docx.shared import Cm, Pt, RGBColor
 
 AQUI = Path(__file__).resolve().parent
 AZUL = RGBColor(0x8A, 0x3B, 0x12)
-VERSION = "1.1.1"
-NTEST = 92
+VERSION = "1.2.0"
+NTEST = 125
 doc = Document()
 
 # ---------------------------------------------------------------- estilos
@@ -155,13 +156,39 @@ def T(cab, filas, anchos=None, size=9):
     doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
 
+_fig = [0]
+
+
+def _pie_fig(pie):
+    _fig[0] += 1
+    P(f"Figura {_fig[0]}. " + re.sub(r"^Figura \w+\.\s*", "", pie), italic=True, align=WD_ALIGN_PARAGRAPH.CENTER, size=9)
+
+
 def IMG(nombre, ancho=16, pie=""):
     f = AQUI / "img" / nombre
     if f.exists():
         doc.add_picture(str(f), width=Cm(ancho))
         doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
         if pie:
-            P(pie, italic=True, align=WD_ALIGN_PARAGRAPH.CENTER, size=9)
+            _pie_fig(pie)
+
+
+def IMG3(items, pie=""):
+    """Cuadrícula de imágenes en una fila (p. ej. los tres memorándums emitidos)."""
+    t = doc.add_table(rows=2, cols=len(items))
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    for i, (nombre, leyenda) in enumerate(items):
+        f = AQUI / "img" / nombre
+        c = t.rows[0].cells[i]
+        c.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
+        if f.exists():
+            c.paragraphs[0].add_run().add_picture(str(f), width=Cm(5.3))
+        q = t.rows[1].cells[i].paragraphs[0]
+        q.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        r = q.add_run(leyenda)
+        r.italic, r.font.size = True, Pt(8.5)
+    if pie:
+        _pie_fig(pie)
 
 
 def SALTO():
@@ -207,26 +234,38 @@ SALTO()
 
 # ================================================================= CONTENIDO
 H("Contenido")
-for t in ["1. Introducción y novedades de la versión 1.1", "2. Requisitos",
+for t in ["1. Introducción y novedades (versiones 1.2 y 1.1)", "2. Requisitos",
           "3. Instalación (servicio de Windows · construir instaladores · servidor Linux · PostgreSQL)",
           "4. Activación y licencia", "5. Primer ingreso y configuración inicial",
           "6. Importación de marcaciones de relojes de distintas marcas", "7. Operación mensual y reportes",
-          "8. Respaldos y recuperación", "9. Guía de pruebas con casos reales", "10. Seguridad", "11. Solución de problemas",
-          "12. Supuestos legales y limitaciones conocidas", "Anexo A. Manual del JB-Activador (emisor de licencias)", "Anexo B. Rutas, puertos y archivos"]:
+          "8. Memorándums y control de cites", "9. Multas y descuentos adicionales", "10. Coherencia entre permisos, faltas, multas, planillas e informes",
+          "11. Respaldos y recuperación", "12. Guía de pruebas con casos reales", "13. Seguridad", "14. Solución de problemas",
+          "15. Supuestos legales y limitaciones conocidas", "Anexo A. Manual del JB-Activador (emisor de licencias)", "Anexo B. Rutas, puertos y archivos"]:
     P(t)
 SALTO()
 
 # ================================================================= 1
-H("1. Introducción y novedades de la versión 1.1")
+H("1. Introducción y novedades (versiones 1.2 y 1.1)")
 P("**JB-Personal** administra el personal de un Gobierno Autónomo Municipal (GAM): **permanente**, **eventual** y **consultores individuales de línea**. "
   "Importa las marcaciones del reloj biométrico, calcula atrasos, faltas y permisos, y genera las planillas e informes mensuales.")
 T(["Módulo", "Qué hace"], [
     ["A. Institucional", "Datos del municipio, horarios y tolerancias, escala de sanción, feriados, carga masiva de personal (Excel/CSV)"],
     ["B. Biometría y asistencia", "Lee marcaciones de relojes de distintas marcas (autodetección + perfiles de mapeo de columnas) y clasifica cada día: normal, retraso leve/grave, falta justificada/injustificada, omisión"],
-    ["C. Permisos e instructivos", "Solicitudes con boleta PDF y correlativo; instructivos con cite oficial (GAM-RRHH-INST-001/2026), destinatarios y notificación"],
+    ["C. Permisos, instructivos y memorándums", "Solicitudes con boleta PDF y correlativo; instructivos con cite oficial (GAM-RRHH-INST-001/2026); **memorándums de designación, aceptación de renuncia y agradecimiento de funciones con control de cites**; multas y descuentos adicionales"],
     ["D. Reportes", "Informe de asistencia (.docx), planillas de nuevo personal, desvinculados y sueldos (.xlsx), reporte detallado (.xlsx) y consolidado plano para auditoría en **.txt/.csv y .xlsx**"],
     ["Transversal", "Usuarios y roles, bitácora inalterable, cierre de periodo, respaldos cifrados, **licencia y activación**"],
 ], [4, 12.5])
+H("Novedades de la versión 1.2", 2)
+T(["N°", "Cambio", "Dónde se ve"], [
+    ["1", "**Módulo de Memorándums:** Designación de Cargo, Aceptación de Renuncia y Agradecimiento de Funciones, con redacción desde plantillas basadas en los modelos del municipio, PDF y Word, escudo y membrete configurables, recepción y anulación", "Cap. 8"],
+    ["2", "**Control de cites:** serie única por gestión asignada al emitir, números anulados sin reutilización, números saltados visibles, continuación de numeración (solo ADMIN), libro de registro en Excel y vista de todas las series del sistema", "Cap. 8.2"],
+    ["3", "**Efecto en el expediente:** al emitir, la designación actualiza cargo y documento del contrato; la renuncia y el agradecimiento registran la baja y alimentan la Planilla de Desvinculados", "Cap. 8"],
+    ["4", "**Coherencia verificada:** permisos (también por horas), faltas, atrasos y multas tienen efecto en todas las planillas e informes. Se corrigió que un permiso sin goce por horas no descontaba, y se agregó el resumen económico al informe y los importes al reporte detallado", "Cap. 10"],
+    ["5", "**Multas y descuentos adicionales** por servidor y mes, incluidos en todos los reportes", "Cap. 9"],
+    ["6", "**Consolidado de auditoría en Excel ampliado:** 42 columnas con toda la información de las planillas salariales y de asistencia (sigue siendo plano: solo títulos y datos)", "Cap. 7"],
+    ["7", "**Actualización sin pérdida de datos:** una base de la versión anterior se migra sola al iniciar", "Cap. 3"],
+    ["8", "Manuales (Word, PDF y Markdown) actualizados con capturas de la aplicación y descarga en un solo comprimido (ZIP)", "Este documento"],
+], [0.9, 12.2, 3.4], size=9)
 H("Novedades de la versión 1.1", 2)
 T(["N°", "Cambio", "Dónde se ve"], [
     ["1", "**Instalador independiente de la sesión:** JB-Personal se instala como servicio (tarea de arranque de Windows, cuenta SYSTEM). Funciona al encender el equipo, sin que ningún usuario haya iniciado sesión", "Cap. 3"],
@@ -238,7 +277,7 @@ T(["N°", "Cambio", "Dónde se ve"], [
     ["7", "**Activador externo:** herramienta JB-Activador (solo del emisor) que genera códigos de activación firmados por equipo; la aplicación incluye prueba de 30 días y modo solo lectura", "Cap. 4, Anexo A"],
     ["8", "**Manuales actualizados** (Word, PDF y GitHub)", "Este documento"],
 ], [0.9, 12.2, 3.4], size=9)
-IMG("ui_inicio.png", 16, "Figura 1. Pantalla «Inicio / Planilla» con el nuevo diseño y el aviso de periodo de prueba.")
+IMG("ui_inicio.png", 16, "Pantalla «Inicio / Planilla»: liquidación individual con descuentos, multas y líquido, y aviso del periodo de prueba.")
 
 # ================================================================= 2
 H("2. Requisitos")
@@ -276,10 +315,10 @@ P("Menú Inicio → JB-Personal → **Administrar el servicio** (pide permisos d
 P("**Acceso desde otras PC de la red (opcional):** por defecto el sistema solo responde en la propia PC. Para habilitarlo use el acceso directo **Habilitar acceso desde la red** (menú Inicio → JB-Personal; abre el puerto 8765 en el Firewall para redes de dominio y privadas) y para revertirlo **Solo esta PC**. Luego, desde las otras PC: `http://IP-DE-ESTA-PC:8765/`.")
 P("Para cambiar el puerto o abrir/cerrar el acceso de red a mano edite `C:\\ProgramData\\JB-Personal\\config.ini` (`host = 127.0.0.1` solo esta PC · `host = 0.0.0.0` toda la red; `port = 8765`), reinicie el servicio y, si cambió el puerto, actualice las reglas del Firewall y el acceso directo.")
 H("Actualizar y desinstalar", 3)
-P("**Actualizar:** ejecute el instalador nuevo sobre el anterior: detiene el servicio, reemplaza el programa y lo vuelve a iniciar; los datos y la licencia se conservan. Haga un respaldo antes. "
+P("**Actualizar:** ejecute el instalador nuevo sobre el anterior: detiene el servicio, reemplaza el programa y lo vuelve a iniciar; los datos y la licencia se conservan. Si la base de datos viene de una versión anterior, **al iniciar se agregan automáticamente las tablas y columnas nuevas** (sin tocar los datos existentes). Haga un respaldo antes. "
   "**Desinstalar:** menú Inicio → JB-Personal → Desinstalar (o Configuración → Aplicaciones). Se elimina el programa, el servicio y la regla de firewall; los datos permanecen en `C:\\ProgramData\\JB-Personal`.")
 NOTE("El instalador se construyó en un entorno Linux con NSIS y Python embebido oficial; **no pudo ejecutarse en Windows durante el desarrollo** (el modo servicio del lanzador sí se probó en Linux). "
-     "Instálelo primero en una PC piloto y complete la lista de aceptación del capítulo 9.7, en especial la prueba «reiniciar sin iniciar sesión».", "Importante")
+     "Instálelo primero en una PC piloto y complete la lista de aceptación del capítulo 12.7, en especial la prueba «reiniciar sin iniciar sesión».", "Importante")
 H("3.2 Cómo comprobar que funciona sin sesión", 2)
 N(["Instale y confirme que abre en el navegador.", "Cierre la sesión de Windows (o reinicie el equipo) **sin volver a iniciar sesión**.",
    "Desde **otra PC** con acceso de red habilitado abra `http://IP-DEL-EQUIPO:8765/`: debe cargar la pantalla de ingreso. "
@@ -345,13 +384,13 @@ N(["Ingrese como **administrador** → menú **Licencia**.", "Copie el **código
 P("**Instalación asistida por Sistemas:** si copia el archivo `licencia.jbp` a `C:\\ProgramData\\JB-Personal\\` y reinicia el servicio, la licencia se activa automáticamente.")
 P("**Importante:** el código está ligado a **un equipo** (huella del identificador de la máquina). Si cambia de computadora, reinstala Windows o restaura en otro servidor, pida un código nuevo. "
   "Una licencia «multiequipo» (`*`) solo la emite el proveedor para casos especiales.")
-IMG("ui_licencia.png", 15, "Figura 2. Pantalla «Licencia» con el código de equipo y el recuadro de activación.")
+IMG("ui_licencia.png", 15, "Pantalla «Licencia» con el código de equipo y el recuadro de activación.")
 NOTE("La activación es una medida **disuasiva y de control comercial**: el código está firmado criptográficamente (Ed25519) y no puede falsificarse sin la clave privada del emisor, "
      "pero ninguna protección de un programa escrito en un lenguaje interpretado es infranqueable frente a un técnico con acceso total al equipo.", "Nota")
 
 # ================================================================= 5
 H("5. Primer ingreso y configuración inicial")
-IMG("ui_login.png", 9, "Figura 3. Pantalla de ingreso con el logotipo.")
+IMG("ui_login.png", 9, "Pantalla de ingreso con el logotipo.")
 N(["**Crear el administrador:** la primera vez la pantalla pide usuario, contraseña (mínimo 8 caracteres) y nombre. Esta cuenta tiene todos los permisos.",
    "**Configuración → Datos institucionales:** nombre del municipio, sigla, código SIGEP, ciudad, Máxima Autoridad Ejecutiva, responsable de RR.HH., quien aprueba el informe y número del Reglamento Interno. Si quedan vacíos, el informe `.docx` mostrará marcadores como «[Nombre Completo]».",
    "**Configuración → Horario:** verifique turnos (por defecto 08:00–12:00 y 14:30–18:30), tolerancia (10 min) y umbral de retraso grave (30 min).",
@@ -360,6 +399,7 @@ N(["**Crear el administrador:** la primera vez la pantalla pide usuario, contras
    "**Feriados:** revise los feriados nacionales precargados 2026–2030 y agregue los locales.",
    "**Usuarios:** cree una cuenta por persona. ADMIN: todo · RRHH: opera personal, asistencia, permisos y reportes · CONSULTA: solo lectura y descargas.",
    "**Personal → Descargar plantilla Excel**, complétela y use **Importar**. La carga informa las filas con error sin detener las demás.",
+   "**Memorándums → Membrete y plantillas:** prefijo del cite, firmante, líneas del membrete, lema, pie y escudo del municipio (capítulo 8).",
    "**Licencia:** active el sistema (capítulo 4)."])
 
 # ================================================================= 6
@@ -379,7 +419,7 @@ N(["Menú **Marcaciones**: elija el archivo del reloj. Con «Perfil: Automático
    "Pulse **Probar interpretación**: muestra cuántas marcas se leyeron, ejemplos y las filas rechazadas, **sin guardar nada**. Ajuste hasta que sea correcto.",
    "Escriba un **nombre** (ej. «Anviz oficina central») y pulse **Guardar perfil**. Desde entonces aparece en la lista «Perfil» y se usa con un clic.",
    "Pulse **Importar con esta configuración**."])
-IMG("ui_asistente.png", 15.5, "Figura 4. Asistente de estructura con un archivo de columnas desconocidas, estructura «varias horas por fila» y la prueba de interpretación.")
+IMG("ui_asistente.png", 15.5, "Asistente de estructura con un archivo de columnas desconocidas, estructura «varias horas por fila» y la prueba de interpretación.")
 T(["Campo del asistente", "Significado"], [
     ["ID / código del empleado", "Debe coincidir con el «Código (ID reloj)» del empleado en Personal. Los ceros a la izquierda se ignoran (0007 = 7)"],
     ["Fecha y hora (juntas)", "Una sola columna con ambos datos (p. ej. `2026-10-01 08:02:05` o `01/10/2026 8:02 a. m.`)"],
@@ -396,26 +436,125 @@ P("**Limitación:** los formatos Anviz, Dahua, Hikvision y Suprema se cubren por
 H("7. Operación mensual y reportes")
 N(["**Importar marcaciones** (capítulo 6). Revise «identificadores del reloj sin servidor asociado»: son códigos sin persona registrada; corrija el código en Personal.",
    "**Registrar permisos, licencias y vacaciones** (Permisos y boletas → Nueva solicitud). Se genera la boleta PDF con correlativo. Los permisos de consultores requieren «Autorizado por» (fiscal de servicio).",
-   "**Registrar altas y bajas** (Personal): las bajas piden fecha efectiva y causal (renuncia, conclusión de contrato, destitución…).",
+   "**Registrar multas y descuentos adicionales** del mes si los hay (capítulo 9).",
+   "**Registrar altas y bajas** (Personal) o emitir los **memorándums** de designación, aceptación de renuncia y agradecimiento (capítulo 8), que registran el cargo o la baja por usted.",
    "**Inicio / Planilla:** revise la liquidación individual y **Asistencia diaria** (colores por estado). El botón *Procesar periodo* recalcula a pedido.",
    "**Reportes:** descargue los 6 documentos. **Los reportes de un periodo abierto se recalculan automáticamente al descargarse**, de modo que siempre reflejan al personal, marcas y permisos más recientes. Para el informe oficial marque «Emitir con N° correlativo» (consume número).",
    "**Instructivos:** cree el instructivo (cite automático), emítalo y registre la notificación de cada destinatario.",
    "**Cerrar periodo** cuando las planillas estén aprobadas: bloquea importaciones, permisos y reproceso y **congela** los resultados. Reabrir exige rol ADMIN y un motivo, que queda en la bitácora.",
-   "**Respaldo** del mes (capítulo 8)."])
-IMG("ui_asistencia.png", 15.5, "Figura 5. Asistencia diaria: amarillo = retraso leve, naranja = grave, rojo = falta, azul = justificada, gris = no laborable.")
+   "**Respaldo** del mes (capítulo 11)."])
+IMG("ui_asistencia.png", 15.5, "Asistencia diaria: amarillo = retraso leve, naranja = grave, rojo = falta, azul = justificada, gris = no laborable.")
 T(["N°", "Reporte", "Formato", "Contenido"], [
     ["1", "Informe de asistencia", ".docx", "Informe técnico editable (membrete, antecedentes, marco normativo, resumen, atrasos, vacaciones, licencias, faltas, omisiones, conclusiones y firmas)"],
     ["2", "Planilla de nuevo personal", ".xlsx", "Altas del periodo: designación/contrato, partida, vigencia, días trabajados y líquido"],
     ["3", "Planilla de desvinculados", ".xlsx", "Bajas del periodo con causal y fecha efectiva"],
     ["4", "Planilla de sueldos y salarios", ".xlsx", "Por modalidad (Permanente, Eventual, Consultores) con subtotales, total general y hoja *Resumen*"],
     ["5", "Reporte detallado de asistencia", ".xlsx", "Resumen institucional, detalle diario, faltas y retrasos, leyenda de reglas"],
-    ["6", "Consolidado para auditoría (UAI/CGE)", ".txt/.csv UTF-8 y **.xlsx**", "Una fila por servidor: periodo, C.I., código, tipo de contrato, días laborables, asistidos, faltas, minutos de retraso, días justificados e importe de descuentos. El `.xlsx` es **plano: solo títulos de columna y datos** (sin membrete, celdas combinadas ni estilos); C.I. y código van como texto y las cifras como números"],
+    ["6", "Consolidado para auditoría (UAI/CGE)", ".txt/.csv UTF-8 (10 columnas) y **.xlsx** (42 columnas)", "El `.txt/.csv` trae lo esencial para el cruce (periodo, C.I., código, tipo de contrato, días laborables, asistidos, faltas, minutos de retraso, días justificados e importe de descuentos). El **`.xlsx` es plano pero completo: toda la información de las planillas salariales y de asistencia** (nombres, cargo, unidad, partida, N° de documento, fechas de ingreso y baja, haber, días trabajados, bono, ganado, aportes laboral y patronal, RC-IVA, asistencia, retrasos, días y montos de descuento por faltas/atrasos/permisos sin goce/exceso de consultor, multas, total de descuentos, líquido, sanción y observaciones). **Solo títulos y datos**: sin membrete, celdas combinadas, fórmulas ni estilos; textos como texto y cifras como números"],
 ], [0.9, 4.2, 2.8, 8.6], size=8.5)
-IMG("ui_reportes.png", 15.5, "Figura 6. Pantalla «Reportes y planillas» (el consolidado 6 ofrece .txt/.csv y .xlsx).")
+IMG("ui_reportes.png", 15.5, "Pantalla «Reportes y planillas» (el consolidado 6 ofrece .txt/.csv y .xlsx).")
 NOTE("Si una planilla sale sin empleados, el mensaje indica la causa: «No hay personal con contrato vigente en el mes». Verifique en Personal que la **fecha de ingreso** del contrato sea anterior o dentro del mes y que la baja no sea anterior al mes.", "Nota")
 
 # ================================================================= 8
-H("8. Respaldos y recuperación")
+# ================================================================= 8 MEMORÁNDUMS
+H("8. Memorándums y control de cites")
+P("El menú **Memorándums** permite redactar, emitir y controlar los memorándums de Recursos Humanos. Se basan en los tres modelos del municipio: "
+  "**Designación de Cargo**, **Aceptación de Renuncia** y **Agradecimiento de Funciones**. Cada memorándum sale en **PDF** (con el diseño del modelo: membrete con escudo, recuadro «MEMORÁNDUM», "
+  "CITE, remitente y destinatario, referencia, texto, firma y pie) y en **Word editable**.")
+T(["Tipo", "Cuándo se usa", "Efecto al emitir (opcional)"], [
+    ["Designación de cargo", "Se designa a una persona a un cargo público", "Actualiza el cargo del servidor y registra el N° del memorándum como «N° de documento» de su contrato (sale en la Planilla de Nuevo Personal)"],
+    ["Aceptación de renuncia", "El ejecutivo acepta la renuncia irrevocable de un servidor; la relación laboral se extingue en la fecha efectiva", "Registra la **baja** del contrato (fecha efectiva, causal «Renuncia») y el N° del memorándum como documento de respaldo (sale en la Planilla de Desvinculados y reduce los días pagados)"],
+    ["Agradecimiento de funciones", "Se agradece y concluye la designación de un servidor, con entrega de bienes, archivos e informes", "Registra la baja con la causal elegida (conclusión de funciones, destitución u otro)"],
+], [3.6, 6.2, 6.7], size=8.5)
+H("8.1 Crear, emitir y registrar la recepción", 2)
+N(["Menú **Memorándums → Nuevo memorándum**. Elija el **tipo** y el **servidor** (se completan nombre, C.I. y cargo) o escriba los datos de una persona aún no registrada.",
+   "Indique la **fecha del memorándum** y la **fecha efectiva**. En la aceptación de renuncia agregue la fecha de la renuncia y los plazos (entrega de documentación: 3 días hábiles; declaración jurada de bienes y rentas: 30 días calendario, 3 copias).",
+   "Pulse **Redactar desde plantilla**: el sistema llena la referencia y el texto con la redacción del modelo y los datos ingresados. Puede **editar el texto libremente** (marcas: `**negrita**`, `## título centrado`, `- viñeta`).",
+   "**Guardar borrador** (no consume número) y **Vista previa PDF** para revisarlo con la marca de agua «BORRADOR».",
+   "**Emitir (asignar CITE)**: asigna el número oficial, cierra el texto y aplica el efecto elegido sobre el contrato. Se abre el PDF final; también puede descargar el Word.",
+   "Cuando el interesado firma el cargo, use **Registrar recepción** (fecha y quién recibió): es lo único que se puede completar después de emitir y sale en el documento como «Recibido».",
+   "Si hay un error: **Anular** (motivo obligatorio). Un memorándum emitido **no se edita ni se elimina**; el número anulado **no se reutiliza** y, si el memorándum había registrado una baja, esta se revierte."])
+IMG("ui_memos_lista.png", 15.5, "Lista de memorándums con filtros por tipo, estado, gestión y búsqueda.")
+IMG("ui_memo_form.png", 15.5, "Formulario de un memorándum de aceptación de renuncia: datos, plazos, efecto sobre el contrato y texto redactado desde la plantilla.")
+NOTE("Si el texto aún tiene campos por completar (`[COMPLETAR: …]`), el sistema **no deja emitir**. Si el efecto «registrar la baja» no es posible (servidor sin contrato vigente o periodo CERRADO), "
+     "la emisión se rechaza **sin consumir el número** de cite.", "Control")
+IMG3([("memo_designacion.png", "Designación de cargo"), ("memo_renuncia.png", "Aceptación de renuncia"), ("memo_agradecimiento.png", "Agradecimiento de funciones")],
+     "PDF emitido de cada modelo (datos y escudo ficticios). Los textos estándar caben en una hoja Carta.")
+H("8.2 Control de cites", 2)
+P("Los memorándums usan **una sola serie de cites por gestión** para los tres tipos, con el formato `PREFIJO/N°077/2026` (el prefijo se define en «Membrete y plantillas»; p. ej. `GAM-RRHH/MAE/RRHH`). "
+  "Reglas de control:")
+B(["El número se asigna **al emitir** (de forma atómica): los borradores no consumen números y dos usuarios no pueden obtener el mismo.",
+   "Un memorándum **anulado conserva su número** y aparece como ANULADO en el registro; **nunca se reutiliza**.",
+   "Los números sin memorándum aparecen como **SALTADOS** (por ejemplo, si se continúa una numeración llevada en papel) y quedan a la vista de la auditoría.",
+   "Solo un **ADMIN** puede fijar el próximo número (para continuar una numeración previa); **nunca retrocede**, exige un motivo y queda en la bitácora.",
+   "La pestaña **Control de cites** muestra último número, siguiente, emitidos, anulados y saltados de la gestión; el **libro de registro** se descarga en Excel (cite, tipo, estado, fechas, destinatario, efecto aplicado, recepción, emitido por y motivo de anulación).",
+   "Al pie se listan **todas las series de cites del sistema** (memorándums, instructivos, boletas de permiso e informes de asistencia) con su último número."])
+IMG("ui_memos_cites.png", 15.5, "Control de cites: resumen de la gestión, continuación de numeración y registro con números emitidos y anulados.")
+H("8.3 Membrete, firma y plantillas", 2)
+P("En **Memorándums → Membrete y plantillas** (roles ADMIN/RRHH) se configura: prefijo del cite, decreto de la estructura organizacional, firmante y su cargo, líneas del membrete (ley de creación, sección y provincia), "
+  "lema, pie (dirección y contactos) y el **escudo/logotipo** del municipio (PNG o JPG). Las **plantillas** de los tres tipos se pueden editar y se restauran con un clic. "
+  "Variables disponibles: `{entidad}`, `{cargo}`, `{cargo_mayus}`, `{destinatario}`, `{fecha}`, `{fecha_efectiva}`, `{fecha_renuncia}`, `{gestion}`, `{decreto_estructura}`, `{mae_nombre}`, `{mae_cargo}`, `{plazo_entrega_texto}`, `{plazo_dj_dias}`, `{copias_dj_texto}`.")
+IMG("ui_memos_config.png", 15.5, "Membrete, firmante, logotipo y plantillas de los memorándums.")
+NOTE("La redacción de las plantillas (citas de la Ley N° 482, Ley N° 2027, Ley N° 1178, D.S. 23318-A y otras) se tomó de los modelos del municipio. **La Unidad Jurídica debe validarla** antes de usarla; para adaptarla a otro municipio edite las plantillas.", "Atención")
+
+# ================================================================= 9 MULTAS
+H("9. Multas y descuentos adicionales")
+P("Además de los descuentos automáticos por faltas, atrasos y permisos sin goce, el menú **Multas y descuentos** registra descuentos que dispone la autoridad (multa por extravío de un bien, descuento por préstamo institucional, etc.). "
+  "Cada registro lleva servidor, tipo (multa o descuento), concepto, monto y la referencia del memorándum o resolución que lo sustenta.")
+B(["Se aplica **al mes seleccionado** y la planilla se recalcula de inmediato.",
+   "Se suma a la columna **«Faltas, atrasos y otros»** de la Planilla de Sueldos (y de las de Nuevo Personal y Desvinculados), al **Total descuentos** y al líquido pagable.",
+   "Aparece en el **informe Word** (resumen económico), en el **reporte detallado** (columna «Multas y desc. adicionales») y en el **consolidado de auditoría** (columnas `MULTAS_Y_DESCUENTOS_ADICIONALES` e `IMPORTE_DESCUENTOS_APLICADOS`).",
+   "**No puede dejar el líquido en negativo:** si el monto excede lo disponible, se limita y se deja constancia en las observaciones.",
+   "Un registro se **anula** (no se borra) y queda en la bitácora. En un periodo **CERRADO** no se pueden registrar ni anular multas."])
+IMG("ui_multas.png", 15.5, "Registro de una multa de Bs 150 asociada a un memorándum de respaldo.")
+
+# ================================================================= 10 COHERENCIA
+H("10. Coherencia entre permisos, faltas, multas, planillas e informes")
+P("Todas las cifras salen de **una sola fuente de verdad**: la **liquidación mensual** que calcula el motor a partir de las marcas, los permisos y las multas. "
+  "Planillas, informes, reportes y pantallas leen esa misma liquidación y **se recalculan solos** cuando el periodo está abierto; un periodo cerrado queda congelado.")
+H("10.1 Efecto de cada situación", 2)
+T(["Situación", "Efecto en asistencia", "Efecto en el sueldo", "Dónde se ve"], [
+    ["Falta injustificada (día o medio día)", "Resta de días asistidos; cuenta en «Faltas»", "Descuento = haber ÷ 30 × días × factor (×2 planta/eventual, ×1 consultor)", "Planillas (Faltas, atrasos y otros), informe §7 y resumen económico, detallado, auditoría"],
+    ["Atrasos del mes", "Minutos y N° de retrasos; sanción de la escala", "Solo si el tramo de la escala descuenta (p. ej. 61–90 min = 0,5 día)", "Informe §4, detallado (Sanción RIP), auditoría"],
+    ["Permiso o licencia **con goce** (día completo)", "Falta justificada: resta asistidos, suma «justificados»", "Ninguno", "Informe §5–6, detallado, auditoría (días justificados)"],
+    ["Permiso **sin goce** (día completo)", "Falta justificada", "Descuento de 1 día de haber por día", "Planillas, informe (permisos sin goce), detallado"],
+    ["Permiso **por horas** con goce", "Se registra la fracción de día; no resta asistencia", "Ninguno; cubre atrasos e ingresos tardíos autorizados", "Informe (fila «Permisos por horas»), detallado (hoja «Faltas y retrasos»)"],
+    ["Permiso **por horas** sin goce", "Se registra la fracción de día", "Descuenta las horas cubiertas (horas ÷ jornada de 8 h = días de haber)", "Planillas, informe, detallado, auditoría"],
+    ["Consultor en línea", "Justificados + horas de permiso ≤ 1 día/mes (libres)", "El exceso se descuenta a haber ÷ 30 por día", "Observaciones de la liquidación, informe §8"],
+    ["Multa o descuento adicional", "Ninguno", "Se descuenta el monto (sin dejar líquido negativo)", "Planillas, informe, detallado, auditoría"],
+    ["Alta o baja en el mes", "Solo cuentan los días hábiles del contrato", "Días comerciales trabajados (haber ÷ 30 × días)", "Planillas de Nuevo Personal / Desvinculados y de sueldos"],
+], [3.6, 3.9, 4.6, 4.4], size=8)
+P("**Fórmulas:** Total ganado = haber ÷ 30 × días trabajados (+ bono). Aporte laboral = 12,71 % del total ganado. "
+  "Líquido = total ganado − aporte laboral − RC-IVA − descuentos por asistencia − multas.")
+H("10.2 Verificación automática de la coherencia", 2)
+P("La suite de pruebas incluye un **mes completo de verificación** (junio de 2019: 5 servidores con faltas, atrasos, licencias, permisos con y sin goce por horas, consultor, alta, baja y multa) cuyos valores se **calcularon a mano** y luego se "
+  "contrastan contra **todas** las salidas:")
+T(["Servidor del caso", "Situación", "Líquido esperado (Bs)"], [
+    ["A · Permanente 6.000", "1 falta, 52 min de atraso (amonestación), 2 h de permiso sin goce, multa 150", "4.637,40"],
+    ["B · Eventual 3.000", "Media falta, 1 día de permiso sin goce, 2 días de licencia médica con goce", "2.418,70"],
+    ["C · Consultora 7.000", "1 falta, 2 días justificados y 2 h de permiso (2,25 > 1 libre)", "6.475,00"],
+    ["D · Permanente 4.500, alta 17/06", "14 días comerciales, 1 falta", "1.533,09"],
+    ["E · Permanente 5.000, baja 14/06", "14 días comerciales, un atraso de 15 min", "2.036,76"],
+], [4.5, 8.5, 3.5], size=8.5)
+B(["**Liquidación = detalle diario:** las faltas, minutos y días justificados del detalle diario suman exactamente lo de la liquidación.",
+   "**Identidades contables:** líquido = ganado − aportes − RC-IVA − descuentos − multas; desglose de descuentos = total.",
+   "**Planilla de sueldos, nuevo personal y desvinculados:** cada fila (haber, días, ganado, aportes, días y monto de descuento, total y líquido) coincide con la liquidación; los subtotales y la hoja *Resumen* también.",
+   "**Reporte detallado:** resumen institucional, detalle diario y permisos por horas coinciden.",
+   "**Consolidado de auditoría (.txt y .xlsx):** mismas cifras que la liquidación y que la planilla.",
+   "**Informe Word:** indicadores (días-hombre, faltas, minutos, permisos por horas), resumen económico y tablas de atrasos y faltas con sus importes coinciden.",
+   "**Una sola verdad:** el líquido total es el mismo en la planilla, la auditoría y el informe.",
+   "**Periodo cerrado:** congela las cifras y bloquea multas."])
+H("10.3 Qué se corrigió en esta versión", 2)
+T(["Hallazgo", "Corrección"], [
+    ["Un permiso **sin goce por horas** no descontaba nada", "Ahora descuenta las horas cubiertas (p. ej. 2 h = 0,25 día) en todas las planillas e informes"],
+    ["No existía forma de aplicar **multas** en planilla", "Módulo de multas y descuentos adicionales (capítulo 9)"],
+    ["El informe Word no mostraba el **efecto en sueldos**", "Resumen económico del mes, importes en las tablas de atrasos y faltas y fila de permisos por horas"],
+    ["El reporte detallado no traía **importes**", "Columnas de ganado, descuentos por tipo, multas, aportes y líquido; permisos por horas en «Faltas y retrasos»"],
+    ["Pantallas de liquidación y asistencia podían mostrar datos **desactualizados**", "Se recalculan solas en periodos abiertos"],
+    ["Error latente al asignar un correlativo con cambios pendientes en la sesión (detectado por las pruebas de memorándums)", "Corregido: ya no se pierden cambios (por ejemplo, la baja registrada)"],
+], [7.5, 9], size=8.5)
+
+H("11. Respaldos y recuperación")
 P("El respaldo es un script SQL **cifrado con AES-256-GCM** (clave derivada de su contraseña). Junto a cada archivo `...sql.enc` se escribe `...sql.enc.sha256`. "
   "En el instalador de Windows los respaldos van por defecto a `C:\\ProgramData\\JB-Personal\\backups`.")
 NOTE("Anote la contraseña de cifrado en un sobre sellado y guárdelo en un lugar seguro. **Sin ella el respaldo no se puede abrir.** Aplique la regla 3-2-1: 3 copias, 2 medios distintos, 1 fuera de la oficina.", "Importante")
@@ -430,16 +569,17 @@ P("**Prueba de recuperación:** al menos una vez por trimestre restaure un respa
   "El respaldo incluye el estado de la licencia, por lo que restaurarlo en **otro** equipo requerirá un código de activación nuevo.")
 
 # ================================================================= 9
-H("9. Guía de pruebas con casos reales")
-H("9.1 Pruebas automáticas", 2)
+H("12. Guía de pruebas con casos reales")
+H("12.1 Pruebas automáticas", 2)
 CODE("""cd jb-personal/backend
 pip install -r requirements-dev.txt
 python -m pytest tests -q                       # SQLite  -> %d passed
 # PostgreSQL (base VACÍA):
 GAM_DATABASE_URL=postgresql+psycopg://usuario@host/base_vacia python -m pytest tests -q""" % NTEST)
-P(f"Son {NTEST} pruebas: motor de reglas, lector de marcaciones, **estructuras de distintas marcas de reloj**, flujo completo (importación, permisos, procesamiento, 6 reportes, cierre de periodo, bitácora inalterable, "
-  "respaldo y restauración, roles, inyección de fórmulas), **regresión de planillas con todos los empleados**, **licencia (códigos válidos, de otro equipo, vencidos, alterados; prueba y modo solo lectura)** y el **JB-Activador**.")
-H("9.2 Dataset de prueba", 2)
+P(f"Son {NTEST} pruebas: motor de reglas (incluye **permisos por horas**), lector de marcaciones, **estructuras de distintas marcas de reloj**, flujo completo (importación, permisos, procesamiento, reportes, cierre de periodo, bitácora inalterable, "
+  "respaldo y restauración, roles, inyección de fórmulas), **regresión de planillas con todos los empleados**, **licencia y modo solo lectura**, **JB-Activador**, **lanzador de Windows**, "
+  "**migración de una base de la versión anterior**, **memorándums y control de cites** (cite único, efecto en el contrato, anulación, números saltados, periodo cerrado, PDF/Word) y la **suite de coherencia** entre planillas, informes y auditoría (capítulo 10).")
+H("12.2 Dataset de prueba", 2)
 P("Datos **ficticios** de **octubre de 2026** (22 días hábiles, sin feriados nacionales). Carpeta `datos_prueba/` (instalada en `C:\\Program Files\\JB-Personal\\datos_prueba`):")
 T(["Archivo", "Contenido"], [
     ["personal.csv", "5 servidores: 2 permanentes, 2 eventuales, 1 consultor en línea"],
@@ -454,13 +594,13 @@ T(["Servidor", "Modalidad / haber", "Incidencias sembradas"], [
     ["2002 Flores Apaza Carla Andrea", "Eventual 3.500 (alta 01/10)", "09/10 permiso sin goce · 14/10 14:52 (22 min) · 22/10 sin marca de entrada de la tarde"],
     ["3001 Salazar Copa Miguel Ángel", "Consultor 7.000 (concluye 30/10)", "08/10 y 19/10 dos días justificados con fiscal · 13/10 08:50 (50 min, grave) · 27/10 permiso PENDIENTE (no justifica)"],
 ], [4.6, 3.6, 8.3], size=8.5)
-H("9.3 Procedimiento", 2)
+H("12.3 Procedimiento", 2)
 N(["Cree el administrador y complete **Configuración** (nombre, sigla, ciudad, responsables).",
    "**Personal → Importar** `personal.csv` → *Creados: 5 · Errores: 0*.",
    "**Marcaciones → Importar** `biometrico_octubre_2026.dat` → *leídas 408, nuevas 408, duplicadas 0, rechazadas 0*. Luego importe el `.csv`: *nuevas 0, duplicadas 408*. Reimportar el mismo archivo debe rechazarse.",
    "**Permisos → Nueva solicitud**: registre las 6 filas de `permisos_octubre_2026.csv`. Compruebe la boleta PDF y que aprobar el permiso del consultor **sin** «Autorizado por» se rechaza.",
-   "**Reportes** (mes *Octubre 2026*): descargue los 6 (se recalculan solos) y compare con 9.4. Alternativa por script: `python datos_prueba/cargar_dataset.py --url http://127.0.0.1:8765 --clave 'SuClave#2026' --salida reportes_prueba`."])
-H("9.4 Resultados esperados (calculados a mano)", 2)
+   "**Reportes** (mes *Octubre 2026*): descargue los reportes (se recalculan solos) y compare con 12.4. Alternativa por script: `python datos_prueba/cargar_dataset.py --url http://127.0.0.1:8765 --clave 'SuClave#2026' --salida reportes_prueba`."])
+H("12.4 Resultados esperados (calculados a mano)", 2)
 P("Descuento = `haber ÷ 30 × días de descuento`. Falta injustificada de planta/eventual = ×2; consultor = ×1. Aporte laboral = 12,71 % del total ganado.")
 T(["Servidor", "Faltas", "Min. retraso", "Días desc.", "Total ganado", "AFP", "Desc. asist.", "Líquido"], [
     ["1001 Mamani", "0", "30", "0", "6.000,00", "762,60", "0,00", "**5.237,40**"],
@@ -472,15 +612,29 @@ T(["Servidor", "Faltas", "Min. retraso", "Días desc.", "Total ganado", "AFP", "
 ], [3.1, 1.3, 1.7, 2.8, 2.2, 1.7, 1.9, 2.2], size=8)
 P("Control de cruce: 24.800,00 − 2.262,38 − 1.085,00 = 21.452,62. Sanciones por retrasos: Vargas → descuento de 0,5 día (70 min); Salazar → amonestación escrita (50 min); Mamani (30 min) y Flores (22 min) → sin sanción.")
 T(["N°", "Reporte", "Resultado esperado"], [
-    ["1", "Informe (.docx)", "Periodo «Del 01 al 31 de octubre de 2026 (22 días hábiles)». Resumen: 5 servidores / 110 días-hombre; asistencia regular 94 días (85,45 %); con atrasos 4 (172 min); licencias con goce 2 servidores / 3 días; permisos 2 / 2 días; faltas 3 / 2,5 días. Atrasos (Vargas, Salazar, Mamani, Flores), faltas (Vargas, Choque, Salazar), omisiones (Mamani 14/10, Flores 22/10). Sin abandono de funciones"],
+    ["1", "Informe (.docx)", "Periodo «Del 01 al 31 de octubre de 2026 (22 días hábiles)». Resumen: 5 servidores / 110 días-hombre; asistencia regular 94 días (85,45 %); con atrasos 4 (172 min); licencias con goce 2 servidores / 3 días; permisos 2 / 2 días; **permisos por horas 1 servidor / 2 horas (0,23 %)**; faltas 3 / 2,5 días. **Resumen económico:** total ganado 24.800,00; AFP 2.262,38; descuento por faltas 660,00; por atrasos 75,00; por permisos sin goce y exceso de consultores 350,00; multas 0,00; **total descuentos 3.347,38; líquido 21.452,62**. Atrasos (Vargas, Salazar, Mamani, Flores) y faltas (Vargas, Choque, Salazar) con su importe en Bs, omisiones (Mamani 14/10, Flores 22/10). Sin abandono de funciones"],
     ["2", "Nuevo personal", "1 fila: Flores Apaza Carla Andrea, ingreso 01/10/2026, Eventual, partida 12100, vigencia 31/12/2026, líquido 2.938,48"],
     ["3", "Desvinculados", "1 fila: Salazar Copa Miguel Ángel, baja 30/10/2026, «Conclusión de contrato», líquido 6.533,34"],
     ["4", "Sueldos y salarios", "Permanentes (2; ganado 10.500,00; líquido 8.790,45), Eventuales (2; 7.300,00; 6.128,83), Consultores (1; 7.000,00; 6.533,34). **Total general 24.800,00 / 21.452,62**. Deben verse los 5 empleados con nombre, C.I. y cargo"],
-    ["5", "Detallado (.xlsx)", "Resumen institucional (5 filas), detalle diario de 154 filas, 16 imputaciones (4 retrasos leves, 2 graves, 3 faltas injustificadas, 5 justificadas, 2 omisiones), leyenda"],
+    ["5", "Detallado (.xlsx)", "Resumen institucional (5 filas, con ganado, descuentos por tipo, multas, aportes y líquido por servidor y fila de totales), detalle diario de 154 filas, 17 imputaciones (4 retrasos leves, 2 graves, 3 faltas injustificadas, 5 justificadas, 2 omisiones y 1 permiso por horas), leyenda"],
     ["6a", "Consolidado .txt", "5 filas separadas por tabulador, p. ej. `2026-10 1000002 1002 PERMANENTE 22 21.00 1.00 70 0.00 375.00`"],
-    ["6b", "Consolidado .xlsx", "Hoja «Consolidado»: fila 1 con los 10 títulos y 5 filas de datos, **sin** membrete, combinadas ni formato; los mismos valores que el `.txt`"],
+    ["6b", "Consolidado .xlsx", "Hoja «Consolidado»: fila 1 con **42 títulos** (PERIODO, CI, CODIGO_EMPLEADO, NOMBRES, APELLIDOS, CARGO, UNIDAD, TIPO_CONTRATO, PARTIDA, … HABER_BASICO, TOTAL_GANADO, APORTE_LABORAL, … MULTAS_Y_DESCUENTOS_ADICIONALES, TOTAL_DESCUENTOS, LIQUIDO_PAGABLE, SANCION_RIP, OBSERVACIONES) y 5 filas de datos, **sin** membrete, combinadas, fórmulas ni formato; las cifras coinciden con el `.txt` y con la planilla (p. ej. Vargas: TOTAL_GANADO 4500, DESC_FALTAS 300, DESC_ATRASOS 75, LIQUIDO_PAGABLE 3553,05)"],
 ], [0.9, 3.2, 12.4], size=8.5)
-H("9.5 Pruebas de estructuras de reloj", 2)
+H("12.4b Pruebas de memorándums, cites y multas", 2)
+T(["Acción", "Resultado esperado"], [
+    ["Redactar desde plantilla una designación, una aceptación de renuncia y un agradecimiento", "Texto con cargo en mayúsculas, fechas en palabras («9 de junio de 2026»), decreto, plazos «tres (3) días hábiles» y «30 días calendario»; ningún `{variable}` sin resolver"],
+    ["Emitir dos memorándums de distinto tipo (el segundo creado emitido primero)", "Cites `PREFIJO/N°001/2026` y `…/N°002/2026`: el número se asigna **al emitir**, en una sola serie"],
+    ["Editar o eliminar un memorándum emitido", "Error 409 (inalterable)"],
+    ["Emitir con texto que conserva `[COMPLETAR: …]`", "Error: campos por completar; no consume número"],
+    ["Emitir una aceptación de renuncia con «registrar la baja»", "Contrato con fecha de baja y causal «Renuncia»; el N° del memorándum queda como documento; aparece en la Planilla de Desvinculados con los días y el importe proporcionales"],
+    ["Anular el memorándum (motivo ≥ 10 caracteres)", "Estado ANULADO, la baja se revierte y el siguiente cite es el número +1 (no se reutiliza)"],
+    ["Fijar el próximo número hacia adelante / hacia atrás", "Adelante: los números omitidos figuran como SALTADOS; atrás: error; usuario no ADMIN: 403"],
+    ["Emitir con baja en un periodo CERRADO", "Error y **no se consume el número**"],
+    ["Registrar recepción; descargar PDF y Word", "El documento muestra «Recibido: fecha»; el borrador lleva la marca de agua BORRADOR"],
+    ["Registrar una multa de Bs 150", "Líquido −150 en la planilla y reflejado en informe, detallado y auditoría; anularla restituye el valor"],
+    ["Registrar una multa mayor al disponible", "Se limita; el líquido no es negativo y queda la observación"],
+], [7.5, 9], size=8.5)
+H("12.5 Pruebas de estructuras de reloj", 2)
 T(["Archivo de prueba", "Esperado"], [
     ["`datos_prueba/biometrico_octubre_2026.dat` (ZKTeco ATTLOG)", "Autodetectado: 408 marcas"],
     ["`.csv` con cabeceras `Employee ID, Name, Authentication Date and Time` o `Person ID, Name, Time` o `No; Nombre; Fecha/Hora`", "Autodetectado (el ID `007` se lee como 7)"],
@@ -488,9 +642,10 @@ T(["Archivo de prueba", "Esperado"], [
     ["Excel con títulos, una hoja «Resumen» y la hoja «Marcaciones» con cabecera en la fila 3", "Detecta la hoja y la fila de cabecera"],
     ["Fila con fecha inválida (`no-es-fecha`)", "Se rechaza solo esa fila; las demás se importan"],
 ], [8.2, 8.3], size=8.5)
-H("9.6 Pruebas negativas y de control", 2)
+H("12.6 Pruebas negativas y de control", 2)
 T(["Acción", "Resultado esperado"], [
     ["Aprobar permiso de consultor sin «Autorizado por»", "Error: debe ser autorizado por el fiscal de servicio"],
+    ["Permiso sin goce por horas (2 h) con asistencia", "Descuento de 0,25 día de haber en las planillas e informes"],
     ["Reimportar el mismo archivo biométrico", "Error: «ya fue importado (lote N)»"],
     ["Generar un reporte de un mes sin personal con contrato", "Error claro: «No hay personal con contrato vigente…»"],
     ["Cargar personal **después** de procesar y descargar la planilla", "La planilla incluye a todos (se recalcula)"],
@@ -502,7 +657,7 @@ T(["Acción", "Resultado esperado"], [
     ["Usuario CONSULTA intenta procesar, respaldar o activar", "Acceso denegado (403)"],
     ["Importar personal con nombre «=HYPERLINK(...)» o C.I. con símbolos", "El nombre sale como texto en los Excel; el C.I. con símbolos se rechaza"],
 ], [7.5, 9])
-H("9.7 Lista de aceptación (instalación en PC nueva)", 2)
+H("12.7 Lista de aceptación (instalación en PC nueva)", 2)
 T(["☐", "Verificación", "Resultado"], [
     ["☐", "El instalador se ejecuta con permisos de administrador y termina sin errores", ""],
     ["☐", "Existe la tarea «JB-Personal» (`schtasks /Query /TN \"JB-Personal\"`) y `http://127.0.0.1:8765/` carga con el logotipo y la paleta cálida", ""],
@@ -514,6 +669,9 @@ T(["☐", "Verificación", "Resultado"], [
     ["☐", "Importar el archivo de estructura desconocida con el asistente y guardar el perfil", ""],
     ["☐", "Totales de octubre 2026: 24.800,00 / 2.262,38 / 1.085,00 / 21.452,62", ""],
     ["☐", "Los 7 archivos de reportes (incluido el consolidado .xlsx) se descargan y abren; las planillas muestran a los 5 empleados", ""],
+    ["☐", "Memorándums: se redacta, emite (con cite correlativo), descarga en PDF y Word, se registra recepción y se anula uno", ""],
+    ["☐", "Control de cites: el libro de registro (.xlsx) muestra emitidos y anulados sin repetir números", ""],
+    ["☐", "Una multa de prueba se refleja en la planilla y en el informe, y se anula", ""],
     ["☐", "Se crea un respaldo, se verifica su integridad y se restaura en la PC de prueba", ""],
     ["☐", "Reinstalar sobre la versión existente conserva los datos y la licencia", ""],
     ["☐", "Desinstalar elimina programa, servicio y regla de firewall, y conserva `C:\\ProgramData\\JB-Personal`", ""],
@@ -521,7 +679,7 @@ T(["☐", "Verificación", "Resultado"], [
 P("Antes de usar datos reales, **borre los datos de prueba**: desinstale, elimine `C:\\ProgramData\\JB-Personal` y vuelva a instalar (la licencia deberá activarse otra vez), o use otra PC para las pruebas.")
 
 # ================================================================= 10
-H("10. Seguridad")
+H("13. Seguridad")
 B(["Un usuario por persona; no comparta la cuenta `admin`. Use el rol CONSULTA para auditoría interna.",
    "Contraseñas almacenadas con scrypt; sesión de 10 horas; bloqueo de 5 minutos tras 5 intentos fallidos.",
    "El servicio escucha por defecto **solo en la propia PC** (`127.0.0.1`). Habilite el acceso de red únicamente si lo necesita; el tráfico no está cifrado (HTTP): use una red interna confiable, VPN o un proxy con HTTPS.",
@@ -532,7 +690,7 @@ B(["Un usuario por persona; no comparta la cuenta `admin`. Use el rol CONSULTA p
    "**JB-Activador:** la clave privada permite emitir licencias; guárdela cifrada y con copia fuera de línea. Nunca la suba a un repositorio ni la entregue a las entidades."])
 
 # ================================================================= 11
-H("11. Solución de problemas")
+H("14. Solución de problemas")
 T(["Síntoma", "Causa probable y solución"], [
     ["El navegador dice «127.0.0.1 rechazó la conexión» (ERR_CONNECTION_REFUSED)", "El servicio no está en ejecución. Ejecute **menú Inicio → JB-Personal → Diagnostico (si no abre)**: muestra el estado de la tarea, los últimos fallos (`logs\\fallos.log`) y arranca el sistema en esa ventana para ver el error. Versiones anteriores a 1.1.1 fallaban si `config.ini` traía una marca BOM: actualice con el instalador nuevo"],
     ["El navegador no abre `http://127.0.0.1:8765/` (otros casos)", "Inicie el servicio: menú Inicio → JB-Personal → Administrar el servicio → 1. Revise `C:\\ProgramData\\JB-Personal\\logs\\servicio.log`. Si el puerto 8765 está ocupado, cambie `port` en `config.ini`"],
@@ -548,12 +706,16 @@ T(["Síntoma", "Causa probable y solución"], [
     ["Una planilla sale sin empleados", "Lea el mensaje: no hay contratos vigentes en el mes. Corrija las fechas de ingreso/baja en Personal y descargue de nuevo"],
     ["El informe .docx muestra «[Nombre Completo]»", "Complete Configuración → Datos institucionales y vuelva a descargar"],
     ["«Periodo CERRADO»", "Un ADMIN debe reabrirlo indicando el motivo"],
+    ["El memorándum no deja emitir: «campos por completar»", "Reemplace en el texto cada `[COMPLETAR: …]` (por ejemplo el decreto de la estructura: configúrelo en «Membrete y plantillas»)"],
+    ["La emisión del memorándum rechaza registrar la baja", "El servidor no tiene contrato vigente a la fecha efectiva, o el periodo de esa fecha está CERRADO (el número de cite no se consumió)"],
+    ["Me equivoqué en un memorándum ya emitido", "Anúlelo (motivo obligatorio) y emita uno nuevo; el número anulado no se reutiliza y la baja que había registrado se revierte"],
+    ["Hay un número de cite «SALTADO»", "Es un número sin memorándum (por ejemplo, tras continuar una numeración en papel). Queda registrado para la auditoría; no se puede reutilizar"],
     ["Restauración falla: «Falla de integridad SHA-256»", "El archivo cambió o el hash corresponde a otro respaldo; use el `.sha256` original"],
     ["Olvidó la contraseña de un respaldo", "No hay forma de recuperarlo (cifrado AES-256). Por eso se guarda en sobre sellado"],
 ], [5.5, 11])
 
 # ================================================================= 12
-H("12. Supuestos legales y limitaciones conocidas")
+H("15. Supuestos legales y limitaciones conocidas")
 NOTE("Los valores siguientes se tomaron de los documentos de ejemplo del municipio y de la especificación del sistema; **no se verificaron contra la normativa vigente**. "
      "La Unidad Jurídica debe validarlos antes de aplicarlos a planillas reales. Todos son editables en Configuración.", "Atención")
 T(["Tema", "Valor usado", "Origen"], [
@@ -567,7 +729,9 @@ T(["Tema", "Valor usado", "Origen"], [
     ["Feriados 2026–2030", "Calculados automáticamente", "Verificar cada año los decretos (p. ej. Carnaval)"],
 ], [5, 6, 5.5], size=8.5)
 P("**Limitaciones:**")
-B(["El instalador de Windows (servicio) y el JB-Activador instalable **no pudieron ejecutarse en Windows durante el desarrollo**: pruébelos en una PC piloto (lista 9.7).",
+B(["Los textos legales de las plantillas de memorándum provienen de los modelos del municipio y **no se validaron contra la normativa vigente**: la Unidad Jurídica debe revisarlos.",
+   "El memorándum de **designación** no crea al servidor ni su contrato: registre primero al servidor en Personal (o impórtelo) y luego vincúlelo.",
+   "El instalador de Windows (servicio) y el JB-Activador instalable **no pudieron ejecutarse en Windows durante el desarrollo**: pruébelos en una PC piloto (lista 12.7).",
    "El servicio usa una tarea programada de arranque (SYSTEM), no un servicio SCM nativo: no aparece en `services.msc` sino en el Programador de tareas, aunque se comporta igual (arranque sin sesión y reinicio automático).",
    "El acceso desde la red local es HTTP sin cifrar; para redes no confiables use VPN o un proxy con HTTPS.",
    "Los formatos Anviz/Dahua/Hikvision/Suprema se cubren por nombres de columna habituales y por el asistente de mapeo; no se probaron con exportaciones reales.",
@@ -595,7 +759,7 @@ N(["Abra **JB-Activador**: se abre una página local en su navegador (`http://12
    "Elija la **vigencia**: sin vencimiento (perpetua), por cantidad de días o hasta una fecha.",
    "Pulse **Emitir código de activación**. Copie el código (`JBP1.…`) o use **Descargar licencia.jbp**, y envíelo al cliente por correo o mensajería.",
    "El historial muestra las licencias emitidas (fecha, entidad, equipo, vencimiento y una huella del código; el código completo no se guarda). Pulse **Cerrar el activador** al terminar."])
-IMG("ui_licencia.png", 14, "Figura A1. Del lado del cliente: la pantalla Licencia donde se pega el código emitido.")
+IMG("ui_licencia.png", 14, "Del lado del cliente: la pantalla Licencia donde se pega el código emitido.")
 H("A.4 Línea de comandos", 2)
 CODE("""python jb_activador.py --emitir --entidad "GAM Villa Ejemplo" --equipo JBP-AAAAA-BBBBB-CCCCC --dias 365
 python jb_activador.py --emitir --entidad "GAM Villa Ejemplo" --equipo JBP-AAAAA-BBBBB-CCCCC          # sin vencimiento

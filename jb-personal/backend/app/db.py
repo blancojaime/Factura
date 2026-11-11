@@ -1,7 +1,7 @@
 """Motor de base de datos, sesión y triggers de inalterabilidad de la bitácora."""
 from __future__ import annotations
 
-from sqlalchemy import create_engine, event, text
+from sqlalchemy import create_engine, event, inspect, text
 from sqlalchemy.orm import sessionmaker
 
 from . import config
@@ -44,8 +44,31 @@ def triggers_for(dialect: str) -> list[str]:
     return TRIGGERS_PG if dialect == "postgresql" else TRIGGERS_SQLITE
 
 
+def migrar_columnas(con) -> list[str]:
+    """Agrega a las tablas EXISTENTES las columnas nuevas del modelo (actualización de versiones sin perder datos)."""
+    insp, hechas = inspect(con), []
+    for t in Base.metadata.sorted_tables:
+        if not insp.has_table(t.name):
+            continue
+        existentes = {c["name"] for c in insp.get_columns(t.name)}
+        for c in t.columns:
+            if c.name in existentes:
+                continue
+            tipo = c.type.compile(dialect=con.dialect)
+            dflt = ""
+            if c.server_default is not None:
+                dflt = f" DEFAULT {c.server_default.arg.text if hasattr(c.server_default.arg, 'text') else c.server_default.arg}"
+            elif not c.nullable:
+                dflt = " DEFAULT ''" if "CHAR" in tipo.upper() or "TEXT" in tipo.upper() else " DEFAULT 0"
+            con.execute(text(f"ALTER TABLE {t.name} ADD COLUMN {c.name} {tipo}{dflt}"))
+            hechas.append(f"{t.name}.{c.name}")
+    return hechas
+
+
 def init_db() -> None:
     Base.metadata.create_all(engine)
+    with engine.begin() as con:
+        migrar_columnas(con)
     with engine.begin() as con:
         for stmt in triggers_for(engine.dialect.name):
             con.execute(text(stmt))
