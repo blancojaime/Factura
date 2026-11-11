@@ -19,7 +19,7 @@ for i in $(seq 1 60); do xdotool search --name "COMEX JB" >/dev/null 2>&1 && bre
 
 # Navegación lateral y pestañas (coordenadas de pantalla)
 NAV_PANEL="180 287"; NAV_OPS="180 327"; NAV_ARA="180 367"; NAV_CFG="180 408"; NAV_ACE="180 448"
-T_MER="700 212"; T_LIQ="808 212"; T_DEC="910 212"; T_CON="1030 212"; T_COS="1170 212"; T_RUT="1290 212"; T_LEG="1420 212"
+T_MER="700 212"; T_VAL="806 212"; T_LIQ="913 212"; T_DES="1019 212"; T_DEC="1115 212"; T_CON="1210 212"; T_COS="1300 212"; T_RUT="1373 212"; T_LEG="1445 212"
 C_TC="430 167"; C_UFV="533 167"; C_PAR="655 167"; C_PER="831 167"; C_USU="962 167"; C_DAT="1081 167"
 
 # ---- Inicio de sesión (primer uso: crea al administrador) ----
@@ -40,7 +40,7 @@ field 495 168 "IMP-2026-001"; shot 08-nueva-importacion
 click 495 259; sleep 3; click 1330 311; xdotool type --delay 60 "tablet"; sleep 3; shot 09-selector-partida
 xdotool key ctrl+a; xdotool type --delay 60 "84713000"; sleep 3; shot 10-selector-por-codigo
 click 1300 355; sleep 2
-field 1170 475 "40000"; field 1330 475 "500"; field 1175 657 "1800"; field 1315 657 "150"; shot 11-formulario-item
+field 1170 475 "40000"; field 1270 475 "200"; field 1390 475 "500"; field 1175 657 "1800"; field 1315 657 "150"; shot 11-formulario-item
 click 1162 704; sleep 3; click 740 330; sleep 1; shot 12-item-agregado
 click 1385 676; sleep 3; click $T_LIQ; sleep 2; shot 13-liquidacion
 click $T_MER; sleep 1; click 740 330; click 700 680; sleep 2; shot 14-editar-item
@@ -48,7 +48,28 @@ click 1162 704; sleep 3; shot 15-item-editado
 click 740 330; click 840 680; sleep 2; shot 16-confirmar-eliminar-item
 xdotool key y; sleep 2; shot 17-item-eliminado
 # ---- Decisión, contraste, costos, ruta, legajo ----
-click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3; click 1170 475; xdotool key ctrl+a; xdotool type "40000"; click 1330 475; xdotool key ctrl+a; xdotool type "500"; click 1162 704; sleep 3; click 1385 676; sleep 3
+click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3; click 1170 475; xdotool key ctrl+a; xdotool type "40000"; click 1270 475; xdotool key ctrl+a; xdotool type "200"; click 1390 475; xdotool key ctrl+a; xdotool type "500"; click 1162 704; sleep 3; click 1385 676; sleep 3
+# ---- Valoración aduanera (DAV) ----
+click $T_VAL; sleep 1.5; click 668 331; sleep 1; shot 36-valoracion-cuestionario
+# operación anterior de la misma partida, para el historial de precios
+click $NAV_OPS; sleep 2; field 495 168 "IMP-2025-099"; click 495 259; sleep 3
+click $T_MER; sleep 1.5
+click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3; click 1170 475; xdotool key ctrl+a; xdotool type "30000"; click 1270 475; xdotool key ctrl+a; xdotool type "200"; click 1390 475; xdotool key ctrl+a; xdotool type "500"; click 1162 704; sleep 3
+click 495 439; sleep 3; click $T_VAL; sleep 1.5; click 668 331; click 1566 700; sleep 1
+field 877 346 "500"; field 877 398 "1000"; click 1327 418; xdotool type --delay 30 "Royalty por licencia + diseno del fabricante"; click 746 572; sleep 2; shot 37-valoracion-ajustes
+click 730 706; sleep 3; click 1566 700; sleep 1; shot 38-valoracion-precios
+click 1566 300; sleep 1; shot 39-valoracion-resultado
+click $T_MER; sleep 1.5; click 1385 676; sleep 3
+click $T_LIQ; sleep 2; shot 40-liquidacion-valor
+click 1566 700; sleep 1; shot 41-liquidacion-items-costeo
+field 755 604 "3000"; field 1150 604 "2000"; field 1497 604 "5"; click 732 649; sleep 3; shot 42-liquidacion-gastos
+# ---- Despacho aduanero (DIM) ----
+click $T_DES; sleep 2; click 705 515; sleep 1; click 823 515; sleep 2; shot 43-despacho-validacion-errores
+field 730 364 "Tambo Quemado"; field 880 364 "La Paz"; field 1030 364 "ADA-0123"
+click 730 416; xdotool type --delay 90 "Carre"; xdotool key Return; sleep 0.5
+field 880 416 "CRT-77123"; field 1030 416 "MIC-9981"; field 712 470 "40"; field 825 470 "505"; field 935 470 "DAV-2026-55"
+click 823 515; sleep 3; shot 44-despacho-datos-validados
+click 1230 347; xdotool type --delay 90 "Roj"; xdotool key Return; sleep 0.5; click 1260 470; sleep 3; shot 45-despacho-canal-rojo
 click $T_DEC; sleep 1.5
 field 706 311 "200"; field 824 311 "4500"; field 976 311 "2800"
 click 743 347; click 743 347; click 743 347; sleep 1; shot 18-decision-escenarios

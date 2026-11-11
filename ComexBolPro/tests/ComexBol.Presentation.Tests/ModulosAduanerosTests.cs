@@ -73,7 +73,7 @@ public class ModulosAduanerosTests : IDisposable
         var vm = await OpConItem(); var d = vm.Despacho;
         await d.ValidarCmd.ExecuteAsync(); Assert.Contains("error", d.EstadoDim); Assert.Contains(d.Hallazgos, h => h.Nivel == "ERROR" && h.Texto.Contains("aduana de ingreso"));
         d.AduanaIngreso = "Tambo Quemado"; d.AduanaDestino = "La Paz"; d.CodigoDeclarante = "ADA-9"; d.Modalidad = "Carretero"; d.NroDocEmbarque = "CRT-5"; d.Bultos = 40; d.PesoManifiesto = 805m; d.NroDav = "DAV-1";
-        Assert.Equal("N.º de CRT / Carta de Porte Internacional", d.EtiquetaEmbarque); Assert.Equal("N.º de MIC/DTA", d.EtiquetaManifiesto);
+        Assert.Equal("N.º de CRT", d.EtiquetaEmbarque); Assert.Equal("N.º de MIC/DTA", d.EtiquetaManifiesto);
         await d.GuardarCmd.ExecuteAsync();
         Assert.DoesNotContain(d.Hallazgos, h => h.Nivel == "ERROR"); Assert.Contains(d.Hallazgos, h => h.Texto.Contains("concuerda"));
         d.Canal = "Rojo"; await d.AsignarCanalCmd.ExecuteAsync(); Assert.Equal(Despacho.TareasCanal("Rojo").Count, d.Tareas.Count); Assert.Equal("#D9534F", d.ColorCanal);

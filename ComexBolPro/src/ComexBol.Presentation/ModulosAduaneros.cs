@@ -83,7 +83,7 @@ public sealed class LiquidacionDetalleViewModel : ModuloOperacionVm
             var ult = op.Liquidaciones.OrderByDescending(l => l.Version).FirstOrDefault(); if (ult is null) return;
             HayLiquidacion = true;
             var r = JsonSerializer.Deserialize<LiquidacionResultado>(ult.ResultadoJson)!;
-            if (r.Desglose is not null) foreach (var l in r.Desglose) Desglose.Add(new(l.Concepto + (string.IsNullOrEmpty(l.Nota) ? "" : $"  ·  {l.Nota}"), F(l.Bob), l.Concepto.StartsWith("Valor en aduana")));
+            if (r.Desglose is not null) foreach (var l in r.Desglose) Desglose.Add(new(l.Concepto, F(l.Bob), l.Concepto.StartsWith("Valor en aduana")));
             foreach (var i in r.Items) Items.Add(new(i.Numero.ToString(), i.CodigoArancelario, F(i.ValorFobBob), F(i.CifBob), F(i.GA), F(i.ICE), F(i.IEHD), F(i.IVA), F(i.TotalTributos)));
             Items.Add(new("", "TOTAL", F(r.ValorFobBob), F(r.CifBob), F(r.GA), F(r.ICE), F(r.IEHD), F(r.IVA), F(r.TotalTributos)));
 
@@ -221,8 +221,8 @@ public sealed class DespachoViewModel : ModuloOperacionVm
     string _ad = ""; public string AduanaDestino { get => _ad; set => Set(ref _ad, value); }
     string _cd = ""; public string CodigoDeclarante { get => _cd; set => Set(ref _cd, value); }
     string _mod = ""; public string Modalidad { get => _mod; set { if (Set(ref _mod, value)) { PropiedadCambiada(nameof(EtiquetaEmbarque)); PropiedadCambiada(nameof(EtiquetaManifiesto)); } } }
-    public string EtiquetaEmbarque => $"N.º de {Despacho.DocumentoEmbarque(Modalidad)}";
-    public string EtiquetaManifiesto => $"N.º de {Despacho.DocumentoManifiesto(Modalidad)}";
+    public string EtiquetaEmbarque => Modalidad switch { "Marítimo / fluvial" => "N.º de B/L", "Carretero" => "N.º de CRT", "Aéreo" => "N.º de AWB", "Ferroviario" => "N.º de TIF/DTA", "Postal / courier" => "N.º de guía", _ => "N.º doc. embarque" };
+    public string EtiquetaManifiesto => Modalidad switch { "Carretero" => "N.º de MIC/DTA", "Ferroviario" => "N.º de TIF/DTA", "Marítimo / fluvial" => "N.º de MIRA", _ => "N.º de manifiesto" };
     string _nde = ""; public string NroDocEmbarque { get => _nde; set => Set(ref _nde, value); }
     string _nm = ""; public string NroManifiesto { get => _nm; set => Set(ref _nm, value); }
     int _b; public int Bultos { get => _b; set => Set(ref _b, value); }

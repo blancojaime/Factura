@@ -11,7 +11,7 @@ Asistente de escritorio (Windows; antes «ComexBol Pro») para **decidir, acompa
 | `ComexBol.App` | Ventana WPF (XAML) | Compila y se ejecuta (probada con capturas reales); instalador de un clic en `installer/` |
 
 ## Instalar (usuario final)
-Ejecute `ComexJB-Setup-1.1.2.exe` (sin administrador; incluye .NET, OCR con español y lector de PDF). Manuales con capturas reales:
+Ejecute `ComexJB-Setup-1.2.0.exe` (sin administrador; incluye .NET, OCR con español y lector de PDF). Manuales con capturas reales:
 [Manual de Usuario](docs/manual/Manual-de-Usuario.pdf) · [Manual de Instalación y Pruebas](docs/manual/Manual-de-Instalacion-y-Pruebas.pdf) (también en `.docx`).
 
 ## Construir el instalador (equipo técnico)
@@ -32,7 +32,13 @@ for t in tests/*/; do (cd $t && dotnet test); done
 
 Manual completo de implementación y pruebas: [`docs/04-Manual-de-Implementacion-y-Pruebas.md`](docs/04-Manual-de-Implementacion-y-Pruebas.md).
 
-## Novedades de la versión 1.1.2
+## Novedades de la versión 1.2.0 (módulos aduaneros)
+- **Valoración (DAV)**: cuestionario de descarte del Primer Método (Decisión 571 CAN), ajustes del Art. 8, validador de precios contra el historial propio.
+- **Liquidación detallada**: valor en aduana línea por línea, fórmulas con sus números, liquidación por ítem, gastos de despacho, costo nacionalizado, factor de importación y flujo de caja.
+- **Despacho (DIM)**: datos y validación previa de la DIM, canales Verde/Amarillo/Rojo con listas de control, levante y borrador de descargos.
+- Pendiente: archivo probatorio inmutable (PDF/A), conciliación bancario-aduanera, gestor de autorizaciones previas, transmisión al SUMA.
+
+## Novedades de la versión 1.1.0
 Nombre y logo COMEX JB · inicio de sesión con roles · rediseño con colores · selector de partida con descripción automática · editar/eliminar ítems y operaciones ·
 tabla de mantenimiento del arancel · menú Configuración (tipos de cambio, UFV, parámetros tributarios, perfil del importador, usuarios, respaldo) · hoja de costos reales · exportación JSON para la DMI.
 Datos en `%LocalAppData%\ComexJB` (se migran desde `ComexBolPro` al primer inicio).

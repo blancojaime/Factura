@@ -134,7 +134,7 @@
 
                     <Grid>
                       <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
-                      <StackPanel><TextBlock Text="Valor de factura (USD)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding ItemValor}"/></StackPanel>
+                      <StackPanel><TextBlock Text="Valor factura (USD)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding ItemValor}"/></StackPanel>
                       <StackPanel Grid.Column="2"><TextBlock Text="Cantidad (unid.)" Style="{StaticResource Etiqueta}" ToolTip="Para el precio unitario y el costo por unidad"/><TextBox Text="{Binding ItemCantidad}" ToolTip="Para el precio unitario y el costo por unidad"/></StackPanel>
                       <StackPanel Grid.Column="4"><TextBlock Text="Peso bruto (kg)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding ItemPesoBruto}"/></StackPanel>
                       <StackPanel Grid.Column="6"><TextBlock Text="Antigüedad (años)" Style="{StaticResource Etiqueta}" ToolTip="Solo vehículos: 0 = nuevo"/><TextBox Text="{Binding ItemAntiguedad}" ToolTip="Solo vehículos: 0 = nuevo"/></StackPanel>
@@ -315,7 +315,7 @@
             <Border Style="{StaticResource Card}" DataContext="{Binding Detalle}">
               <StackPanel>
                 <TextBlock Text="5 · Gastos de despacho y costo nacionalizado por ítem" Style="{StaticResource Subtitulo}"/>
-                <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,0,0,8" Text="Anote en bolivianos lo que pagará además de los tributos. El IVA se trata como crédito fiscal (no es costo) salvo que lo cambie en Configuración."/>
+                <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,0,0,8" Text="Anote en bolivianos lo que pagará además de los tributos (*GA + ICE + IEHD). El IVA se trata como crédito fiscal (no es costo) salvo que lo cambie en Configuración."/>
                 <Grid>
                   <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition Width="90"/></Grid.ColumnDefinitions>
                   <StackPanel><TextBlock Text="Agencia despachante (Bs)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Honorarios}"/></StackPanel>
@@ -335,11 +335,11 @@
                     <DataGridTextColumn Header="Partida" Binding="{Binding Partida}" Width="112"/>
                     <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="*"/>
                     <DataGridTextColumn Header="CIF" Binding="{Binding Cif}" Width="*"/>
-                    <DataGridTextColumn Header="GA+ICE+IEHD" Binding="{Binding Tributos}" Width="*"/>
+                    <DataGridTextColumn Header="Tributos*" Binding="{Binding Tributos}" Width="*"/>
                     <DataGridTextColumn Header="Gastos" Binding="{Binding Gastos}" Width="*"/>
-                    <DataGridTextColumn Header="Costo total" Binding="{Binding Costo}" Width="*"/>
+                    <DataGridTextColumn Header="Costo" Binding="{Binding Costo}" Width="*"/>
                     <DataGridTextColumn Header="Factor" Binding="{Binding Factor}" Width="*"/>
-                    <DataGridTextColumn Header="Costo unitario" Binding="{Binding Unitario}" Width="*"/>
+                    <DataGridTextColumn Header="Unitario" Binding="{Binding Unitario}" Width="*"/>
                   </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock Text="{Binding ResumenCosteo}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,8,0,0"/>
@@ -352,11 +352,11 @@
         <!-- ===================== DESPACHO (DIM) ===================== -->
         <TabItem Header="Despacho">
           <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,8,0,0"><Grid DataContext="{Binding Despacho}">
-            <Grid.ColumnDefinitions><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions><ColumnDefinition Width="1.3*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
             <StackPanel>
               <Border Style="{StaticResource Card}">
                 <StackPanel>
-                  <TextBlock Text="1 · Datos de la DIM (Declaración de Importación de Mercancías)" Style="{StaticResource Subtitulo}"/>
+                  <TextBlock Text="1 · Datos de la DIM" Style="{StaticResource Subtitulo}"/>
                   <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
                     <StackPanel><TextBlock Text="Tipo de despacho" Style="{StaticResource Etiqueta}"/><ComboBox ItemsSource="{Binding Tipos}" SelectedItem="{Binding TipoDespacho}"/></StackPanel>
@@ -366,7 +366,7 @@
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
                     <StackPanel><TextBlock Text="Aduana de ingreso" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding AduanaIngreso}"/></StackPanel>
                     <StackPanel Grid.Column="2"><TextBlock Text="Aduana de destino" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding AduanaDestino}"/></StackPanel>
-                    <StackPanel Grid.Column="4"><TextBlock Text="Código de declarante (ADA)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding CodigoDeclarante}"/></StackPanel>
+                    <StackPanel Grid.Column="4"><TextBlock Text="Código declarante" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding CodigoDeclarante}"/></StackPanel>
                   </Grid>
                   <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
@@ -376,8 +376,8 @@
                   </Grid>
                   <Grid>
                     <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
-                    <StackPanel><TextBlock Text="Bultos (manifiesto)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Bultos}"/></StackPanel>
-                    <StackPanel Grid.Column="2"><TextBlock Text="Peso bruto manifiesto (kg)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding PesoManifiesto}"/></StackPanel>
+                    <StackPanel><TextBlock Text="Bultos" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Bultos}"/></StackPanel>
+                    <StackPanel Grid.Column="2"><TextBlock Text="Peso manifiesto (kg)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding PesoManifiesto}"/></StackPanel>
                     <StackPanel Grid.Column="4"><TextBlock Text="N.º de DAV" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding NroDav}"/></StackPanel>
                     <StackPanel Grid.Column="6"><TextBlock Text="N.º de DIM" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding NroDim}"/></StackPanel>
                   </Grid>
