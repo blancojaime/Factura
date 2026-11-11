@@ -64,6 +64,15 @@ public partial class OperacionesView : UserControl
         if (dlg.ShowDialog() == true) await Vm.ExportarExcelAsync(dlg.FileName);
     }
 
+    async void Descargo_Click(object s, RoutedEventArgs e)
+    {
+        if (Vm.Seleccionada is null) return;
+        var texto = await Vm.Despacho.GenerarDescargoAsync(Vm.Despacho.ObservacionAduana);
+        if (texto is null) return;
+        var dlg = new SaveFileDialog { Filter = "Texto|*.txt", FileName = $"Descargos-{Vm.Seleccionada.Carpeta}.txt" };
+        if (dlg.ShowDialog() == true) await System.IO.File.WriteAllTextAsync(dlg.FileName, texto, System.Text.Encoding.UTF8);
+    }
+
     async void ExportarJson_Click(object s, RoutedEventArgs e)
     {
         if (Vm.Seleccionada is null) return;

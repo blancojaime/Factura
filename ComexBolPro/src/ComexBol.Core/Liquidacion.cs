@@ -44,7 +44,11 @@ public sealed record OperacionImportacion(
     Money? Seguro = null,
     Money? OtrosGastosHastaFrontera = null,  // ASP-B, tránsito hasta frontera boliviana, etc.
     Money? DeduccionesPostFrontera = null,   // DAP/DPU/DDP: transporte interno, tributos incluidos en el precio
-    decimal OtrasErogacionesBob = 0m);
+    decimal OtrasErogacionesBob = 0m,
+    Money? AdicionesArt8 = null,             // Art. 8 (comisiones, envases, assists, royalties, reversiones): se suman siempre
+    Money? DeduccionesArt8 = null);          // armado/transporte posterior/impuestos en Bolivia desglosados: se restan siempre
+
+public sealed record LineaValor(string Concepto, decimal Bob, string Nota = "");
 
 public sealed record ItemLiquidado(
     int Numero, string CodigoArancelario,
@@ -63,7 +67,8 @@ public sealed record LiquidacionResultado(
     decimal TotalTributos,
     bool RequiereBancarizacion,
     IReadOnlyList<ItemLiquidado> Items,
-    IReadOnlyList<string> Advertencias);
+    IReadOnlyList<string> Advertencias,
+    IReadOnlyList<LineaValor>? Desglose = null);
 
 public static class CalculadoraTributaria
 {
@@ -91,30 +96,34 @@ public static class CalculadoraTributaria
         var fobBob = op.Items.Sum(i => tc.ABob(new Money(i.ValorFactura, op.MonedaFactura)));
 
         // --- Adiciones: solo lo que el precio de factura NO incluye según el Incoterm ---
-        decimal adiciones = 0m;
+        decimal adiciones = 0m; var desglose = new List<LineaValor> { new("Valor FOB de la factura", fobBob, "Σ valor de factura × tipo de cambio") };
         void Adicionar(bool incluido, Money? monto, string nombre)
         {
             var bob = Bob(monto);
             if (incluido) { if (bob > 0) adv.Add($"{nombre} ignorado: ya incluido en el precio por Incoterm {op.Incoterm}."); return; }
-            adiciones += bob;
+            adiciones += bob; if (bob > 0) desglose.Add(new("(+) " + nombre, bob));
         }
         Adicionar(cob.Origen, op.GastosOrigen, "Gastos de origen");
         Adicionar(cob.Flete, op.Flete, "Flete");
         if (!cob.Seguro && Bob(op.Seguro) == 0m)
         {
-            if (p.SeguroPresuntoPct > 0) { adiciones += fobBob * p.SeguroPresuntoPct; adv.Add($"Seguro no declarado: se aplicó {p.SeguroPresuntoPct:P2} presunto."); }
+            if (p.SeguroPresuntoPct > 0) { adiciones += fobBob * p.SeguroPresuntoPct; desglose.Add(new("(+) Seguro presunto", fobBob * p.SeguroPresuntoPct, $"{p.SeguroPresuntoPct:P2} sobre FOB")); adv.Add($"Seguro no declarado: se aplicó {p.SeguroPresuntoPct:P2} presunto."); }
             else adv.Add("Seguro no declarado: verifique póliza/certificado de transporte.");
         }
         else Adicionar(cob.Seguro, op.Seguro, "Seguro");
         // Gastos entre puerto de tránsito y frontera: siempre por cuenta del importador salvo que el vendedor los cubra (DAP/DPU/DDP).
         Adicionar(cob.Destino, op.OtrosGastosHastaFrontera, "Gastos hasta frontera");
+        var adArt8 = Bob(op.AdicionesArt8); if (adArt8 > 0) { adiciones += adArt8; desglose.Add(new("(+) Ajustes del Art. 8", adArt8, "comisiones, envases, assists, royalties, reversiones")); }
         var deducciones = cob.Destino ? Bob(op.DeduccionesPostFrontera) : 0m;
+        if (deducciones > 0) desglose.Add(new("(−) Costos posteriores a la frontera", -deducciones, "DAP/DPU/DDP"));
+        var dedArt8 = Bob(op.DeduccionesArt8); if (dedArt8 > 0) { deducciones += dedArt8; desglose.Add(new("(−) Deducciones del Art. 8", -dedArt8, "armado posterior, transporte posterior, impuestos en Bolivia")); }
         if (!cob.Destino && Bob(op.DeduccionesPostFrontera) > 0) adv.Add("Deducciones post-frontera ignoradas: solo aplican a DAP/DPU/DDP.");
         if (cob.Destino && deducciones == 0m) adv.Add($"Incoterm {op.Incoterm}: declare los costos posteriores a la frontera (y tributos en DDP) para excluirlos del valor en aduana.");
 
         var neto = adiciones - deducciones;
         var cifTotal = fobBob + neto;
         if (cifTotal <= 0) throw new InvalidOperationException("Valor en aduana no positivo tras deducciones.");
+        desglose.Add(new("Valor en aduana (CIF frontera)", cifTotal, "base de todos los tributos"));
 
         // --- Prorrateo ---
         var pesoTotal = op.Items.Sum(i => i.PesoBrutoKg);
@@ -139,7 +148,7 @@ public static class CalculadoraTributaria
         var iehd_ = items.Sum(i => i.IEHD); var iva_ = items.Sum(i => i.IVA);
         return new(R(fobBob), R(adiciones), R(deducciones), items.Sum(i => i.CifBob),
             ga_, ice_, iehd_, iva_, ga_ + ice_ + iehd_ + iva_,
-            Bancarizacion.Requiere(fobBob, p), items, adv);
+            Bancarizacion.Requiere(fobBob, p), items, adv, desglose);
     }
 
     private static void Validar(OperacionImportacion op, ParametrosTributarios p)

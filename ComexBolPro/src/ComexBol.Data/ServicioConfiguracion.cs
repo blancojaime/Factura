@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ComexBol.Data;
 
+public sealed record AjustesOperativos(decimal AlmacenTarifaBsTonDia = 0m, int AlmacenDiasLibres = 0, decimal TolerancePrecio = 0.30m, decimal TolerancePeso = 0.05m, bool IvaRecuperable = true);
+
 /// <summary>Mantenimiento de tipos de cambio, UFV, parámetros tributarios, perfil del importador y respaldo.</summary>
 public sealed class ServicioConfiguracion(ComexDb db)
 {
@@ -85,6 +87,29 @@ public sealed class ServicioConfiguracion(ComexDb db)
         await Poner(KMaxGa, p.MaxAlicuotaGA.ToString(Inv), "Alícuota máxima aceptada del gravamen arancelario (fracción)");
         await Poner(KRedondeo, p.Redondeo.ToString(), "Redondeo de tributos: DosDecimales | EnteroBs");
         await Poner(KProrrateo, p.Prorrateo.ToString(), "Reparto de flete/seguro entre ítems: PorValor | PorPesoBruto");
+        await db.SaveChangesAsync();
+    }
+
+    // ---------- Ajustes operativos (almacén, tolerancias, crédito fiscal) ----------
+    public async Task<AjustesOperativos> ObtenerAjustesAsync()
+    {
+        var d = await db.Parametros.AsNoTracking().ToDictionaryAsync(p => p.Clave, p => p.Valor);
+        var def = new AjustesOperativos();
+        decimal Dec(string k, decimal x) => d.TryGetValue(k, out var v) && decimal.TryParse(v, NumberStyles.Number, Inv, out var r) ? r : x;
+        return new(Dec("almacen_tarifa_ton_dia", def.AlmacenTarifaBsTonDia), (int)Dec("almacen_dias_libres", def.AlmacenDiasLibres),
+            Dec("tolerancia_precio", def.TolerancePrecio), Dec("tolerancia_peso", def.TolerancePeso), Dec("iva_recuperable", def.IvaRecuperable ? 1 : 0) != 0);
+    }
+
+    public async Task GuardarAjustesAsync(AjustesOperativos a)
+    {
+        if (a.AlmacenTarifaBsTonDia < 0 || a.AlmacenDiasLibres < 0) throw new ArgumentException("La tarifa y los días libres de almacén no pueden ser negativos.");
+        if (a.TolerancePrecio is <= 0 or > 2) throw new ArgumentException("La tolerancia de precio debe estar entre 0 % y 200 %.");
+        if (a.TolerancePeso is <= 0 or > 1) throw new ArgumentException("La tolerancia de peso debe estar entre 0 % y 100 %.");
+        await Poner("almacen_tarifa_ton_dia", a.AlmacenTarifaBsTonDia.ToString(Inv), "Tarifa de almacenaje del recinto, Bs por tonelada y día (la fija el concesionario)");
+        await Poner("almacen_dias_libres", a.AlmacenDiasLibres.ToString(Inv), "Días de almacenaje sin cobro");
+        await Poner("tolerancia_precio", a.TolerancePrecio.ToString(Inv), "Desviación del precio unitario frente al historial desde la cual hay riesgo de duda razonable (fracción)");
+        await Poner("tolerancia_peso", a.TolerancePeso.ToString(Inv), "Diferencia aceptada entre el peso de los ítems y el del manifiesto (fracción)");
+        await Poner("iva_recuperable", a.IvaRecuperable ? "1" : "0", "El IVA de importación se recupera como crédito fiscal (1) o es costo (0)");
         await db.SaveChangesAsync();
     }
 

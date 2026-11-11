@@ -31,6 +31,65 @@ public class Operacion
     public List<Documento> Documentos { get; set; } = [];
     public List<EventoBitacora> Bitacora { get; set; } = [];
     public List<CostoOperacion> Costos { get; set; } = [];
+    public List<TareaDespacho> TareasDespacho { get; set; } = [];
+
+    // --- Valoración aduanera (DAV): cuestionario de descarte y ajustes del Art. 8 (en la moneda de la factura) ---
+    public bool CuestionarioRespondido { get; set; }
+    public bool Vinculacion { get; set; }
+    public bool VinculacionInfluyoPrecio { get; set; }
+    public bool RestriccionesCesion { get; set; }
+    public bool CondicionesNoCuantificables { get; set; }
+    public bool ReversionAlVendedor { get; set; }
+    public decimal AdComisiones { get; set; }
+    public decimal AdEnvases { get; set; }
+    public decimal AdAssists { get; set; }
+    public decimal AdRoyalties { get; set; }
+    public decimal AdReversiones { get; set; }
+    public decimal AdOtros { get; set; }
+    public decimal DedArmadoPosterior { get; set; }
+    public decimal DedTransportePosterior { get; set; }
+    public decimal DedImpuestosBolivia { get; set; }
+    public string NotasValoracion { get; set; } = "";
+
+    // --- Despacho aduanero (DIM) ---
+    public string TipoDespacho { get; set; } = "General";
+    public string Regimen { get; set; } = "10 - Importación a consumo";
+    public string AduanaIngreso { get; set; } = "";
+    public string AduanaDestino { get; set; } = "";
+    public string CodigoDeclarante { get; set; } = "";
+    public string ModalidadTransporte { get; set; } = "";
+    public string NroDocEmbarque { get; set; } = "";
+    public string NroManifiesto { get; set; } = "";
+    public int Bultos { get; set; }
+    public decimal PesoBrutoManifiestoKg { get; set; }
+    public string NroDav { get; set; } = "";
+    public string NroDim { get; set; } = "";
+    public string Canal { get; set; } = "Sin asignar";
+    public DateOnly? FechaLevante { get; set; }
+    public string ObservacionAduana { get; set; } = "";
+
+    // --- Gastos locales para el costeo (Bs) ---
+    public decimal GastoHonorariosAgencia { get; set; }
+    public decimal GastoAlmacenaje { get; set; }
+    public decimal GastoTransporteInterno { get; set; }
+    public decimal GastoOtros { get; set; }
+    public int DiasAlmacenaje { get; set; }
+
+    public AjustesArt8 Ajustes() => new(AdComisiones, AdEnvases, AdAssists, AdRoyalties, AdReversiones, AdOtros, DedArmadoPosterior, DedTransportePosterior, DedImpuestosBolivia);
+    public CuestionarioValor Cuestionario() => new(Vinculacion, VinculacionInfluyoPrecio, RestriccionesCesion, CondicionesNoCuantificables, ReversionAlVendedor, CuestionarioRespondido);
+    public GastosLocales Gastos() => new(GastoHonorariosAgencia, GastoAlmacenaje, GastoTransporteInterno, GastoOtros);
+    public DatosDespacho DatosDim() => new(TipoDespacho, Regimen, AduanaIngreso, AduanaDestino, CodigoDeclarante, ModalidadTransporte, NroDocEmbarque, Bultos, PesoBrutoManifiestoKg, NroManifiesto, NroDav, NroDim);
+}
+
+/// <summary>Tarea de la lista de control del canal de selectividad (Verde/Amarillo/Rojo).</summary>
+public class TareaDespacho
+{
+    public int Id { get; set; }
+    public int OperacionId { get; set; }
+    public string Canal { get; set; } = "";
+    public int Orden { get; set; }
+    public string Texto { get; set; } = "";
+    public bool Hecha { get; set; }
 }
 
 public class ItemMercancia
@@ -185,6 +244,7 @@ public class ComexDb(Microsoft.EntityFrameworkCore.DbContextOptions<ComexDb> o) 
     public Microsoft.EntityFrameworkCore.DbSet<ParametroSistema> Parametros => Set<ParametroSistema>();
     public Microsoft.EntityFrameworkCore.DbSet<PerfilImportador> Perfiles => Set<PerfilImportador>();
     public Microsoft.EntityFrameworkCore.DbSet<CostoOperacion> Costos => Set<CostoOperacion>();
+    public Microsoft.EntityFrameworkCore.DbSet<TareaDespacho> TareasDespacho => Set<TareaDespacho>();
 
     protected override void OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder b)
     {

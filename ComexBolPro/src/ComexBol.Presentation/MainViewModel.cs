@@ -44,6 +44,7 @@ public sealed class MainViewModel : ObservableObject
         _db = db; _hoy = hoy ?? (() => DateOnly.FromDateTime(DateTime.Today));
         _ops = new(db); _cat = new(db); _cfg = new(db); _costos = new(db);
         Decision = new DecisionViewModel(db, () => Seleccionada?.Id, () => TipoCambioUsd, _hoy);
+        Detalle = new(db, () => Seleccionada?.Id); Valoracion = new(db, () => Seleccionada?.Id); Despacho = new(db, () => Seleccionada?.Id);
         CargarCmd = new(_ => CargarAsync());
         NuevaImportacionCmd = new(_ => NuevaImportacionAsync());
         AgregarItemCmd = new(_ => AgregarItemAsync(), _ => Seleccionada is not null);
@@ -61,6 +62,9 @@ public sealed class MainViewModel : ObservableObject
     }
 
     public DecisionViewModel Decision { get; }
+    public LiquidacionDetalleViewModel Detalle { get; }
+    public ValoracionViewModel Valoracion { get; }
+    public DespachoViewModel Despacho { get; }
 
     // --- Lista y selección ---
     public ObservableCollection<Operacion> Operaciones { get; } = [];
@@ -76,7 +80,7 @@ public sealed class MainViewModel : ObservableObject
     public IReadOnlyList<Incoterm> Incoterms { get; } = Enum.GetValues<Incoterm>();
     decimal _tc = 6.96m; public decimal TipoCambioUsd { get => _tc; set => Set(ref _tc, value); }   // se propone el de la tabla de configuración; el usuario lo confirma
     string _tcInfo = ""; public string TcInfo { get => _tcInfo; set => Set(ref _tcInfo, value); }
-    string _usuario = ""; public string UsuarioActual { get => _usuario; set { if (Set(ref _usuario, value)) { _ops.Usuario = value; if (_docs is not null) _docs.Usuario = value; } } }
+    string _usuario = ""; public string UsuarioActual { get => _usuario; set { if (Set(ref _usuario, value)) { _ops.Usuario = value; Valoracion.Usuario = value; Despacho.Usuario = value; if (_docs is not null) _docs.Usuario = value; } } }
     string _filtroOps = ""; public string FiltroOperaciones { get => _filtroOps; set { if (Set(ref _filtroOps, value)) AplicarFiltroOperaciones(); } }
     ItemFila? _itemSel; public ItemFila? ItemSeleccionado { get => _itemSel; set { if (Set(ref _itemSel, value)) { EditarItemCmd.Refresh(); EliminarItemCmd.Refresh(); } } }
     bool _enEdicion; public bool EnEdicion { get => _enEdicion; set { if (Set(ref _enEdicion, value)) PropiedadCambiada(nameof(TextoGuardarItem)); } }
@@ -90,6 +94,7 @@ public sealed class MainViewModel : ObservableObject
         get => _partida;
         set { if (Set(ref _partida, value) && !_silenciar) _ = BuscarSugerenciasAsync(value); }
     }
+    decimal _cant; public decimal ItemCantidad { get => _cant; set => Set(ref _cant, value); }
     string _desc = ""; public string ItemDescripcion { get => _desc; set => Set(ref _desc, value); }
     string _marca = ""; public string ItemMarca { get => _marca; set => Set(ref _marca, value); }
     string _modelo = ""; public string ItemModelo { get => _modelo; set => Set(ref _modelo, value); }
@@ -192,14 +197,14 @@ public sealed class MainViewModel : ObservableObject
     ItemMercancia ItemDelFormulario(int numero) => new()
     {
         Numero = numero, CodigoNandina = new string(ItemPartida.Where(char.IsDigit).ToArray()), Descripcion = ItemDescripcion, ValorFactura = ItemValor,
-        PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto, AntiguedadAnios = ItemAntiguedad, AlicuotaIce = ItemIcePct / 100m,
+        PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto, Cantidad = ItemCantidad, AntiguedadAnios = ItemAntiguedad, AlicuotaIce = ItemIcePct / 100m,
         AcuerdoPreferencial = ItemAcuerdo, Desgravacion = ItemDesgravacionPct / 100m, Marca = ItemMarca ?? "", Modelo = ItemModelo ?? "", Serie = ItemSerie ?? "", PaisOrigen = ItemPais ?? ""
     };
 
     void LimpiarFormularioItem()
     {
         _silenciar = true;
-        ItemPartida = ItemDescripcion = ItemMarca = ItemModelo = ItemSerie = ItemPais = ""; ItemValor = ItemPesoBruto = ItemIcePct = ItemDesgravacionPct = 0; ItemAntiguedad = 0; ItemAcuerdo = "";
+        ItemPartida = ItemDescripcion = ItemMarca = ItemModelo = ItemSerie = ItemPais = ""; ItemValor = ItemPesoBruto = ItemIcePct = ItemDesgravacionPct = ItemCantidad = 0; ItemAntiguedad = 0; ItemAcuerdo = "";
         _silenciar = false; InfoPartida = ""; Sugerencias.Clear(); MostrarSugerencias = false; EnEdicion = false; _itemEditId = 0; ItemSeleccionado = null;
     }
 
@@ -232,7 +237,7 @@ public sealed class MainViewModel : ObservableObject
         var fila = ItemSeleccionado ?? throw new InvalidOperationException("Seleccione un ítem de la lista.");
         var it = await _db.Items.AsNoTracking().FirstAsync(i => i.Id == fila.Id);
         _silenciar = true;
-        ItemPartida = it.CodigoNandina; ItemDescripcion = it.Descripcion; ItemValor = it.ValorFactura; ItemPesoBruto = it.PesoBrutoKg; ItemAntiguedad = it.AntiguedadAnios;
+        ItemPartida = it.CodigoNandina; ItemDescripcion = it.Descripcion; ItemValor = it.ValorFactura; ItemPesoBruto = it.PesoBrutoKg; ItemCantidad = it.Cantidad; ItemAntiguedad = it.AntiguedadAnios;
         ItemIcePct = it.AlicuotaIce * 100m; ItemAcuerdo = it.AcuerdoPreferencial; ItemDesgravacionPct = it.Desgravacion * 100m;
         ItemMarca = it.Marca; ItemModelo = it.Modelo; ItemSerie = it.Serie; ItemPais = it.PaisOrigen ?? "";
         _silenciar = false; Sugerencias.Clear(); MostrarSugerencias = false;
@@ -431,7 +436,7 @@ public sealed class MainViewModel : ObservableObject
     {
         Items.Clear(); Etapas.Clear(); Liquidacion.Clear(); Legajo.Clear(); Bitacora.Clear(); Avisos.Clear(); Costos.Clear(); TotalesCostos = "";
         ResumenSemaforos = ProximoVencimiento = "";
-        if (Seleccionada is null) return;
+        if (Seleccionada is null) { await Detalle.CargarAsync(); await Valoracion.CargarAsync(); await Despacho.CargarAsync(); return; }
         await Seguro_(async () =>
         {
             var id = Seleccionada.Id; var hoy = _hoy();
@@ -474,6 +479,7 @@ public sealed class MainViewModel : ObservableObject
             foreach (var e in op.Bitacora.OrderByDescending(e => e.Fecha).Take(100)) Bitacora.Add($"{e.Fecha:dd/MM HH:mm} · {e.Categoria} · {e.Detalle}" + (string.IsNullOrEmpty(e.Usuario) ? "" : $"  [{e.Usuario}]"));
             foreach (var c in await _costos.ListarAsync(id)) Costos.Add(new() { Id = c.Id, Concepto = c.Concepto, Proyectado = c.ProyectadoBob, Real = c.RealBob, Nota = c.Nota });
             RecalcularTotalesCostos();
+            await Detalle.CargarAsync(); await Valoracion.CargarAsync(); await Despacho.CargarAsync();
         });
     }
 }

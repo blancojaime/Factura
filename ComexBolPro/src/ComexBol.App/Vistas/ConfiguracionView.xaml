@@ -72,6 +72,16 @@
                 <TextBlock Text="Redondeo de tributos" Style="{StaticResource Etiqueta}"/><ComboBox ItemsSource="{Binding Redondeos}" SelectedItem="{Binding Redondeo}"/>
                 <TextBlock Text="Reparto de flete y seguro entre ítems" Style="{StaticResource Etiqueta}"/><ComboBox ItemsSource="{Binding Prorrateos}" SelectedItem="{Binding Prorrateo}"/></StackPanel>
             </Grid>
+            <TextBlock Text="Almacenaje, costeo y validaciones" Style="{StaticResource Subtitulo}" Margin="0,14,0,4"/>
+            <TextBlock Style="{StaticResource Suave}" Margin="0,0,0,10" TextWrapping="Wrap" Text="La tarifa de almacenaje la fija su recinto aduanero (déjela en 0 si no la conoce: no se estimará). Las tolerancias definen cuándo el sistema avisa de un riesgo."/>
+            <Grid>
+              <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="14"/><ColumnDefinition/></Grid.ColumnDefinitions>
+              <StackPanel><TextBlock Text="Tarifa de almacenaje (Bs por tonelada y día)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding AlmacenTarifa}"/>
+                <TextBlock Text="Días de almacenaje sin cobro" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding AlmacenDiasLibres}"/>
+                <CheckBox Content="El IVA de importación se recupera como crédito fiscal" IsChecked="{Binding IvaRecuperable}" Margin="0,10,0,0"/></StackPanel>
+              <StackPanel Grid.Column="2"><TextBlock Text="Tolerancia de precio vs. historial (%)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding TolerancePrecioPct}"/>
+                <TextBlock Text="Tolerancia de peso vs. manifiesto (%)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding TolerancePesoPct}"/></StackPanel>
+            </Grid>
             <StackPanel Orientation="Horizontal"><Button Content="Guardar parámetros" Command="{Binding GuardarParametrosCmd}" Style="{StaticResource BtnExito}"/><Button Content="Restaurar valores por defecto" Command="{Binding RestaurarParametrosCmd}" Style="{StaticResource BtnSuave}" Margin="0"/></StackPanel>
           </StackPanel>
         </Border>

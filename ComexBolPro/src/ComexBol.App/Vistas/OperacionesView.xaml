@@ -133,10 +133,11 @@
                     <TextBox Text="{Binding ItemDescripcion}" TextWrapping="Wrap" AcceptsReturn="False" MinHeight="46" VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top"/>
 
                     <Grid>
-                      <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                      <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
                       <StackPanel><TextBlock Text="Valor de factura (USD)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding ItemValor}"/></StackPanel>
-                      <StackPanel Grid.Column="2"><TextBlock Text="Peso bruto (kg)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding ItemPesoBruto}"/></StackPanel>
-                      <StackPanel Grid.Column="4"><TextBlock Text="Antigüedad (años)" Style="{StaticResource Etiqueta}" ToolTip="Solo vehículos: 0 = nuevo"/><TextBox Text="{Binding ItemAntiguedad}" ToolTip="Solo vehículos: 0 = nuevo"/></StackPanel>
+                      <StackPanel Grid.Column="2"><TextBlock Text="Cantidad (unid.)" Style="{StaticResource Etiqueta}" ToolTip="Para el precio unitario y el costo por unidad"/><TextBox Text="{Binding ItemCantidad}" ToolTip="Para el precio unitario y el costo por unidad"/></StackPanel>
+                      <StackPanel Grid.Column="4"><TextBlock Text="Peso bruto (kg)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding ItemPesoBruto}"/></StackPanel>
+                      <StackPanel Grid.Column="6"><TextBlock Text="Antigüedad (años)" Style="{StaticResource Etiqueta}" ToolTip="Solo vehículos: 0 = nuevo"/><TextBox Text="{Binding ItemAntiguedad}" ToolTip="Solo vehículos: 0 = nuevo"/></StackPanel>
                     </Grid>
                     <Grid>
                       <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
@@ -175,30 +176,269 @@
           </Grid>
         </TabItem>
 
-        <!-- ===================== LIQUIDACIÓN ===================== -->
-        <TabItem Header="Liquidación">
-          <Grid Margin="0,8,0,0">
-            <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-            <Border Style="{StaticResource Card}" Margin="0">
-              <ListBox ItemsSource="{Binding Liquidacion}" HorizontalContentAlignment="Stretch" FontSize="14" BorderThickness="0" Focusable="False">
-                <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="10,9"/><Setter Property="BorderThickness" Value="0,0,0,1"/><Setter Property="BorderBrush" Value="#E6EEF0"/><Setter Property="Focusable" Value="False"/></Style></ListBox.ItemContainerStyle>
-                <ListBox.ItemTemplate><DataTemplate>
-                  <DockPanel>
-                    <TextBlock Text="{Binding Monto}" DockPanel.Dock="Right" FontWeight="SemiBold"/>
-                    <TextBlock Text="{Binding Concepto}"><TextBlock.Style><Style TargetType="TextBlock"><Style.Triggers><DataTrigger Binding="{Binding Destacada}" Value="True"><Setter Property="FontWeight" Value="Bold"/><Setter Property="Foreground" Value="{StaticResource TurquesaOscuro}"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
-                  </DockPanel>
-                </DataTemplate></ListBox.ItemTemplate>
-              </ListBox>
-            </Border>
-            <Border Grid.Column="2" Style="{StaticResource Card}" Margin="0" Background="#FFF8E8" BorderBrush="#F3D9A4" VerticalAlignment="Top">
+        <!-- ===================== VALORACIÓN (DAV) ===================== -->
+        <TabItem Header="Valoración">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,8,0,0"><StackPanel DataContext="{Binding Valoracion}">
+            <Border Style="{StaticResource Card}">
               <StackPanel>
-                <TextBlock Text="Avisos y observaciones" Style="{StaticResource Subtitulo}"/>
-                <ItemsControl ItemsSource="{Binding Avisos}"><ItemsControl.ItemTemplate><DataTemplate>
-                  <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,3" Foreground="#8A5A00"/>
-                </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                <TextBlock Text="1 · Cuestionario de descarte del Primer Método (valor de transacción)" Style="{StaticResource Subtitulo}"/>
+                <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,0,0,8" Text="Decisión 571 de la CAN y Resolución 1684. Marque «Sí» solo lo que ocurra en esta compra; el sistema le dice si el valor de transacción sigue siendo aplicable."/>
+                <CheckBox Content="¿Comprador y vendedor están vinculados?" IsChecked="{Binding Vinculacion}" Margin="0,4"/>
+                <CheckBox Content="      …y la vinculación influyó en el precio" IsChecked="{Binding VinculacionInfluyo}" IsEnabled="{Binding PuedeInfluir}" Margin="0,4"/>
+                <CheckBox Content="¿Hay restricciones a la cesión o utilización de la mercancía (distintas de las legales o geográficas)?" IsChecked="{Binding Restricciones}" Margin="0,4"/>
+                <CheckBox Content="¿El precio depende de condiciones o contraprestaciones cuyo valor no puede determinarse?" IsChecked="{Binding Condiciones}" Margin="0,4"/>
+                <CheckBox Content="¿Parte del producto de la reventa o utilización posterior revierte al vendedor?" IsChecked="{Binding Reversion}" Margin="0,4"/>
+                <Border CornerRadius="6" Padding="12,8" Margin="0,10,0,0" Background="{Binding ResultadoColor}"><TextBlock Text="{Binding ResultadoDescarte}" Foreground="White" FontWeight="Bold"/></Border>
+                <ItemsControl ItemsSource="{Binding Observaciones}" Margin="0,6,0,0"><ItemsControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2" Foreground="#8A5A00"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
               </StackPanel>
             </Border>
-          </Grid>
+            <Border Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock Text="2 · Ajustes del Art. 8 (en la moneda de la factura)" Style="{StaticResource Subtitulo}"/>
+                <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,0,0,8" Text="Anote solo lo que NO está incluido en el precio de la factura. Las adiciones suben el valor en aduana; las deducciones (si están desglosadas en la factura) lo bajan."/>
+                <Grid>
+                  <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="20"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                  <StackPanel>
+                    <TextBlock Text="ADICIONES" FontWeight="Bold" Foreground="{StaticResource TurquesaOscuro}"/>
+                    <TextBlock Text="Comisiones y corretajes (excepto comisión de compra)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Comisiones}"/>
+                    <TextBlock Text="Envases y embalajes" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Envases}"/>
+                    <TextBlock Text="Prestaciones (assists): matrices, moldes, planos, diseños hechos fuera del país" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Assists}"/>
+                    <TextBlock Text="Cánones y derechos de licencia (royalties)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Royalties}"/>
+                    <TextBlock Text="Reversiones al vendedor" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Reversiones}"/>
+                    <TextBlock Text="Otras adiciones" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding OtrasAdiciones}"/>
+                  </StackPanel>
+                  <StackPanel Grid.Column="2">
+                    <TextBlock Text="DEDUCCIONES" FontWeight="Bold" Foreground="{StaticResource TurquesaOscuro}"/>
+                    <TextBlock Text="Armado, montaje o asistencia técnica posteriores a la importación" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding ArmadoPosterior}"/>
+                    <TextBlock Text="Transporte posterior al lugar de importación" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding TransportePosterior}"/>
+                    <TextBlock Text="Derechos e impuestos aplicables en Bolivia incluidos en el precio" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding ImpuestosBolivia}"/>
+                    <TextBlock Text="Notas de sustento (contrato, factura de royalty, etc.)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Notas}" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="70" VerticalContentAlignment="Top"/>
+                  </StackPanel>
+                </Grid>
+                <TextBlock Text="{Binding TotalesAjustes}" FontWeight="SemiBold" Margin="0,10,0,0"/>
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                  <Button Content="Guardar valoración" Command="{Binding GuardarCmd}" Style="{StaticResource BtnExito}"/>
+                  <TextBlock Text="{Binding Mensaje}" VerticalAlignment="Center" Margin="12,0,0,0" Foreground="#8A5A00" TextWrapping="Wrap" MaxWidth="520"/>
+                </StackPanel>
+              </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}">
+              <StackPanel>
+                <TextBlock Text="3 · Validador previo de precios (riesgo de duda razonable)" Style="{StaticResource Subtitulo}"/>
+                <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,0,0,8" Text="Compara el precio unitario de cada ítem (valor ÷ cantidad) con el de sus operaciones anteriores de la misma partida. Requiere la cantidad en cada ítem."/>
+                <Button Content="Validar precios" Command="{Binding ValidarPreciosCmd}" Style="{StaticResource BtnSecundario}" HorizontalAlignment="Left"/>
+                <DataGrid ItemsSource="{Binding Precios}" IsReadOnly="True" MinHeight="70" MaxHeight="220" Margin="0,8,0,0">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="N.º" Binding="{Binding N}" Width="44"/>
+                    <DataGridTextColumn Header="Partida" Binding="{Binding Partida}" Width="104"/>
+                    <DataGridTextColumn Header="Precio unit." Binding="{Binding PrecioUnitario}" Width="96"/>
+                    <DataGridTextColumn Header="Mediana hist." Binding="{Binding Referencia}" Width="104"/>
+                    <DataGridTextColumn Header="Desviación" Binding="{Binding Desviacion}" Width="92"/>
+                    <DataGridTextColumn Header="Riesgo" Binding="{Binding Riesgo}" Width="110"/>
+                    <DataGridTextColumn Header="Detalle" Binding="{Binding Mensaje}" Width="*"/>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </Border>
+          </StackPanel></ScrollViewer>
+        </TabItem>
+
+        <!-- ===================== LIQUIDACIÓN ===================== -->
+        <TabItem Header="Liquidación">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,8,0,0"><StackPanel>
+            <Grid>
+              <Grid.ColumnDefinitions><ColumnDefinition Width="1.15*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+              <StackPanel>
+                <Border Style="{StaticResource Card}" DataContext="{Binding Detalle}">
+                  <StackPanel>
+                    <TextBlock Text="1 · Determinación del valor en aduana (CIF frontera)" Style="{StaticResource Subtitulo}"/>
+                    <ItemsControl ItemsSource="{Binding Desglose}"><ItemsControl.ItemTemplate><DataTemplate>
+                      <DockPanel Margin="0,4">
+                        <TextBlock Text="{Binding Monto}" DockPanel.Dock="Right" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding Concepto}" TextWrapping="Wrap" Margin="0,0,10,0"><TextBlock.Style><Style TargetType="TextBlock"><Style.Triggers><DataTrigger Binding="{Binding Destacada}" Value="True"><Setter Property="FontWeight" Value="Bold"/><Setter Property="Foreground" Value="{StaticResource TurquesaOscuro}"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                      </DockPanel>
+                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                  </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}">
+                  <StackPanel>
+                    <TextBlock Text="2 · Tributos a pagar (Bs)" Style="{StaticResource Subtitulo}"/>
+                    <ListBox ItemsSource="{Binding Liquidacion}" HorizontalContentAlignment="Stretch" FontSize="14" BorderThickness="0" Focusable="False">
+                      <ListBox.ItemContainerStyle><Style TargetType="ListBoxItem"><Setter Property="Padding" Value="6,6"/><Setter Property="BorderThickness" Value="0,0,0,1"/><Setter Property="BorderBrush" Value="#E6EEF0"/><Setter Property="Focusable" Value="False"/></Style></ListBox.ItemContainerStyle>
+                      <ListBox.ItemTemplate><DataTemplate>
+                        <DockPanel>
+                          <TextBlock Text="{Binding Monto}" DockPanel.Dock="Right" FontWeight="SemiBold"/>
+                          <TextBlock Text="{Binding Concepto}"><TextBlock.Style><Style TargetType="TextBlock"><Style.Triggers><DataTrigger Binding="{Binding Destacada}" Value="True"><Setter Property="FontWeight" Value="Bold"/><Setter Property="Foreground" Value="{StaticResource TurquesaOscuro}"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                        </DockPanel>
+                      </DataTemplate></ListBox.ItemTemplate>
+                    </ListBox>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+              <StackPanel Grid.Column="2">
+                <Border Style="{StaticResource Card}" Margin="0,0,0,12" Background="#FFF8E8" BorderBrush="#F3D9A4">
+                  <StackPanel>
+                    <TextBlock Text="Avisos y observaciones" Style="{StaticResource Subtitulo}"/>
+                    <ItemsControl ItemsSource="{Binding Avisos}"><ItemsControl.ItemTemplate><DataTemplate>
+                      <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,3" Foreground="#8A5A00"/>
+                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                  </StackPanel>
+                </Border>
+                <Border Style="{StaticResource Card}" Margin="0" DataContext="{Binding Detalle}">
+                  <StackPanel>
+                    <TextBlock Text="3 · Cómo se calculó (fórmulas)" Style="{StaticResource Subtitulo}"/>
+                    <ItemsControl ItemsSource="{Binding Pasos}"><ItemsControl.ItemTemplate><DataTemplate>
+                      <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2" FontSize="12"/>
+                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                  </StackPanel>
+                </Border>
+              </StackPanel>
+            </Grid>
+            <Border Style="{StaticResource Card}" DataContext="{Binding Detalle}">
+              <StackPanel>
+                <TextBlock Text="4 · Liquidación por ítem (Bs)" Style="{StaticResource Subtitulo}"/>
+                <DataGrid ItemsSource="{Binding Items}" IsReadOnly="True" MinHeight="70" MaxHeight="240">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="N.º" Binding="{Binding N}" Width="44"/>
+                    <DataGridTextColumn Header="Partida" Binding="{Binding Partida}" Width="112"/>
+                    <DataGridTextColumn Header="FOB" Binding="{Binding Fob}" Width="*"/>
+                    <DataGridTextColumn Header="CIF" Binding="{Binding Cif}" Width="*"/>
+                    <DataGridTextColumn Header="GA" Binding="{Binding GA}" Width="*"/>
+                    <DataGridTextColumn Header="ICE" Binding="{Binding ICE}" Width="*"/>
+                    <DataGridTextColumn Header="IEHD" Binding="{Binding IEHD}" Width="*"/>
+                    <DataGridTextColumn Header="IVA" Binding="{Binding IVA}" Width="*"/>
+                    <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="*"/>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" DataContext="{Binding Detalle}">
+              <StackPanel>
+                <TextBlock Text="5 · Gastos de despacho y costo nacionalizado por ítem" Style="{StaticResource Subtitulo}"/>
+                <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,0,0,8" Text="Anote en bolivianos lo que pagará además de los tributos. El IVA se trata como crédito fiscal (no es costo) salvo que lo cambie en Configuración."/>
+                <Grid>
+                  <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition Width="90"/></Grid.ColumnDefinitions>
+                  <StackPanel><TextBlock Text="Agencia despachante (Bs)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Honorarios}"/></StackPanel>
+                  <StackPanel Grid.Column="2"><TextBlock Text="Almacenaje (Bs)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Almacenaje}"/></StackPanel>
+                  <StackPanel Grid.Column="4"><TextBlock Text="Transporte interno (Bs)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding TransporteInterno}"/></StackPanel>
+                  <StackPanel Grid.Column="6"><TextBlock Text="Otros gastos (Bs)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding OtrosGastos}"/></StackPanel>
+                  <StackPanel Grid.Column="8"><TextBlock Text="Días en almacén" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding DiasAlmacenaje}"/></StackPanel>
+                </Grid>
+                <StackPanel Orientation="Horizontal" Margin="0,8,0,8">
+                  <Button Content="Guardar gastos" Command="{Binding GuardarGastosCmd}" Style="{StaticResource BtnExito}"/>
+                  <Button Content="Estimar almacenaje" Command="{Binding EstimarAlmacenajeCmd}" Style="{StaticResource BtnSecundario}" ToolTip="Con la tarifa del recinto configurada"/>
+                  <TextBlock Text="{Binding Mensaje}" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#8A5A00" TextWrapping="Wrap" MaxWidth="560"/>
+                </StackPanel>
+                <DataGrid ItemsSource="{Binding Costeo}" IsReadOnly="True" MinHeight="70" MaxHeight="220">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="N.º" Binding="{Binding N}" Width="44"/>
+                    <DataGridTextColumn Header="Partida" Binding="{Binding Partida}" Width="112"/>
+                    <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="*"/>
+                    <DataGridTextColumn Header="CIF" Binding="{Binding Cif}" Width="*"/>
+                    <DataGridTextColumn Header="GA+ICE+IEHD" Binding="{Binding Tributos}" Width="*"/>
+                    <DataGridTextColumn Header="Gastos" Binding="{Binding Gastos}" Width="*"/>
+                    <DataGridTextColumn Header="Costo total" Binding="{Binding Costo}" Width="*"/>
+                    <DataGridTextColumn Header="Factor" Binding="{Binding Factor}" Width="*"/>
+                    <DataGridTextColumn Header="Costo unitario" Binding="{Binding Unitario}" Width="*"/>
+                  </DataGrid.Columns>
+                </DataGrid>
+                <TextBlock Text="{Binding ResumenCosteo}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                <TextBlock Text="{Binding FlujoCaja}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{StaticResource TurquesaOscuro}" Margin="0,4,0,0"/>
+              </StackPanel>
+            </Border>
+          </StackPanel></ScrollViewer>
+        </TabItem>
+
+        <!-- ===================== DESPACHO (DIM) ===================== -->
+        <TabItem Header="Despacho">
+          <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,8,0,0"><Grid DataContext="{Binding Despacho}">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <StackPanel>
+              <Border Style="{StaticResource Card}">
+                <StackPanel>
+                  <TextBlock Text="1 · Datos de la DIM (Declaración de Importación de Mercancías)" Style="{StaticResource Subtitulo}"/>
+                  <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                    <StackPanel><TextBlock Text="Tipo de despacho" Style="{StaticResource Etiqueta}"/><ComboBox ItemsSource="{Binding Tipos}" SelectedItem="{Binding TipoDespacho}"/></StackPanel>
+                    <StackPanel Grid.Column="2"><TextBlock Text="Régimen aduanero" Style="{StaticResource Etiqueta}"/><ComboBox ItemsSource="{Binding Regimenes}" SelectedItem="{Binding Regimen}"/></StackPanel>
+                  </Grid>
+                  <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                    <StackPanel><TextBlock Text="Aduana de ingreso" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding AduanaIngreso}"/></StackPanel>
+                    <StackPanel Grid.Column="2"><TextBlock Text="Aduana de destino" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding AduanaDestino}"/></StackPanel>
+                    <StackPanel Grid.Column="4"><TextBlock Text="Código de declarante (ADA)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding CodigoDeclarante}"/></StackPanel>
+                  </Grid>
+                  <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                    <StackPanel><TextBlock Text="Modalidad de transporte" Style="{StaticResource Etiqueta}"/><ComboBox ItemsSource="{Binding Modalidades}" SelectedItem="{Binding Modalidad}"/></StackPanel>
+                    <StackPanel Grid.Column="2"><TextBlock Text="{Binding EtiquetaEmbarque}" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding NroDocEmbarque}"/></StackPanel>
+                    <StackPanel Grid.Column="4"><TextBlock Text="{Binding EtiquetaManifiesto}" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding NroManifiesto}"/></StackPanel>
+                  </Grid>
+                  <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                    <StackPanel><TextBlock Text="Bultos (manifiesto)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding Bultos}"/></StackPanel>
+                    <StackPanel Grid.Column="2"><TextBlock Text="Peso bruto manifiesto (kg)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding PesoManifiesto}"/></StackPanel>
+                    <StackPanel Grid.Column="4"><TextBlock Text="N.º de DAV" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding NroDav}"/></StackPanel>
+                    <StackPanel Grid.Column="6"><TextBlock Text="N.º de DIM" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding NroDim}"/></StackPanel>
+                  </Grid>
+                  <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button Content="Guardar" Command="{Binding GuardarCmd}" Style="{StaticResource BtnExito}"/>
+                    <Button Content="Validar la DIM" Command="{Binding ValidarCmd}" Style="{StaticResource BtnSecundario}"/>
+                  </StackPanel>
+                  <TextBlock Text="{Binding Mensaje}" Foreground="#8A5A00" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource Card}">
+                <StackPanel>
+                  <TextBlock Text="2 · Validación previa de la DIM" Style="{StaticResource Subtitulo}"/>
+                  <Border CornerRadius="6" Padding="10,6" Background="{Binding EstadoDimColor}" Margin="0,0,0,6"><TextBlock Text="{Binding EstadoDim}" Foreground="White" FontWeight="Bold"/></Border>
+                  <ItemsControl ItemsSource="{Binding Hallazgos}"><ItemsControl.ItemTemplate><DataTemplate>
+                    <DockPanel Margin="0,3">
+                      <Border DockPanel.Dock="Left" CornerRadius="9" Padding="8,1" Margin="0,0,8,0" Width="68" Background="{Binding ColorHex}" VerticalAlignment="Top"><TextBlock Text="{Binding Nivel}" Foreground="White" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center"/></Border>
+                      <TextBlock Text="{Binding Texto}" TextWrapping="Wrap"/>
+                    </DockPanel>
+                  </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+              <Border Style="{StaticResource Card}">
+                <StackPanel>
+                  <TextBlock Text="3 · Canal de selectividad" Style="{StaticResource Subtitulo}"/>
+                  <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,0,0,6" Text="Elija el canal que asignó la Aduana: el sistema genera la lista de control que corresponde."/>
+                  <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="180"/><ColumnDefinition Width="10"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <StackPanel><TextBlock Text="Canal" Style="{StaticResource Etiqueta}"/><ComboBox ItemsSource="{Binding Canales}" SelectedItem="{Binding Canal}"/></StackPanel>
+                    <Border Grid.Column="2" CornerRadius="6" Margin="0,18,0,0" Background="{Binding ColorCanal}" Height="34"><TextBlock Text="{Binding Canal}" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center"/></Border>
+                  </Grid>
+                  <TextBlock Text="Observaciones de la Aduana (acta, notificación)" Style="{StaticResource Etiqueta}"/>
+                  <TextBox Text="{Binding ObservacionAduana}" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="54" VerticalContentAlignment="Top"/>
+                  <StackPanel Orientation="Horizontal" Margin="0,8,0,6">
+                    <Button Content="Asignar canal y generar lista" Command="{Binding AsignarCanalCmd}" Style="{StaticResource BtnExito}"/>
+                  </StackPanel>
+                  <ItemsControl ItemsSource="{Binding Tareas}"><ItemsControl.ItemTemplate><DataTemplate>
+                    <CheckBox IsChecked="{Binding Hecha}" Margin="0,4"><TextBlock Text="{Binding Texto}" TextWrapping="Wrap" MaxWidth="470"/></CheckBox>
+                  </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource Card}">
+                <StackPanel>
+                  <TextBlock Text="4 · Levante" Style="{StaticResource Subtitulo}"/>
+                  <StackPanel Orientation="Horizontal">
+                    <DatePicker SelectedDate="{Binding FechaLevante}" Width="170"/>
+                    <Button Content="Registrar levante" Command="{Binding LevanteCmd}" Style="{StaticResource BtnSecundario}" Margin="10,0,0,0"/>
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource Card}" Margin="0">
+                <StackPanel>
+                  <TextBlock Text="5 · Duda razonable y descargos" Style="{StaticResource Subtitulo}"/>
+                  <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,0,0,6" Text="Si la Aduana emite un Acta de Reconocimiento o un Informe de Variación de Valor, genere el borrador de respuesta con la lista de pruebas (SWIFT, transferencias, cartas de crédito, listas de precios, catálogos)."/>
+                  <Button Content="Generar borrador de descargos…" Click="Descargo_Click" Style="{StaticResource BtnSecundario}" HorizontalAlignment="Left"/>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Grid></ScrollViewer>
         </TabItem>
 
         <!-- ===================== DECISIÓN ===================== -->
@@ -261,7 +501,7 @@
         </TabItem>
 
         <!-- ===================== CONTRASTE CON DIM ===================== -->
-        <TabItem Header="Contraste con DIM">
+        <TabItem Header="Contraste">
           <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,8,0,0"><StackPanel DataContext="{Binding Decision}">
             <Border Style="{StaticResource Card}">
               <StackPanel>
@@ -281,7 +521,7 @@
         </TabItem>
 
         <!-- ===================== COSTOS REALES ===================== -->
-        <TabItem Header="Costos reales">
+        <TabItem Header="Costos">
           <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0,8,0,0"><StackPanel>
             <Border Style="{StaticResource Card}">
               <StackPanel>
@@ -315,7 +555,7 @@
         </TabItem>
 
         <!-- ===================== RUTA CRÍTICA ===================== -->
-        <TabItem Header="Ruta crítica">
+        <TabItem Header="Ruta">
           <Border Style="{StaticResource Card}" Margin="0,8,0,0">
             <DataGrid ItemsSource="{Binding Etapas}" IsReadOnly="True">
               <DataGrid.Columns>
@@ -334,7 +574,7 @@
         </TabItem>
 
         <!-- ===================== LEGAJO Y BITÁCORA ===================== -->
-        <TabItem Header="Legajo y bitácora">
+        <TabItem Header="Legajo">
           <Grid Margin="0,8,0,0">
             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
             <Border Style="{StaticResource Card}" Margin="0" VerticalAlignment="Top">

@@ -102,7 +102,8 @@ public sealed class ServicioOperaciones(ComexDb db)
         var op = await db.Operaciones.Include(o => o.Items).Include(o => o.Liquidaciones).SingleAsync(o => o.Id == opId);
         Money? M(decimal v) => v == 0 ? null : new Money(v, op.MonedaFactura);
         var core = new OperacionImportacion(op.Incoterm, op.MonedaFactura, op.Items.OrderBy(i => i.Numero).Select(i => i.ToCore()).ToList(),
-            M(op.GastosOrigen), M(op.Flete), M(op.Seguro), M(op.OtrosGastosFrontera), M(op.Deducciones), op.OtrasErogacionesBob);
+            M(op.GastosOrigen), M(op.Flete), M(op.Seguro), M(op.OtrosGastosFrontera), M(op.Deducciones), op.OtrasErogacionesBob,
+            M(op.Ajustes().TotalAdiciones), M(op.Ajustes().TotalDeducciones));
         var r = CalculadoraTributaria.Calcular(core, tc, p);
 
         var version = op.Liquidaciones.Count + 1;
