@@ -238,14 +238,15 @@ export async function buscarActivos(db: Db, q: { texto?: string; situacion?: str
   return w;
 }
 
-export async function guardarFicha(db: Db, u: Usuario, codigo: string, d: { descripcion: string; marca?: string; modelo?: string; serie?: string; color?: string; estado: string; valor?: number; observaciones?: string; campos?: Record<string, string> }) {
+export async function guardarFicha(db: Db, u: Usuario, codigo: string, d: { descripcion: string; marca?: string; modelo?: string; serie?: string; color?: string; estado: string; valor?: number; operativo?: string; observaciones?: string; campos?: Record<string, string> }) {
   const a = await db('af_activos').where({ codigo }).first();
   if (!a) throw new NotFound(`No existe el activo ${codigo}.`);
   if (!txt(d.descripcion)) fail('Registre la descripción del activo.');
   if (!(await db('af_estados').where({ estado: d.estado }).first())) fail(`El estado físico "${d.estado}" no existe.`);
   if (d.valor !== undefined && d.valor !== null && (isNaN(Number(d.valor)) || Number(d.valor) < 0)) fail('El valor debe ser numérico.');
   const upd: Record<string, unknown> = { descripcion: txt(d.descripcion), marca: txt(d.marca), modelo: txt(d.modelo), serie: txt(d.serie), color: txt(d.color), estado: d.estado, observaciones: txt(d.observaciones) };
-  if (d.valor !== undefined && d.valor !== null) upd.valor = num(d.valor);
+  if (d.operativo === 'SI' || d.operativo === 'NO') upd.operativo = d.operativo;
+  if (d.valor !== undefined && d.valor !== null) { upd.valor = num(d.valor); upd.valor_libros = null; }
   const campos = await db('af_campos').where({ id_cta: a.id_cta });
   for (const c of campos) upd['c' + String(c.nro).padStart(2, '0')] = txt(d.campos?.[String(c.nro)]);
   await db('af_activos').where({ codigo }).update(upd);

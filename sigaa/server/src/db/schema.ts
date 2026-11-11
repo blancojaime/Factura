@@ -825,9 +825,57 @@ export const TABLES: Record<string, Builder> = {
     for (let i = 1; i <= 4; i++) t.string('foto' + i, 300);
     t.string('etq_impresa', 2).defaultTo('NO');
     t.text('observaciones');
+    t.string('operativo', 2).defaultTo('SI'); // SI|NO: no operativo = desuso/obsoleto/propuesto para baja (no entra al revalúo)
+    t.decimal('valor_libros', 18, 4); // valor en libros neto (Bs 1 = totalmente depreciado); vacío = se toma el valor; el revalúo lo actualiza
+    t.integer('vida_residual'); // vida útil residual en meses (la fija el revalúo técnico)
+    t.string('revaluado', 10); // fecha del último revalúo técnico aprobado
     t.index(['situacion']);
     t.index(['funcionario']);
     t.index(['nro_ingreso']);
+  },
+  af_reval_lotes: (t) => {
+    t.increments('id');
+    t.string('nro', 20).notNullable().unique(); // REV-0001/2026
+    t.string('fecha', 10).notNullable();
+    t.string('descripcion', 240);
+    t.string('estado', 12).notNullable().defaultTo('BORRADOR'); // BORRADOR|APROBADO
+    t.string('perito', 140);
+    t.string('perito_cargo', 140);
+    t.text('comision'); // un integrante por línea: Nombre | Cargo
+    t.string('resolucion', 60);
+    t.string('fecha_aprob', 10);
+    t.string('usuario', 40);
+    t.string('fecha_reg', 30);
+  },
+  af_reval_items: (t) => {
+    t.increments('id');
+    t.integer('lote_id').notNullable();
+    t.string('codigo', 20).notNullable();
+    t.decimal('valor_anterior', 18, 4).defaultTo(1);
+    t.string('estado_fisico', 20);
+    t.string('operativo', 2).defaultTo('SI');
+    t.string('metodo', 10).defaultTo('PROMEDIO'); // PROMEDIO|MEDIANA
+    t.decimal('vn_base', 18, 4).defaultTo(0);
+    t.decimal('factor', 8, 4);
+    t.decimal('vtr', 18, 4).defaultTo(0);
+    t.decimal('incremento', 18, 4).defaultTo(0);
+    t.integer('vida_anios').defaultTo(0);
+    t.integer('vida_meses').defaultTo(0);
+    t.text('justificacion');
+    t.unique(['lote_id', 'codigo']);
+    t.index(['codigo']);
+  },
+  af_reval_cotizaciones: (t) => {
+    t.increments('id');
+    t.integer('item_id').notNullable();
+    t.string('proveedor', 160);
+    t.string('nit', 30);
+    t.string('fecha', 10);
+    t.string('nro_proforma', 40);
+    t.string('referencia', 300); // enlace (link) o descripción del bien similar cotizado
+    t.decimal('valor', 18, 4).notNullable(); // Valor a Nuevo (VN)
+    t.string('soporte', 300); // archivo adjunto (proforma escaneada)
+    t.index(['item_id']);
   },
   af_solicitudes: (t) => {
     t.string('nro', 20).primary(); // SOL-0001/2026
@@ -932,6 +980,10 @@ const COLUMNAS_NUEVAS: [tabla: string, columna: string, def: (t: Knex.AlterTable
   ['af_movimientos', 'resolucion', (t) => t.string('resolucion', 40)],
   ['af_movimientos', 'motivo_cod', (t) => t.integer('motivo_cod')],
   ['af_ingresos', 'org_fin', (t) => t.string('org_fin', 3)],
+  ['af_activos', 'operativo', (t) => t.string('operativo', 2).defaultTo('SI')],
+  ['af_activos', 'valor_libros', (t) => t.decimal('valor_libros', 18, 4)],
+  ['af_activos', 'vida_residual', (t) => t.integer('vida_residual')],
+  ['af_activos', 'revaluado', (t) => t.string('revaluado', 10)],
   ['alm_ingresos', 'comision_cargo', (t) => t.string('comision_cargo', 160)],
 ];
 

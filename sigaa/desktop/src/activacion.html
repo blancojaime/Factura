@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Activación de SIGAA</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<style>
+  body{font-family:Segoe UI,Arial,sans-serif;background:#14263f;color:#1b2a3d;margin:0;padding:18px}
+  .card{background:#fff;border-radius:10px;padding:20px 24px;max-width:620px;margin:0 auto}
+  h1{font-size:20px;margin:0 0 4px;color:#14263f} .sub{color:#5a6b80;margin:0 0 14px;font-size:13px}
+  .estado{padding:10px 12px;border-radius:8px;margin-bottom:12px;font-size:14px}
+  .ok{background:#e6f4ea;color:#14532d}.warn{background:#fff4d6;color:#7a4b00}.bad{background:#fde8e8;color:#8a1c1c}
+  label{font-weight:600;font-size:13px;display:block;margin:10px 0 4px}
+  .id{display:flex;gap:8px;align-items:center}.id code{font-size:18px;letter-spacing:1px;background:#eef2f7;padding:6px 10px;border-radius:6px;flex:1}
+  textarea{width:100%;box-sizing:border-box;height:84px;font-family:Consolas,monospace;font-size:12px;border:1px solid #9aa7b8;border-radius:6px;padding:6px}
+  button{padding:8px 16px;border-radius:6px;border:1px solid #9aa7b8;background:#fff;cursor:pointer;font-size:14px}
+  button.p{background:#1f3a5f;color:#fff;border-color:#1f3a5f}.fila{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  small{color:#5a6b80}
+</style></head><body><div class="card">
+<h1>Activación de SIGAA</h1><p class="sub">Sistema Integrado de Gestión de Almacenes, Combustible y Activos Fijos</p>
+<div id="est" class="estado"></div>
+<label>ID de este equipo (envíelo al proveedor para recibir su clave)</label>
+<div class="id"><code id="eq">…</code><button id="cp">Copiar</button></div>
+<label for="clave">Clave de activación</label>
+<textarea id="clave" placeholder="Pegue aquí la clave completa que recibió (empieza con SIGAA1-)"></textarea>
+<div id="msg" class="estado bad" style="display:none;margin-top:8px"></div>
+<div class="fila"><button class="p" id="act">Activar</button><button id="cont" style="display:none"></button><button id="sal">Cerrar</button></div>
+<p><small>Contacto del proveedor: WhatsApp 68240905 · jbconsultor3@gmail.com</small></p>
+</div>
+<script>
+const $=(i)=>document.getElementById(i);
+function pinta(e){
+  $('eq').textContent=e.equipo;
+  const est=$('est');
+  if(e.estado==='ACTIVA'){est.className='estado ok';est.textContent='✔ Licencia activa para '+e.entidad+' ('+e.tipo+')'+(e.vence?'. Vence el '+e.vence.split('-').reverse().join('/')+' ('+e.diasRestantes+' días).':'. Sin vencimiento.');}
+  else if(e.estado==='PRUEBA'){est.className='estado warn';est.textContent='Período de prueba: le quedan '+e.diasRestantes+' día(s). Para seguir usando SIGAA después, ingrese su clave de activación.';}
+  else{est.className='estado bad';est.textContent=e.mensaje||'Ingrese su clave de activación.';}
+  const c=$('cont');
+  if(e.estado==='PRUEBA'||e.estado==='ACTIVA'){c.style.display='';c.textContent=e.estado==='PRUEBA'?'Continuar con la prueba':'Continuar';}else c.style.display='none';
+}
+window.sigaaLic.estado().then(pinta);
+$('cp').onclick=()=>window.sigaaLic.copiar($('eq').textContent);
+$('act').onclick=async()=>{const r=await window.sigaaLic.activar($('clave').value);const m=$('msg');if(r.error){m.style.display='';m.textContent=r.error;}else{m.style.display='none';pinta(r.estado);$('clave').value='';}};
+$('cont').onclick=()=>window.sigaaLic.continuar();
+$('sal').onclick=()=>window.sigaaLic.cerrar();
+</script></body></html>

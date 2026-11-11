@@ -7,7 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Knex } from 'knex';
 import { createSchema } from './schema.js';
-import { DEFAULT_CONFIG } from './defaults.js';
+import { DEFAULT_CONFIG, type CfgDef } from './defaults.js';
 import { asegurarAdmin, asegurarUsuariosDemo } from '../core/auth.js';
 import { registrarNro } from '../core/services.js';
 
@@ -48,9 +48,41 @@ async function insIgnore(db: Knex, table: string, rows: Row[], key: string) {
   await ins(db, table, nuevos);
 }
 
-export async function seedConfig(db: Knex) {
+/**
+ * Catálogos NORMATIVOS (iguales para cualquier entidad): grupos y causales de almacenes, tipos de vehículo, cuentas
+ * contables, campos y estados de activos fijos. Se cargan siempre (también en la base vacía de distribución).
+ */
+export async function seedNormativos(db: Knex) {
+  const vacia = async (t: string) => !(await db(t).first());
+  if (await vacia('alm_grupos')) {
+    const a = load('almacenes.json');
+  await ins(db, 'alm_grupos', a.T_GRUPOS.map((g) => ({ grupo: g.Grupo, nombre: g.NombreGrupo })));
+  await ins(db, 'alm_subgrupos', a.T_SUBGRUPOS.map((g) => ({ grupo: g.Grupo, subgrupo: g.SubGrupo, nombre: g.Nombre })));
+  await ins(db, 'alm_unidades_medida', a.T_UMEDIDA.map((u) => ({ nombre: u.Unidad })));
+  await ins(db, 'alm_causales', a.T_CAUSALES.map((c) => ({ causal: c.Causal, grupo: c.Grupo })));
+  await ins(db, 'alm_pasos', a.T_PASOS.map((p) => ({ grupo: p.Grupo, orden: p.Orden, paso: p.Paso, doc: s(p.Doc), clase: s(p.Clase), obligatorio: s(p.Obligatorio) ?? 'SI' })));
+  await ins(db, 'alm_docreq', a.T_DOCREQ.map((p) => ({ tipo: p.Tipo, orden: p.Orden, documento: p.Documento, obligatorio: s(p.Obligatorio) ?? 'SI' })));
+  }
+  if (await vacia('com_tipos')) {
+    const c = load('combustible.json');
+  await ins(db, 'com_tipos', c.tblTipos.map((t) => ({ tipo: t.Tipo, clase: s(t.Clase), medidor: s(t.Medidor), rendimiento_ref: n(t['Rendimiento Ref']) })));
+  }
+  if (await vacia('af_cuentas')) {
+    const f = load('activos.json');
+  await ins(db, 'af_cuentas', f.T_CUENTAS.map((x) => ({ id_cta: x.ID_Cta, cuenta: x.Cuenta, partida: s(x.Partida), cod_vsiaf: x.Cod_VSIAF, cuenta_vsiaf: s(x.Cuenta_VSIAF), vida_util: n(x.Vida_Util) })));
+  await ins(db, 'af_auxiliares', f.T_AUX.map((x) => ({ id_cta: x.ID_Cta, id_aux: x.ID_Aux, auxiliar: x.Auxiliar })));
+  await ins(db, 'af_campos', f.T_CAMPOS.map((x) => ({ id_cta: x.ID_Cta, nro: x.Nro, campo: x.Campo, descripcion: s(x.Descripcion) })));
+  await ins(db, 'af_estados', f.T_ESTADOS.map((x) => ({ cod: pad2(x.Cod), estado: x.Estado, factor: n(x.Factor), descripcion: s(x.Descripcion) })));
+  }
+}
+
+/** Configuración de la base vacía: sin los datos de la entidad de demostración (se completan en Administración → Configuración). */
+const NEUTRAS: Record<string, string> = { Entidad: 'NOMBRE DE LA ENTIDAD (configúrelo en Administración)', Sigla: 'SIGLA', NitEntidad: '', Secretaria: 'UNIDAD ADMINISTRATIVA Y FINANCIERA', Municipio: '', Departamento: '' };
+const neutra = (c: CfgDef): CfgDef => (c.clave in NEUTRAS ? { ...c, valor: NEUTRAS[c.clave] } : /^Nombre[A-Za-z]+$/.test(c.clave) ? { ...c, valor: '' } : c);
+
+export async function seedConfig(db: Knex, o: { neutro?: boolean } = {}) {
   const ex = new Set((await db('core_config').select('clave')).map((r: any) => r.clave));
-  await ins(db, 'core_config', DEFAULT_CONFIG.filter((c) => !ex.has(c.clave)));
+  await ins(db, 'core_config', (o.neutro ? DEFAULT_CONFIG.map(neutra) : DEFAULT_CONFIG).filter((c) => !ex.has(c.clave)));
 }
 
 export async function seedAlmacenes(db: Knex) {
@@ -59,12 +91,6 @@ export async function seedAlmacenes(db: Knex) {
   const bc = (v: any): string | null => (v === null || v === undefined ? null : bodNom.get(String(v)) ?? (/^\d+$/.test(String(v)) ? pad2(v) : null));
 
   await ins(db, 'alm_bodegas', a.T_BODEGAS.map((b) => ({ cod: pad2(b.CodBod), nombre: b.Bodega, responsable: s(b.Responsable), ubicacion: s(b.Ubicacion), estado: s(b.Estado) ?? 'ACTIVO' })));
-  await ins(db, 'alm_grupos', a.T_GRUPOS.map((g) => ({ grupo: g.Grupo, nombre: g.NombreGrupo })));
-  await ins(db, 'alm_subgrupos', a.T_SUBGRUPOS.map((g) => ({ grupo: g.Grupo, subgrupo: g.SubGrupo, nombre: g.Nombre })));
-  await ins(db, 'alm_unidades_medida', a.T_UMEDIDA.map((u) => ({ nombre: u.Unidad })));
-  await ins(db, 'alm_causales', a.T_CAUSALES.map((c) => ({ causal: c.Causal, grupo: c.Grupo })));
-  await ins(db, 'alm_pasos', a.T_PASOS.map((p) => ({ grupo: p.Grupo, orden: p.Orden, paso: p.Paso, doc: s(p.Doc), clase: s(p.Clase), obligatorio: s(p.Obligatorio) ?? 'SI' })));
-  await ins(db, 'alm_docreq', a.T_DOCREQ.map((p) => ({ tipo: p.Tipo, orden: p.Orden, documento: p.Documento, obligatorio: s(p.Obligatorio) ?? 'SI' })));
   await ins(db, 'alm_extintores', a.T_EXTINT.map((x) => ({ cod: x.CodExt, cod_bod: bc(x.Bodega), tipo: s(x.Tipo), capacidad: s(x.Capacidad), ult_recarga: d(x.UltRecarga), venc_recarga: d(x.VencRecarga), estado: s(x.Estado) ?? 'ACTIVO' })));
   await ins(db, 'alm_seguros', a.T_SEGUROS.map((x) => ({ poliza: x.Poliza, aseguradora: s(x.Aseguradora), cobertura: s(x.Cobertura), desde: d(x.Desde), hasta: d(x.Hasta), monto_asegurado: n(x.MontoAsegurado), archivo: s(x.Archivo), estado: s(x.Estado) ?? 'VIGENTE' })));
   await ins(db, 'alm_catalogo', a.T_CATALOGO.map((c) => ({
@@ -118,7 +144,6 @@ export async function seedAlmacenes(db: Knex) {
 
 export async function seedCombustible(db: Knex) {
   const c = load('combustible.json');
-  await ins(db, 'com_tipos', c.tblTipos.map((t) => ({ tipo: t.Tipo, clase: s(t.Clase), medidor: s(t.Medidor), rendimiento_ref: n(t['Rendimiento Ref']) })));
   await ins(db, 'com_vehiculos', c.tblVehiculos.map((v) => ({
     codigo: v['Código'], placa: String(v.Placa), tipo: s(v.Tipo), clase: s(v.Clase), uso: s(v.Uso), marca: s(v.Marca), modelo: s(v.Modelo), anio: v['Año'] ?? null, color: s(v.Color), combustible: s(v.Combustible), medidor: s(v.Medidor),
     capacidad_tanque: n(v['Capacidad Tanque L']), rendimiento: n(v.Rendimiento), unidad: s(v.Unidad), conductor: s(v['Conductor Asignado']), acta_asignacion: s(v['Acta Asignación']), estado: s(v.Estado) ?? 'Activo', observaciones: s(v.Observaciones),
@@ -137,12 +162,8 @@ export async function seedCombustible(db: Knex) {
 
 export async function seedActivos(db: Knex) {
   const f = load('activos.json');
-  await ins(db, 'af_cuentas', f.T_CUENTAS.map((x) => ({ id_cta: x.ID_Cta, cuenta: x.Cuenta, partida: s(x.Partida), cod_vsiaf: x.Cod_VSIAF, cuenta_vsiaf: s(x.Cuenta_VSIAF), vida_util: n(x.Vida_Util) })));
-  await ins(db, 'af_auxiliares', f.T_AUX.map((x) => ({ id_cta: x.ID_Cta, id_aux: x.ID_Aux, auxiliar: x.Auxiliar })));
-  await ins(db, 'af_campos', f.T_CAMPOS.map((x) => ({ id_cta: x.ID_Cta, nro: x.Nro, campo: x.Campo, descripcion: s(x.Descripcion) })));
   await ins(db, 'af_edificios', f.T_EDIF.map((x) => ({ cod_edif: x.CodEdif, edificio: x.Edificio, sector: s(x.Sector), comunidad: s(x.Comunidad), responsable: s(x.Responsable) })));
   await ins(db, 'af_ambientes', f.T_AMB.map((x) => ({ cod_edif: x.CodEdif, cod_amb: x.CodAmb, ambiente: x.Ambiente, responsable: s(x.Responsable) })));
-  await ins(db, 'af_estados', f.T_ESTADOS.map((x) => ({ cod: pad2(x.Cod), estado: x.Estado, factor: n(x.Factor), descripcion: s(x.Descripcion) })));
   await insIgnore(db, 'core_unidades', f.T_UNID.map((u) => ({ nombre: u.Unidad })), 'nombre');
   await insIgnore(db, 'core_funcionarios', f.T_FUNC.map((x) => ({ nombre: x.Nombre, ci: s(x.CI), cargo: s(x.Cargo), unidad: s(x.Unidad), celular: s(x.Celular), estado: s(x.Estado) ?? 'ACTIVO' })), 'nombre');
   await insIgnore(db, 'core_proveedores', f.T_PROV.map((x) => ({ nit: String(x.NIT), razon_social: x.RazonSocial, contacto: s(x.Representante), telefono: s(x.Telefono), direccion: s(x.Direccion) })), 'razon_social');
@@ -167,9 +188,11 @@ export async function seedActivos(db: Knex) {
   for (const x of f.T_MOV.map((r) => r.Documento).filter(Boolean)) await registrarNro(db, x, 'AF.' + String(x).split('-')[0]);
 }
 
+/** Base inicial. demo=true: datos de demostración (Calamarca); demo=false (distribución): vacía, con solo configuración, catálogos normativos y el administrador. */
 export async function seedAll(db: Knex, opts: { demo?: boolean } = {}) {
   await createSchema(db);
-  await seedConfig(db);
+  await seedConfig(db, { neutro: opts.demo === false });
+  await seedNormativos(db);
   if (opts.demo !== false) {
     const hay = await db('alm_bodegas').first();
     if (!hay) {

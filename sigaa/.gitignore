@@ -6,3 +6,4 @@ data/
 .env
 release/
 build-deps/
+tools/licencias/privada/

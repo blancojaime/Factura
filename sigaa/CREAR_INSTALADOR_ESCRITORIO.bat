@@ -25,6 +25,12 @@ echo [2/4] Construyendo servidor y pantallas...
 call npm run build
 if errorlevel 1 goto reparar
 echo.
+echo Preparando la clave de activacion (licenciamiento)...
+if not exist desktop\licencia\publica.pem (
+  node tools\licencias\generador.mjs --crear-par-si-falta
+  if errorlevel 1 goto fallo
+)
+echo.
 echo [3/4] Preparando la aplicacion de escritorio...
 cd desktop
 call npm install --ignore-scripts

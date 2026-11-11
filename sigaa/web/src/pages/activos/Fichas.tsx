@@ -19,7 +19,7 @@ export default function AfFichas() {
   const cargar = (codigo: string) => run(async () => {
     const d = await get(`/af/activos/${encodeURIComponent(codigo)}`);
     setA(d);
-    setF({ descripcion: d.descripcion, marca: d.marca ?? '', modelo: d.modelo ?? '', serie: d.serie ?? '', color: d.color ?? '', estado: d.estado, valor: d.valor, observaciones: d.observaciones ?? '', campos: Object.fromEntries(d.campos.map((c: any) => [String(c.nro), c.valor ?? ''])) });
+    setF({ descripcion: d.descripcion, marca: d.marca ?? '', modelo: d.modelo ?? '', serie: d.serie ?? '', color: d.color ?? '', estado: d.estado, operativo: d.operativo || 'SI', valor: d.valor, observaciones: d.observaciones ?? '', campos: Object.fromEntries(d.campos.map((c: any) => [String(c.nro), c.valor ?? ''])) });
   });
   const idx = a ? (lista ?? []).findIndex((x) => x.codigo === a.codigo) : -1;
   const editable = puede('af');
@@ -37,6 +37,7 @@ export default function AfFichas() {
               <div className="grid">
                 <TextField className="span2" label="Descripción" req value={f.descripcion} onChange={(v) => setF({ ...f, descripcion: v })} disabled={!editable} />
                 <SelectField label="Estado físico" blank={false} value={f.estado} onChange={(v) => setF({ ...f, estado: v })} disabled={!editable} options={(meta?.estados ?? []).map((e) => e.estado)} />
+                <SelectField label="¿Operativo? (NO = desuso, obsoleto o para baja; no entra al revalúo)" blank={false} value={f.operativo} onChange={(v) => setF({ ...f, operativo: v })} disabled={!editable} options={['SI', 'NO']} />
                 <NumField label="Valor (Bs)" value={f.valor} onChange={(v) => setF({ ...f, valor: v })} disabled={!editable} />
                 <Field label="Cuenta contable"><input readOnly value={a.cuenta ?? ''} /></Field>
                 <Field label="Auxiliar"><input readOnly value={a.auxiliar ?? ''} /></Field>

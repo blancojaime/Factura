@@ -17,6 +17,7 @@
     "adm-zip": "^0.6.1",
     "better-sqlite3": "^13.0.3",
     "decimal.js": "^10.6.0",
+    "docx": "^9.7.1",
     "exceljs": "^4.4.0",
     "fastify": "^5.12.8",
     "iconv-lite": "^0.7.3",

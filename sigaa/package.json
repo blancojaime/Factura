@@ -17,6 +17,8 @@
     "typecheck": "npm run typecheck -w server && npm run typecheck -w web",
     "desktop:install": "npm install --prefix desktop",
     "desktop": "npm run start --prefix desktop",
-    "desktop:dist": "npm run build && npm run dist --prefix desktop"
+    "desktop:dist": "npm run build && npm run dist --prefix desktop",
+    "seed:vacia": "npm run seed -w server -- --sin-demo",
+    "seed:demo": "npm run seed -w server"
   }
 }

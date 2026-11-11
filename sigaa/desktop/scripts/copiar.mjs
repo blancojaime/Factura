@@ -11,6 +11,13 @@ const copiar = (de, a) => {
 copiar(path.join(raiz, 'server/dist'), path.join(dist, 'server'));
 copiar(path.join(raiz, 'web/dist'), path.join(dist, 'web'));
 copiar(path.join(raiz, 'server/seed'), path.join(dist, 'seed'));
+// Licenciamiento: la clave PÚBLICA (desktop/licencia/publica.pem) va dentro de la aplicación. Sin ella no se genera el instalador
+// (para una prueba interna sin protección use SIGAA_SIN_LICENCIA=1).
+const pub = path.resolve(import.meta.dirname, '../licencia/publica.pem');
+if (fs.existsSync(pub)) fs.copyFileSync(pub, path.join(dist, 'licencia-publica.pem'));
+else if (process.env.SIGAA_SIN_LICENCIA === '1') { fs.writeFileSync(path.join(dist, 'licencia-publica.pem'), 'SIN_LICENCIA'); console.warn('⚠ Compilación SIN protección de licencia (SIGAA_SIN_LICENCIA=1). No la distribuya.'); }
+else throw new Error('Falta la clave pública de licenciamiento (desktop/licencia/publica.pem). Cree el par de claves con GENERADOR_DE_CLAVES.bat (opción 1) y vuelva a intentarlo.');
+fs.copyFileSync(path.resolve(import.meta.dirname, '../src/activacion.html'), path.join(dist, 'activacion.html'));
 fs.writeFileSync(path.join(dist, 'server/package.json'), JSON.stringify({ type: 'module' }));
 console.log('Recursos copiados a', dist);
 

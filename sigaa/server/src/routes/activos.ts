@@ -12,6 +12,8 @@ import { FOTOS_DIR, stickersPdf } from '../docs/activos.js';
 import { estructuraActivos, importarActivosExcel, plantillaActivos } from '../modules/activos/importar.js';
 import { cfgAll } from '../core/services.js';
 import { formatoImagen } from '../core/logo.js';
+import { actualizarLote, agregarCotizacion, aprobarLote, crearLote, editarCotizacion, elegibles, eliminarLote, FACTORES, guardarItem, guardarSoporte, listarLotes, marcarOperativo, obtenerLote, quitarCotizacion, quitarItem, REVAL_DIR } from '../modules/activos/revaluo.js';
+import { anexosDocx, informeTecnicoDocx } from '../docs/revaluoDocx.js';
 
 /** Rutas del módulo de Activos Fijos (/api/af). */
 export async function registerActivos({ db, app, w }: Ctx) {
@@ -27,6 +29,34 @@ export async function registerActivos({ db, app, w }: Ctx) {
   app.post(`${P}/importar`, W, async (req) => {
     if (!Buffer.isBuffer(req.body) || !(req.body as Buffer).length) fail('Seleccione un archivo .xlsx.');
     return importarActivosExcel(db, req.usuario, req.body as Buffer, q(req).confirmar === '1');
+  });
+
+  // ───────── Revalúo técnico (NC 4) ─────────
+  const R = `${P}/revaluo`;
+  const rid = (req: any) => Number((req.params as any).id);
+  const DOCX = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+  app.get(`${R}/meta`, async () => ({ factores: FACTORES, estados: Object.keys(FACTORES), cuentas: await db('af_cuentas').orderBy('id_cta'), auxiliares: await db('af_auxiliares').orderBy(['id_cta', 'id_aux']) }));
+  app.get(`${R}/bandeja`, async (req) => elegibles(db, { id_cta: q(req).id_cta ? Number(q(req).id_cta) : undefined, id_aux: q(req).id_aux ? Number(q(req).id_aux) : undefined, texto: q(req).texto, incluirEnLote: q(req).todos === '1' }));
+  app.put(`${R}/operativo/:codigo`, W, async (req) => marcarOperativo(db, req.usuario, decodeURIComponent((req.params as any).codigo), body(req).operativo, body(req).motivo));
+  app.get(`${R}/lotes`, async () => listarLotes(db));
+  app.post(`${R}/lotes`, W, async (req) => crearLote(db, req.usuario, body(req)));
+  app.get(`${R}/lotes/:id`, async (req) => obtenerLote(db, rid(req)));
+  app.put(`${R}/lotes/:id`, W, async (req) => actualizarLote(db, req.usuario, rid(req), body(req)));
+  app.delete(`${R}/lotes/:id`, W, async (req) => eliminarLote(db, req.usuario, rid(req)));
+  app.post(`${R}/lotes/:id/aprobar`, W, async (req) => aprobarLote(db, req.usuario, rid(req), body(req)));
+  app.get(`${R}/lotes/:id/informe`, async (req, reply) => sendFile(reply, await informeTecnicoDocx(db, rid(req)), DOCX, `Informe_Tecnico_Revaluo_${rid(req)}.docx`, false));
+  app.get(`${R}/lotes/:id/anexos`, async (req, reply) => sendFile(reply, await anexosDocx(db, rid(req)), DOCX, `Anexos_Revaluo_${rid(req)}.docx`, false));
+  app.put(`${R}/items/:id`, W, async (req) => guardarItem(db, req.usuario, rid(req), body(req)));
+  app.delete(`${R}/items/:id`, W, async (req) => quitarItem(db, req.usuario, rid(req)));
+  app.post(`${R}/items/:id/cotizaciones`, W, async (req) => agregarCotizacion(db, req.usuario, rid(req), body(req)));
+  app.put(`${R}/cotizaciones/:id`, W, async (req) => editarCotizacion(db, req.usuario, rid(req), body(req)));
+  app.delete(`${R}/cotizaciones/:id`, W, async (req) => quitarCotizacion(db, req.usuario, rid(req)));
+  app.put(`${R}/cotizaciones/:id/soporte`, W, async (req) => guardarSoporte(db, req.usuario, rid(req), req.body));
+  app.get(`${R}/soporte/:archivo`, async (req, reply) => {
+    const f = path.basename((req.params as any).archivo);
+    const p = path.join(REVAL_DIR(), f);
+    if (!fs.existsSync(p)) throw new NotFound('El archivo de soporte no existe.');
+    return sendFile(reply, fs.readFileSync(p), f.endsWith('.pdf') ? 'application/pdf' : f.endsWith('.png') ? 'image/png' : 'image/jpeg', f);
   });
 
   app.get(`${P}/indicadores`, async () => indicadoresAF(db));

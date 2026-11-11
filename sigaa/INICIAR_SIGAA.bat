@@ -23,8 +23,8 @@ if not exist web\dist\index.html (
 )
 
 if not exist server\data\sigaa.sqlite (
-  echo [3/3] Creando la base de datos con datos de ejemplo...
-  call npm run seed
+  echo [3/3] Creando la base de datos VACIA para iniciar...
+  call npm run seed:vacia
   if errorlevel 1 ( echo Fallo la creacion de la base de datos. & pause & exit /b 1 )
 )
 
