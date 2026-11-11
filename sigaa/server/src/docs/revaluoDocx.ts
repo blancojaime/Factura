@@ -208,7 +208,8 @@ export async function anexosDocx(db: Db, id: number): Promise<Buffer> {
   const { l, c, logo } = await contexto(db, id);
   const T = l.totales;
   const borrador = l.estado !== 'APROBADO';
-  const anchos = [450, 1250, 1900, 1300, 1150, 1500, 950, 1100, 1100, 800]; // 11500 (hoja carta horizontal)
+  const E = (a: number[]) => a.map((x) => Math.round(x * 1.2)); // hoja carta horizontal: 13 840 de ancho útil
+  const anchos = E([450, 1250, 1900, 1300, 1150, 1500, 950, 1100, 1100, 800]);
   const filas = l.items.map((i: any, n: number) => {
     const vn = i.cotizaciones.length ? `${fmt2(i.vn_base)} (${i.metodo === 'MEDIANA' ? 'mediana' : 'promedio'} de ${i.cotizaciones.length})` : '—';
     const vida = num(i.vida_anios) + num(i.vida_meses) / 12;
@@ -233,12 +234,12 @@ export async function anexosDocx(db: Db, id: number): Promise<Buffer> {
       aligns: [AlignmentType.CENTER, AlignmentType.LEFT, AlignmentType.LEFT, AlignmentType.LEFT, AlignmentType.CENTER, AlignmentType.RIGHT, AlignmentType.RIGHT, AlignmentType.RIGHT, AlignmentType.RIGHT, AlignmentType.CENTER], size: 16,
     }),
     H1('Anexo 2. Detalle de cotizaciones (respaldo del Valor a Nuevo)'),
-    cot.length ? tabla([1500, 500, 2400, 1200, 1200, 1300, 2300, 1100], ['Código', 'N°', 'Proveedor / fuente', 'NIT', 'Fecha', 'Proforma', 'Referencia / enlace', 'VN (Bs)'], cot, { size: 16, aligns: [AlignmentType.LEFT, AlignmentType.CENTER, AlignmentType.LEFT, AlignmentType.LEFT, AlignmentType.CENTER, AlignmentType.LEFT, AlignmentType.LEFT, AlignmentType.RIGHT] }) : P('No hay cotizaciones registradas.'),
+    cot.length ? tabla(E([1500, 500, 2400, 1200, 1200, 1300, 2300, 1100]), ['Código', 'N°', 'Proveedor / fuente', 'NIT', 'Fecha', 'Proforma', 'Referencia / enlace', 'VN (Bs)'], cot, { size: 16, aligns: [AlignmentType.LEFT, AlignmentType.CENTER, AlignmentType.LEFT, AlignmentType.LEFT, AlignmentType.CENTER, AlignmentType.LEFT, AlignmentType.LEFT, AlignmentType.RIGHT] }) : P('No hay cotizaciones registradas.'),
     H1('Anexo 3. Justificación técnica por activo'),
-    tabla([1700, 1000, 1000, 7800], ['Código', 'Factor', 'Vida útil', 'Justificación técnica del perito'], l.items.map((i: any) => [i.codigo, i.factor == null ? '—' : Number(i.factor).toFixed(2), `${i.vida_anios}a ${i.vida_meses}m`, i.justificacion || '—']), { size: 16, aligns: [AlignmentType.LEFT, AlignmentType.CENTER, AlignmentType.CENTER, AlignmentType.LEFT] }),
+    tabla(E([1700, 1000, 1000, 7800]), ['Código', 'Factor', 'Vida útil', 'Justificación técnica del perito'], l.items.map((i: any) => [i.codigo, i.factor == null ? '—' : Number(i.factor).toFixed(2), `${i.vida_anios}a ${i.vida_meses}m`, i.justificacion || '—']), { size: 16, aligns: [AlignmentType.LEFT, AlignmentType.CENTER, AlignmentType.CENTER, AlignmentType.LEFT] }),
     H1('Anexo 4. Asiento contable modelo sugerido'),
     P('Modelo referencial; el registro definitivo corresponde a la Unidad de Contabilidad según el Plan de Cuentas vigente de la entidad.', { i: true, size: 18 }),
-    tabla([6400, 2550, 2550], ['Cuenta', 'Debe (Bs)', 'Haber (Bs)'], [...debitos, ['Reserva por Revalúos Técnicos (Patrimonio)', '', fmt2(total)]], { aligns: [AlignmentType.LEFT, AlignmentType.RIGHT, AlignmentType.RIGHT], pie: ['SUMAS IGUALES', fmt2(total), fmt2(total)], size: 20 }),
+    tabla(E([6400, 2550, 2550]), ['Cuenta', 'Debe (Bs)', 'Haber (Bs)'], [...debitos, ['Reserva por Revalúos Técnicos (Patrimonio)', '', fmt2(total)]], { aligns: [AlignmentType.LEFT, AlignmentType.RIGHT, AlignmentType.RIGHT], pie: ['SUMAS IGUALES', fmt2(total), fmt2(total)], size: 20 }),
     P(''),
     P([run('Glosa: ', { b: true }), run(glosa)]),
     P(''),
