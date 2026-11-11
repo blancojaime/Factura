@@ -4,6 +4,8 @@ on:
     branches: [claude/kind-bohr-gl7xa2]
     paths: ['ComexBolPro/**', '.github/workflows/instalador-comexjb.yml']
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   instalador:
     runs-on: ubuntu-latest
@@ -21,3 +23,11 @@ jobs:
           name: ComexJB-Setup
           path: ComexBolPro/dist/ComexJB-Setup-*.exe
           retention-days: 30
+      - name: Publicar como Release (descarga directa del .exe)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=comexjb-instalador
+          gh release delete "$TAG" --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
+          gh release create "$TAG" ComexBolPro/dist/ComexJB-Setup-*.exe --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "COMEX JB - instalador (con OCR)" --notes "Descargue ComexJB-Setup-*.exe y haga doble clic. Si Windows muestra SmartScreen: Más información > Ejecutar de todas formas."
