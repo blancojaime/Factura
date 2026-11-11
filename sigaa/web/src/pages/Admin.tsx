@@ -37,7 +37,7 @@ function LogoCampo({ valor, onCambio }: { valor: string; onCambio: () => void })
 
 function Config() {
   const { data, reload } = useLoad<any[]>(() => get('/config'));
-  const { esAdmin } = useAuth();
+  const { esAdmin, setEntidad } = useAuth();
   const [cambios, setCambios] = useState<Record<string, string>>({});
   const [run, busy] = useAction();
   const mods: Record<string, string> = { core: 'Entidad y firmantes', alm: 'Almacenes', af: 'Activos fijos', com: 'Combustible' };
@@ -56,7 +56,7 @@ function Config() {
           </div>
         </Card>
       ))}
-      {esAdmin && <button className="primary" disabled={busy || !Object.keys(cambios).length} onClick={() => run(async () => { await put('/config', cambios); setCambios({}); reload(); }, 'Configuración guardada.')}>Guardar configuración</button>}
+      {esAdmin && <button className="primary" disabled={busy || !Object.keys(cambios).length} onClick={() => run(async () => { await put('/config', cambios); if (cambios.Entidad !== undefined) setEntidad(cambios.Entidad); setCambios({}); reload(); }, 'Configuración guardada.')}>Guardar configuración</button>}
     </>
   );
 }

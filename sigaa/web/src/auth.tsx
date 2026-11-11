@@ -5,6 +5,9 @@ export interface Usuario { usuario: string; nombre: string; roles: string[] }
 interface AuthState {
   usuario: Usuario | null;
   gestion: number | null;
+  /** nombre de la entidad configurada (vacía/por defecto en una instalación nueva) */
+  entidad: string;
+  setEntidad(e: string): void;
   debeCambiar: boolean;
   cargando: boolean;
   login(u: string, c: string): Promise<void>;
@@ -24,6 +27,7 @@ const ROL: Record<string, string> = { alm: 'ALMACEN', com: 'COMBUSTIBLE', af: 'A
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [gestion, setGestion] = useState<number | null>(null);
+  const [entidad, setEntidad] = useState('');
   const [debeCambiar, setDebe] = useState(false);
   const [vsiaf, setVsiaf] = useState(true);
   const [cargando, setCargando] = useState(true);
@@ -36,18 +40,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!getToken()) return setCargando(false);
     get('/auth/me')
-      .then((r) => { setUsuario(r.usuario); setGestion(r.gestion); setVsiaf(r.vsiaf !== false); })
+      .then((r) => { setUsuario(r.usuario); setGestion(r.gestion); setEntidad(r.entidad || ''); setVsiaf(r.vsiaf !== false); })
       .catch((e) => { if (e.extra?.cambiarClave) setDebe(true); else logout(); })
       .finally(() => setCargando(false));
   }, [logout]);
 
   const value: AuthState = {
-    usuario, gestion, debeCambiar, cargando,
+    usuario, gestion, entidad, setEntidad, debeCambiar, cargando,
     async login(u, c) {
       const r = await post('/auth/login', { usuario: u, clave: c });
       setToken(r.token);
       setUsuario(r.usuario);
       setGestion(r.gestion);
+      setEntidad(r.entidad || '');
       setVsiaf(r.vsiaf !== false);
       setDebe(!!r.debeCambiar);
     },

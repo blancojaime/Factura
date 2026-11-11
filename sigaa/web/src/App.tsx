@@ -45,7 +45,7 @@ function CambiarClave() {
 }
 
 function Shell() {
-  const { usuario, logout, gestion, puede, vsiaf } = useAuth();
+  const { usuario, logout, gestion, puede, vsiaf, entidad, esAdmin } = useAuth();
   const [open, setOpen] = useState(false);
   const [tema, setTema] = useState(() => localStorage.getItem('sigaa.tema') || '');
   const loc = useLocation();
@@ -78,6 +78,7 @@ function Shell() {
           </div>
         </header>
         <main className="content">
+          {esAdmin && /^NOMBRE DE LA ENTIDAD/.test(entidad) && <div className="card" style={{ borderLeft: '4px solid var(--warn)' }}><b>Instalación nueva:</b> configure los datos de su entidad (nombre, NIT, firmantes y logo) en <NavLink to="/admin">Administración → Configuración</NavLink> y cargue sus catálogos (funcionarios, proveedores, edificios, aperturas) desde <NavLink to="/catalogos">Catálogos</NavLink>.</div>}
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/almacenes/catalogo" element={<AlmCatalogo />} />

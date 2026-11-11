@@ -24,7 +24,8 @@ Los tres comparten maestros (funcionarios, unidades, proveedores, proyectos, ape
 ```bash
 cd sigaa
 npm install
-npm run seed            # crea sigaa.sqlite en server/data con los datos demo importados de los 3 libros
+npm run seed:vacia      # DISTRIBUCIÓN: base vacía (solo catálogos normativos, configuración neutra y el usuario admin)
+# npm run seed:demo     # solo para capacitación: carga los datos de ejemplo de Calamarca
 npm run build           # compila web y servidor
 npm start               # http://localhost:3000   (admin / Admin2026 → exige cambiar la clave)
 ```
@@ -35,12 +36,22 @@ Desarrollo: `npm run dev:server` y `npm run dev:web` (Vite en :5173 con proxy a 
 
 **Docker (servidor con PostgreSQL)**: `SIGAA_JWT_SECRET=<cadena-larga> docker compose up -d`.
 
+**Base de datos de distribución**: tanto la versión web como la de escritorio inician con la base **vacía** (no se carga ningún dato de ejemplo). Incluye los catálogos normativos (cuentas contables, estados, grupos de materiales, causales de baja, tipos de vehículo) y solo el usuario `admin`. La entidad completa su configuración y catálogos desde la aplicación. Para capacitación existe una copia demostrativa lista para restaurar: `distribucion/SIGAA_Base_Demostrativa_Capacitacion.sqlite` (se regenera con `npm run base:demo -w server -- <archivo>`).
+
 **Escritorio (Windows/Linux/macOS)**:
 ```bash
 npm run build && npm run desktop:install
 npm run desktop            # abre la ventana; datos en la carpeta del usuario (SIGAA/sigaa.sqlite)
 npm run desktop:dist       # genera el instalador con electron-builder (reconstruye better-sqlite3 para Electron)
 ```
+
+## Revalúo técnico de activos fijos (NC 4)
+
+Menú *Activos fijos → Revalúo técnico*: bandeja automática de activos con valor en libros Bs 1, estado Bueno/Regular/Malo y operativos → hoja de tasación (1 a 3 cotizaciones de Valor a Nuevo con respaldo, promedio o mediana, factor de conservación dentro del rango por estado, VTR no menor a Bs 1, nueva vida útil, justificación del perito) → consolidación y aprobación (incremento a *Reserva por Revalúos Técnicos*, movimiento REVÁLUO en el kardex). Genera en Word el **Informe Técnico de Revalúo** (estructura NC 4 inc. 7) y los **Anexos** (cuadro comparativo con fotografías, cotizaciones, justificaciones y asiento contable modelo).
+
+## Licenciamiento del escritorio (clave de activación)
+
+La aplicación de escritorio para Windows pide una **clave de activación** firmada (Ed25519) atada opcionalmente a un equipo y a una fecha de vencimiento; sin clave funciona 30 días de prueba. El proveedor emite las claves con `GENERADOR_DE_CLAVES.bat` (carpeta `tools/licencias`); la clave privada queda en `tools/licencias/privada/` (no se sube al repositorio). La primera vez, `CREAR_INSTALADOR_ESCRITORIO.bat` crea el par de claves e incluye la clave pública en la aplicación. Ver `docs/Manual_Licenciamiento_Escritorio.docx`.
 
 ## Roles
 

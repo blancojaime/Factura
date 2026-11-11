@@ -7,3 +7,4 @@ data/
 release/
 build-deps/
 tools/licencias/privada/
+!distribucion/*.sqlite

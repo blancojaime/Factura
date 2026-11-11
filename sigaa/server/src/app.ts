@@ -111,7 +111,7 @@ export async function buildApp(opts: AppOptions): Promise<FastifyInstance> {
     const { user, debeCambiar } = await autenticar(db, b.usuario, b.clave);
     const token = app.jwt.sign({ u: user.usuario, n: user.nombre, r: user.roles, dc: debeCambiar });
     await bitacora(db, user, 'SEGURIDAD', 'INICIO DE SESIÓN', user.usuario, '');
-    return { token, usuario: user, debeCambiar, gestion: await gestion(db), vsiaf: await vsiafVisible(db, user) };
+    return { token, usuario: user, debeCambiar, gestion: await gestion(db), entidad: (await cfgAll(db)).Entidad, vsiaf: await vsiafVisible(db, user) };
   });
   app.get('/api/auth/me', async (req) => ({ usuario: req.usuario, gestion: await gestion(db), entidad: (await cfgAll(db)).Entidad, vsiaf: await vsiafVisible(db, req.usuario) }));
   app.post('/api/auth/cambiar-clave', async (req) => {
