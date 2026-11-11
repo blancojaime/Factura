@@ -212,6 +212,25 @@ class ContratacionItem(Base):
     estado_chb: Mapped[str] = mapped_column(String(30), default=EstadoCHB.NO_APLICA.value)
 
     contratacion: Mapped[ContratacionMenor] = relationship(back_populates="items")
+    partida: Mapped["PartidaPresupuestaria | None"] = relationship(lazy="joined")
+
+    # (+) datos de la apertura programatica de la partida elegida (se muestran en pantalla y en los documentos)
+    @property
+    def apertura(self) -> str:
+        p = self.partida
+        return f"{p.programa}-{p.proyecto}-{p.actividad}" if p else ""
+
+    @property
+    def descripcion_apertura(self) -> str:
+        return self.partida.descripcion_apertura if self.partida else ""
+
+    @property
+    def fuente(self) -> str:
+        return self.partida.fuente if self.partida else ""
+
+    @property
+    def organismo(self) -> str:
+        return self.partida.organismo if self.partida else ""
 
 
 class CotizacionProveedor(Base):

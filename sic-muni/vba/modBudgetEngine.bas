@@ -48,6 +48,90 @@ Public Function SaldoDisponible(ByVal da As String, ByVal ue As String, ByRef L 
 End Function
 
 '------------------------------------------------------------------------------
+' SELECCION DEL PRESUPUESTO DE LA INSTITUCION (listas para los combos)
+' modo 1 = aperturas "Programa-Proyecto-Actividad"; 2 = "Fuente/Organismo";
+' modo 3 = "Partida | Descripcion". Cada nivel se filtra por el anterior.
+' ue vacio = todas las UE de la DA.
+'------------------------------------------------------------------------------
+Public Function ListaPresupuesto(ByVal da As String, ByVal ue As String, ByVal apertura As String, _
+                                 ByVal fteOrg As String, ByVal modo As Long) As Collection
+    Dim sh As Worksheet, r As Long, gest As String, col As Collection, k As String, ap As String, fo As String
+    Set col = New Collection
+    Set sh = WS(SH_PRE)
+    gest = CfgVal("Gestion", CStr(Year(Date)))
+    For r = 2 To LastRow(sh)
+        If CStr(GetV(sh, r, "Gestion")) = gest And CStr(GetV(sh, r, "DA")) = da _
+           And (Len(ue) = 0 Or CStr(GetV(sh, r, "UE")) = ue) Then
+            ap = CStr(GetV(sh, r, "Programa")) & "-" & CStr(GetV(sh, r, "Proyecto")) & "-" & CStr(GetV(sh, r, "ActObra"))
+            fo = CStr(GetV(sh, r, "Fuente")) & "/" & CStr(GetV(sh, r, "Organismo"))
+            k = ""
+            Select Case modo
+                Case 1: k = ap
+                Case 2: If ap = apertura Then k = fo
+                Case 3: If ap = apertura And fo = fteOrg Then k = CStr(GetV(sh, r, "Partida_ObjetoGasto")) & " | " & CStr(GetV(sh, r, "DescripcionPartida"))
+            End Select
+            If Len(k) > 0 Then
+                On Error Resume Next
+                col.Add k, k
+                On Error GoTo 0
+            End If
+        End If
+    Next r
+    Set ListaPresupuesto = col
+End Function
+
+' Arma una linea de C-31 a partir de lo elegido en los combos.
+Public Function LineaDeSeleccion(ByVal apertura As String, ByVal fteOrg As String, ByVal partidaTxt As String, _
+                                 ByVal importe As Double) As LineaC31
+    Dim L As LineaC31, a() As String, f() As String, p() As String
+    If Len(apertura) = 0 Or Len(fteOrg) = 0 Or Len(partidaTxt) = 0 Then _
+        Fail "Seleccione la apertura programatica, la fuente/organismo y la partida del presupuesto."
+    a = Split(apertura, "-"): f = Split(fteOrg, "/"): p = Split(partidaTxt, " | ")
+    If UBound(a) <> 2 Or UBound(f) <> 1 Then Fail "Seleccion de presupuesto invalida; vuelva a elegirla."
+    L.Programa = a(0): L.Proyecto = a(1): L.ActObra = a(2)
+    L.Fuente = f(0): L.Organismo = f(1): L.Partida = Trim$(p(0))
+    L.Importe = importe
+    LineaDeSeleccion = L
+End Function
+
+' Texto con presupuesto, comprometido (ejecucion preventiva) y saldo de la partida elegida.
+Public Function ResumenPartida(ByVal da As String, ByVal ue As String, ByVal apertura As String, _
+                               ByVal fteOrg As String, ByVal partidaTxt As String) As String
+    Dim L As LineaC31, r As Long, sh As Worksheet, apr As Double, com As Double, pct As String
+    On Error GoTo Sin
+    L = LineaDeSeleccion(apertura, fteOrg, partidaTxt, 0)
+    r = FilaPresupuesto(da, ue, L)
+    If r = 0 Then GoTo Sin
+    Set sh = WS(SH_PRE)
+    apr = CDbl(GetV(sh, r, "PresupuestoAprobado")): com = CDbl(GetV(sh, r, "PreventivoComprometido"))
+    If apr > 0 Then pct = " (" & Format$(com / apr * 100, "0.0") & " %)"
+    ResumenPartida = "Presupuesto Bs " & Format$(apr, "#,##0.00") & "   |   Ejecutado/comprometido Bs " & Format$(com, "#,##0.00") & _
+                     pct & "   |   Saldo Bs " & Format$(apr - com, "#,##0.00")
+    Exit Function
+Sin:
+    ResumenPartida = "Partida no encontrada en el presupuesto de la UE de la solicitud."
+End Function
+
+' Total de ejecucion del presupuesto de la DA/UE (suma de todas las partidas de la gestion).
+Public Function ResumenEjecucion(ByVal da As String, ByVal ue As String) As String
+    Dim sh As Worksheet, r As Long, gest As String, apr As Double, com As Double, pct As String
+    On Error GoTo Sin
+    Set sh = WS(SH_PRE)
+    gest = CfgVal("Gestion", CStr(Year(Date)))
+    For r = 2 To LastRow(sh)
+        If CStr(GetV(sh, r, "Gestion")) = gest And CStr(GetV(sh, r, "DA")) = da And CStr(GetV(sh, r, "UE")) = ue Then
+            apr = apr + CDbl(GetV(sh, r, "PresupuestoAprobado")): com = com + CDbl(GetV(sh, r, "PreventivoComprometido"))
+        End If
+    Next r
+    If apr > 0 Then pct = " (" & Format$(com / apr * 100, "0.0") & " %)"
+    ResumenEjecucion = "TOTAL EJECUCION de la UE: Bs " & Format$(com, "#,##0.00") & " de Bs " & Format$(apr, "#,##0.00") & _
+                       pct & "   |   Saldo total Bs " & Format$(apr - com, "#,##0.00")
+    Exit Function
+Sin:
+    ResumenEjecucion = ""
+End Function
+
+'------------------------------------------------------------------------------
 ' EMISION DE C-31 PREVENTIVO
 ' Todo-o-nada: primero valida TODAS las lineas, luego aplica.
 '------------------------------------------------------------------------------

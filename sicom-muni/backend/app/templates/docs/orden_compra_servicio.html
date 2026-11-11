@@ -1,6 +1,6 @@
 {% extends "base.html" %}{% import "macros.html" as m %}
+{% block titulo_doc %}<h1 class="titulo-doc">{{ ctx.titulo_orden }}</h1>{% endblock %}
 {% block cuerpo %}
-<h2 style="text-align:center;font-size:12pt">{{ ctx.titulo_orden }}</h2>
 {{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("CUCE", ctx.tramite.cuce), ("N° preventivo C-31", ctx.tramite.c31),
   ("Proveedor", ctx.adjudicatario.razon_social), ("NIT / CI", ctx.adjudicatario.nit_ci),
   ("Monto total (Bs)", ctx.adjudicatario.monto | bs), ("Plazo", ctx.adjudicatario.plazo ~ " días calendario"),

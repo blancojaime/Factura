@@ -113,6 +113,12 @@ def test_caso1_material_de_construccion_18500(client, tokens, SessionTest):
     c = f.accion(cid, "devengar", "presupuesto").json()
     assert c["estado"] == "DEVENGADO"
     assert Decimal(f.partida("34200")["saldo_disponible"]) == Decimal("62100.00")
+    # (+) el devengado se suma a la ejecucion de la partida y se ve en el reporte de presupuesto
+    assert Decimal(f.partida("34200")["monto_ejecutado"]) >= Decimal("17900.00")
+    fila = next(x for x in f.req("GET", "/reportes/presupuesto", "presupuesto", 200).json() if x["codigo_partida"] == "34200")
+    assert Decimal(fila["ejecutado"]) == Decimal(f.partida("34200")["monto_ejecutado"]) and Decimal(fila["preventivo_activo"]) == 0
+    # (+) los items muestran la apertura programatica, fuente y organismo de su partida
+    assert all(i["apertura"].count("-") == 2 and i["fuente"] and i["organismo"] for i in c["items"])
     assert {p["estado"] for p in c["preventivos"]} == {"DEVENGADO"} and Decimal(c["preventivos"][0]["importe"]) == Decimal("17900.00")
 
     # --- expediente completo y auditoria integra

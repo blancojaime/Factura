@@ -46,6 +46,17 @@ export default function PanelPresupuesto({ c, recargar, puedeOperar }: { c: Cont
     setTimeout(() => setCopiado(false), 2500);
   }
 
+  // (+) resumen de ejecucion: antes de devengar (previsto) y despues (devengado real)
+  const devengado = c.estado === "DEVENGADO";
+  const adjudicada = c.cotizaciones.find((q) => q.adjudicado);
+  const filasEjecucion = c.preventivos.map((p) => {
+    const pa = partidas.find((x) => x.id === p.partida_id);
+    return { p, pa };
+  });
+  const totReservado = c.preventivos.reduce((a, p) => a + Number(p.importe), 0);
+  const montoAdj = Number(adjudicada?.monto_total_ofertado ?? 0);
+  // lo que realmente se devengara en cada partida (reparto proporcional de lo adjudicado)
+  const aDevengar = (importe: string) => devengado ? Number(importe) : (totReservado > 0 ? (montoAdj * Number(importe)) / totReservado : 0);
   const certificado = c.preventivos.length > 0;
   const verificable = c.estado === "SOLICITADO";
 
@@ -75,6 +86,51 @@ export default function PanelPresupuesto({ c, recargar, puedeOperar }: { c: Cont
           </Tabla>
         )}
       </Card>
+
+      {certificado && (c.estado === "RECEPCIONADO" || devengado) && (
+        <Card>
+          <CardHeader><CardTitle>{devengado ? "Ejecución presupuestaria — devengado registrado" : "Ejecución presupuestaria — previsión del devengado"}</CardTitle>
+            <Badge className={devengado ? "bg-emerald-100 text-emerald-800 ring-emerald-300" : "bg-amber-100 text-amber-800 ring-amber-300"}>{devengado ? "Devengado" : "Pendiente de devengar"}</Badge></CardHeader>
+          <Tabla aria-label="Ejecución presupuestaria del trámite">
+            <thead><tr><Th>Apertura</Th><Th>Fte/Org</Th><Th>Partida</Th><Th className="text-right">Presupuesto (Bs)</Th>
+              <Th className="text-right">{devengado ? "Devengado en este trámite (Bs)" : "Reservado (Bs)"}</Th>
+              <Th className="text-right">{devengado ? "Ejecución acumulada de la partida (Bs)" : "Ejecución acumulada al devengar (Bs)"}</Th><Th className="text-right">Saldo disponible (Bs)</Th></tr></thead>
+            <tbody>{filasEjecucion.map(({ p, pa }) => (
+              <tr key={p.partida_id}>
+                <Td className="num whitespace-nowrap">{pa ? `${pa.programa}-${pa.proyecto}-${pa.actividad}` : "—"}</Td>
+                <Td className="num">{pa ? `${pa.fuente}/${pa.organismo}` : "—"}</Td>
+                <Td><span className="num font-medium">{p.codigo_partida}</span> {p.descripcion}</Td>
+                <Td className="num text-right">{pa ? bs(pa.monto_aprobado) : "—"}</Td>
+                <Td className="num text-right">{bs(p.importe)}</Td>
+                <Td className="num text-right">{pa ? bs(devengado ? pa.monto_ejecutado : Number(pa.monto_ejecutado) + aDevengar(p.importe)) : "—"}</Td>
+                <Td className="num text-right font-semibold">{pa ? bs(pa.saldo_disponible) : "—"}</Td>
+              </tr>
+            ))}</tbody>
+            <tfoot>
+              <tr><Td colSpan={3} className="text-right font-semibold">TOTAL</Td>
+                <Td className="num text-right font-bold">{bs(filasEjecucion.reduce((a, { pa }) => a + Number(pa?.monto_aprobado ?? 0), 0))}</Td>
+                <Td className="num text-right font-bold">{bs(totReservado)}</Td>
+                <Td className="num text-right font-bold">{bs(filasEjecucion.reduce((a, { p, pa }) => a + Number(pa?.monto_ejecutado ?? 0) + (devengado ? 0 : aDevengar(p.importe)), 0))}</Td>
+                <Td className="num text-right font-bold">{bs(filasEjecucion.reduce((a, { pa }) => a + Number(pa?.saldo_disponible ?? 0), 0))}</Td></tr>
+            </tfoot>
+          </Tabla>
+          <CardBody className="grid gap-2 text-sm sm:grid-cols-3">
+            {devengado ? (
+              <>
+                <div><span className="text-xs text-slate-500">Total ejecución cargada (devengado)</span><p className="num text-lg font-bold text-emerald-700">Bs {bs(totReservado)}</p></div>
+                <div><span className="text-xs text-slate-500">Monto adjudicado</span><p className="num text-lg font-semibold">Bs {bs(montoAdj)}</p></div>
+                <div><span className="text-xs text-slate-500">Saldo liberado al presupuesto</span><p className="num text-lg font-semibold">Bs {bs(Math.max(0, Number(c.monto_referencial_total) - totReservado))}</p></div>
+              </>
+            ) : (
+              <>
+                <div><span className="text-xs text-slate-500">Reservado en el preventivo</span><p className="num text-lg font-semibold">Bs {bs(totReservado)}</p></div>
+                <div><span className="text-xs text-slate-500">Se devengará (monto adjudicado)</span><p className="num text-lg font-bold text-emerald-700">Bs {bs(montoAdj)}</p></div>
+                <div><span className="text-xs text-slate-500">Se liberará al presupuesto</span><p className="num text-lg font-semibold">Bs {bs(Math.max(0, totReservado - montoAdj))}</p></div>
+              </>
+            )}
+          </CardBody>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

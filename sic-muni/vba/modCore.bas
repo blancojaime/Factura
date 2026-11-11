@@ -43,6 +43,22 @@ Public Function WS(ByVal nombre As String) As Worksheet
     Set WS = ThisWorkbook.Worksheets(nombre)
 End Function
 
+' Agrega la columna al final si no existe (migracion de libros ya instalados).
+Public Sub AsegurarColumna(ByVal sh As Worksheet, ByVal hdr As String)
+    Dim c As Long
+    On Error Resume Next
+    c = ColIdx(sh, hdr)
+    If Err.Number = 0 Then Exit Sub
+    Err.Clear
+    On Error GoTo 0
+    c = sh.Cells(1, sh.Columns.Count).End(xlToLeft).Column + 1
+    sh.Cells(1, c).Value = hdr
+    With sh.Cells(1, c)
+        .Font.Bold = True: .Interior.Color = RGB(31, 78, 121): .Font.Color = vbWhite
+    End With
+    sh.Columns(c).NumberFormat = "@"
+End Sub
+
 Public Function ColIdx(ByVal sh As Worksheet, ByVal hdr As String) As Long
     Dim c As Long, lastC As Long
     lastC = sh.Cells(1, sh.Columns.Count).End(xlToLeft).Column

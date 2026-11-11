@@ -11,10 +11,10 @@ import { ErrorApi, useAccion } from "./comun";
 import ItemsTabla from "./ItemsTabla";
 
 interface ItemForm {
-  id: string | null; codigo: string; partida_id: string; descripcion: string; unidad: string; cantidad: string;
+  id: string | null; codigo: string; apertura: string; fuenteOrg: string; partida_id: string; descripcion: string; unidad: string; cantidad: string;
   precio: string; fuera: boolean;
 }
-const VACIO: ItemForm = { id: null, codigo: "", partida_id: "", descripcion: "", unidad: "", cantidad: "1", precio: "", fuera: false };
+const VACIO: ItemForm = { id: null, codigo: "", apertura: "", fuenteOrg: "", partida_id: "", descripcion: "", unidad: "", cantidad: "1", precio: "", fuera: false };
 
 /** Formulador asistido del C-1: datos, ET/TdR, items con consulta CHB y partida, vista previa de reglas y envio. */
 export default function Formulador({ c, recargar }: { c: Contratacion; recargar: () => Promise<void> }) {
@@ -53,6 +53,25 @@ export default function Formulador({ c, recargar }: { c: Contratacion; recargar:
   }, [form.codigo]);
 
   const partidaSel = useMemo(() => partidas.find((p) => p.id === form.partida_id), [partidas, form.partida_id]);
+  // (+) seleccion en cascada del presupuesto de la institucion: apertura programatica -> fuente/organismo -> partida
+  const claveApertura = (p: Partida) => `${p.programa}-${p.proyecto}-${p.actividad}`;
+  const aperturas = useMemo(() => {
+    const m = new Map<string, string>();
+    partidas.forEach((p) => { if (!m.has(claveApertura(p))) m.set(claveApertura(p), p.descripcion_apertura); });
+    return [...m.entries()];
+  }, [partidas]);
+  const fuentes = useMemo(() => {
+    const m = new Map<string, string>();
+    partidas.filter((p) => claveApertura(p) === form.apertura).forEach((p) => m.set(`${p.fuente}/${p.organismo}`, `Fuente ${p.fuente} / Organismo ${p.organismo}`));
+    return [...m.entries()];
+  }, [partidas, form.apertura]);
+  const partidasFiltradas = useMemo(
+    () => partidas.filter((p) => claveApertura(p) === form.apertura && `${p.fuente}/${p.organismo}` === form.fuenteOrg),
+    [partidas, form.apertura, form.fuenteOrg]);
+  function elegirApertura(apertura: string) {
+    const fs = [...new Set(partidas.filter((p) => claveApertura(p) === apertura).map((p) => `${p.fuente}/${p.organismo}`))];
+    setForm((f) => ({ ...f, apertura, fuenteOrg: fs.length === 1 ? fs[0] : "", partida_id: "" }));
+  }
   const obligatorios = c.items.filter((i) => i.estado_chb === "COMPRA_CHB_OBLIGATORIA");
 
   function elegirSugerencia(s: Catalogo) {
@@ -62,7 +81,8 @@ export default function Formulador({ c, recargar }: { c: Contratacion; recargar:
   }
 
   function editar(i: Item) {
-    setForm({ id: i.id, codigo: i.codigo_unspsc, partida_id: i.partida_id ?? "", descripcion: i.descripcion_especifica,
+    const pa = partidas.find((x) => x.id === i.partida_id);
+    setForm({ id: i.id, codigo: i.codigo_unspsc, apertura: pa ? claveApertura(pa) : "", fuenteOrg: pa ? `${pa.fuente}/${pa.organismo}` : "", partida_id: i.partida_id ?? "", descripcion: i.descripcion_especifica,
       unidad: i.unidad_medida, cantidad: String(Number(i.cantidad)), precio: String(Number(i.precio_unitario_ref)), fuera: i.fuera_catalogo_chb });
     setErrItem(null);
     window.scrollTo({ top: document.getElementById("form-item")?.offsetTop ?? 0, behavior: "smooth" });
@@ -76,7 +96,7 @@ export default function Formulador({ c, recargar }: { c: Contratacion; recargar:
       unidad_medida: form.unidad.trim(), cantidad: form.cantidad, precio_unitario_ref: form.precio, fuera_catalogo_chb: form.fuera,
     };
     const exito = await ejecutar("item", () => form.id ? api.put(`/contrataciones/${c.id}/items/${form.id}`, cuerpo) : api.post(`/contrataciones/${c.id}/items`, cuerpo));
-    if (exito) { setForm(VACIO); setChb(null); }
+    if (exito) { setForm({ ...VACIO, apertura: form.apertura, fuenteOrg: form.fuenteOrg }); setChb(null); }
   }
 
   async function guardarDatos(e: FormEvent<HTMLFormElement>) {
@@ -172,12 +192,38 @@ export default function Formulador({ c, recargar }: { c: Contratacion; recargar:
                 </ul>
               )}
             </div>
-            <Field label="Partida presupuestaria" className="sm:col-span-4">
-              <Select value={form.partida_id} onChange={(e) => setForm({ ...form, partida_id: e.target.value })} required>
-                <option value="">Seleccione…</option>
-                {partidas.map((p) => <option key={p.id} value={p.id}>{p.codigo_partida} · {p.descripcion} · Apertura {p.programa}-{p.proyecto}-{p.actividad} · Fte {p.fuente}/Org {p.organismo} (saldo Bs {bs(p.saldo_disponible)})</option>)}
-              </Select>
-            </Field>
+            <div className="sm:col-span-6 rounded-lg border border-brand-100 bg-brand-50/40 p-3">
+              <p className="mb-2 text-sm font-semibold text-brand-900">Presupuesto de la institución — seleccione la apertura programática</p>
+              <div className="grid gap-3 sm:grid-cols-6">
+                <Field label="1. Apertura programática (Programa-Proyecto-Actividad)" className="sm:col-span-3">
+                  <Select value={form.apertura} onChange={(e) => elegirApertura(e.target.value)} required>
+                    <option value="">Seleccione…</option>
+                    {aperturas.map(([k, d]) => <option key={k} value={k}>{k}{d ? ` — ${d}` : ""}</option>)}
+                  </Select>
+                </Field>
+                <Field label="2. Fuente / Organismo" className="sm:col-span-3">
+                  <Select value={form.fuenteOrg} onChange={(e) => setForm({ ...form, fuenteOrg: e.target.value, partida_id: "" })} required disabled={!form.apertura}>
+                    <option value="">Seleccione…</option>
+                    {fuentes.map(([k, d]) => <option key={k} value={k}>{d}</option>)}
+                  </Select>
+                </Field>
+                <Field label="3. Partida de gasto (con su presupuesto y saldo)" className="sm:col-span-6">
+                  <Select value={form.partida_id} onChange={(e) => setForm({ ...form, partida_id: e.target.value })} required disabled={!form.fuenteOrg}>
+                    <option value="">Seleccione…</option>
+                    {partidasFiltradas.map((p) => <option key={p.id} value={p.id}>{p.codigo_partida} · {p.descripcion} — presupuesto Bs {bs(p.monto_aprobado)} · saldo Bs {bs(p.saldo_disponible)}</option>)}
+                  </Select>
+                </Field>
+              </div>
+              {partidaSel && (
+                <dl className="num mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-5" aria-label="Datos de la partida elegida">
+                  <div><dt className="text-xs text-slate-500">Apertura</dt><dd className="font-medium">{claveApertura(partidaSel)}</dd></div>
+                  <div><dt className="text-xs text-slate-500">Fuente / Organismo</dt><dd className="font-medium">{partidaSel.fuente} / {partidaSel.organismo}</dd></div>
+                  <div><dt className="text-xs text-slate-500">Presupuesto de la partida</dt><dd className="font-medium">Bs {bs(partidaSel.monto_aprobado)}</dd></div>
+                  <div><dt className="text-xs text-slate-500">Ejecutado</dt><dd className="font-medium">Bs {bs(partidaSel.monto_ejecutado)}</dd></div>
+                  <div><dt className="text-xs text-slate-500">Saldo disponible</dt><dd className="font-semibold text-emerald-700">Bs {bs(partidaSel.saldo_disponible)}</dd></div>
+                </dl>
+              )}
+            </div>
 
             {chb && (
               <div className="sm:col-span-6">

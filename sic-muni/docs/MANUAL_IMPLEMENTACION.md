@@ -2,7 +2,7 @@
 
 Sistema Integrado de Contrataciones Municipales — Contratación Menor (Excel / VBA)
 
-Versión 1.0 · Octubre 2026 · Dirigido al personal de sistemas, al Administrador del sistema y a quien lidere la puesta en marcha
+Versión 1.1 · Noviembre 2026 · Dirigido al personal de sistemas, al Administrador del sistema y a quien lidere la puesta en marcha
 
 ---
 
@@ -29,6 +29,19 @@ Una aplicación de escritorio construida como **un solo libro de Excel con macro
 | Seguridad | La protección de hojas y del proyecto VBA es disuasiva, no criptográfica. Ver sección 10 |
 | Normativa | Los topes, multas y artículos citados provienen de la especificación del proyecto y **deben validarse contra los textos vigentes** por Asesoría Legal antes de producción (sección 15) |
 | Madurez | Probado en una instalación real de Excel 16.0 el 04/10/2026 (ver sección 9.4); no tiene historial de uso en producción |
+| Cambios de la versión 1.1 | **No se ejecutaron en Excel**: se escribieron y revisaron estáticamente (ver el recuadro siguiente). Antes de usarlos en producción siga el procedimiento de actualización de la sección 1.4 |
+
+### 1.4 Cambios de la versión 1.1 (noviembre 2026)
+
+| Cambio | Dónde | Qué hace |
+| :-- | :-- | :-- |
+| Selección del presupuesto | Pestaña 1 (unidad solicitante) y pestaña 4 (Presupuesto) | Tres listas en cascada —**Apertura** (Programa-Proyecto-Actividad), **Fte./Org.** y **Partida**— alimentadas por la hoja `PRESUPUESTO` de la DA/UE de la solicitud; muestran presupuesto, ejecutado/comprometido (con %) y saldo. Reemplazan a las cajas de texto donde se escribían los códigos |
+| Imputación prevista en la solicitud | Pestaña 1 y C-1 | La unidad guarda su apertura, fuente/organismo y partida (columnas `ImpApertura`, `ImpFuenteOrg`, `ImpPartida` de `SOLICITUDES`); Presupuesto la encuentra preseleccionada y el C-1 la imprime |
+| Total de ejecución | Pestaña 4 y C-31 | Línea «TOTAL EJECUCION de la UE» (comprometido / presupuesto aprobado, % y saldo) en pantalla y en el C-31 impreso |
+| Reportes compactos | Plantillas `Doc_*` | Menos espacio en blanco arriba: alturas de membrete reducidas, margen superior 1,1 cm y filas vacías mínimas |
+| Orden de Compra | `Doc_OrdenCompraServicio` | Se verificó que el título aparece **una sola vez** (celda `OC_Titulo`, fila 2); no hay un segundo título en la plantilla |
+
+**Procedimiento de actualización (hágalo en una copia del libro):** (1) reemplace los módulos `.bas` de la carpeta `vba` (modCore, modSetup, modProcurement, modBudgetEngine, modDocumentAutomation, modSetupTemplates, modUIBuilder y modSelfTest); (2) ejecute `modUIBuilder.ConstruirFormularios` para recrear los formularios con los nuevos controles; (3) ejecute `modSetupTemplates.BuildTemplates` para aplicar el diseño compacto; (4) ejecute `modSelfTest.EjecutarPruebas` (incluye la prueba nueva *Seleccion del presupuesto*) y revise `resultado_pruebas.txt`; (5) repita los casos 1.12 y 1.20 de la lista de prueba y proteja de nuevo con `modCore.ProtectDB`.
 
 ## 2. Arquitectura
 
@@ -498,7 +511,7 @@ Las columnas marcadas con (+) se agregaron a las requeridas por la especificaci�
 | `SYS_AUTH` | Usuario, PasswordHash, NombreCompleto, Rol, Dependencia_DA, Estado, (+) Intentos, (+) UltimoAcceso |
 | `CAT_CHB` | CodigoUNSPSC, Descripcion, Unidad, FichaTecnicaCHB, Tipo, Vigencia, RequiereAutorizacionMDPyEP |
 | `PRESUPUESTO` | Gestion, DA, UE, Programa, Proyecto, ActObra, Fuente, Organismo, Partida_ObjetoGasto, DescripcionPartida, PresupuestoAprobado, PreventivoComprometido, SaldoDisponible (fórmula) |
-| `SOLICITUDES` | ID_Solicitud, Correlativo, Fecha, Cod_DA, Cod_UE, Solicitante, Justificacion, Estado, (+) Modalidad, (+) MontoReferencial |
+| `SOLICITUDES` | ID_Solicitud, Correlativo, Fecha, Cod_DA, Cod_UE, Solicitante, Justificacion, Estado, (+) Modalidad, (+) MontoReferencial, (+) ImpApertura, (+) ImpFuenteOrg, (+) ImpPartida (imputación presupuestaria prevista elegida por la unidad; en libros ya instalados las columnas se agregan solas la primera vez que se guarda una imputación) |
 | `SOLICITUDES_DET` | ID_Solicitud, Item, CodigoUNSPSC, Descripcion, Cantidad, Unidad, PrecioRefUnitario, PrecioRefTotal, CumpleCHB, CodigoExcepcionMDPyEP, (+) JustificacionExcepcion, (+) NroAutorizacionMDPyEP, (+) FechaAutorizacion |
 | `COTIZACIONES` | ID_Cotizacion, ID_Solicitud, Proveedor_NIT, RazonSocial, (+) FechaCotizacion, ValidezOferta, MontoTotalCotizado, CumplimientoTecnico, Recomendado, (+) Adjudicada, (+) FechaHoraRecepcion, (+) Desempate |
 | `ORDENES_GASTO` | NroOrden, Tipo, CUCE_SICOES, ID_Solicitud, (+) ID_Cotizacion, Proveedor_Adjudicado, NIT, MontoTotal, NroPreventivo_C31, EstadoC31, FechaEmision, (+) PlazoDias, (+) LugarEntrega, (+) EstadoOrden, (+) MotivoAnulacion, (+) Usuario |
@@ -511,14 +524,14 @@ Las columnas de códigos (DA, UE, programa, partida, NIT, UNSPSC, N° SIGEP) tie
 
 ## Anexo B. Plantillas de documentos y rangos con nombre
 
-Cada plantilla tiene el membrete en la fila 1, el título en la fila 2 y la gestión en la fila 3. La tabla de detalle tiene capacidad fija; las filas sobrantes se ocultan. Las columnas calculadas son **fórmulas de la plantilla** y no se sobrescriben desde el código.
+Cada plantilla tiene el membrete en la fila 1, el título en la fila 2 y la gestión en la fila 3 (alturas de fila compactas y márgenes de impresión de 1,1 cm arriba y 1,3 cm abajo; las filas 4 vacías se reducen a 5 puntos). **Para aplicar el diseño compacto a un libro ya instalado, ejecute `modSetupTemplates.BuildTemplates` en una copia.** La tabla de detalle tiene capacidad fija; las filas sobrantes se ocultan. Las columnas calculadas son **fórmulas de la plantilla** y no se sobrescriben desde el código.
 
 | Hoja (prefijo) | Campos con nombre (celda) | Tabla de detalle | Fórmulas |
 | :-- | :-- | :-- | :-- |
-| `Doc_Solicitud_C1` (`RQ_`) | Solicitud C5, Fecha G5, DA C6, UE G6, Solicitante C7, Modalidad G7, Justificacion C8, Literal A27 | `RQ_ItemsIni` = A11, 15 filas, 8 columnas | `G11:G25 =IF(E11="","",ROUND(E11*F11,2))`; `G26 =SUM(G11:G25)` |
+| `Doc_Solicitud_C1` (`RQ_`) | Solicitud C5, Fecha G5, DA C6, UE G6, Solicitante C7, Modalidad G7, Justificacion C8, Imputacion C9, Literal A27 | `RQ_ItemsIni` = A11, 15 filas, 8 columnas | `G11:G25 =IF(E11="","",ROUND(E11*F11,2))`; `G26 =SUM(G11:G25)` |
 | `Doc_CuadroComparativo` (`CC_`) | Solicitud C5, Fecha G5, Modalidad C6, Referencial G6, Criterio C7, Recomendacion A22 | `CC_OfertasIni` = A10, 10 filas, 7 columnas | `H10:H19` variación sobre el referencial; `F20` menor oferta hábil con `AGGREGATE` |
 | `Doc_JustificacionExcepcionCHB` (`EX_`) | Solicitud C5, Fecha G5, DA C6, Solicitante G6 | `EX_ItemsIni` = A13, 10 filas, 7 columnas | Ajuste automático de alto de fila al volcar |
-| `Doc_Preventivo_C31` (`PV_`) | Nro C5, Sigep H5, Fecha C6, Estado H6, DA C7, UE H7, Solicitud C8, Literal A22 | `PV_LineasIni` = A11, 10 filas, 9 columnas | `J11:J20` vigente; `H21:J21` totales |
+| `Doc_Preventivo_C31` (`PV_`) | Nro C5, Sigep H5, Fecha C6, Estado H6, DA C7, UE H7, Solicitud C8, Ejecucion D9, Literal A22 | `PV_LineasIni` = A11, 10 filas, 9 columnas | `J11:J20` vigente; `H21:J21` totales |
 | `Doc_OrdenCompraServicio` (`OC_`) | Titulo A2, Nro C4, Fecha F4, CUCE C5, Solicitud F5, Proveedor C6, NIT C7, C31 F7, Plazo C8, Lugar C9, Monto F27, Literal A28, PenPorMil H2, PenMaxPct I2 | `OC_ItemsIni` = A12, 15 filas, 4 columnas | Cláusulas 1, 2, 3 y 5 son fórmulas que concatenan los rangos con nombre y los parámetros de `CONFIG` |
 | `Doc_ActaRecepcion` (`AR_`) | Nro C4, Fecha F4, Orden C5, Solicitud F5, Proveedor C6, Limite C7, Dias F7, Monto C8, Multa F8, Conformidad C9, Obs C10 | — | `C11 =IF(AR_Monto="","",AR_Monto-AR_Multa)` |
 
@@ -658,7 +671,7 @@ Cinco casos completos (más la preparación y un ejemplo adicional de desempate)
 | 1.9 | RC, pestaña 3 | NIT `1020304050`, razón social `LIBRERIA EJEMPLO S.R.L.`, validez HOY+30, monto `1080`, marque **Cumple técnicamente**, **Registrar oferta** | Aparece la cotización `COT-2026-000001` en la lista | ☐ |
 | 1.10 | RC, pestaña 3 | Pulse **Evaluar cuadro** | Mensaje "Recomendada: LIBRERIA EJEMPLO S.R.L. por Bs 1,080.00"; estado `EVALUADA`; en la lista la columna recomendada dice `SI` | ☐ |
 | 1.11 | RC, pestaña 3 | Pulse **Adjudicar seleccionada** con la fila seleccionada | Rechazo: "No existe C-31 Preventivo vigente…" (falta la reserva) | ☐ |
-| 1.12 | PF `pf_ejemplo`, pestaña 4 | Cargue la solicitud. Ingrese Programa `01`, Proyecto `0000`, Act./Obra `001`, Fuente `20`, Organismo `230`, Partida `31120`, Importe `1150`. **Consultar saldo** | "Saldo disponible: Bs 12,000.00" | ☐ |
+| 1.12 | PF `pf_ejemplo`, pestaña 4 | Cargue la solicitud. Elija Apertura `01-0000-001`, Fuente/Organismo `20/230`, Partida `31120`; Importe `1150`. **Consultar saldo** | Línea azul con "Presupuesto … Saldo Bs 12,000.00" y línea verde "TOTAL EJECUCION de la UE" | ☐ |
 | 1.13 | PF, pestaña 4 | **Agregar línea** y **Emitir C-31 Preventivo** | Mensaje con `C31P-2026-000001`; el estado pasa a `PRESUPUESTADA`; la lista de líneas se limpia | ☐ |
 | 1.14 | PF, pestaña 4 | Con el N° interno en la casilla, escriba SIGEP `ABC` y pulse **Asociar C-31** | Rechazo: "N de C-31 SIGEP invalido (numerico, hasta 10 digitos)." | ☐ |
 | 1.15 | PF, pestaña 4 | Escriba SIGEP `250001` y **Asociar C-31** | "C-31 SIGEP asociado." | ☐ |
@@ -666,7 +679,7 @@ Cinco casos completos (más la preparación y un ejemplo adicional de desempate)
 | 1.17 | RC, pestaña 5 | Tipo `COMPRA`, CUCE `EJEMPLO-CUCE-001`, plazo `10`, lugar `Almacen Municipal`. **Generar Orden** | Orden `OC-2026-000001`; estado `ORDEN_EMITIDA` | ☐ |
 | 1.18 | RC, pestaña 5 | **Imprimir Orden (PDF)** | PDF "ORDEN DE COMPRA": proveedor, NIT, ítems (sin precios unitarios), monto **1.080,00**, "Son: MIL OCHENTA 00/100 BOLIVIANOS", plazo 10 días, N° del preventivo (`C31P-2026-000001`) y 6 cláusulas con el plazo y las penalidades (3 por mil, tope 10 %) | ☐ |
 | 1.19 | PF, pestaña 4 | Reversión parcial: N° interno `C31P-2026-000001`, Línea `1`, Monto `70`, Motivo `Ajuste de reserva al monto adjudicado`. **Reversión parcial** | "Reversion parcial registrada." | ☐ |
-| 1.20 | PF, pestaña 4 | Con la solicitud cargada, escriba Programa `01`, Proyecto `0000`, Act./Obra `001`, Fuente `20`, Organismo `230`, Partida `31120` e importe `1` y pulse **Consultar saldo** | Saldo **10,920.00** (12.000 − 1.150 + 70) | ☐ |
+| 1.20 | PF, pestaña 4 | Con la solicitud cargada, elija Apertura `01-0000-001`, Fuente/Organismo `20/230`, Partida `31120`, importe `1`, y pulse **Consultar saldo** | Saldo **10,920.00** (12.000 − 1.150 + 70) | ☐ |
 | 1.21 | PF, pestaña 4 | **C-31 (PDF)** | PDF con la línea: Importe 1.150,00, Revertido 70,00, Vigente 1.080,00; total en literal "MIL OCHENTA"; estado `REVERTIDO_PARCIAL` | ☐ |
 | 1.22 | RC, pestaña 5 | Fecha recepción HOY, casilla **Recepción CONFORME** marcada, **Registrar recepción** | Mensaje con `REC-2026-000001`; la Orden queda `RECIBIDA` | ☐ |
 | 1.23 | RC, pestaña 5 | **Imprimir acta (PDF)** | Acta con 0 días de retraso, multa 0,00 y neto a pagar **1.080,00** | ☐ |
@@ -845,6 +858,7 @@ Nota 5.25: el comprometido de 25800 sigue en 27.500,00 aunque la Orden de servic
 | `USUARIO_CREADO`, `PASSWORD_CAMBIADO`, `USUARIO_DESBLOQUEADO` | Ejemplos 0 y 5 |
 | `IMPORT_CSV` | Cuatro importaciones |
 | `SOLICITUD_CREADA`, `SOLICITUD_ESTADO`, `SOLICITUD_ANULADA` | Cada cambio de estado de las solicitudes |
+| `SOLICITUD_IMPUTACION` | La unidad solicitante guardó la apertura, fuente/organismo y partida previstas |
 | `CHB_EVAL` | Cada evaluación de ítem, incluidas las rechazadas del Ejemplo 3 |
 | `COTIZACION_REGISTRADA` | 8 cotizaciones |
 | `C31_EMITIDO`, `C31_ASOCIADO`, `C31_REV_PARCIAL`, `C31_REV_TOTAL` | Ejemplos 1, 2, 3 y 4 |

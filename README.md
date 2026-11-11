@@ -8,8 +8,11 @@ Este repositorio contiene una plantilla HTML de remisión (`index.html`, `style.
 
 Sistema de contratación menor (`sicom-muni/`) con instalador para Windows 10/11 (64 bits): un solo servidor en la red local, los demás equipos solo usan el navegador. Incluye los 6 roles, documentos PDF con código QR y verificación, respaldo diario y licencia por equipo (30 días de prueba).
 
-**Descarga (un solo comprimido):** [Releases](../../releases) → `SICOM-MUNI-Instalador-Windows-<versión>.zip`.
-Contiene el instalador `.exe`, el manual de instalación en red local (Word) y un `LEEME`.
+**Descarga (un solo comprimido por componente):** [Releases](../../releases)
+- `SICOM-MUNI-Instalador-Windows-<versión>.zip`: instalador `.exe`, manual de instalación en red local (Word) y `LEEME`.
+- `SIC-MUNI-Escritorio-Excel-<versión>.zip`: aplicativo de escritorio (Excel/VBA) con sus manuales.
+- `SICOM-MUNI-Manuales-<versión>.zip`: todos los manuales en Word (web y escritorio).
+- `SICOM-Emisor-de-Licencias-<versión>.zip`: herramienta del proveedor (no va a los clientes).
 
 - Manual para personas sin conocimientos de informática: `sicom-muni/docs/MANUAL_INSTALACION_RED_LOCAL.docx`
 - **Emisor de Licencias** (herramienta externa, solo del proveedor): `SICOM-Emisor-de-Licencias-<versión>.zip` en la misma página, con su manual `sicom-muni/docs/MANUAL_EMISOR_LICENCIAS.docx`.

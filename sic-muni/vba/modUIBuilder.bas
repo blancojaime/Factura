@@ -197,19 +197,32 @@ Private Sub BuildConsolidado(ByVal dirV As String)
     Set c = Fld(f, "P1", "Justificaci{o}n", "txtJustificacion", FM_TXT, 10, 200, 520, 44, "Explique por qu{e} se necesita (m{i}nimo 20 caracteres)")
     c.MultiLine = True
     Btn f, "cmdCrearSolicitud", 640, 200, 135, 34, "Crear solicitud", "primario", "P1", "Crea la solicitud y le asigna su n{u}mero"
-    Barra f, "barP1b", 254, "AGREGAR {I}TEMS", "P1"
-    Fld f, "P1", "C{o}digo UNSPSC", "txtCodigo", FM_TXT, 10, 278, 90, 18, "Si el c{o}digo est{a} en el cat{a}logo CHB ver{a} una alerta"
-    Set c = Ctl(f, FM_LBL, "lblAlertaCHB", 210, 272, 570, 30, "", "P1")
+    Barra f, "barP1p", 254, "IMPUTACI{O}N PRESUPUESTARIA PREVISTA   (elija del presupuesto de su unidad)", "P1"
+    Etq f, "lblApS", 10, 281, 52, 16, "Apertura", "P1"
+    Set c = Ctl(f, FM_CBO, "cboApertSol", 62, 278, 135, 18, "", "P1", "Programa-Proyecto-Actividad del presupuesto de su unidad")
+    c.Style = 2
+    Etq f, "lblFteS", 205, 281, 50, 16, "Fte./Org.", "P1"
+    Set c = Ctl(f, FM_CBO, "cboFteSol", 255, 278, 90, 18, "", "P1", "Fuente de financiamiento / Organismo financiador")
+    c.Style = 2
+    Etq f, "lblParS", 355, 281, 38, 16, "Partida", "P1"
+    Set c = Ctl(f, FM_CBO, "cboPartidaSol", 395, 278, 235, 18, "", "P1", "Partida (objeto del gasto) con la que se pagar{a} la compra")
+    c.Style = 2
+    Btn f, "cmdGuardarImp", 640, 274, 135, 26, "Guardar imputaci{o}n", "primario", "P1", "Guarda la apertura, fuente, organismo y partida elegidas en la solicitud"
+    Set c = Ctl(f, FM_LBL, "lblPresupSol", 10, 303, 765, 16, "", "P1")
+    c.Font.Bold = True: c.BackStyle = 0: c.ForeColor = RGB(31, 78, 121)
+    Barra f, "barP1b", 326, "AGREGAR {I}TEMS", "P1"
+    Fld f, "P1", "C{o}digo UNSPSC", "txtCodigo", FM_TXT, 10, 350, 90, 18, "Si el c{o}digo est{a} en el cat{a}logo CHB ver{a} una alerta"
+    Set c = Ctl(f, FM_LBL, "lblAlertaCHB", 210, 344, 570, 30, "", "P1")
     c.Font.Bold = True: c.WordWrap = True: c.BackStyle = 0
-    Fld f, "P1", "Descripci{o}n", "txtDescItem", FM_TXT, 10, 306, 330, 18, "Especificaciones t{e}cnicas claras, sin direccionar a un proveedor"
-    Fld f, "P1", "Unidad", "txtUnidad", FM_TXT, 540, 306, 80, 18
-    Fld f, "P1", "Cantidad", "txtCant", FM_TXT, 10, 332, 80, 18
-    Fld f, "P1", "P. ref. unit. (Bs)", "txtPrecio", FM_TXT, 290, 332, 80, 18, "Precio referencial por unidad"
-    Btn f, "cmdAgregarItem", 640, 328, 135, 28, "Agregar {i}tem", "primario", "P1", "Agrega el {i}tem a la solicitud"
-    Barra f, "barP1c", 362, "{I}TEMS CARGADOS", "P1"
-    Ctl f, FM_LST, "lstItems", 10, 382, 765, 128, "", "P1"
-    Btn f, "cmdEnviarCot", 10, 520, 180, 32, "Enviar a cotizaci{o}n", "ok", "P1", "Cierra la edici{o}n y la env{i}a a cotizaci{o}n (ya no se podr{a}n agregar {i}tems)"
-    Btn f, "cmdC1", 200, 520, 180, 32, "Imprimir C-1 (PDF)", "pdf", "P1", "Formulario de requerimiento y especificaciones t{e}cnicas"
+    Fld f, "P1", "Descripci{o}n", "txtDescItem", FM_TXT, 10, 378, 330, 18, "Especificaciones t{e}cnicas claras, sin direccionar a un proveedor"
+    Fld f, "P1", "Unidad", "txtUnidad", FM_TXT, 540, 378, 80, 18
+    Fld f, "P1", "Cantidad", "txtCant", FM_TXT, 10, 404, 80, 18
+    Fld f, "P1", "P. ref. unit. (Bs)", "txtPrecio", FM_TXT, 290, 404, 80, 18, "Precio referencial por unidad"
+    Btn f, "cmdAgregarItem", 640, 400, 135, 28, "Agregar {i}tem", "primario", "P1", "Agrega el {i}tem a la solicitud"
+    Barra f, "barP1c", 432, "{I}TEMS CARGADOS", "P1"
+    Ctl f, FM_LST, "lstItems", 10, 452, 765, 100, "", "P1"
+    Btn f, "cmdEnviarCot", 10, 558, 180, 32, "Enviar a cotizaci{o}n", "ok", "P1", "Cierra la edici{o}n y la env{i}a a cotizaci{o}n (ya no se podr{a}n agregar {i}tems)"
+    Btn f, "cmdC1", 200, 558, 180, 32, "Imprimir C-1 (PDF)", "pdf", "P1", "Formulario de requerimiento y especificaciones t{e}cnicas"
 
     ' ====================== P2 EVALUACION CHB ======================
     Banner f, 2, "2  EVALUACI{O}N CHB   -   Cat{a}logo 'Compro Hecho en Bolivia' y excepciones"
@@ -249,33 +262,35 @@ Private Sub BuildConsolidado(ByVal dirV As String)
 
     ' ====================== P4 PRESUPUESTO / C-31 ======================
     Banner f, 4, "4  PRESUPUESTO / C-31   -   Reserve el presupuesto, as{o}ciele el N{deg} de SIGEP y revierta si corresponde"
-    Barra f, "barP4a", 150, "IMPUTACI{O}N PRESUPUESTARIA (una l{i}nea por partida)", "P4"
-    Fld f, "P4", "Programa", "txtProg", FM_TXT, 10, 174, 80, 18
-    Fld f, "P4", "Proyecto", "txtProy", FM_TXT, 290, 174, 80, 18
-    Fld f, "P4", "Act./Obra", "txtAct", FM_TXT, 10, 200, 80, 18
-    Fld f, "P4", "Fuente", "txtFte", FM_TXT, 290, 200, 80, 18
-    Fld f, "P4", "Organismo", "txtOrg", FM_TXT, 10, 226, 80, 18
-    Fld f, "P4", "Partida", "txtPartida", FM_TXT, 290, 226, 80, 18, "Objeto del gasto"
-    Fld f, "P4", "Importe (Bs)", "txtImporte", FM_TXT, 10, 252, 100, 18
-    Btn f, "cmdSaldo", 500, 174, 150, 28, "Consultar saldo", "primario", "P4", "Muestra el saldo disponible de la partida escrita"
-    Btn f, "cmdAddLinea", 500, 208, 150, 28, "Agregar l{i}nea", "primario", "P4", "Agrega la l{i}nea a la lista del preventivo"
-    Set c = Ctl(f, FM_LBL, "lblSaldo", 500, 244, 280, 20, "", "P4")
+    Barra f, "barP4a", 150, "IMPUTACI{O}N PRESUPUESTARIA   (seleccione del presupuesto de la instituci{o}n; una l{i}nea por partida)", "P4"
+    Set c = Fld(f, "P4", "Apertura program.", "cboApert", FM_CBO, 10, 176, 170, 18, "Programa-Proyecto-Actividad del presupuesto")
+    c.Style = 2
+    Set c = Fld(f, "P4", "Fuente / Organismo", "cboFteOrg", FM_CBO, 290, 176, 190, 18, "Fuente y organismo de la apertura elegida")
+    c.Style = 2
+    Set c = Fld(f, "P4", "Partida", "cboPartida", FM_CBO, 10, 202, 470, 18, "Partida (objeto del gasto) de la apertura, fuente y organismo elegidos")
+    c.Style = 2
+    Fld f, "P4", "Importe (Bs)", "txtImporte", FM_TXT, 10, 228, 100, 18
+    Btn f, "cmdSaldo", 600, 174, 175, 28, "Consultar saldo", "primario", "P4", "Muestra presupuesto, ejecuci{o}n y saldo de la partida elegida"
+    Btn f, "cmdAddLinea", 600, 208, 175, 28, "Agregar l{i}nea", "primario", "P4", "Agrega la l{i}nea a la lista del preventivo"
+    Set c = Ctl(f, FM_LBL, "lblSaldo", 10, 252, 765, 18, "", "P4")
     c.Font.Bold = True: c.BackStyle = 0: c.ForeColor = RGB(31, 78, 121)
-    Barra f, "barP4b", 276, "L{I}NEAS DEL PREVENTIVO", "P4"
-    Ctl f, FM_LST, "lstLineas", 10, 296, 765, 70, "", "P4"
-    Btn f, "cmdEmitirC31", 10, 372, 220, 30, "Emitir C-31 Preventivo", "ok", "P4", "Reserva el presupuesto (valida el saldo de todas las l{i}neas)"
-    Barra f, "barP4c", 410, "ASOCIAR AL SIGEP E IMPRIMIR", "P4"
-    Fld f, "P4", "N{deg} C-31 interno", "txtNroC31", FM_TXT, 10, 434, 140, 18, "Se completa al emitir; escr{i}balo para consultar uno anterior"
-    Fld f, "P4", "N{deg} C-31 SIGEP", "txtNroSigep", FM_TXT, 290, 434, 120, 18, "N{u}mero del C-31 registrado en SIGEP (solo n{u}meros)"
-    Btn f, "cmdAsociar", 540, 430, 120, 26, "Asociar C-31", "ok", "P4", "Asocia el n{u}mero de SIGEP al preventivo"
-    Btn f, "cmdDocC31", 668, 430, 107, 26, "C-31 (PDF)", "pdf", "P4"
-    Barra f, "barP4d", 464, "REVERSIONES (devuelven saldo al presupuesto)", "P4"
-    Fld f, "P4", "L{i}nea a revertir", "txtLineaRev", FM_TXT, 10, 488, 60, 18
-    Fld f, "P4", "Monto a revertir", "txtMontoRev", FM_TXT, 290, 488, 100, 18
-    Set c = Fld(f, "P4", "Motivo", "txtMotivoRev", FM_TXT, 10, 514, 520, 40, "Obligatorio (m{i}nimo 10 caracteres)")
+    Set c = Ctl(f, FM_LBL, "lblEjecucion", 10, 272, 765, 18, "", "P4")
+    c.Font.Bold = True: c.BackStyle = 0: c.ForeColor = RGB(56, 118, 29)
+    Barra f, "barP4b", 296, "L{I}NEAS DEL PREVENTIVO", "P4"
+    Ctl f, FM_LST, "lstLineas", 10, 316, 765, 70, "", "P4"
+    Btn f, "cmdEmitirC31", 10, 392, 220, 30, "Emitir C-31 Preventivo", "ok", "P4", "Reserva el presupuesto (valida el saldo de todas las l{i}neas)"
+    Barra f, "barP4c", 430, "ASOCIAR AL SIGEP E IMPRIMIR", "P4"
+    Fld f, "P4", "N{deg} C-31 interno", "txtNroC31", FM_TXT, 10, 454, 140, 18, "Se completa al emitir; escr{i}balo para consultar uno anterior"
+    Fld f, "P4", "N{deg} C-31 SIGEP", "txtNroSigep", FM_TXT, 290, 454, 120, 18, "N{u}mero del C-31 registrado en SIGEP (solo n{u}meros)"
+    Btn f, "cmdAsociar", 540, 450, 120, 26, "Asociar C-31", "ok", "P4", "Asocia el n{u}mero de SIGEP al preventivo"
+    Btn f, "cmdDocC31", 668, 450, 107, 26, "C-31 (PDF)", "pdf", "P4"
+    Barra f, "barP4d", 484, "REVERSIONES (devuelven saldo al presupuesto)", "P4"
+    Fld f, "P4", "L{i}nea a revertir", "txtLineaRev", FM_TXT, 10, 508, 60, 18
+    Fld f, "P4", "Monto a revertir", "txtMontoRev", FM_TXT, 290, 508, 100, 18
+    Set c = Fld(f, "P4", "Motivo", "txtMotivoRev", FM_TXT, 10, 534, 520, 40, "Obligatorio (m{i}nimo 10 caracteres)")
     c.MultiLine = True
-    Btn f, "cmdRevParcial", 640, 486, 135, 30, "Reversi{o}n parcial", "peligro", "P4", "Revierte parte de una l{i}nea"
-    Btn f, "cmdRevTotal", 640, 522, 135, 30, "Reversi{o}n total", "peligro", "P4", "Revierte todo el preventivo (pide confirmaci{o}n)"
+    Btn f, "cmdRevParcial", 640, 506, 135, 30, "Reversi{o}n parcial", "peligro", "P4", "Revierte parte de una l{i}nea"
+    Btn f, "cmdRevTotal", 640, 542, 135, 30, "Reversi{o}n total", "peligro", "P4", "Revierte todo el preventivo (pide confirmaci{o}n)"
 
     ' ====================== P5 ORDEN / RECEPCION ======================
     Banner f, 5, "5  ORDEN / RECEPCI{O}N   -   Emita la Orden, registre la recepci{o}n y gestione anulaciones"

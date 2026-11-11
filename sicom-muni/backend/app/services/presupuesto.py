@@ -99,6 +99,9 @@ def devengar(db: Session, c: ContratacionMenor, monto_adjudicado: Decimal) -> De
             p.saldo_disponible = Decimal(p.saldo_disponible) + parte
             prev.importe = Decimal(prev.importe) - parte
             liberado += parte
+        # (+) el importe devengado pasa a la ejecucion de la partida
+        p_ej = db.scalar(select(PartidaPresupuestaria).where(PartidaPresupuestaria.id == prev.partida_id).with_for_update())
+        p_ej.monto_ejecutado = Decimal(p_ej.monto_ejecutado) + Decimal(prev.importe)
         prev.estado = EstadoPreventivo.DEVENGADO.value
     db.flush()
     return liberado

@@ -6,6 +6,7 @@ Private m_Lineas() As LineaC31
 Private m_nLin As Long
 Private m_base As Object            ' colores originales de los botones (para restaurar al habilitar)
 Private m_pag As Long
+Private m_Lleno As Boolean          ' evita eventos en cascada mientras se llenan los combos del presupuesto
 
 ' Texto con acentos: {a}{e}{i}{o}{u}{n}, mayusculas {A}{E}{I}{O}{U}{N}, {deg}
 Private Function Tx(ByVal s As String) As String
@@ -159,6 +160,7 @@ Private Sub UserForm_Initialize()
     m_nLin = 0
     GuardarColoresBotones
     AplicarRol
+    CargarAperturasSol
     lblEstado.Caption = "  Sin solicitud cargada"
     lblSugerencia.Caption = Sugerencia("", modSecurity.g_Rol, "")
     Select Case modSecurity.g_Rol
@@ -176,6 +178,7 @@ Private Sub AplicarRol()
     ' Habilita botones segun permiso (la verificacion real la repite cada rutina de negocio).
     cmdCrearSolicitud.Enabled = PuedeHacer(P_SOLICITUD): cmdAgregarItem.Enabled = PuedeHacer(P_SOLICITUD)
     cmdEnviarCot.Enabled = PuedeHacer(P_SOLICITUD)
+    cmdGuardarImp.Enabled = PuedeHacer(P_SOLICITUD)
     cmdEvalCHB.Enabled = PuedeHacer(P_CHB): cmdDocExc.Enabled = PuedeHacer(P_CHB)
     cmdRegCot.Enabled = PuedeHacer(P_COTIZACION): cmdEvaluar.Enabled = PuedeHacer(P_COTIZACION)
     cmdCuadro.Enabled = PuedeHacer(P_COTIZACION): cmdAdjudicar.Enabled = PuedeHacer(P_ADJUDICAR)
@@ -274,6 +277,128 @@ Private Sub Refrescar()
             If IsDate(v) Then lstCot.List(lstCot.ListCount - 1, 6) = Format$(CDate(v), "dd/mm/yyyy hh:nn")
         End If
     Next r
+    PrepararPresupuesto idSol, rS
+End Sub
+
+'-------------------------- Seleccion del presupuesto (P1 y P4) --------------------------
+Private Sub LlenarCombo(ByVal cbo As MSForms.ComboBox, ByVal col As Collection)
+    Dim v As Variant
+    m_Lleno = True
+    cbo.Clear
+    For Each v In col
+        cbo.AddItem CStr(v)
+    Next v
+    m_Lleno = False
+    If col.Count = 1 Then cbo.ListIndex = 0          ' una sola opcion: se elige sola
+End Sub
+
+Private Sub ElegirEn(ByVal cbo As MSForms.ComboBox, ByVal texto As String)
+    Dim i As Long
+    For i = 0 To cbo.ListCount - 1
+        If cbo.List(i) = texto Then cbo.ListIndex = i: Exit Sub
+    Next i
+End Sub
+
+Private Sub DaUeActiva(ByRef da As String, ByRef ue As String)
+    Dim rS As Long
+    rS = modProcurement.FilaSolicitud(SolActiva())
+    da = CStr(GetV(WS(SH_SOL), rS, "Cod_DA")): ue = CStr(GetV(WS(SH_SOL), rS, "Cod_UE"))
+End Sub
+
+' ---- P1: la unidad solicitante elige la imputacion prevista de su presupuesto
+Private Sub CargarAperturasSol()
+    On Error Resume Next
+    LlenarCombo cboApertSol, modBudgetEngine.ListaPresupuesto(Trim$(txtDA.Text), Trim$(txtUE.Text), "", "", 1)
+    cboFteSol.Clear: cboPartidaSol.Clear: lblPresupSol.Caption = ""
+End Sub
+
+Private Sub txtUE_AfterUpdate()
+    CargarAperturasSol
+End Sub
+
+Private Sub cboApertSol_Change()
+    If m_Lleno Or Len(cboApertSol.Text) = 0 Then Exit Sub
+    On Error GoTo EH
+    LlenarCombo cboFteSol, modBudgetEngine.ListaPresupuesto(Trim$(txtDA.Text), Trim$(txtUE.Text), cboApertSol.Text, "", 2)
+    LlenarCombo cboPartidaSol, New Collection
+    lblPresupSol.Caption = ""
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cboFteSol_Change()
+    If m_Lleno Or Len(cboFteSol.Text) = 0 Then Exit Sub
+    On Error GoTo EH
+    LlenarCombo cboPartidaSol, modBudgetEngine.ListaPresupuesto(Trim$(txtDA.Text), Trim$(txtUE.Text), cboApertSol.Text, cboFteSol.Text, 3)
+    lblPresupSol.Caption = ""
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cboPartidaSol_Change()
+    If m_Lleno Or Len(cboPartidaSol.Text) = 0 Then Exit Sub
+    lblPresupSol.Caption = modBudgetEngine.ResumenPartida(Trim$(txtDA.Text), Trim$(txtUE.Text), cboApertSol.Text, cboFteSol.Text, cboPartidaSol.Text)
+End Sub
+
+Private Sub cmdGuardarImp_Click()
+    On Error GoTo EH
+    modProcurement.GuardarImputacion SolActiva(), cboApertSol.Text, cboFteSol.Text, cboPartidaSol.Text
+    MsgBox "Imputacion presupuestaria guardada en la solicitud. Presupuesto la propondra al emitir el C-31.", vbInformation, "SIC-MUNI"
+    Refrescar
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+' ---- P4: presupuesto sugerido desde la solicitud + resumen de ejecucion
+Private Sub PrepararPresupuesto(ByVal idSol As String, ByVal rS As Long)
+    Dim da As String, ue As String, ap As String, fo As String, pt As String
+    On Error Resume Next
+    da = CStr(GetV(WS(SH_SOL), rS, "Cod_DA")): ue = CStr(GetV(WS(SH_SOL), rS, "Cod_UE"))
+    LlenarCombo cboApert, modBudgetEngine.ListaPresupuesto(da, ue, "", "", 1)
+    If modProcurement.LeerImputacion(idSol, ap, fo, pt) Then
+        ElegirEn cboApert, ap
+        ElegirEn cboFteOrg, fo
+        ElegirEn cboPartida, pt
+        txtDA.Text = da: txtUE.Text = ue
+        CargarAperturasSol
+        ElegirEn cboApertSol, ap
+        ElegirEn cboFteSol, fo
+        ElegirEn cboPartidaSol, pt
+    End If
+    lblEjecucion.Caption = modBudgetEngine.ResumenEjecucion(da, ue)
+End Sub
+
+Private Sub cboApert_Change()
+    Dim da As String, ue As String
+    If m_Lleno Or Len(cboApert.Text) = 0 Then Exit Sub
+    On Error GoTo EH
+    DaUeActiva da, ue
+    LlenarCombo cboFteOrg, modBudgetEngine.ListaPresupuesto(da, ue, cboApert.Text, "", 2)
+    LlenarCombo cboPartida, New Collection
+    lblSaldo.Caption = ""
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cboFteOrg_Change()
+    Dim da As String, ue As String
+    If m_Lleno Or Len(cboFteOrg.Text) = 0 Then Exit Sub
+    On Error GoTo EH
+    DaUeActiva da, ue
+    LlenarCombo cboPartida, modBudgetEngine.ListaPresupuesto(da, ue, cboApert.Text, cboFteOrg.Text, 3)
+    lblSaldo.Caption = ""
+    Exit Sub
+EH: Aviso Err
+End Sub
+
+Private Sub cboPartida_Change()
+    Dim da As String, ue As String
+    If m_Lleno Or Len(cboPartida.Text) = 0 Then Exit Sub
+    On Error GoTo EH
+    DaUeActiva da, ue
+    lblSaldo.Caption = modBudgetEngine.ResumenPartida(da, ue, cboApert.Text, cboFteOrg.Text, cboPartida.Text)
+    Exit Sub
+EH: Aviso Err
 End Sub
 
 '-------------------------- P1 Solicitud --------------------------
@@ -389,20 +514,16 @@ End Sub
 
 '-------------------------- P4 Presupuesto / C-31 --------------------------
 Private Function LeerLinea() As LineaC31
-    Dim L As LineaC31
     If Not IsNumeric(txtImporte.Text) Then Err.Raise vbObjectError + 705, , "Importe invalido."
-    L.Programa = Trim$(txtProg.Text): L.Proyecto = Trim$(txtProy.Text): L.ActObra = Trim$(txtAct.Text)
-    L.Fuente = Trim$(txtFte.Text): L.Organismo = Trim$(txtOrg.Text): L.Partida = Trim$(txtPartida.Text)
-    L.Importe = CDbl(txtImporte.Text)
-    LeerLinea = L
+    LeerLinea = modBudgetEngine.LineaDeSeleccion(cboApert.Text, cboFteOrg.Text, cboPartida.Text, CDbl(txtImporte.Text))
 End Function
 
 Private Sub cmdSaldo_Click()
-    Dim L As LineaC31, rS As Long
+    Dim da As String, ue As String
     On Error GoTo EH
-    L = LeerLinea()
-    rS = modProcurement.FilaSolicitud(SolActiva())
-    lblSaldo.Caption = "Saldo disponible: Bs " & Format$(modBudgetEngine.SaldoDisponible(CStr(GetV(WS(SH_SOL), rS, "Cod_DA")), CStr(GetV(WS(SH_SOL), rS, "Cod_UE")), L), "#,##0.00")
+    DaUeActiva da, ue
+    lblSaldo.Caption = modBudgetEngine.ResumenPartida(da, ue, cboApert.Text, cboFteOrg.Text, cboPartida.Text)
+    lblEjecucion.Caption = modBudgetEngine.ResumenEjecucion(da, ue)
     Exit Sub
 EH: Aviso Err
 End Sub

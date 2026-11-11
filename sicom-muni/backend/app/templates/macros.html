@@ -27,3 +27,17 @@
 {% for r in roles %}<td><div class="linea">{{ r }}</div></td>{% endfor %}
 </tr></table>
 {% endmacro %}
+
+{% macro imputacion(ctx) %}
+{% if ctx.imputacion %}
+<h2>Imputación presupuestaria (apertura programática)</h2>
+<table class="lista">
+<tr><th>Apertura (Prog-Proy-Act)</th><th>Partida</th><th>Fte / Org</th><th class="num">Presupuesto (Bs)</th><th class="num">Saldo (Bs)</th><th class="num">Solicitado (Bs)</th></tr>
+{% for f in ctx.imputacion %}
+<tr><td>{{ f.apertura }}{% if f.descripcion_apertura %}<br><span class="nota">{{ f.descripcion_apertura }}</span>{% endif %}</td>
+<td>{{ f.partida }} — {{ f.descripcion }}</td><td>{{ f.fuente }} / {{ f.organismo }}</td>
+<td class="num">{{ f.presupuesto | bs }}</td><td class="num">{{ f.saldo | bs }}</td><td class="num">{{ f.importe | bs }}</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+{% endmacro %}

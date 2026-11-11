@@ -20,7 +20,7 @@ BORRADOR → SOLICITADO → CERTIFICADO_PRESUPUESTO → EN_COTIZACION → EVALUA
 
 ## 2. Solicitante: crear la solicitud
 1. **Nueva solicitud** → complete objeto, tipo (Bien / Servicio general / Consultoría), plazo en días, lugar y justificación. La **guía de redacción** le ayuda con las Especificaciones Técnicas.
-2. En el **Formulador** agregue ítems: escriba el código UNSPSC o busque en el **Catálogo CHB**; elija partida, unidad, cantidad y precio. Verá en vivo:
+2. En el **Formulador** agregue ítems: escriba el código UNSPSC o busque en el **Catálogo CHB**; elija en el recuadro **Presupuesto de la institución** la **apertura programática** (Programa-Proyecto-Actividad), la **fuente/organismo** y la **partida** (se muestran su presupuesto, lo ejecutado y el saldo disponible); luego unidad, cantidad y precio. Verá en vivo:
    monto total, **modalidad** (Compra directa ≤ 20.000; Consulta de Precios SICOES hasta 50.000; sobre 50.000 se bloquea y se indica derivar a ANPE),
    **método de formalización** (Orden hasta 15 días; Contrato desde 16) y el estado CHB de cada ítem.
 3. Si un bien existe en el catálogo CHB, es **compra obligatoria** y no podrá enviar. Para exceptuarlo marque el ítem «fuera de catálogo», escriba la justificación (mín. 80 caracteres) y el código de autorización; el sistema generará el **Informe de Excepción**.
@@ -31,8 +31,8 @@ BORRADOR → SOLICITADO → CERTIFICADO_PRESUPUESTO → EN_COTIZACION → EVALUA
 1. Abra el trámite → pestaña **Presupuesto**: vea saldo por partida y el **bloque SIGEP** previsto.
 2. Revise la tarjeta **Certificación del POA — programa y objetivo** (programa de cada partida, su objetivo del POA y la justificación; puede corregirla). Si un programa no tiene objetivo, regístrelo en **Objetivos POA**.
 3. **Copiar Bloque SIGEP** y péguelo en el SIGEP; registre el N.° de preventivo C-31 y pulse **Certificar** (descuenta el saldo de todas las partidas o ninguna). Se generan la **Certificación presupuestaria C-31** y la **Certificación del POA**.
-4. Al final, **Devengar**: libera la diferencia entre lo reservado y lo adjudicado.
-5. Menú **Presupuesto**: aperturas programáticas y partidas con presupuesto, ejecutado, preventivo activo y saldo; **Importar desde Excel** y **Registrar partida**.
+4. Al final, **Registrar devengado**: antes de hacerlo, la tarjeta **Ejecución presupuestaria — previsión del devengado** muestra lo reservado, lo que se devengará y lo que se liberará; después muestra el **total de ejecución** cargado y la ejecución acumulada de cada partida (la diferencia entre lo reservado y lo adjudicado vuelve al saldo).
+5. Menú **Presupuesto**: aperturas programáticas y partidas con presupuesto, ejecutado, **% de ejecución**, preventivo activo y saldo, con una fila **TOTAL** al pie; **Importar desde Excel** y **Registrar partida**.
 
 ### 3.1 Importar desde Excel (Presupuesto y Objetivos POA)
 Botón **Importar desde Excel** en *Presupuesto* y en *Objetivos POA*. Descargue la **plantilla**, complete sus datos (.xlsx), pulse **Validar archivo** (no guarda nada, muestra errores por fila y vista previa) y luego **Confirmar importación** (solo si no hay errores).

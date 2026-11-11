@@ -58,6 +58,40 @@ Public Function CrearSolicitud(ByVal codDA As String, ByVal codUE As String, _
     LogAudit "SOLICITUD_CREADA", CrearSolicitud
 End Function
 
+' Imputacion presupuestaria PREVISTA elegida por la unidad solicitante (se propone luego en el C-31).
+Public Sub GuardarImputacion(ByVal idSol As String, ByVal apertura As String, ByVal fteOrg As String, ByVal partidaTxt As String)
+    Dim rS As Long, sh As Worksheet
+    RequirePermiso P_SOLICITUD
+    rS = FilaSolicitud(idSol)
+    If CStr(GetV(WS(SH_SOL), rS, "Estado")) <> "BORRADOR" Then Fail "Solo se edita la imputacion de solicitudes en BORRADOR."
+    If Len(apertura) = 0 Or Len(fteOrg) = 0 Or Len(partidaTxt) = 0 Then Fail "Seleccione la apertura programatica, la fuente/organismo y la partida."
+    Set sh = WS(SH_SOL)
+    AsegurarColumna sh, "ImpApertura": AsegurarColumna sh, "ImpFuenteOrg": AsegurarColumna sh, "ImpPartida"
+    SetV sh, rS, "ImpApertura", apertura
+    SetV sh, rS, "ImpFuenteOrg", fteOrg
+    SetV sh, rS, "ImpPartida", partidaTxt
+    LogAudit "SOLICITUD_IMPUTACION", idSol & " " & apertura & " " & fteOrg & " " & partidaTxt
+End Sub
+
+Private Function ValorOpcional(ByVal sh As Worksheet, ByVal r As Long, ByVal hdr As String) As String
+    On Error GoTo NoHay
+    ValorOpcional = CStr(GetV(sh, r, hdr))
+    Exit Function
+NoHay:
+    ValorOpcional = ""
+End Function
+
+' Devuelve True si la solicitud tiene imputacion prevista.
+Public Function LeerImputacion(ByVal idSol As String, ByRef apertura As String, ByRef fteOrg As String, ByRef partidaTxt As String) As Boolean
+    Dim rS As Long, sh As Worksheet
+    rS = FilaSolicitud(idSol)
+    Set sh = WS(SH_SOL)
+    apertura = ValorOpcional(sh, rS, "ImpApertura")
+    fteOrg = ValorOpcional(sh, rS, "ImpFuenteOrg")
+    partidaTxt = ValorOpcional(sh, rS, "ImpPartida")
+    LeerImputacion = (Len(apertura) > 0 And Len(fteOrg) > 0 And Len(partidaTxt) > 0)
+End Function
+
 Public Function FilaSolicitud(ByVal idSol As String) As Long
     FilaSolicitud = FindRow(WS(SH_SOL), "ID_Solicitud", idSol)
     If FilaSolicitud = 0 Then Fail "Solicitud " & idSol & " no existe."

@@ -43,6 +43,7 @@ Private Function Hoja(ByVal nombre As String, ByVal widths As String, ByVal titu
     sh.Cells(2, 1).Value = titulo: sh.Cells(2, 1).Font.Size = 11: sh.Cells(2, 1).Font.Bold = True
     sh.Range(sh.Cells(1, 1), sh.Cells(2, nCols)).HorizontalAlignment = xlCenter
     sh.Cells(3, 1).Value = "Gestion:": sh.Cells(3, 2).Font.Bold = True
+    sh.Rows(1).RowHeight = 20: sh.Rows(2).RowHeight = 17: sh.Rows(3).RowHeight = 13      ' membrete compacto
     sh.Range(sh.Cells(2, 1), sh.Cells(2, nCols)).Borders(xlEdgeBottom).LineStyle = xlContinuous
     NombreRango sh, pref & "_Entidad", 1, 1
     NombreRango sh, pref & "_Gestion", 3, 2
@@ -119,6 +120,9 @@ Private Sub PageSetup_(ByVal sh As Worksheet, ByVal lastRow As Long, ByVal nCols
         .Zoom = False: .FitToPagesWide = 1: .FitToPagesTall = 1
         .CenterHorizontally = True
         .LeftMargin = Application.CentimetersToPoints(1.5): .RightMargin = Application.CentimetersToPoints(1.5)
+        .TopMargin = Application.CentimetersToPoints(1.1): .BottomMargin = Application.CentimetersToPoints(1.3)
+        .HeaderMargin = Application.CentimetersToPoints(0.4): .FooterMargin = Application.CentimetersToPoints(0.5)
+        .CenterVertically = False
     End With
     On Error GoTo 0
 End Sub
@@ -129,6 +133,7 @@ End Sub
 Private Sub BuildC1()
     Dim sh As Worksheet
     Set sh = Hoja(DOC_C1, "6,14,38,10,10,13,13,8", "FORMULARIO C-1 - REQUERIMIENTO Y ESPECIFICACIONES TECNICAS", "RQ")
+    sh.Rows(4).RowHeight = 5
     Par sh, 5, 1, 2, "N Solicitud:", 3, 4, "RQ_Solicitud"
     Par sh, 5, 5, 6, "Fecha:", 7, 8, "RQ_Fecha", "dd/mm/yyyy"
     Par sh, 6, 1, 2, "Direccion Admin. (DA):", 3, 4, "RQ_DA"
@@ -138,6 +143,8 @@ Private Sub BuildC1()
     sh.Cells(8, 1).Value = "Justificacion:": sh.Cells(8, 1).Font.Bold = True
     sh.Range("A8:B8").Merge: sh.Range("C8:H8").Merge: sh.Cells(8, 3).WrapText = True: sh.Rows(8).RowHeight = 40
     NombreRango sh, "RQ_Justificacion", 8, 3
+    Par sh, 9, 1, 2, "Imputacion prevista:", 3, 8, "RQ_Imputacion"
+    sh.Cells(9, 3).WrapText = True: sh.Rows(9).RowHeight = 26
     Encabezado sh, 10, "Item|Codigo UNSPSC|Descripcion y especificaciones tecnicas|Unidad|Cantidad|P. Ref. Unit. (Bs)|Total (Bs)|CHB"
     Cuerpo sh, 11, 25, 8
     NombreRango sh, "RQ_ItemsIni", 11, 1
@@ -162,6 +169,7 @@ End Sub
 Private Sub BuildCuadro()
     Dim sh As Worksheet
     Set sh = Hoja(DOC_CUADRO, "5,13,32,12,14,12,14,11", "CUADRO COMPARATIVO DE COTIZACIONES", "CC")
+    sh.Rows(4).RowHeight = 5
     Par sh, 5, 1, 2, "N Solicitud:", 3, 4, "CC_Solicitud"
     Par sh, 5, 5, 6, "Fecha:", 7, 8, "CC_Fecha", "dd/mm/yyyy"
     Par sh, 6, 1, 2, "Modalidad:", 3, 4, "CC_Modalidad"
@@ -189,6 +197,7 @@ End Sub
 Private Sub BuildExcepcion()
     Dim sh As Worksheet
     Set sh = Hoja(DOC_EXCEPCION, "5,13,28,16,16,12,50", "JUSTIFICACION DE EXCEPCION DE FICHA TECNICA - CATALOGO CHB", "EX")
+    sh.Rows(4).RowHeight = 5
     Par sh, 5, 1, 2, "N Solicitud:", 3, 4, "EX_Solicitud"
     Par sh, 5, 5, 6, "Fecha:", 7, 7, "EX_Fecha", "dd/mm/yyyy"
     Par sh, 6, 1, 2, "Direccion Admin.:", 3, 4, "EX_DA"
@@ -211,6 +220,7 @@ End Sub
 Private Sub BuildC31()
     Dim sh As Worksheet
     Set sh = Hoja(DOC_C31, "6,10,10,10,8,10,12,16,16,16", "C-31 PREVENTIVO - RESERVA PRESUPUESTARIA (REGISTRO INTERNO)", "PV")
+    sh.Rows(4).RowHeight = 5
     Par sh, 5, 1, 2, "N Interno:", 3, 4, "PV_Nro"
     Par sh, 5, 5, 7, "N C-31 SIGEP:", 8, 10, "PV_Sigep"
     Par sh, 6, 1, 2, "Fecha:", 3, 4, "PV_Fecha", "dd/mm/yyyy"
@@ -218,6 +228,8 @@ Private Sub BuildC31()
     Par sh, 7, 1, 2, "DA:", 3, 4, "PV_DA"
     Par sh, 7, 5, 7, "UE:", 8, 10, "PV_UE"
     Par sh, 8, 1, 2, "Solicitud:", 3, 4, "PV_Solicitud"
+    Par sh, 9, 1, 3, "Ejecucion presupuestaria:", 4, 10, "PV_Ejecucion"
+    sh.Cells(9, 4).WrapText = True: sh.Cells(9, 4).Font.Bold = True
     Encabezado sh, 10, "Linea|Programa|Proyecto|Act./Obra|Fuente|Organismo|Partida (Objeto del Gasto)|Importe (Bs)|Revertido (Bs)|Vigente (Bs)"
     Cuerpo sh, 11, 20, 10
     NombreRango sh, "PV_LineasIni", 11, 1

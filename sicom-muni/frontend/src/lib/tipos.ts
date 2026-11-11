@@ -16,6 +16,7 @@ export interface Item {
   id: string; numero: number; codigo_unspsc: string; partida_id: string | null; partida_gasto: string;
   descripcion_especifica: string; unidad_medida: string; cantidad: string; precio_unitario_ref: string;
   subtotal: string; fuera_catalogo_chb: boolean;
+  apertura?: string; descripcion_apertura?: string; fuente?: string; organismo?: string;
   estado_chb: "NO_APLICA" | "COMPRA_CHB_OBLIGATORIA" | "EXCEPCION_INCOMPATIBILIDAD" | "SIN_COINCIDENCIA";
 }
 

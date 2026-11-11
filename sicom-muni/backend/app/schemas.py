@@ -171,6 +171,10 @@ class ItemOut(Base):
     subtotal: Decimal
     fuera_catalogo_chb: bool
     estado_chb: str
+    apertura: str = ""
+    descripcion_apertura: str = ""
+    fuente: str = ""
+    organismo: str = ""
 
 
 class CotizacionIn(BaseModel):

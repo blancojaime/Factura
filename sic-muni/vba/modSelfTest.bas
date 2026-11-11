@@ -59,6 +59,7 @@ Public Function EjecutarPruebas() As Long
     T_CHB
     T_Flujo
     T_Reversion
+    T_SeleccionPresupuesto
     T_Desempate
     T_DocC1
     T_DocPDF
@@ -291,6 +292,29 @@ Private Sub T_Reversion()
     Err.Clear
     Exit Sub
 EH: RegEx "T_Reversion"
+End Sub
+
+Private Sub T_SeleccionPresupuesto()
+    Dim ap As Collection, fo As Collection, pa As Collection, L As LineaC31, id As String
+    Dim a2 As String, f2 As String, p2 As String
+    On Error GoTo EH
+    Set ap = ListaPresupuesto("01", "001", "", "", 1)
+    Reg "Seleccion: hay aperturas programaticas en el presupuesto", ap.Count > 0
+    Set fo = ListaPresupuesto("01", "001", CStr(ap(1)), "", 2)
+    Reg "Seleccion: la apertura tiene fuente/organismo", fo.Count > 0
+    Set pa = ListaPresupuesto("01", "001", CStr(ap(1)), CStr(fo(1)), 3)
+    Reg "Seleccion: la apertura/fuente tiene partidas", pa.Count > 0
+    L = LineaDeSeleccion(CStr(ap(1)), CStr(fo(1)), CStr(pa(1)), 10)
+    Reg "Seleccion: la linea arma la estructura completa", Len(L.Programa) > 0 And Len(L.Fuente) > 0 And Len(L.Partida) > 0 And L.Importe = 10
+    Reg "Seleccion: resumen de la partida", InStr(ResumenPartida("01", "001", CStr(ap(1)), CStr(fo(1)), CStr(pa(1))), "Presupuesto Bs") > 0
+    Reg "Seleccion: total de ejecucion de la UE", Left$(ResumenEjecucion("01", "001"), 15) = "TOTAL EJECUCION"
+    Sesion "t_us", ROL_US
+    id = CrearSolicitud("01", "001", "Prueba de imputacion presupuestaria prevista de la solicitud")
+    GuardarImputacion id, CStr(ap(1)), CStr(fo(1)), CStr(pa(1))
+    Reg "Seleccion: la imputacion prevista se guarda y se lee", LeerImputacion(id, a2, f2, p2) And a2 = CStr(ap(1)) And f2 = CStr(fo(1)) And p2 = CStr(pa(1))
+    Exit Sub
+EH:
+    RegEx "Seleccion del presupuesto"
 End Sub
 
 Private Sub T_Desempate()

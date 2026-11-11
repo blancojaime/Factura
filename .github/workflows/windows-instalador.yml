@@ -5,20 +5,20 @@ on:
     inputs:
       version:
         description: 'Versión del instalador'
-        default: '2.0.0'
+        default: '2.1.0'
       publicar:
         description: 'Publicar como Release de GitHub'
         type: boolean
         default: false
   push:
     branches: [claude/tender-einstein-76nc7n]
-    paths: ['instalador/**', 'sicom-muni/backend/**', 'sicom-muni/frontend/**', 'herramientas/**', '.github/workflows/windows-instalador.yml']
+    paths: ['instalador/**', 'sicom-muni/backend/**', 'sicom-muni/frontend/**', 'sicom-muni/docs/**', 'sic-muni/**', 'herramientas/**', '.github/workflows/windows-instalador.yml']
 
 permissions:
   contents: write
 
 env:
-  VERSION: ${{ github.event.inputs.version || '2.0.0' }}
+  VERSION: ${{ github.event.inputs.version || '2.1.0' }}
 
 jobs:
   windows:
@@ -150,6 +150,15 @@ jobs:
           Copy-Item instalador/windows/_emisor/SICOM-Emisor-de-Licencias.exe dist/emisor
           Get-ChildItem sicom-muni/docs -Filter 'MANUAL_EMISOR_LICENCIAS*.docx' -ErrorAction SilentlyContinue | Copy-Item -Destination dist/emisor
           Copy-Item sicom-muni/backend/app/licencia_publica.pem dist/emisor/llave_publica_SICOM.pem
+          # Aplicativo de escritorio (Excel/VBA) y paquete de manuales
+          New-Item -ItemType Directory -Force -Path dist/escritorio/docs, dist/manuales | Out-Null
+          Copy-Item -Recurse sic-muni/vba, sic-muni/instalar, sic-muni/ejemplos -Destination dist/escritorio
+          Copy-Item sic-muni/README.md dist/escritorio
+          Copy-Item sic-muni/docs/*.docx, sic-muni/docs/*.md -Destination dist/escritorio/docs
+          Copy-Item sicom-muni/docs/*.docx dist/manuales
+          Get-ChildItem sic-muni/docs -Filter *.docx | ForEach-Object { Copy-Item $_.FullName (Join-Path dist/manuales ('ESCRITORIO_' + $_.Name)) }
+          Compress-Archive -Path dist/escritorio/* -DestinationPath "dist/SIC-MUNI-Escritorio-Excel-$env:VERSION.zip" -Force
+          Compress-Archive -Path dist/manuales/* -DestinationPath "dist/SICOM-MUNI-Manuales-$env:VERSION.zip" -Force
           Compress-Archive -Path dist/instalador/* -DestinationPath "dist/SICOM-MUNI-Instalador-Windows-$env:VERSION.zip" -Force
           Compress-Archive -Path dist/emisor/* -DestinationPath "dist/SICOM-Emisor-de-Licencias-$env:VERSION.zip" -Force
           Get-ChildItem dist -Filter *.zip | ForEach-Object { "{0}  {1:N0} MB" -f $_.Name, ($_.Length / 1MB) }
@@ -177,4 +186,6 @@ jobs:
             Instalador de SICOM-MUNI para Windows (servidor de red local) y Emisor de Licencias.
             - `SICOM-MUNI-Instalador-Windows-${{ env.VERSION }}.zip`: instalador + manual de instalación en red local (para cada servidor).
             - `SICOM-Emisor-de-Licencias-${{ env.VERSION }}.zip`: herramienta EXTERNA del proveedor para emitir licencias (no se instala en los clientes).
+            - `SIC-MUNI-Escritorio-Excel-${{ env.VERSION }}.zip`: aplicativo de escritorio (Excel/VBA) con sus manuales.
+            - `SICOM-MUNI-Manuales-${{ env.VERSION }}.zip`: todos los manuales en Word (web y escritorio).
           files: dist/*.zip

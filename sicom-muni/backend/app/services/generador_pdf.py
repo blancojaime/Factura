@@ -46,7 +46,7 @@ from .evaluador_ofertas import evaluar as evaluar_ofertas
 from .numeros_letras import monto_literal
 from .storage import get_storage
 
-TEMPLATE_VERSION = "1.0"
+TEMPLATE_VERSION = "1.1"
 TEMPLATES_DIR = Path(__file__).resolve().parent.parent / "templates"
 
 TITULOS = {
@@ -151,11 +151,27 @@ def _usuario(db: Session, uid) -> dict:
     return {"nombre": u.nombre_completo if u else "", "cargo": u.cargo if u else ""}
 
 
+def _imputacion(c: ContratacionMenor) -> list[dict]:
+    """Imputacion presupuestaria de la solicitud: una fila por partida (apertura, fuente, organismo, importe)."""
+    filas: dict = {}
+    for i in c.items:
+        p = i.partida
+        if p is None:
+            continue
+        f = filas.setdefault(p.id, {"apertura": i.apertura, "descripcion_apertura": p.descripcion_apertura,
+                                    "partida": p.codigo_partida, "descripcion": p.descripcion, "fuente": p.fuente,
+                                    "organismo": p.organismo, "presupuesto": str(p.monto_aprobado),
+                                    "saldo": str(p.saldo_disponible), "importe": Decimal("0")})
+        f["importe"] += Decimal(i.subtotal)
+    return [{**f, "importe": str(f["importe"])} for f in filas.values()]
+
+
 def _base_context(db: Session, c: ContratacionMenor, params: dict[str, str]) -> dict:
     items = [{
         "numero": i.numero, "codigo_unspsc": i.codigo_unspsc, "partida": i.partida_gasto,
         "descripcion": i.descripcion_especifica, "unidad": i.unidad_medida, "cantidad": str(i.cantidad),
         "precio": str(i.precio_unitario_ref), "subtotal": str(i.subtotal), "estado_chb": i.estado_chb,
+        "apertura": i.apertura, "fuente": i.fuente, "organismo": i.organismo,
     } for i in c.items]
     return {
         "gam": {"nombre": params["nombre_gam"], "ciudad": params["ciudad"], "da": params["da"], "ue": params["ue"],
@@ -172,6 +188,7 @@ def _base_context(db: Session, c: ContratacionMenor, params: dict[str, str]) -> 
         "solicitante": _usuario(db, c.created_by_id),
         "rpa": _usuario(db, c.rpa_id),
         "items": items,
+        "imputacion": _imputacion(c),
         "fecha_emision": date.today().isoformat(),
     }
 

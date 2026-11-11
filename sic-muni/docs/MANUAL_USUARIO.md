@@ -115,6 +115,7 @@ Los **PDF** se guardan en la carpeta `PDF` junto al libro (por ejemplo `C:\SIC-M
 1. Escriba la **DA** y la **UE** (Unidad Ejecutora). La DA ya aparece con la suya y debe ser la suya: el sistema no permite crear solicitudes de otra DA.
 2. Escriba la **Justificación** (al menos 20 caracteres): por qué se necesita la compra o el servicio.
 3. Pulse **Crear solicitud**. El sistema asigna el número (por ejemplo `SOL-2026-000001`) y lo muestra en **Solicitud N°**. **Anótelo.**
+4. En **Imputación presupuestaria prevista** elija del presupuesto de su unidad: la **Apertura** (Programa-Proyecto-Actividad), la **Fte./Org.** (fuente y organismo) y la **Partida**. Al elegir la partida, el sistema muestra el **presupuesto, lo ejecutado/comprometido (con su porcentaje) y el saldo**. Pulse **Guardar imputación**. Esta elección se imprime en el C-1 y Presupuesto la encontrará ya seleccionada al emitir el C-31 (puede cambiarla). Mientras la solicitud esté en BORRADOR puede volver a guardarla con otra elección.
 
 ### 6.2 Agregar ítems
 
@@ -234,8 +235,8 @@ Notas:
 Condición: la solicitud debe estar **EVALUADA** (con oferta recomendada).
 
 1. Cargue la solicitud.
-2. Para cada línea de imputación escriba: **Programa, Proyecto, Act./Obra, Fuente, Organismo, Partida** (objeto del gasto) e **Importe (Bs)**. Los códigos se escriben tal como están en el presupuesto (por ejemplo `01`, `0000`, `001`).
-3. Pulse **Consultar saldo** para ver el saldo disponible de esa estructura.
+2. Para cada línea de imputación **seleccione del presupuesto de la institución**, en este orden: **Apertura program.** (Programa-Proyecto-Actividad, por ejemplo `01-0000-001`), **Fuente / Organismo** (por ejemplo `20/230`) y **Partida** (objeto del gasto con su descripción). Si la unidad solicitante ya guardó su imputación prevista, aparece **ya seleccionada**. Escriba el **Importe (Bs)**. Ya no se escriben los códigos: solo se pueden elegir los que existen en el presupuesto de la gestión.
+3. Pulse **Consultar saldo** para ver, en la línea azul, el **presupuesto, lo ejecutado/comprometido (con su %) y el saldo** de esa partida; en la línea verde de abajo se muestra el **TOTAL EJECUCIÓN de la UE** (comprometido sobre presupuesto aprobado y saldo total), que se actualiza al emitir o revertir un C-31.
 4. Pulse **Agregar línea**. La línea pasa a la lista. Repita si el gasto se imputa a varias partidas.
 5. Pulse **Emitir C-31 Preventivo**.
 
@@ -307,14 +308,14 @@ Con la opción 6 se muestran las hojas. En `CONFIG` complete como mínimo: **Ent
 
 | Documento | Quién lo genera | Dónde | Contenido principal |
 | :-- | :-- | :-- | :-- |
-| Formulario C-1: Requerimiento y Especificaciones Técnicas | US, RC | Pestaña 1 | Datos de la solicitud, ítems, total en literal, declaración de no impedimento, firmas |
+| Formulario C-1: Requerimiento y Especificaciones Técnicas | US, RC | Pestaña 1 | Datos de la solicitud, **imputación presupuestaria prevista**, ítems, total en literal, declaración de no impedimento, firmas |
 | Cuadro Comparativo de Cotizaciones | RC | Pestaña 3 | Ofertas, evaluación Cumple/No cumple, menor oferta hábil, recomendación |
 | Justificación de Excepción CHB | RC | Pestaña 2 | Ítems fuera de catálogo con código de excepción, autorización MDPyEP y justificación |
-| C-31 Preventivo (boleta interna) | PF, RC | Pestaña 4 | Estructura programática, importes por partida, revertido, vigente, total en literal |
+| C-31 Preventivo (boleta interna) | PF, RC | Pestaña 4 | Estructura programática, importes por partida, revertido, vigente, total en literal y el **total de ejecución presupuestaria** de la UE |
 | Orden de Compra / de Servicio | RC | Pestaña 5 | Datos del proveedor, ítems, monto, plazo, cláusulas, firmas |
 | Acta de Recepción y Conformidad | RC | Pestaña 5 | Fechas, días de retraso, multa, resultado y monto neto a pagar |
 
-Cada PDF se guarda con el número del trámite y la fecha y hora en el nombre. Imprima, firme y archive en el expediente de la contratación.
+Los documentos se imprimen con un **membrete compacto** (márgenes de página reducidos y filas de encabezado ajustadas) para aprovechar la hoja. Cada PDF se guarda con el número del trámite y la fecha y hora en el nombre. Imprima, firme y archive en el expediente de la contratación.
 
 ## 11. Mensajes que puede ver y qué hacer
 
@@ -381,7 +382,7 @@ Cada PDF se guarda con el número del trámite y la fecha y hora en el nombre. I
 
 **RC:** Cargar solicitud → Pestaña 2 evaluar cada ítem → Pestaña 3 registrar cotizaciones → Evaluar cuadro → (espera C-31 de PF) → Adjudicar → Pestaña 5 Generar Orden → Recepción → Acta.
 
-**PF:** Cargar solicitud EVALUADA → Pestaña 4 líneas de imputación → Consultar saldo → Emitir C-31 → Registrar en SIGEP → Asociar N° SIGEP → Reversiones si corresponde.
+**PF:** Cargar solicitud EVALUADA → Pestaña 4: elegir apertura, fuente/organismo y partida → Consultar saldo → Emitir C-31 → Registrar en SIGEP → Asociar N° SIGEP → Reversiones si corresponde.
 
 **ADM:** Menú: 1 usuarios · 2 desbloqueo · 3 contraseña · 4-5 importar · 6-7 configurar y proteger · 8 auditoría.
 

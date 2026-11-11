@@ -72,6 +72,12 @@ Public Function GenerarC1(ByVal idSol As String, Optional ByVal aPDF As Boolean 
     PutN "RQ_UE", GetV(sh, rS, "Cod_UE")
     PutN "RQ_Solicitante", GetV(sh, rS, "Solicitante")
     PutN "RQ_Justificacion", GetV(sh, rS, "Justificacion")
+    Dim ap As String, fo As String, pt As String
+    If modProcurement.LeerImputacion(idSol, ap, fo, pt) Then
+        PutN "RQ_Imputacion", "Apertura " & ap & "  |  Fuente/Org. " & fo & "  |  Partida " & pt
+    Else
+        PutN "RQ_Imputacion", "(no registrada)"
+    End If
     PutN "RQ_Modalidad", GetV(sh, rS, "Modalidad")
     Set shD = WS(SH_DET)
     ReDim d(1 To 40, 1 To 8)
@@ -173,6 +179,7 @@ Public Function GenerarPreventivoC31(ByVal nroInterno As String, Optional ByVal 
     PutN "PV_UE", GetV(shC, rC, "UE")
     PutN "PV_Solicitud", GetV(shC, rC, "ID_Solicitud")
     PutN "PV_Estado", GetV(shC, rC, "Estado")
+    PutN "PV_Ejecucion", modBudgetEngine.ResumenEjecucion(CStr(GetV(shC, rC, "DA")), CStr(GetV(shC, rC, "UE")))
     ReDim d(1 To 10, 1 To 9)
     For r = 2 To LastRow(shD)
         If CStr(GetV(shD, r, "NroInterno")) = nroInterno Then

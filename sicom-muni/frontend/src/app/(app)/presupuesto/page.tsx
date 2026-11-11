@@ -10,6 +10,7 @@ import { bs } from "@/lib/format";
 import type { Partida } from "@/lib/tipos";
 
 interface Ejecucion { id: string; preventivo_activo: string }
+const pct = (parte: string | number, total: string | number) => Number(total) > 0 ? `${((Number(parte) / Number(total)) * 100).toLocaleString("es-BO", { maximumFractionDigits: 1 })} %` : "—";
 
 export default function PresupuestoPage() {
   const { user } = useAuth();
@@ -52,6 +53,11 @@ export default function PresupuestoPage() {
     return q ? partidas.filter((p) => `${p.programa}-${p.proyecto}-${p.actividad} ${p.codigo_partida} ${p.descripcion} ${p.descripcion_apertura}`.toLowerCase().includes(q)) : partidas;
   }, [partidas, filtro]);
 
+  const tot = useMemo(() => visibles.reduce((a, p) => ({
+    aprobado: a.aprobado + Number(p.monto_aprobado), ejecutado: a.ejecutado + Number(p.monto_ejecutado),
+    preventivo: a.preventivo + Number(activos.get(p.id) ?? 0), saldo: a.saldo + Number(p.saldo_disponible) }),
+    { aprobado: 0, ejecutado: 0, preventivo: 0, saldo: 0 }), [visibles, activos]);
+
   if (error) return <Alert tipo="error">{error}</Alert>;
   if (!partidas) return <Cargando />;
   return (
@@ -70,16 +76,25 @@ export default function PresupuestoPage() {
         <CardHeader><CardTitle>Presupuesto de la gestión ({visibles.length} filas)</CardTitle></CardHeader>
         <Tabla aria-label="Partidas presupuestarias">
           <thead><tr><Th>Apertura (Prog-Proy-Act)</Th><Th>Descripción apertura</Th><Th>Partida</Th><Th>Fte / Org</Th>
-            <Th className="text-right">Presupuesto (Bs)</Th><Th className="text-right">Ejecutado (Bs)</Th><Th className="text-right">Preventivo activo (Bs)</Th><Th className="text-right">Saldo (Bs)</Th></tr></thead>
+            <Th className="text-right">Presupuesto (Bs)</Th><Th className="text-right">Ejecutado (Bs)</Th><Th className="text-right">% Ejec.</Th><Th className="text-right">Preventivo activo (Bs)</Th><Th className="text-right">Saldo (Bs)</Th></tr></thead>
           <tbody>{visibles.map((p) => (
             <tr key={p.id}>
               <Td className="num whitespace-nowrap">{p.programa}-{p.proyecto}-{p.actividad}</Td><Td>{p.descripcion_apertura || "—"}</Td>
               <Td><span className="num font-medium">{p.codigo_partida}</span> <span className="text-slate-600">{p.descripcion}</span></Td>
               <Td className="num">{p.fuente} / {p.organismo}</Td>
               <Td className="num text-right">{bs(p.monto_aprobado)}</Td><Td className="num text-right">{bs(p.monto_ejecutado)}</Td>
+              <Td className="num whitespace-nowrap text-right">{pct(p.monto_ejecutado, p.monto_aprobado)}</Td>
               <Td className="num text-right">{activos.has(p.id) ? bs(activos.get(p.id)) : "—"}</Td><Td className="num text-right font-semibold">{bs(p.saldo_disponible)}</Td>
             </tr>
           ))}</tbody>
+          <tfoot>
+            <tr>
+              <Td colSpan={4} className="text-right font-semibold">TOTAL ({visibles.length} filas)</Td>
+              <Td className="num text-right font-bold">{bs(tot.aprobado)}</Td><Td className="num text-right font-bold">{bs(tot.ejecutado)}</Td>
+              <Td className="num whitespace-nowrap text-right font-bold">{pct(tot.ejecutado, tot.aprobado)}</Td>
+              <Td className="num text-right font-bold">{bs(tot.preventivo)}</Td><Td className="num text-right font-bold">{bs(tot.saldo)}</Td>
+            </tr>
+          </tfoot>
         </Tabla>
       </Card>
       <ImportarExcel abierto={importar} onCerrar={() => setImportar(false)} titulo="Importar presupuesto desde Excel" ruta="/partidas/importar"

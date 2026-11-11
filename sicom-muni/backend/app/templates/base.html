@@ -4,23 +4,27 @@
 <meta charset="utf-8">
 <title>{{ titulo }}</title>
 <style>
-  @page { size: letter; margin: 3.6cm 2cm 3.3cm 2cm;
+  @page { size: letter; margin: 2.35cm 1.9cm 2.9cm 1.9cm;
           @top-center { content: element(membrete); width: 100%; vertical-align: top; }
           @bottom-center { content: element(pie); width: 100%; vertical-align: top; } }
   body { font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif; font-size: 9.5pt; color: #111; line-height: 1.35; }
-  header.membrete { position: running(membrete); border-bottom: 2px solid #1f4e79; padding-bottom: 4px; }
+  header.membrete { position: running(membrete); border-bottom: 2px solid #1f4e79; padding-bottom: 3px; }
   header.membrete table { width: 100%; border-collapse: collapse; }
   header.membrete td { vertical-align: middle; border: 0; padding: 0; }
-  header.membrete .gam { font-size: 12pt; font-weight: bold; color: #1f4e79; text-transform: uppercase; }
-  header.membrete .sub { font-size: 8pt; color: #555; }
-  header.membrete img.logo { height: 1.9cm; }
+  header.membrete .gam { font-size: 11.5pt; font-weight: bold; color: #1f4e79; text-transform: uppercase; }
+  header.membrete .sub { font-size: 7.6pt; color: #555; line-height: 1.25; }
+  header.membrete img.logo { height: 1.45cm; }
   .marca { position: fixed; top: 9cm; left: 0; right: 0; text-align: center; font-size: 62pt; font-weight: bold;
            color: rgba(150,150,150,0.16); transform: rotate(-30deg); z-index: -1; text-transform: uppercase; }
   footer.pie { position: running(pie); border-top: 1px solid #999; font-size: 6.8pt; color: #444; padding-top: 3px; }
-  footer.pie img.qr { float: left; height: 1.9cm; width: 1.9cm; margin-right: 0.3cm; }
-  footer.pie .txt { overflow: hidden; padding-top: 2px; }
+  footer.pie table { width: 100%; border-collapse: collapse; }
+  footer.pie td { border: 0; padding: 0; vertical-align: top; }
+  footer.pie img.qr { height: 1.7cm; width: 1.7cm; }
+  footer.pie .txt { padding: 2px 0 0 0.3cm; }
   footer.pie .hash { font-family: "DejaVu Sans Mono", monospace; word-break: break-all; }
   h1 { font-size: 13pt; color: #1f4e79; margin: 0 0 6px 0; text-align: center; }
+  h1.titulo-doc { margin-top: 0; }
+  h2:first-child { margin-top: 2px; }
   h2 { font-size: 10.5pt; color: #1f4e79; border-bottom: 1px solid #c9d6e4; margin: 14px 0 6px 0; padding-bottom: 2px; }
   table.datos { width: 100%; border-collapse: collapse; margin: 4px 0 8px 0; }
   table.datos td { border: 1px solid #b8c4d2; padding: 3px 6px; vertical-align: top; }
@@ -52,16 +56,18 @@
   </tr></table>
 </header>
 <footer class="pie">
-  <img class="qr" src="{{ qr }}">
-  <div class="txt">
-    <div>Verificación de autenticidad: <b>{{ url_verificacion }}</b></div>
-    <div>SHA-256 del contenido:</div>
-    <div class="hash">{{ hash_contenido }}</div>
-    <div>Generado el {{ generado }} por {{ generado_por }} · Estado del trámite: {{ estado }}</div>
-  </div>
+  <table><tr>
+    <td style="width:2.0cm"><img class="qr" src="{{ qr }}"></td>
+    <td class="txt">
+      <div>Verificación de autenticidad: <b>{{ url_verificacion }}</b></div>
+      <div>SHA-256 del contenido:</div>
+      <div class="hash">{{ hash_contenido }}</div>
+      <div>Generado el {{ generado }} por {{ generado_por }} · Estado del trámite: {{ estado }}</div>
+    </td>
+  </tr></table>
 </footer>
 <main>
-<h1>{{ titulo }}</h1>
+{% block titulo_doc %}<h1 class="titulo-doc">{{ titulo }}</h1>{% endblock %}
 {% block cuerpo %}{% endblock %}
 </main>
 </body>

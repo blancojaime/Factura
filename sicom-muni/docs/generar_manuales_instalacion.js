@@ -142,7 +142,8 @@ function manualInstalacion() {
     ['Recepción', 'Almacenes / comisión de recepción', 'Registrar la recepción y conformidad'],
     ['Administrador', 'Sistemas / administrador', 'Usuarios, parámetros, catálogo, licencia y auditoría']], [1800, 3300, 4260]);
   IMGF('inst-web-nuevo-usuario.png', 'Creación de un usuario', 5.2, 5);
-  PASO(4, 'presupuesto / contrataciones', 'Cargar sus datos reales', ['Con las plantillas de Excel que ofrece cada pantalla: **Presupuesto → Importar desde Excel** (aperturas programáticas), **Objetivos POA → Importar** y **Catálogo CHB → Importar**. El detalle está en el Manual de Usuario.']);
+  PASO(4, 'presupuesto / contrataciones', 'Cargar sus datos reales', ['Con las plantillas de Excel que ofrece cada pantalla: **Presupuesto → Importar desde Excel** (aperturas programáticas), **Objetivos POA → Importar** y **Catálogo CHB → Importar**. El detalle está en el Manual de Usuario.', 'Una vez cargado el presupuesto, cada **solicitante elige directamente del presupuesto de la institución**: al agregar un ítem selecciona la **apertura programática** (programa, proyecto y actividad), la **fuente / organismo** y la **partida de gasto**, y el sistema le muestra el presupuesto, lo ejecutado y el saldo disponible.']);
+  IMGF('46-seleccion-apertura.png', 'El solicitante elige la apertura programática, fuente, organismo y partida del presupuesto', 5.4, 5.0);
   NOTE('Si instaló los **datos de demostración** (solo para pruebas), los usuarios de ejemplo tienen todos la misma contraseña conocida (`Sicom#2026Demo`): **no los use con datos reales**; para pasar a producción reinstale sin esa opción o desactívelos.', 'FDE9E7', 'Atención');
 
   H1('6. Conectar las demás computadoras (no se instala nada)');
@@ -197,6 +198,7 @@ function manualInstalacion() {
     ['Encender el sistema', 'Solo encienda el servidor: el sistema arranca solo (espere 1 o 2 minutos).'],
     ['Apagar el servidor', 'Apáguelo normalmente desde Windows (Inicio → Apagar). Evite cortar la luz: use un UPS.'],
     ['Ver si está funcionando', '**Menú Inicio → SICOM-MUNI → Estado del sistema**: muestra los servicios, la dirección, la licencia y el último respaldo.'],
+    ['Ver la ejecución del presupuesto', 'Menú **Presupuesto**: presupuesto, ejecutado, % de ejecución, preventivo y saldo por apertura y partida, con el **TOTAL** al pie. Al registrar el devengado de un trámite, su tarjeta muestra el total de ejecución cargado.'],
     ['Reiniciar el sistema', '**Menú Inicio → SICOM-MUNI → Reiniciar el servicio**.'],
     ['Cambiar dirección o puerto', '**Menú Inicio → SICOM-MUNI → Cambiar la dirección o el puerto de red**.'],
     ['Olvidé la contraseña', '**Menú Inicio → SICOM-MUNI → Restablecer la contraseña de un usuario** (en el servidor, con permiso de administrador).'],
