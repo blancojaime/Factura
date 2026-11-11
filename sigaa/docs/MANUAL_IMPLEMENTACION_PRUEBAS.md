@@ -49,7 +49,7 @@ Para usar el sistema después: doble clic en `INICIAR_SIGAA.bat` y **no cerrar l
 
 ### Reiniciar los datos de prueba
 
-Con el sistema **cerrado**, borrar el archivo `sigaa\server\data\sigaa.sqlite` y volver a abrir `INICIAR_SIGAA.bat`. Se recrea la base con datos demo.
+Con el sistema **cerrado**, borrar el archivo `sigaa\server\data\sigaa.sqlite` y volver a abrir `INICIAR_SIGAA.bat`. Se recrea la base **vacía** (sin datos de ejemplo). Para practicar con datos de ejemplo cargue la base demostrativa `distribucion/SIGAA_Base_Demostrativa_Capacitacion.sqlite`.
 Para empezar **sin datos demo** (fase C), abrir PowerShell en la carpeta `sigaa\server` y ejecutar:
 `npx tsx src/db/seed-cli.ts --force --sin-demo`
 
@@ -235,3 +235,13 @@ Consulte el capítulo final de `Manual_SIGAA_Implementacion_y_Pruebas` (Word/PDF
 3. Cargue catálogos con **Catálogos → Importar desde Excel** y el **logo** en Configuración.
 4. Defina `SIGAA_JWT_SECRET`, publique con HTTPS si hay red y programe copias de seguridad (probar la restauración).
 5. Revise `Informe_Auditoria_SIGAA` (riesgos pendientes).
+
+---
+
+## Actualización (solicitud 4: revalúo, licenciamiento y base vacía)
+
+- **Revalúo técnico** (Activos fijos → Revalúo técnico): ver `Manual_Revaluo_Tecnico_Activos_Fijos`. Genera el Informe Técnico y los Anexos en Word.
+- **Clave de activación del escritorio** y **base de datos vacía de distribución**: ver `Manual_Licenciamiento_Distribucion_y_Base_de_Datos`.
+- La base de **distribución nace vacía** (web y escritorio); la base **demostrativa** es solo para capacitación (`distribucion/`).
+- Pruebas nuevas: capítulo 12 de `Guia_SIGAA_Pruebas_por_Rol`. Resumen: `Novedades_Solicitud_4`.
+- Todo el material se descarga en un solo comprimido: `SIGAA_Descarga_Completa.zip` (raíz del repositorio).

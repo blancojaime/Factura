@@ -51,7 +51,7 @@ Menú *Activos fijos → Revalúo técnico*: bandeja automática de activos con 
 
 ## Licenciamiento del escritorio (clave de activación)
 
-La aplicación de escritorio para Windows pide una **clave de activación** firmada (Ed25519) atada opcionalmente a un equipo y a una fecha de vencimiento; sin clave funciona 30 días de prueba. El proveedor emite las claves con `GENERADOR_DE_CLAVES.bat` (carpeta `tools/licencias`); la clave privada queda en `tools/licencias/privada/` (no se sube al repositorio). La primera vez, `CREAR_INSTALADOR_ESCRITORIO.bat` crea el par de claves e incluye la clave pública en la aplicación. Ver `docs/Manual_Licenciamiento_Escritorio.docx`.
+La aplicación de escritorio para Windows pide una **clave de activación** firmada (Ed25519) atada opcionalmente a un equipo y a una fecha de vencimiento; sin clave funciona 30 días de prueba. El proveedor emite las claves con `GENERADOR_DE_CLAVES.bat` (carpeta `tools/licencias`); la clave privada queda en `tools/licencias/privada/` (no se sube al repositorio). La primera vez, `CREAR_INSTALADOR_ESCRITORIO.bat` crea el par de claves e incluye la clave pública en la aplicación. Ver `docs/Manual_Licenciamiento_Distribucion_y_Base_de_Datos.docx`.
 
 ## Roles
 

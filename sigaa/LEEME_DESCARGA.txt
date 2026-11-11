@@ -1,0 +1,31 @@
+SIGAA - Sistema Integrado de Gestion de Almacenes, Combustible y Activos Fijos
+================================================================================
+Este comprimido (zip) contiene TODO: programa (web y escritorio), manuales, folletos, paquete de capacitacion,
+herramientas y base de datos demostrativa.
+
+QUE HAY EN CADA CARPETA
+  sigaa\INICIAR_SIGAA.bat ..................... Abre el sistema WEB en su PC (base de datos VACIA). Usuario admin / Admin2026
+  sigaa\CREAR_INSTALADOR_ESCRITORIO.bat ....... Crea el instalador de Windows (SIGAA Setup.exe) con clave de activacion
+  sigaa\GENERADOR_DE_CLAVES.bat ............... SOLO PROVEEDOR: crea el par de claves y emite claves de activacion
+  sigaa\distribucion\ ......................... Base de datos DEMOSTRATIVA para capacitacion (restaurar en escritorio:
+                                                menu SIGAA > Restaurar copia de respaldo...)
+  sigaa\docs\ ................................. Manuales (Word y PDF), guias, informes y folletos
+  sigaa\docs\capacitacion\ .................... Paquete del taller de capacitacion (Word y PowerPoint)
+  sigaa\docs\Paquete_Capacitacion_AGAMDEPAZ.zip  Paquete del taller en un solo zip
+  sigaa\server, web, desktop, tools ........... Codigo fuente
+
+MANUALES PRINCIPALES (carpeta sigaa\docs)
+  Manual_Revaluo_Tecnico_Activos_Fijos ........................ Modulo de revaluo tecnico (NC 4)
+  Manual_Licenciamiento_Distribucion_y_Base_de_Datos .......... Clave de activacion, base vacia y demostrativa
+  Manual_SIGAA_Implementacion_y_Pruebas ....................... Instalacion y puesta en marcha
+  Guia_SIGAA_Pruebas_por_Rol .................................. Pruebas paso a paso por rol (capitulo 12: solicitud 4)
+  Novedades_Solicitud_4 / Novedades_Solicitudes_2_y_3 ......... Resumen de cambios
+  Manual_Importar_Activos_Excel_y_Fotos / ..._desde_VSIAF ..... Carga de activos
+  Guia_Envio_VSIAF, Guia_Conciliacion_Vales_Estacion_Servicio . Guias especificas
+  Informe_Auditoria_SIGAA ..................................... Auditoria previa a produccion
+
+PRIMEROS PASOS
+  1. Instale Node.js (https://nodejs.org) y extraiga este zip en una carpeta (por ejemplo C:\SIGAA).
+  2. Abra sigaa\INICIAR_SIGAA.bat (la primera vez instala componentes; necesita internet).
+  3. Ingrese con admin / Admin2026 y cambie la clave. Configure su entidad en Administracion.
+  Contacto del proveedor: WhatsApp 68240905 - jbconsultor3@gmail.com
