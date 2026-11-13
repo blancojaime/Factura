@@ -1,0 +1,11 @@
+Archivos de practica para el Anexo E del Manual de Implementacion.
+Todos son CSV UTF-8. Datos FICTICIOS: no usar en produccion.
+
+catalogo_ejemplo.csv          -> Menu ADM opcion 4  (5 registros nuevos)
+presupuesto_ejemplo.csv       -> Menu ADM opcion 5  (4 estructuras nuevas, gestion 2026)
+catalogo_actualizacion.csv    -> Menu ADM opcion 4  (1 actualizado, 1 nuevo)  [Ejemplo 5]
+presupuesto_con_duplicado.csv -> Menu ADM opcion 5  (1 rechazado por repetido, 1 nuevo) [Ejemplo 5]
+
+Si instalo el sistema en una gestion distinta de 2026, cambie la columna Gestion de los presupuestos.
+Las vigencias del catalogo (2027-12-31) deben ser posteriores a la fecha en que hace la practica;
+el papel para impresora (14111507) tiene ficha VENCIDA a proposito (2026-01-31).

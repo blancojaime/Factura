@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+<table class="datos">
+  <tr><td class="k">CITE</td><td>{{ ctx.pac.cite }}</td></tr>
+  <tr><td class="k">A:</td><td><b>{{ ctx.pac.mae.nombre }}</b></td></tr>
+  <tr><td class="k">CARGO:</td><td>{{ ctx.pac.mae.cargo }}</td></tr>
+  <tr><td class="k">DE:</td><td><b>{{ ctx.solicitante.nombre }}</b></td></tr>
+  <tr><td class="k">CARGO:</td><td>{{ ctx.solicitante.cargo }}{% if ctx.tramite.unidad_solicitante %} — {{ ctx.tramite.unidad_solicitante }}{% endif %}</td></tr>
+  <tr><td class="k">FECHA:</td><td>{{ ctx.pac.fecha_texto }}</td></tr>
+  <tr><td class="k">REF.:</td><td><b>{{ ctx.pac.ref }}</b></td></tr>
+</table>
+<p>De mi consideración:</p>
+<p>A través de la presente, me dirijo a su autoridad con el objetivo de solicitar formalmente la inclusión y registro en el
+Plan Anual de Contrataciones (PAC) del proceso de contratación para <b>{{ ctx.tramite.objeto }}</b>, por un valor estimado de
+<b>{{ ctx.tramite.monto_referencial | bs }} Bs</b> ({{ ctx.tramite.monto_literal }}).</p>
+<p>Esta adquisición es de importancia para la institución, ya que permitirá: {{ ctx.tramite.justificacion }}</p>
+<p>A continuación, detallo los datos referenciales requeridos para el correspondiente registro:</p>
+{{ m.datos([
+  ("Objeto de la contratación", ctx.tramite.objeto),
+  ("Presupuesto estimado", (ctx.tramite.monto_referencial | bs) ~ " Bs."),
+  ("Fuente de financiamiento", ctx.pac.fuente),
+  ("Organismo financiador", ctx.pac.organismo),
+  ("Modalidad de contratación", ctx.pac.modalidad),
+  ("Fecha estimada de publicación", ctx.pac.fecha_publicacion)]) }}
+<p>Sin otro particular, y agradeciendo de antemano su pronta atención y gestión a la presente solicitud para continuar con el
+proceso administrativo, me despido cordialmente.</p>
+<p>Atentamente,</p>
+<div style="height:8px"></div>
+{{ m.firmas([ctx.solicitante.nombre ~ " — " ~ ctx.solicitante.cargo]) }}
+{% endblock %}

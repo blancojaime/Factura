@@ -1,0 +1,236 @@
+name: Instalador Windows (SICOM-MUNI)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión del instalador'
+        default: '2.1.4'
+      publicar:
+        description: 'Publicar como Release de GitHub'
+        type: boolean
+        default: false
+  push:
+    branches: [claude/tender-einstein-76nc7n]
+    paths: ['instalador/**', 'sicom-muni/backend/**', 'sicom-muni/frontend/**', 'sicom-muni/docs/**', 'sic-muni/**', 'herramientas/**', '.github/workflows/windows-instalador.yml']
+
+permissions:
+  contents: write
+
+env:
+  VERSION: ${{ github.event.inputs.version || '2.1.4' }}
+
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: sicom-muni/frontend/package-lock.json
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Pantalla web (exportación estática)
+        working-directory: sicom-muni/frontend
+        shell: pwsh
+        run: |
+          npm ci --no-audit --no-fund
+          $env:NEXT_EXPORT = '1'
+          npm run build
+          if (-not (Test-Path out/index.html)) { throw 'No se generó la carpeta out' }
+
+      - name: Comprobar sintaxis de los scripts de PowerShell
+        shell: pwsh
+        run: |
+          $mal = 0
+          Get-ChildItem instalador/windows -Recurse -Filter *.ps1 | ForEach-Object {
+            $errores = $null; $tokens = $null
+            [System.Management.Automation.Language.Parser]::ParseFile($_.FullName, [ref]$tokens, [ref]$errores) | Out-Null
+            if ($errores) { $mal++; Write-Host "ERROR en $($_.Name):"; $errores | ForEach-Object { Write-Host "   $_" } } else { Write-Host "OK $($_.Name)" }
+          }
+          if ($mal) { throw "$mal script(s) con errores de sintaxis" }
+
+      - name: MSYS2 (Pango, HarfBuzz, Fontconfig y fuentes)
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: false
+          install: >-
+            mingw-w64-x86_64-pango
+            mingw-w64-x86_64-fontconfig
+            mingw-w64-x86_64-ttf-dejavu
+
+      - name: Copiar DLL de Pango y fuentes
+        shell: msys2 {0}
+        run: bash instalador/windows/msys2-dlls.sh "$(cygpath -u "$GITHUB_WORKSPACE")/instalador/windows/_gtk"
+
+      - name: Preparar el contenido del instalador
+        shell: pwsh
+        run: ./instalador/windows/construir.ps1 -Version $env:VERSION
+
+      - name: Compilar el instalador (Inno Setup)
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          & $iscc "/DVersion=$env:VERSION" instalador/windows/sicom-muni.iss
+          if ($LASTEXITCODE -ne 0) { throw 'ISCC falló' }
+          Get-ChildItem instalador/windows/_salida | ForEach-Object { "{0}  {1:N0} MB" -f $_.Name, ($_.Length / 1MB) }
+
+      - name: Instalar en silencio (prueba real en Windows)
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
+          $log = Join-Path $env:RUNNER_TEMP 'setup.log'
+          $argumentos = @('/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', "/LOG=$log", '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8090', '/DEMO=NO')
+          $p = Start-Process -FilePath $setup -ArgumentList $argumentos -PassThru
+          if (-not $p.WaitForExit(900000)) {
+            Write-Host '##[error]El instalador no terminó en 15 minutos. Diagnóstico:'
+            Get-Process | Where-Object { $_.ProcessName -match 'powershell|pwsh|pg_ctl|initdb|postgres|python|vc_redist|WinSW|SICOM|msiexec' } | Format-Table Id, ProcessName, StartTime, CPU -AutoSize | Out-String | Write-Host
+            if (Test-Path $log) { Write-Host '--- setup.log ---'; Get-Content $log -Tail 60 }
+            Get-ChildItem "$env:ProgramData\SICOM-MUNI" -Recurse -Depth 2 -ErrorAction SilentlyContinue | Select-Object -First 60 FullName | Out-String | Write-Host
+            foreach ($f in Get-ChildItem "$env:ProgramData\SICOM-MUNI\logs" -ErrorAction SilentlyContinue) { Write-Host "--- $($f.Name) ---"; Get-Content $f.FullName -Tail 60 }
+            Get-Process | Where-Object { $_.ProcessName -match 'SICOM-MUNI-Instalador' } | Stop-Process -Force
+            throw 'Instalador colgado'
+          }
+          $p.WaitForExit()
+          Write-Host "Código de salida del instalador: $($p.ExitCode)"
+          if (Test-Path "$env:ProgramData\SICOM-MUNI\logs\instalacion.log") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" }
+          if ($p.ExitCode -ne 0) { throw "El instalador terminó con código $($p.ExitCode)" }
+
+      - name: Probar el sistema instalado
+        shell: pwsh
+        run: ./instalador/windows/probar-instalacion.ps1 -Puerto 8090 -Clave 'Prueba#Segura2026' -Python python
+
+      - name: Actualizar sobre la instalación existente (como en un equipo real) y repetir la recuperación
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
+          # proceso colgado de la instalación anterior (bloquea python.exe): el instalador debe cerrarlo
+          $colgado = Start-Process -FilePath "$env:ProgramFiles\\SICOM-MUNI\\python\\python.exe" -ArgumentList '-c', 'import time; time.sleep(900)' -PassThru
+          Start-Sleep -Seconds 2
+          $p = Start-Process -FilePath $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8090', '/DEMO=NO' -PassThru
+          if (-not $p.WaitForExit(900000)) { throw 'La actualización no terminó en 15 minutos' }
+          if (-not $colgado.HasExited) { $colgado.Kill(); throw 'El instalador no cerró el proceso que bloqueaba los archivos' }
+          if (Test-Path "$env:ProgramFiles\SICOM-MUNI\INSTALACION-INCOMPLETA.txt") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Tail 60; throw 'La actualización dejó la instalación incompleta' }
+          ./instalador/windows/probar-recuperacion.ps1 -Puerto 8090
+
+      - name: Contraseña interna distinta (restos de una instalación anterior) debe repararse sin perder datos
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
+          # se pierde el archivo de secretos pero queda la base de datos: el instalador genera claves nuevas y debe reconciliarlas
+          Remove-Item "$env:ProgramData\SICOM-MUNI\config\secretos.json" -Force
+          $p = Start-Process -FilePath $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8090', '/DEMO=NO' -PassThru
+          if (-not $p.WaitForExit(900000)) { throw 'La reinstalación no terminó en 15 minutos' }
+          if (Test-Path "$env:ProgramFiles\SICOM-MUNI\INSTALACION-INCOMPLETA.txt") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Tail 80; throw 'La reinstalación con contraseña distinta dejó la instalación incompleta' }
+          Select-String -Path "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Pattern 'contraseña interna' | Select-Object -Last 1 | ForEach-Object { Write-Host $_.Line }
+          if (Get-Content "$env:ProgramData\SICOM-MUNI\pgdata\pg_hba.conf" | Where-Object { $_ -notmatch '^\s*#' -and $_ -match '\btrust\b' }) { throw 'pg_hba.conf quedó abierto (trust)' }
+          # la base conserva los datos: el administrador entra con su clave
+          $r = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8090/api/v1/auth/login' -ContentType 'application/json' -Body '{"username":"admin","password":"Prueba#Segura2026"}'
+          if (-not $r.access_token) { throw 'No se puede iniciar sesión tras reparar la contraseña' }
+          ./instalador/windows/probar-recuperacion.ps1 -Puerto 8090
+
+      - name: Recoger registros
+        if: always()
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path registros | Out-Null
+          if (Test-Path "$env:ProgramData\SICOM-MUNI\logs") { Copy-Item -Recurse "$env:ProgramData\SICOM-MUNI\logs\*" registros -ErrorAction SilentlyContinue }
+          if (Test-Path "$env:ProgramData\SICOM-MUNI\pgdata\log") { Copy-Item -Recurse "$env:ProgramData\SICOM-MUNI\pgdata\log" registros\pg -ErrorAction SilentlyContinue }
+          Copy-Item (Join-Path $env:RUNNER_TEMP 'setup.log') registros -ErrorAction SilentlyContinue
+
+      - name: Desinstalar (prueba de desinstalación y borrado de datos)
+        shell: pwsh
+        run: |
+          $u = "$env:ProgramFiles\SICOM-MUNI\unins000.exe"
+          if (-not (Test-Path $u)) { throw 'No existe el desinstalador' }
+          Start-Process -FilePath $u -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ELIMINARDATOS=1' -Wait
+          Start-Sleep -Seconds 5
+          if (Get-Service SICOM-MUNI -ErrorAction SilentlyContinue) { throw 'El servicio SICOM-MUNI sigue instalado' }
+          if (Get-Service SICOM-MUNI-BD -ErrorAction SilentlyContinue) { throw 'El servicio SICOM-MUNI-BD sigue instalado' }
+          if (Test-Path "$env:ProgramData\SICOM-MUNI") { Get-Content "$env:SystemRoot\Temp\sicom-desinstalacion.log" -ErrorAction SilentlyContinue; throw 'No se eliminaron los datos' }
+          Write-Host 'Desinstalación correcta.'
+
+      - name: Puerto ocupado (debe fallar con un mensaje claro y no dejar nada a medias)
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
+          $ocupa = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, 8099); $ocupa.Start()
+          try {
+            $p = Start-Process -FilePath $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8099', '/DEMO=NO' -PassThru
+            if (-not $p.WaitForExit(600000)) { throw 'El instalador no terminó con el puerto ocupado' }
+          } finally { $ocupa.Stop() }
+          $msg = Get-Content "$env:ProgramData\SICOM-MUNI\logs\ultimo-error.txt" -ErrorAction SilentlyContinue
+          Write-Host "Motivo mostrado al usuario: $msg"
+          if ($msg -notmatch '8099') { throw 'No se informó que el puerto estaba ocupado' }
+          $u = "$env:ProgramFiles\SICOM-MUNI\unins000.exe"
+          if (Test-Path $u) { Start-Process -FilePath $u -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ELIMINARDATOS=1' -Wait }
+          Start-Sleep -Seconds 5
+
+      - name: Emisor de licencias (ejecutable externo)
+        shell: pwsh
+        run: |
+          python -m pip install --quiet pyinstaller cryptography
+          python herramientas/emisor-licencias/emisor.py llaves --salida $env:RUNNER_TEMP\llaves
+          python herramientas/emisor-licencias/emisor.py emitir --llave $env:RUNNER_TEMP\llaves\llave_privada_SICOM.pem --entidad "Prueba" --equipo "*" --salida $env:RUNNER_TEMP\prueba.sicomlic
+          if ($LASTEXITCODE -ne 0) { throw 'El emisor por consola falló' }
+          pyinstaller --noconfirm --onefile --windowed --name SICOM-Emisor-de-Licencias --paths sicom-muni/backend/app/services --distpath instalador/windows/_emisor herramientas/emisor-licencias/emisor.py
+          if (-not (Test-Path instalador/windows/_emisor/SICOM-Emisor-de-Licencias.exe)) { throw 'No se generó el ejecutable del emisor' }
+
+      - name: Empaquetar (ZIP del instalador y ZIP del emisor)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist/instalador, dist/emisor | Out-Null
+          Copy-Item instalador/windows/_salida/*.exe dist/instalador
+          Copy-Item instalador/windows/LEEME.txt dist/instalador
+          Get-ChildItem sicom-muni/docs -Filter 'MANUAL_INSTALACION_RED_LOCAL*.docx' -ErrorAction SilentlyContinue | Copy-Item -Destination dist/instalador
+          Copy-Item instalador/windows/_emisor/SICOM-Emisor-de-Licencias.exe dist/emisor
+          Get-ChildItem sicom-muni/docs -Filter 'MANUAL_EMISOR_LICENCIAS*.docx' -ErrorAction SilentlyContinue | Copy-Item -Destination dist/emisor
+          Copy-Item sicom-muni/backend/app/licencia_publica.pem dist/emisor/llave_publica_SICOM.pem
+          # Aplicativo de escritorio (Excel/VBA) y paquete de manuales
+          New-Item -ItemType Directory -Force -Path dist/escritorio/docs, dist/manuales | Out-Null
+          Copy-Item -Recurse sic-muni/vba, sic-muni/instalar, sic-muni/ejemplos -Destination dist/escritorio
+          Copy-Item sic-muni/README.md dist/escritorio
+          Copy-Item sic-muni/docs/*.docx, sic-muni/docs/*.md -Destination dist/escritorio/docs
+          Copy-Item sicom-muni/docs/*.docx dist/manuales
+          Get-ChildItem sic-muni/docs -Filter *.docx | ForEach-Object { Copy-Item $_.FullName (Join-Path dist/manuales ('ESCRITORIO_' + $_.Name)) }
+          Compress-Archive -Path dist/escritorio/* -DestinationPath "dist/SIC-MUNI-Escritorio-Excel-$env:VERSION.zip" -Force
+          Compress-Archive -Path dist/manuales/* -DestinationPath "dist/SICOM-MUNI-Manuales-$env:VERSION.zip" -Force
+          Compress-Archive -Path dist/instalador/* -DestinationPath "dist/SICOM-MUNI-Instalador-Windows-$env:VERSION.zip" -Force
+          Compress-Archive -Path dist/emisor/* -DestinationPath "dist/SICOM-Emisor-de-Licencias-$env:VERSION.zip" -Force
+          Get-ChildItem dist -Filter *.zip | ForEach-Object { "{0}  {1:N0} MB" -f $_.Name, ($_.Length / 1MB) }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: registros-instalacion
+          path: registros
+          if-no-files-found: ignore
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SICOM-MUNI-Windows
+          path: dist/*.zip
+          compression-level: 0
+
+      - name: Publicar Release
+        if: ${{ github.event.inputs.publicar == 'true' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: instalador-v${{ env.VERSION }}
+          name: SICOM-MUNI instalador para Windows ${{ env.VERSION }}
+          body: |
+            Instalador de SICOM-MUNI para Windows (servidor de red local) y Emisor de Licencias.
+            - `SICOM-MUNI-Instalador-Windows-${{ env.VERSION }}.zip`: instalador + manual de instalación en red local (para cada servidor).
+            - `SICOM-Emisor-de-Licencias-${{ env.VERSION }}.zip`: herramienta EXTERNA del proveedor para emitir licencias (no se instala en los clientes).
+            - `SIC-MUNI-Escritorio-Excel-${{ env.VERSION }}.zip`: aplicativo de escritorio (Excel/VBA) con sus manuales.
+            - `SICOM-MUNI-Manuales-${{ env.VERSION }}.zip`: todos los manuales en Word (web y escritorio).
+          files: dist/*.zip

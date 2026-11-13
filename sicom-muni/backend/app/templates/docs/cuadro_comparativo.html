@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+{{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("Objeto", ctx.tramite.objeto),
+  ("Monto referencial (Bs)", ctx.tramite.monto_referencial | bs), ("N° Formulario 110 SICOES", ctx.tramite.formulario_110),
+  ("Criterio de evaluación", ctx.evaluacion.criterio)]) }}
+<h2>Matriz comparativa (ordenada de menor a mayor precio evaluado)</h2>
+<table class="lista" style="table-layout:fixed;font-size:7.8pt">
+<colgroup><col style="width:6%"><col style="width:22%"><col style="width:13%"><col style="width:8%"><col style="width:13%"><col style="width:7%"><col style="width:14%"><col style="width:17%"></colgroup>
+<tr><th>Orden</th><th>Proveedor</th><th class="num">Monto (Bs)</th><th class="num">Marg. %</th>
+<th class="num">P. evaluado (Bs)</th><th class="num">Plazo</th><th>Recibida</th><th>Resultado</th></tr>
+{% for o in ctx.evaluacion.ofertas %}
+<tr class="{{ 'destacada' if o.recomendada else ('excluida' if not o.elegible else '') }}">
+<td>{{ o.ranking if o.ranking else '—' }}</td><td>{{ o.razon_social }}</td><td class="num">{{ o.monto | bs }}</td>
+<td class="num">{{ o.margen }}</td><td class="num">{{ o.precio_evaluado | bs }}</td><td class="num">{{ o.plazo }}</td>
+<td>{{ o.recibida | fechahora }}</td><td>{{ 'RECOMENDADA' if o.recomendada else (o.motivo or 'Calificada') }}</td></tr>
+{% endfor %}</table>
+{% if ctx.evaluacion.desempate %}<p class="nota">Hubo empate en el precio evaluado más bajo: se recomienda la oferta recibida primero (fecha y hora de recepción).</p>{% endif %}
+<h2>Acta de calificación</h2>
+<p>Revisadas las ofertas, se califica el cumplimiento de las especificaciones técnicas y se aplica, cuando corresponde y el proveedor acredita
+registro válido, el margen de preferencia Pro-Bolivia / MyPE. Se recomienda adjudicar a la oferta de Precio Evaluado Más Bajo señalada.</p>
+{{ m.firmas(["Responsable de contrataciones", "Responsable del proceso de contratación (RPA)"]) }}
+{% endblock %}

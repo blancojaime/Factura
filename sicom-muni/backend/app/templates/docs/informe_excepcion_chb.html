@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+{{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("Objeto", ctx.tramite.objeto),
+  ("Código de autorización CHB", ctx.excepcion.codigo_autorizacion)]) }}
+<h2>1. Antecedentes y base legal</h2>
+<p>Conforme al D.S. 4505 y la Resolución Bi-Ministerial N° 012/2024 (Catálogo Compro Hecho en Bolivia), la contratación de bienes
+debe consultar el catálogo electrónico. El presente informe fundamenta, en el marco del D.S. 0181 (NB-SABS), la adquisición
+de los siguientes ítems fuera del catálogo.</p>
+<h2>2. Ítems comprendidos</h2>
+<table class="lista"><tr><th>N°</th><th>UNSPSC</th><th>Descripción</th><th>Resultado de la consulta CHB</th></tr>
+{% for i in ctx.excepcion['items'] %}<tr><td>{{ i.numero }}</td><td>{{ i.codigo_unspsc }}</td><td>{{ i.descripcion }}</td>
+<td>{{ 'Existe en el catálogo; se compra fuera por incompatibilidad' if i.estado_chb == 'EXCEPCION_INCOMPATIBILIDAD' else 'Sin coincidencia en el catálogo' }}</td></tr>{% endfor %}
+</table>
+<h2>3. Justificación técnico-legal</h2><p>{{ ctx.excepcion.justificacion }}</p>
+<h2>4. Conclusión</h2>
+<p>Se concluye que corresponde la contratación fuera del Catálogo CHB para los ítems indicados, por el monto referencial
+de Bs {{ ctx.tramite.monto_referencial | bs }} ({{ ctx.tramite.monto_literal }}).</p>
+{{ m.firmas([ctx.solicitante.nombre ~ " — Unidad solicitante", "Asesoría legal / Responsable de contrataciones"]) }}
+{% endblock %}

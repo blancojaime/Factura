@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+{{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("CUCE", ctx.tramite.cuce), ("Proveedor", ctx.adjudicatario.razon_social),
+  ("NIT / CI", ctx.adjudicatario.nit_ci), ("Monto adjudicado (Bs)", ctx.adjudicatario.monto | bs),
+  ("Fecha de recepción", ctx.recepcion.fecha | fecha), ("Nota de Ingreso a Almacén (NIA)", ctx.recepcion.nia),
+  ("Días de retraso", ctx.recepcion.dias_retraso), ("Resultado", 'CONFORME' if ctx.recepcion.conforme else 'OBSERVADA')]) }}
+<h2>Verificación cuantitativa y cualitativa</h2>
+<table class="lista"><tr><th>N°</th><th>Descripción</th><th class="num">Cant. contratada</th><th class="num">Cant. recibida</th><th>Cualitativa</th></tr>
+{% for i in ctx['items'] %}{% set d = ctx.recepcion.detalle.get(i.numero | string, {}) %}
+<tr><td>{{ i.numero }}</td><td>{{ i.descripcion }}</td><td class="num">{{ i.cantidad }}</td>
+<td class="num">{{ d.get('cantidad_recibida', i.cantidad) }}</td><td>{{ 'Conforme' if d.get('conforme', True) else 'Observada' }}</td></tr>{% endfor %}</table>
+{% if ctx.recepcion.observaciones %}<h2>Observaciones</h2><p>{{ ctx.recepcion.observaciones }}</p>{% endif %}
+<p>En cumplimiento de lo establecido por las NB-SABS, se verificó la recepción de lo contratado y se deja constancia de la
+conformidad. El presente acta constituye el Formulario 500 de recepción para el registro en SICOES.</p>
+{{ m.firmas([ctx.recepcion.responsable.nombre ~ " — Responsable de recepción", "Proveedor", "Responsable del proceso (RPA)"]) }}
+{% endblock %}

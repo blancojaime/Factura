@@ -1,0 +1,11 @@
+
+# Instalador de Windows (salidas de compilacion)
+instalador/windows/_stage/
+instalador/windows/_tmp/
+instalador/windows/_gtk/
+instalador/windows/_salida/
+instalador/windows/_emisor/
+dist/
+sicom-muni/frontend/out/
+__pycache__/
+*.pyc

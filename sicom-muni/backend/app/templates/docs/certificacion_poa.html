@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+<p>Se certifica que la contratación que se detalla a continuación se encuentra vinculada a los programas presupuestarios y
+contribuye al logro de los objetivos de gestión del Programa Operativo Anual (POA) {{ ctx.poa.gestion }} de la entidad.</p>
+{{ m.datos([
+  ("N° de trámite", ctx.tramite.correlativo),
+  ("Objeto de la contratación", ctx.tramite.objeto),
+  ("Unidad solicitante", ctx.tramite.unidad_solicitante),
+  ("Monto referencial", (ctx.tramite.monto_referencial | bs) ~ " Bs. (" ~ ctx.tramite.monto_literal ~ ")")]) }}
+<h2>Relación con el programa presupuestario y el objetivo del POA</h2>
+<table class="lista">
+<tr><th>Programa</th><th>Denominación del programa</th><th>Partida(s)</th><th>Cód. objetivo</th><th>Objetivo de gestión del POA</th><th class="num">Monto (Bs)</th></tr>
+{% for p in ctx.poa.programas %}
+<tr><td>{{ p.programa }}</td><td>{{ p.denominacion_programa }}</td><td>{{ p.partidas | join(', ') }}</td>
+<td>{{ p.codigo_objetivo }}</td><td>{{ p.descripcion_objetivo }}</td><td class="num">{{ p.monto | bs }}</td></tr>
+{% endfor %}
+<tr><td colspan="5" class="num"><b>TOTAL</b></td><td class="num"><b>{{ ctx.tramite.monto_referencial | bs }}</b></td></tr>
+</table>
+<h2>Justificación del apoyo de la contratación al logro del objetivo</h2>
+<p>{{ ctx.poa.justificacion }}</p>
+<p class="nota">La presente certificación da fe de la relación de la contratación con los objetivos del POA de la gestión; no sustituye
+a la certificación presupuestaria (C-31) ni a la inscripción en el PAC.</p>
+{{ m.firmas([ctx.poa.certifica.nombre ~ " — " ~ ctx.poa.certifica.cargo, "Responsable de planificación / POA"]) }}
+{% endblock %}

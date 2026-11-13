@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block cuerpo %}
+{{ m.datos([("N° de trámite", ctx.tramite.correlativo), ("CUCE", ctx.tramite.cuce), ("N° preventivo C-31", ctx.tramite.c31),
+  ("Contratista", ctx.adjudicatario.razon_social), ("NIT / CI", ctx.adjudicatario.nit_ci),
+  ("Monto del contrato (Bs)", ctx.adjudicatario.monto | bs), ("Plazo", ctx.adjudicatario.plazo ~ " días calendario")]) }}
+<p class="literal">{{ ctx.adjudicatario.monto_literal }}</p>
+<p>Conste por el presente documento el Contrato Administrativo de Contratación Menor que celebran, por una parte, el
+{{ ctx.gam.nombre }}, representado por su Responsable del Proceso de Contratación, y por otra <b>{{ ctx.adjudicatario.razon_social }}</b>
+(NIT/CI {{ ctx.adjudicatario.nit_ci }}), al tenor de las siguientes cláusulas:</p>
+<ol class="clausulas">
+<li><b>Primera — Antecedentes.</b> La contratación se tramitó como solicitud {{ ctx.tramite.correlativo }} y fue adjudicada previa evaluación de ofertas.</li>
+<li><b>Segunda — Objeto.</b> {{ ctx.tramite.objeto }}.</li>
+<li><b>Tercera — Monto y forma de pago.</b> Bs {{ ctx.adjudicatario.monto | bs }}, pagaderos contra conformidad y factura.</li>
+<li><b>Cuarta — Plazo y lugar.</b> {{ ctx.adjudicatario.plazo }} días calendario en {{ ctx.tramite.lugar_entrega or 'el lugar señalado por la entidad' }}.</li>
+<li><b>Quinta — Garantías, multas y resolución.</b> Se aplicarán las que correspondan según el D.S. 0181 (NB-SABS) y su reglamentación.</li>
+<li><b>Sexta — Recepción.</b> Mediante el Acta de Recepción Definitiva Formulario 500, con conformidad del Responsable de Recepción.</li>
+<li><b>Séptima — Jurisdicción.</b> Las controversias se resolverán conforme a la normativa del Estado Plurinacional de Bolivia.</li>
+</ol>
+<h2>Detalle</h2>{{ m.tabla_items(ctx, False, False) }}
+{{ m.firmas(["Responsable del proceso de contratación (RPA)", "Contratista"]) }}
+{% endblock %}
