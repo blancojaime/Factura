@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   pruebas:
-    name: Pruebas (Windows 10/11: Python 3.12 + PySide6)
+    name: "Pruebas (Windows 10/11: Python 3.12 + PySide6)"
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: ContaBolPy } }
     steps:
@@ -24,7 +24,7 @@ jobs:
       - run: QT_QPA_PLATFORM=offscreen python -m pytest
 
   pruebas_win7:
-    name: Pruebas (Windows 7: Python 3.8 + PySide2)
+    name: "Pruebas (Windows 7: Python 3.8 + PySide2)"
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: ContaBolPy } }
     steps:
@@ -37,7 +37,7 @@ jobs:
       - run: QT_QPA_PLATFORM=offscreen python -m pytest
 
   instalador:
-    name: Instalador Windows 10/11
+    name: "Instalador Windows 10/11"
     needs: pruebas
     runs-on: windows-latest
     defaults: { run: { working-directory: ContaBolPy } }
@@ -68,7 +68,7 @@ jobs:
             ContaBolPy/dist/ContaJB_portable.zip
 
   instalador_win7:
-    name: Instalador Windows 7 (SP1, 64 bits)
+    name: "Instalador Windows 7 (SP1, 64 bits)"
     needs: pruebas_win7
     runs-on: windows-latest
     defaults: { run: { working-directory: ContaBolPy } }
@@ -101,7 +101,7 @@ jobs:
             ContaBolPy/dist/ContaJB_portable_Win7.zip
 
   publicar:
-    name: Publicar en Releases
+    name: "Publicar en Releases"
     needs: [ instalador, instalador_win7 ]
     runs-on: ubuntu-latest
     steps:
