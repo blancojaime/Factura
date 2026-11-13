@@ -5,7 +5,7 @@ on:
     inputs:
       version:
         description: 'Versión del instalador'
-        default: '2.1.0'
+        default: '2.1.1'
       publicar:
         description: 'Publicar como Release de GitHub'
         type: boolean
@@ -18,7 +18,7 @@ permissions:
   contents: write
 
 env:
-  VERSION: ${{ github.event.inputs.version || '2.1.0' }}
+  VERSION: ${{ github.event.inputs.version || '2.1.1' }}
 
 jobs:
   windows:
@@ -129,6 +129,22 @@ jobs:
           if (Get-Service SICOM-MUNI-BD -ErrorAction SilentlyContinue) { throw 'El servicio SICOM-MUNI-BD sigue instalado' }
           if (Test-Path "$env:ProgramData\SICOM-MUNI") { Get-Content "$env:SystemRoot\Temp\sicom-desinstalacion.log" -ErrorAction SilentlyContinue; throw 'No se eliminaron los datos' }
           Write-Host 'Desinstalación correcta.'
+
+      - name: Puerto ocupado (debe fallar con un mensaje claro y no dejar nada a medias)
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
+          $ocupa = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Any, 8099); $ocupa.Start()
+          try {
+            $p = Start-Process -FilePath $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8099', '/DEMO=NO' -PassThru
+            if (-not $p.WaitForExit(600000)) { throw 'El instalador no terminó con el puerto ocupado' }
+          } finally { $ocupa.Stop() }
+          $msg = Get-Content "$env:ProgramData\SICOM-MUNI\logs\ultimo-error.txt" -ErrorAction SilentlyContinue
+          Write-Host "Motivo mostrado al usuario: $msg"
+          if ($msg -notmatch '8099') { throw 'No se informó que el puerto estaba ocupado' }
+          $u = "$env:ProgramFiles\SICOM-MUNI\unins000.exe"
+          if (Test-Path $u) { Start-Process -FilePath $u -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ELIMINARDATOS=1' -Wait }
+          Start-Sleep -Seconds 5
 
       - name: Emisor de licencias (ejecutable externo)
         shell: pwsh

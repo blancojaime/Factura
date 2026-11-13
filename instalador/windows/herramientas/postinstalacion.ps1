@@ -10,18 +10,51 @@ if ($InstallDirParam) { $script:InstallDir = $InstallDirParam.TrimEnd('\') }
 $LogFile = 'instalacion.log'
 function Log([string]$m) { Escribir-Log $m $LogFile }
 
+function Sin-Acentos([string]$t) { return -join ($t.Normalize([Text.NormalizationForm]::FormD).ToCharArray() | Where-Object { [Globalization.CharUnicodeInfo]::GetUnicodeCategory($_) -ne 'NonSpacingMark' }) }
+
+# Devuelve el nombre del programa que ya usa el puerto (o $null si está libre).
+function Puerto-En-Uso([int]$p) {
+    $c = Get-NetTCPConnection -LocalPort $p -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $c) { return $null }
+    $proc = Get-Process -Id $c.OwningProcess -ErrorAction SilentlyContinue
+    if ($proc -and $proc.Path -and $proc.Path -like "$InstallDir\*") { return $null }   # es nuestro propio servicio (actualización)
+    if ($proc) { return $proc.ProcessName }
+    return 'otro programa'
+}
+
+# Vuelca al registro lo necesario para diagnosticar un servicio que no arranca.
+function Diagnostico-Servicio([string]$nombre) {
+    try { Log ((Invocar-Nativo 'sc.exe' @('qc', $nombre)).Salida) } catch { }
+    try { Log ((Invocar-Nativo 'sc.exe' @('query', $nombre)).Salida) } catch { }
+    foreach ($f in Get-ChildItem $LogDir -Filter 'SICOM-MUNI-Servicio*' -ErrorAction SilentlyContinue) { Log ("--- $($f.Name) ---"); Log ((Get-Content $f.FullName -Tail 40 -ErrorAction SilentlyContinue) -join "`n") }
+    foreach ($f in Get-ChildItem (Join-Path $DataDir 'pgdata\log') -ErrorAction SilentlyContinue) { Log ("--- pgdata\log\$($f.Name) ---"); Log ((Get-Content $f.FullName -Tail 40 -ErrorAction SilentlyContinue) -join "`n") }
+    try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'System'; ProviderName = 'Service Control Manager' } -MaxEvents 8 | ForEach-Object { $_.Message }) -join "`n") } catch { }
+    try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'Application' } -MaxEvents 25 | Where-Object { $_.Message -match 'SICOM|python|WinSW|Postgre' } | ForEach-Object { $_.ProviderName + ': ' + $_.Message }) -join "`n") } catch { }
+}
+
 try {
     Log '=== Instalación de SICOM-MUNI ==='
+    Remove-Item (Join-Path $LogDir 'ultimo-error.txt') -Force -ErrorAction SilentlyContinue
     $r = Get-Content -Raw -Path $Respuestas -Encoding UTF8 | ConvertFrom-Json
     $puerto = [int]$r.puerto
     if ($puerto -lt 1024 -or $puerto -gt 65535) { throw "Puerto inválido: $puerto" }
+    Log ("Equipo: $env:COMPUTERNAME · " + [Environment]::OSVersion.VersionString + " · idioma " + (Get-Culture).Name)
+    $uso = Puerto-En-Uso $puerto
+    if ($uso) { throw "El puerto $puerto ya lo usa el programa '$uso'. Vuelva a ejecutar el instalador y elija otro puerto en la pantalla «Red local» (por ejemplo 8181)." }
+    $uso = Puerto-En-Uso $script:PgPuerto
+    if ($uso) { throw "El puerto interno $($script:PgPuerto) ya lo usa el programa '$uso'. Cierre ese programa y vuelva a ejecutar el instalador." }
 
     # 1. Requisito: Visual C++ 2015-2022 (lo usan PostgreSQL y Python)
     $vc = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64' -ErrorAction SilentlyContinue
     if (-not $vc -or $vc.Installed -ne 1) {
         Log 'Instalando Microsoft Visual C++ Redistributable...'
-        $p = Start-Process -FilePath (Join-Path $InstallDir 'prerequisitos\vc_redist.x64.exe') -ArgumentList '/install', '/quiet', '/norestart' -Wait -PassThru
-        if (@(0, 1638, 3010, 1641) -notcontains $p.ExitCode) { throw "No se pudo instalar Visual C++ (código $($p.ExitCode))" }
+        for ($intento = 1; $intento -le 4; $intento++) {
+            $p = Start-Process -FilePath (Join-Path $InstallDir 'prerequisitos\vc_redist.x64.exe') -ArgumentList '/install', '/quiet', '/norestart' -Wait -PassThru
+            if ($p.ExitCode -ne 1618) { break }
+            Log 'Windows está instalando otra cosa (código 1618); se reintenta en 45 segundos...'
+            Start-Sleep -Seconds 45
+        }
+        if (@(0, 1638, 3010, 1641) -notcontains $p.ExitCode) { throw "No se pudo instalar Visual C++ (código $($p.ExitCode)). Instálelo manualmente desde la carpeta prerequisitos y vuelva a ejecutar el instalador." }
     }
 
     # 2. Carpetas de datos (fuera de Program Files) con permisos restringidos
@@ -50,8 +83,15 @@ try {
     $bin = Join-Path $InstallDir 'pgsql\bin'
     $pgdata = Join-Path $DataDir 'pgdata'
     if (-not (Test-Path (Join-Path $pgdata 'PG_VERSION'))) {
+        # restos de un intento anterior que no llegó a terminar: initdb exige una carpeta vacía
+        if (Get-ChildItem $pgdata -Force -ErrorAction SilentlyContinue) {
+            Log 'Se encontraron restos de una instalación incompleta en pgdata; se limpian.'
+            & takeown.exe /F $pgdata /R /A /D Y 2>&1 | Out-Null
+            & icacls.exe $pgdata '/grant' '*S-1-5-32-544:(OI)(CI)F' '/T' '/C' '/Q' 2>&1 | Out-Null
+            Get-ChildItem $pgdata -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+        }
         Log 'Creando la base de datos (initdb)...'
-        $pw = Join-Path $env:TEMP ('pgpw_' + [guid]::NewGuid().ToString('N'))
+        $pw = Join-Path $DataDir ('cache\pgpw_' + [guid]::NewGuid().ToString('N'))
         Set-Content -Path $pw -Value $sec.pg_super -Encoding ASCII -NoNewline
         try {
             $x = Invocar-Nativo (Join-Path $bin 'initdb.exe') @('-D', $pgdata, '-U', 'postgres', '-E', 'UTF8', '--locale=C', '--auth-local=scram-sha-256', '--auth-host=scram-sha-256', "--pwfile=$pw")
@@ -80,41 +120,34 @@ log_min_duration_statement = 2000
     # 5. Servicio de la base de datos
     if (-not (Get-Service -Name $SvcBd -ErrorAction SilentlyContinue)) {
         Log 'Registrando el servicio de base de datos...'
-        $x = Invocar-Nativo (Join-Path $bin 'pg_ctl.exe') @('register', '-N', $SvcBd, '-D', $pgdata, '-S', 'auto', '-U', 'NT AUTHORITY\NetworkService')
+        $x = Invocar-Nativo (Join-Path $bin 'pg_ctl.exe') @('register', '-N', $SvcBd, '-D', $pgdata, '-S', 'auto')
         Log ("pg_ctl: " + $x.Salida)
         if ($x.Codigo -ne 0) { throw "No se pudo registrar el servicio de PostgreSQL (código $($x.Codigo))" }
         Invocar-Nativo 'sc.exe' @('description', $SvcBd, 'Base de datos PostgreSQL de SICOM-MUNI') | Out-Null
     }
     if ((Get-Service -Name $SvcBd).Status -ne 'Running') {
-        try { Start-Service -Name $SvcBd -ErrorAction Stop }
-        catch {
-            Log ("No inició el servicio de la base de datos: " + $_.Exception.Message)
-            foreach ($f in Get-ChildItem (Join-Path $pgdata 'log') -ErrorAction SilentlyContinue) { Log ("--- pgdata\log\" + $f.Name + " ---"); Log ((Get-Content $f.FullName -Tail 40 -ErrorAction SilentlyContinue) -join "`n") }
-            try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'System'; ProviderName = 'Service Control Manager' } -MaxEvents 6 | ForEach-Object { $_.Message }) -join "`n") } catch { }
-            Log ((Invocar-Nativo 'icacls.exe' @($pgdata)).Salida)
-            Log ((Invocar-Nativo 'sc.exe' @('qc', $SvcBd)).Salida)
-            Log ((Invocar-Nativo 'icacls.exe' @((Join-Path $pgdata 'postgresql.conf'))).Salida)
-            try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'Application' } -MaxEvents 15 | Where-Object { $_.ProviderName -match 'Postgre|pg_ctl|Application Error' } | ForEach-Object { $_.ProviderName + ': ' + $_.Message }) -join "`n") } catch { }
-            Log ('postgres -C: ' + (Invocar-Nativo (Join-Path $bin 'postgres.exe') @('-D', $pgdata, '-C', 'data_directory')).Salida)
-            Log ('pg_ctl start (administrador): ' + (Invocar-Nativo (Join-Path $bin 'pg_ctl.exe') @('start', '-D', $pgdata, '-w', '-t', '20', '-l', (Join-Path $env:TEMP 'pgprueba.log'))).Salida)
-            if (Test-Path (Join-Path $env:TEMP 'pgprueba.log')) { Log (Get-Content (Join-Path $env:TEMP 'pgprueba.log') -Raw) }
-            throw
-        }
+        # en equipos lentos el servicio tarda más que el tiempo de espera de Windows: se sigue esperando abajo
+        try { Start-Service -Name $SvcBd -ErrorAction Stop } catch { Log ("Aviso al iniciar el servicio de la base de datos: " + $_.Exception.Message) }
     }
     $listo = $false
-    for ($i = 0; $i -lt 60; $i++) {
+    for ($i = 0; $i -lt 90; $i++) {
         $x = Invocar-Nativo (Join-Path $bin 'pg_isready.exe') @('-h', '127.0.0.1', '-p', "$($script:PgPuerto)")
         if ($x.Codigo -eq 0) { $listo = $true; break }
         Start-Sleep -Seconds 2
     }
-    if (-not $listo) { throw 'La base de datos no inició. Revise C:\ProgramData\SICOM-MUNI\pgdata\log' }
+    if (-not $listo) {
+        Diagnostico-Servicio $SvcBd
+        Log ('icacls pgdata: ' + (Invocar-Nativo 'icacls.exe' @($pgdata)).Salida)
+        Log ('postgres -C: ' + (Invocar-Nativo (Join-Path $bin 'postgres.exe') @('-D', $pgdata, '-C', 'data_directory')).Salida)
+        throw 'La base de datos no inició. Revise C:\ProgramData\SICOM-MUNI\pgdata\log'
+    }
 
     # 6. Rol y base de datos de la aplicación
     $env:PGPASSWORD = $sec.pg_super
     $psql = Join-Path $bin 'psql.exe'
     $base = @('-h', '127.0.0.1', '-p', "$($script:PgPuerto)", '-U', 'postgres', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-q')
     $existeRol = (Invocar-Nativo $psql ($base + @('-tAc', "SELECT 1 FROM pg_roles WHERE rolname='sicom'"))).Salida
-    $sql = Join-Path $env:TEMP ('sicom_' + [guid]::NewGuid().ToString('N') + '.sql')
+    $sql = Join-Path $DataDir ('cache\sicom_' + [guid]::NewGuid().ToString('N') + '.sql')
     try {
         if ($existeRol -ne '1') { $orden = "CREATE ROLE sicom LOGIN PASSWORD '{0}';" } else { $orden = "ALTER ROLE sicom PASSWORD '{0}';" }
         Escribir-Archivo $sql ($orden -f $sec.pg_app)
@@ -193,35 +226,38 @@ LICENCIA_DIAS_PRUEBA=30
         Invocar-Nativo 'sc.exe' @('failure', $SvcApp, 'reset=', '86400', 'actions=', 'restart/5000/restart/10000/restart/30000') | Out-Null
     }
     Restringir $dirServicio 'RX'
-    try { Start-Service -Name $SvcApp -ErrorAction Stop }
-    catch {
-        Log ("No inició el servicio de la aplicación: " + $_.Exception.Message)
-        foreach ($f in Get-ChildItem (Join-Path $DataDir 'logs') -Filter 'SICOM-MUNI-Servicio*' -ErrorAction SilentlyContinue) { Log ("--- " + $f.Name + " ---"); Log ((Get-Content $f.FullName -Tail 40 -ErrorAction SilentlyContinue) -join "`n") }
-        try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'Application' } -MaxEvents 20 | Where-Object { $_.Message -match 'SICOM|python|WinSW' } | ForEach-Object { $_.ProviderName + ': ' + $_.Message }) -join "`n") } catch { }
-        try { Log ((Get-WinEvent -FilterHashtable @{ LogName = 'System'; ProviderName = 'Service Control Manager' } -MaxEvents 6 | ForEach-Object { $_.Message }) -join "`n") } catch { }
-        Log ((Invocar-Nativo 'sc.exe' @('qc', $SvcApp)).Salida)
-        Log ((Invocar-Nativo 'icacls.exe' @($dirServicio)).Salida)
-        Log (Get-Content $xml -Raw)
-        throw
+    try { Start-Service -Name $SvcApp -ErrorAction Stop } catch { Log ("Aviso al iniciar el servicio de la aplicación: " + $_.Exception.Message) }
+
+    # 11. Firewall: solo la red local (si Windows Firewall está apagado o lo administra otro antivirus, se avisa y se sigue)
+    try {
+        Get-NetFirewallRule -DisplayName 'SICOM-MUNI*' -ErrorAction SilentlyContinue | Remove-NetFirewallRule -ErrorAction SilentlyContinue
+        New-NetFirewallRule -DisplayName "SICOM-MUNI (puerto $puerto)" -Direction Inbound -Protocol TCP -LocalPort $puerto -Action Allow -Profile Any -RemoteAddress LocalSubnet -ErrorAction Stop | Out-Null
+    } catch {
+        Log ("AVISO: no se pudo crear la regla del Firewall de Windows (" + $_.Exception.Message + "). Si usa otro antivirus/firewall, permita el puerto TCP $puerto desde la red local.")
+        $x = Invocar-Nativo 'netsh.exe' @('advfirewall', 'firewall', 'add', 'rule', "name=SICOM-MUNI (puerto $puerto)", 'dir=in', 'action=allow', 'protocol=TCP', "localport=$puerto", 'remoteip=localsubnet')
+        Log ("netsh: " + $x.Salida)
     }
 
-    # 11. Firewall: solo la red local
-    Get-NetFirewallRule -DisplayName 'SICOM-MUNI*' -ErrorAction SilentlyContinue | Remove-NetFirewallRule
-    New-NetFirewallRule -DisplayName "SICOM-MUNI (puerto $puerto)" -Direction Inbound -Protocol TCP -LocalPort $puerto -Action Allow -Profile Any -RemoteAddress LocalSubnet | Out-Null
-
     # 12. Respaldo diario automático (02:00)
-    $accion = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -File "{0}" -Silencioso' -f (Join-Path $InstallDir 'herramientas\respaldar.ps1'))
-    $disparador = New-ScheduledTaskTrigger -Daily -At '02:00'
-    $principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
-    Register-ScheduledTask -TaskName 'SICOM-MUNI Respaldo diario' -Action $accion -Trigger $disparador -Principal $principal -Force | Out-Null
+    try {
+        $accion = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -File "{0}" -Silencioso' -f (Join-Path $InstallDir 'herramientas\respaldar.ps1'))
+        $disparador = New-ScheduledTaskTrigger -Daily -At '02:00'
+        $principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
+        Register-ScheduledTask -TaskName 'SICOM-MUNI Respaldo diario' -Action $accion -Trigger $disparador -Principal $principal -Force -ErrorAction Stop | Out-Null
+    } catch {
+        Log ("AVISO: no se pudo programar el respaldo diario (" + $_.Exception.Message + "). Use «Respaldar ahora» del menú Inicio.")
+    }
 
     # 13. Verificación final
     Log 'Esperando a que el sistema responda...'
-    if (-not (Esperar-Url "http://127.0.0.1:$puerto/api/v1/salud" 120)) { throw "El sistema no respondió. Revise $LogDir\servicio.err.log" }
+    if (-not (Esperar-Url "http://127.0.0.1:$puerto/api/v1/salud" 300)) {
+        Diagnostico-Servicio $SvcApp
+        Log ('icacls servicio: ' + (Invocar-Nativo 'icacls.exe' @($dirServicio)).Salida)
+        throw "El sistema no respondió en 5 minutos. Revise los archivos de $LogDir (SICOM-MUNI-Servicio.*) y el estado del servicio SICOM-MUNI."
+    }
     $idEquipo = (Ejecutar-Cli @('id-equipo')).Salida.Trim()
     $lic = Invoke-RestMethod -Uri "http://127.0.0.1:$puerto/api/v1/licencia" -UseBasicParsing
     $nombrePc = $env:COMPUTERNAME
-    function Sin-Acentos([string]$t) { return -join ($t.Normalize([Text.NormalizationForm]::FormD).ToCharArray() | Where-Object { [Globalization.CharUnicodeInfo]::GetUnicodeCategory($_) -ne 'NonSpacingMark' }) }
     $resultado = @(
         "Direccion para los usuarios de la red:  $url/",
         "Tambien:  http://${nombrePc}:$puerto/",
@@ -238,6 +274,8 @@ LICENCIA_DIAS_PRUEBA=30
 catch {
     Log ("ERROR: " + $_.Exception.Message)
     Log ($_.ScriptStackTrace)
+    # versión sin tildes para mostrarla en el aviso del instalador
+    try { [System.IO.File]::WriteAllText((Join-Path $LogDir 'ultimo-error.txt'), (Sin-Acentos $_.Exception.Message), [System.Text.Encoding]::ASCII) } catch { }
     exit 1
 }
 finally {

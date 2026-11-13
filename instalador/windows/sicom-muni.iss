@@ -1,7 +1,7 @@
 ﻿; Instalador de SICOM-MUNI para Windows (servidor de red local)
-; Compilar:  ISCC /DVersion=2.1.0 sicom-muni.iss      (el contenido de _stage lo prepara construir.ps1)
+; Compilar:  ISCC /DVersion=2.1.1 sicom-muni.iss      (el contenido de _stage lo prepara construir.ps1)
 #ifndef Version
-  #define Version "2.1.0"
+  #define Version "2.1.1"
 #endif
 #define Nombre "SICOM-MUNI"
 
@@ -200,6 +200,16 @@ begin
   SaveStringToFile(ExpandConstant('{app}\SICOM-MUNI-Activacion.url'), '[InternetShortcut]' + #13#10 + 'URL=http://localhost:' + Puerto + '/activacion/' + #13#10, False);
 end;
 
+{ Motivo del fallo (texto sin tildes que deja postinstalacion.ps1), para mostrarlo en el aviso }
+function UltimoErrorDelRegistro: String;
+var
+  Lineas: TArrayOfString;
+begin
+  Result := 'no se pudo leer el registro.';
+  if LoadStringsFromFile(ExpandConstant('{commonappdata}\SICOM-MUNI\logs\ultimo-error.txt'), Lineas) then
+    if GetArrayLength(Lineas) > 0 then Result := Lineas[0];
+end;
+
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   Json: TArrayOfString;
@@ -225,8 +235,9 @@ begin
       Codigo := 1;
     if Codigo <> 0 then
     begin
-      SuppressibleMsgBox('La configuración no terminó correctamente (código ' + IntToStr(Codigo) + ').' + #13#10 +
-        'Revise el archivo C:\ProgramData\SICOM-MUNI\logs\instalacion.log y envíelo a soporte.', mbError, MB_OK, IDOK);
+      SuppressibleMsgBox('La configuración no terminó correctamente (código ' + IntToStr(Codigo) + ').' + #13#10 + #13#10 +
+        'Motivo: ' + UltimoErrorDelRegistro + #13#10 + #13#10 +
+        'El detalle completo está en C:\ProgramData\SICOM-MUNI\logs\instalacion.log. Envíelo a soporte si el problema continúa.', mbError, MB_OK, IDOK);
       { La automatización (CI) comprueba el servicio y deja constancia en el registro }
       SaveStringToFile(ExpandConstant('{app}\INSTALACION-INCOMPLETA.txt'), 'Revise C:\ProgramData\SICOM-MUNI\logs\instalacion.log', False);
     end;
