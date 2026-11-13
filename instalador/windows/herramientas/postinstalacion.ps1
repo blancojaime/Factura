@@ -61,9 +61,14 @@ try {
     foreach ($d in 'pgdata', 'archivos', 'respaldos', 'logs', 'config', 'cache') { New-Item -ItemType Directory -Force -Path (Join-Path $DataDir $d) | Out-Null }
     function Restringir([string]$ruta, [string]$nivelSvc = 'F') {
         # SID conocidos: SYSTEM (S-1-5-18), Administradores (S-1-5-32-544), NetworkService (S-1-5-20)
-        Invocar-Nativo 'icacls.exe' @($ruta, '/inheritance:r', '/grant:r', '*S-1-5-18:(OI)(CI)F', '*S-1-5-32-544:(OI)(CI)F', "*S-1-5-20:(OI)(CI)$nivelSvc", '/C', '/Q') | Out-Null
-        # Archivos y carpetas ya existentes: se les quita la herencia y se les da acceso explícito
-        Invocar-Nativo 'icacls.exe' @((Join-Path $ruta '*'), '/inheritance:r', '/grant:r', '*S-1-5-18:F', '*S-1-5-32-544:F', "*S-1-5-20:$nivelSvc", '/T', '/C', '/Q') | Out-Null
+        # 1) Carpeta raíz: solo esas tres cuentas, con permiso HEREDABLE (lo recibe todo lo que se cree dentro después)
+        Invocar-Nativo 'icacls.exe' @($ruta, '/inheritance:r', '/grant:r', '*S-1-5-18:(OI)(CI)F', '*S-1-5-32-544:(OI)(CI)F', "*S-1-5-20:(OI)(CI)$nivelSvc", '/Q') | Out-Null
+        # 2) Lo que ya existe dentro vuelve a HEREDAR de la raíz (/reset), de modo que las subcarpetas también
+        #    transmiten el permiso a los archivos nuevos (PostgreSQL crea archivos en pg_logical, pg_wal, base...).
+        #    Esto también repara instalaciones anteriores que dejaron permisos explícitos no heredables.
+        if (Get-ChildItem -LiteralPath $ruta -Force -ErrorAction SilentlyContinue | Select-Object -First 1) {
+            Invocar-Nativo 'icacls.exe' @((Join-Path $ruta '*'), '/reset', '/T', '/C', '/Q') | Out-Null
+        }
     }
 
     # 3. Secretos (se crean una sola vez y se conservan en las actualizaciones)

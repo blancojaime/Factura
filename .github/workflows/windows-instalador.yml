@@ -5,7 +5,7 @@ on:
     inputs:
       version:
         description: 'Versión del instalador'
-        default: '2.1.1'
+        default: '2.1.2'
       publicar:
         description: 'Publicar como Release de GitHub'
         type: boolean
@@ -18,7 +18,7 @@ permissions:
   contents: write
 
 env:
-  VERSION: ${{ github.event.inputs.version || '2.1.1' }}
+  VERSION: ${{ github.event.inputs.version || '2.1.2' }}
 
 jobs:
   windows:
@@ -108,6 +108,15 @@ jobs:
       - name: Probar el sistema instalado
         shell: pwsh
         run: ./instalador/windows/probar-instalacion.ps1 -Puerto 8090 -Clave 'Prueba#Segura2026' -Python python
+
+      - name: Actualizar sobre la instalación existente (como en un equipo real) y repetir la recuperación
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
+          $p = Start-Process -FilePath $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8090', '/DEMO=NO' -PassThru
+          if (-not $p.WaitForExit(900000)) { throw 'La actualización no terminó en 15 minutos' }
+          if (Test-Path "$env:ProgramFiles\SICOM-MUNI\INSTALACION-INCOMPLETA.txt") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Tail 60; throw 'La actualización dejó la instalación incompleta' }
+          ./instalador/windows/probar-recuperacion.ps1 -Puerto 8090
 
       - name: Recoger registros
         if: always()

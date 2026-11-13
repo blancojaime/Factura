@@ -40,6 +40,9 @@ if ($dump) {
     Comprobar ($LASTEXITCODE -eq 0 -and ($lista | Out-String) -match 'contrataciones_menores') 'El respaldo es legible y contiene las tablas del sistema'
 }
 
+& (Join-Path $PSScriptRoot 'probar-recuperacion.ps1') -Instalacion $Instalacion -Puerto $Puerto
+Comprobar ($LASTEXITCODE -eq 0) 'Permisos de la base de datos y recuperación tras un corte brusco'
+
 Write-Host "`n== Reinicio de servicios =="
 & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Instalacion 'herramientas\servicios.ps1') -Accion detener -Silencioso
 Comprobar ((Get-Service SICOM-MUNI).Status -eq 'Stopped') 'Los servicios se detienen'
