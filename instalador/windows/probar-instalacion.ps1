@@ -16,6 +16,7 @@ $url = "http://127.0.0.1:$Puerto"
 
 Write-Host "`n== Servicios, red y tareas =="
 Comprobar ((Get-Service SICOM-MUNI-BD).Status -eq 'Running') 'Servicio de base de datos SICOM-MUNI-BD en ejecución'
+Comprobar ((Get-CimInstance Win32_Service -Filter "Name='SICOM-MUNI-BD'").StartName -match 'NetworkService|NETWORK SERVICE') 'La base de datos corre con una cuenta sin privilegios (NetworkService)'
 Comprobar ((Get-Service SICOM-MUNI).Status -eq 'Running') 'Servicio SICOM-MUNI en ejecución'
 Comprobar ((Get-Service SICOM-MUNI-BD).StartType -eq 'Automatic' -and (Get-Service SICOM-MUNI).StartType -eq 'Automatic') 'Ambos servicios arrancan automáticamente con Windows'
 Comprobar ($null -ne (Get-NetFirewallRule -DisplayName 'SICOM-MUNI*' -ErrorAction SilentlyContinue)) 'Regla de firewall creada'

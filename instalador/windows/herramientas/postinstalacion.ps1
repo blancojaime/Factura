@@ -170,6 +170,11 @@ log_min_duration_statement = 2000
         if ($x.Codigo -ne 0) { throw "No se pudo registrar el servicio de PostgreSQL (código $($x.Codigo))" }
         Invocar-Nativo 'sc.exe' @('description', $SvcBd, 'Base de datos PostgreSQL de SICOM-MUNI') | Out-Null
     }
+    # PostgreSQL se niega a correr con permisos de administrador: la cuenta se fija siempre, sin depender del valor por defecto de pg_ctl
+    if ((Get-Service -Name $SvcBd).Status -ne 'Running') {
+        $c = Invocar-Nativo 'sc.exe' @('config', $SvcBd, 'obj=', 'NT AUTHORITY\NetworkService')
+        Log ('Cuenta del servicio de base de datos: ' + $c.Salida)
+    }
     if ((Get-Service -Name $SvcBd).Status -ne 'Running') {
         # en equipos lentos el servicio tarda más que el tiempo de espera de Windows: se sigue esperando abajo
         try { Start-Service -Name $SvcBd -ErrorAction Stop } catch { Log ("Aviso al iniciar el servicio de la base de datos: " + $_.Exception.Message) }
