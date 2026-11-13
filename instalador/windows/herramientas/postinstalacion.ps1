@@ -22,6 +22,46 @@ function Puerto-En-Uso([int]$p) {
     return 'otro programa'
 }
 
+# La base de datos de un intento anterior puede tener otra contraseña de "postgres" que la que se generó ahora.
+# Sin perder datos: se abre el acceso local un momento, se fija la contraseña nueva y se restablece la seguridad.
+function Restablecer-Clave-Postgres([string]$pgdata, [string]$bin, [string]$claveNueva) {
+    Log 'La contraseña interna de la base de datos no coincide (restos de una instalación anterior): se restablece sin perder datos.'
+    $hba = Join-Path $pgdata 'pg_hba.conf'
+    $copia = Join-Path $pgdata 'pg_hba.conf.sicom'
+    Copy-Item -LiteralPath $hba -Destination $copia -Force
+    try {
+        $abierto = "local all all trust`n" + "host all all 127.0.0.1/32 trust`n" + "host all all ::1/128 trust`n"
+        [System.IO.File]::WriteAllText($hba, $abierto, [System.Text.Encoding]::ASCII)
+        Stop-Service -Name $SvcBd -Force -ErrorAction SilentlyContinue
+        try { (Get-Service $SvcBd).WaitForStatus('Stopped', '00:01:00') } catch { }
+        Start-Service -Name $SvcBd -ErrorAction SilentlyContinue
+        $listo = $false
+        for ($i = 0; $i -lt 60; $i++) {
+            if ((Invocar-Nativo (Join-Path $bin 'pg_isready.exe') @('-h', '127.0.0.1', '-p', "$($script:PgPuerto)")).Codigo -eq 0) { $listo = $true; break }
+            Start-Sleep -Seconds 2
+        }
+        if (-not $listo) { throw 'La base de datos no arrancó al restablecer la contraseña.' }
+        Remove-Item Env:\PGPASSWORD -ErrorAction SilentlyContinue
+        $sqlC = Join-Path $DataDir ('cache\clave_' + [guid]::NewGuid().ToString('N') + '.sql')
+        try {
+            Escribir-Archivo $sqlC ("ALTER ROLE postgres PASSWORD '{0}';" -f $claveNueva)
+            $x = Invocar-Nativo (Join-Path $bin 'psql.exe') @('-h', '127.0.0.1', '-p', "$($script:PgPuerto)", '-U', 'postgres', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-q', '-f', $sqlC)
+            if ($x.Codigo -ne 0) { throw "No se pudo restablecer la contraseña de la base de datos: $($x.Salida)" }
+        } finally { Remove-Item $sqlC -Force -ErrorAction SilentlyContinue }
+    } finally {
+        # se restablece SIEMPRE la seguridad original (autenticación con contraseña)
+        Copy-Item -LiteralPath $copia -Destination $hba -Force
+        Remove-Item -LiteralPath $copia -Force -ErrorAction SilentlyContinue
+        Stop-Service -Name $SvcBd -Force -ErrorAction SilentlyContinue
+        try { (Get-Service $SvcBd).WaitForStatus('Stopped', '00:01:00') } catch { }
+        Start-Service -Name $SvcBd -ErrorAction SilentlyContinue
+        for ($i = 0; $i -lt 60; $i++) {
+            if ((Invocar-Nativo (Join-Path $bin 'pg_isready.exe') @('-h', '127.0.0.1', '-p', "$($script:PgPuerto)")).Codigo -eq 0) { break }
+            Start-Sleep -Seconds 2
+        }
+    }
+}
+
 # Vuelca al registro lo necesario para diagnosticar un servicio que no arranca.
 function Diagnostico-Servicio([string]$nombre) {
     try { Log ((Invocar-Nativo 'sc.exe' @('qc', $nombre)).Salida) } catch { }
@@ -151,6 +191,13 @@ log_min_duration_statement = 2000
     $env:PGPASSWORD = $sec.pg_super
     $psql = Join-Path $bin 'psql.exe'
     $base = @('-h', '127.0.0.1', '-p', "$($script:PgPuerto)", '-U', 'postgres', '-d', 'postgres', '-v', 'ON_ERROR_STOP=1', '-q')
+    $prueba = Invocar-Nativo $psql ($base + @('-tAc', 'SELECT 1'))
+    if ($prueba.Codigo -ne 0 -and $prueba.Salida -match 'password authentication failed|autenticaci') {
+        Restablecer-Clave-Postgres $pgdata $bin $sec.pg_super
+        $env:PGPASSWORD = $sec.pg_super
+        $prueba = Invocar-Nativo $psql ($base + @('-tAc', 'SELECT 1'))
+    }
+    if ($prueba.Codigo -ne 0) { throw "No se pudo conectar con la base de datos: $($prueba.Salida)" }
     $existeRol = (Invocar-Nativo $psql ($base + @('-tAc', "SELECT 1 FROM pg_roles WHERE rolname='sicom'"))).Salida
     $sql = Join-Path $DataDir ('cache\sicom_' + [guid]::NewGuid().ToString('N') + '.sql')
     try {

@@ -1,7 +1,7 @@
 ﻿; Instalador de SICOM-MUNI para Windows (servidor de red local)
-; Compilar:  ISCC /DVersion=2.1.3 sicom-muni.iss      (el contenido de _stage lo prepara construir.ps1)
+; Compilar:  ISCC /DVersion=2.1.4 sicom-muni.iss      (el contenido de _stage lo prepara construir.ps1)
 #ifndef Version
-  #define Version "2.1.3"
+  #define Version "2.1.4"
 #endif
 #define Nombre "SICOM-MUNI"
 

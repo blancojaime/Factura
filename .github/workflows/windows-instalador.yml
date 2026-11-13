@@ -5,7 +5,7 @@ on:
     inputs:
       version:
         description: 'Versión del instalador'
-        default: '2.1.3'
+        default: '2.1.4'
       publicar:
         description: 'Publicar como Release de GitHub'
         type: boolean
@@ -18,7 +18,7 @@ permissions:
   contents: write
 
 env:
-  VERSION: ${{ github.event.inputs.version || '2.1.3' }}
+  VERSION: ${{ github.event.inputs.version || '2.1.4' }}
 
 jobs:
   windows:
@@ -120,6 +120,22 @@ jobs:
           if (-not $p.WaitForExit(900000)) { throw 'La actualización no terminó en 15 minutos' }
           if (-not $colgado.HasExited) { $colgado.Kill(); throw 'El instalador no cerró el proceso que bloqueaba los archivos' }
           if (Test-Path "$env:ProgramFiles\SICOM-MUNI\INSTALACION-INCOMPLETA.txt") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Tail 60; throw 'La actualización dejó la instalación incompleta' }
+          ./instalador/windows/probar-recuperacion.ps1 -Puerto 8090
+
+      - name: Contraseña interna distinta (restos de una instalación anterior) debe repararse sin perder datos
+        shell: pwsh
+        run: |
+          $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
+          # se pierde el archivo de secretos pero queda la base de datos: el instalador genera claves nuevas y debe reconciliarlas
+          Remove-Item "$env:ProgramData\SICOM-MUNI\config\secretos.json" -Force
+          $p = Start-Process -FilePath $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8090', '/DEMO=NO' -PassThru
+          if (-not $p.WaitForExit(900000)) { throw 'La reinstalación no terminó en 15 minutos' }
+          if (Test-Path "$env:ProgramFiles\SICOM-MUNI\INSTALACION-INCOMPLETA.txt") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Tail 80; throw 'La reinstalación con contraseña distinta dejó la instalación incompleta' }
+          Select-String -Path "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Pattern 'contraseña interna' | Select-Object -Last 1 | ForEach-Object { Write-Host $_.Line }
+          if (Select-String -Path "$env:ProgramData\SICOM-MUNI\pgdata\pg_hba.conf" -Pattern 'trust' -Quiet) { throw 'pg_hba.conf quedó abierto (trust)' }
+          # la base conserva los datos: el administrador entra con su clave
+          $r = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8090/api/v1/auth/login' -ContentType 'application/json' -Body '{"username":"admin","password":"Prueba#Segura2026"}'
+          if (-not $r.access_token) { throw 'No se puede iniciar sesión tras reparar la contraseña' }
           ./instalador/windows/probar-recuperacion.ps1 -Puerto 8090
 
       - name: Recoger registros
