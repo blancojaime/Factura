@@ -67,12 +67,12 @@ La versión se **aprueba** si todos los casos marcados ★ (críticos) están �
 
 ## A1b ★ Instalación en Windows 7 (edición Windows 7)
 
-**Objetivo:** comprobar que CONTA JB funciona en un equipo con **Windows 7 SP1 de 64 bits** con la misma apariencia que en Windows 10/11.
+**Objetivo:** comprobar que CONTA JB funciona en un equipo con **Windows 7 SP1 (32 o 64 bits)** con la misma apariencia que en Windows 10/11.
 
 **Pasos**
 
-1. Descargue `ContaJB_Setup_Win7.exe` desde *Releases* y haga doble clic. Pulse **Instalar** y luego **Finalizar**.
-2. En la pantalla de ingreso, mire el pie: debe decir **«Versión 2.4.0 · Edición Windows 7»**. Ingrese (`admin` / `admin`) y elija una contraseña nueva.
+1. Descargue desde *Releases* `ContaJB_Setup_Win7.exe` (equipo de 64 bits) o `ContaJB_Setup_Win7_32bits.exe` (equipo de 32 bits) y haga doble clic. Pulse **Instalar** y luego **Finalizar**.
+2. En la pantalla de ingreso, mire el pie: debe decir **«Versión 2.4.0 · Edición Windows 7»** (en la de 32 bits: **«… Edición Windows 7 · 32 bits»**). Ingrese (`admin` / `admin`) y elija una contraseña nueva.
 3. Cree la empresa de demostración (*Crear empresa de demostración*) y recorra: **Control de comprobantes** (F2), **Balance General** y **Notas a los Estados Financieros** (botones PDF, Excel y Word), **Auditoría financiera (MAF)**, **Planilla de sueldos** y **Ayuda > Activación de la licencia**.
 4. Compare con las capturas de este manual (tomadas en la edición Windows 10/11).
 
@@ -84,7 +84,7 @@ La versión se **aprueba** si todos los casos marcados ★ (críticos) están �
 | Informes | PDF, Excel y Word se generan y abren |
 | Copias de seguridad | Una copia hecha en Windows 7 se restaura en Windows 10/11 y viceversa |
 
-**Si falla:** anote el mensaje exacto. Si Windows indica que falta `api-ms-win-crt-…`, instale la actualización **KB2999226** (Universal C Runtime) y reintente. Verifique que sea Windows 7 **con Service Pack 1** y de **64 bits** (*Panel de control > Sistema*).
+**Si falla:** anote el mensaje exacto. Si Windows indica que falta `api-ms-win-crt-…`, instale la actualización **KB2999226** (Universal C Runtime) y reintente. Verifique que sea Windows 7 **con Service Pack 1** (*Panel de control > Sistema*) y que haya elegido el instalador que corresponde a 32 o 64 bits.
 
 > **Nota sobre la verificación:** la edición Windows 7 se prueba automáticamente con las mismas pruebas que la de Windows 10/11 (Python 3.8 + PySide2) y con la autoprueba del paquete en cada publicación. La comprobación final en un equipo real con Windows 7 es la de este caso A1b.
 

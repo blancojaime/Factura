@@ -59,7 +59,7 @@ class LoginDialog(QDialog):
         self.b_olvido.setStyleSheet(f"color:{tema.AZUL_MED}; border:none; text-decoration: underline; padding:2px;")
         self.b_olvido.clicked.connect(self.restablecer)
         lay.addWidget(self.b_olvido)
-        pie = QLabel(f"Versión {__version__}{'  ·  Edición Windows 7' if _qtcompat.USANDO_PYSIDE2 else ''}  ·  Normativa boliviana vigente")
+        pie = QLabel(f"Versión {__version__}{'  ·  ' + _qtcompat.EDICION if _qtcompat.EDICION else ''}  ·  Normativa boliviana vigente")
         pie.setObjectName("sub")
         pie.setAlignment(Qt.AlignCenter)
         lay.addSpacing(6)

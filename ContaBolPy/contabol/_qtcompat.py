@@ -32,3 +32,8 @@ except ImportError:
             except (TypeError, AttributeError):
                 pass
     USANDO_PYSIDE2 = True
+
+# Edición mostrada en el pie de la ventana de ingreso ("" en Windows 10/11)
+EDICION = ""
+if USANDO_PYSIDE2:
+    EDICION = "Edición Windows 7" + (" · 32 bits" if sys.maxsize <= 2**32 else "")

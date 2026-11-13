@@ -74,22 +74,22 @@ Para usar **otra carpeta de datos** (otro disco), cree antes de abrir la aplicac
 
 ## 3.1b Edición para Windows 7
 
-Para equipos con **Windows 7 SP1 (64 bits)** existe una edición equivalente: **`ContaJB_Setup_Win7.exe`** (y su versión portable `ContaJB_portable_Win7.zip`), publicada en la misma página de *Releases*. Tiene **las mismas funciones** (contabilidad, impuestos, comercial, inventarios, activos, planillas, costos, estados financieros, informes en PDF/Excel/Word, auditoría MAF/MAI, control de comprobantes, activación, copias de seguridad) y **la misma apariencia** que la edición de Windows 10/11: mismos colores, iconos, tipografía Segoe UI y distribución de pantallas.
+Para equipos con **Windows 7 SP1** existen dos instaladores equivalentes, publicados en la misma página de *Releases*: **`ContaJB_Setup_Win7.exe`** para equipos de **64 bits** y **`ContaJB_Setup_Win7_32bits.exe`** para equipos de **32 bits** (cada uno con su versión portable `.zip`). Para saber cuál elegir: *Panel de control > Sistema > Tipo de sistema* indica «Sistema operativo de 64 bits» o «de 32 bits». Si duda, el instalador de 32 bits funciona en ambos, pero el de 64 bits aprovecha mejor la memoria en equipos grandes. Tiene **las mismas funciones** (contabilidad, impuestos, comercial, inventarios, activos, planillas, costos, estados financieros, informes en PDF/Excel/Word, auditoría MAF/MAI, control de comprobantes, activación, copias de seguridad) y **la misma apariencia** que la edición de Windows 10/11: mismos colores, iconos, tipografía Segoe UI y distribución de pantallas.
 
 | Tema | Windows 10 / 11 | Windows 7 |
 |---|---|---|
-| Instalador | `ContaJB_Setup.exe` | `ContaJB_Setup_Win7.exe` |
+| Instalador | `ContaJB_Setup.exe` | `ContaJB_Setup_Win7.exe` (64 bits) · `ContaJB_Setup_Win7_32bits.exe` (32 bits) |
 | Tecnología interna | Python 3.12 + Qt 6 (PySide6) | Python 3.8 + Qt 5.15 (PySide2): son las últimas versiones que funcionan en Windows 7 |
-| Requisitos | Windows 10 de 64 bits | **Windows 7 con Service Pack 1, 64 bits** |
+| Requisitos | Windows 10 de 64 bits | **Windows 7 con Service Pack 1**, 32 o 64 bits |
 | Datos y copias de seguridad | `%LOCALAPPDATA%\ContaJB` | Igual: son **compatibles entre ambas ediciones** (puede restaurar en un equipo nuevo la copia hecha en el antiguo) |
-| Identificación | Pie de la ventana de ingreso: «Versión 2.4.0» | «Versión 2.4.0 · **Edición Windows 7**» |
+| Identificación | Pie de la ventana de ingreso: «Versión 2.4.0» | «Versión 2.4.0 · **Edición Windows 7**» (64 bits) o «… **Edición Windows 7 · 32 bits**» |
 
 **Instalación en Windows 7:** igual que en 3.1, con `ContaJB_Setup_Win7.exe`: doble clic → **Instalar** → **Finalizar** (sin permisos de administrador). Si Windows 7 no abre el programa o indica que falta un archivo `api-ms-win-crt-…`, instale la actualización de Microsoft *Universal C Runtime* (**KB2999226**) y reintente.
 
 **Advertencias:**
 
 - Microsoft ya **no entrega actualizaciones de seguridad** para Windows 7, y Python 3.8 y Qt 5.15 tampoco: use la edición Windows 7 solo si el equipo no puede actualizarse, evitando navegar por Internet en él.
-- Solo existe para **64 bits**. Los equipos de 32 bits no están soportados.
+- **Equipos de 32 bits:** un programa de 32 bits solo puede usar unos 2 GB de memoria; es suficiente para empresas pequeñas y medianas, pero en gestiones con decenas de miles de comprobantes conviene un equipo de 64 bits.
 - Cada versión nueva del programa se publica en ambas ediciones; al actualizar use el instalador que corresponde a su Windows.
 
 ## 3.2 Ejecutable portátil
