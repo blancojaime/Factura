@@ -1,7 +1,7 @@
 ﻿# Prepara el contenido del instalador de Windows en _stage (se ejecuta en GitHub Actions, en Windows).
 # Requisitos previos: frontend exportado en sicom-muni/frontend/out, DLL de GTK en _gtk, Python 3.12 en el PATH.
 param(
-    [string]$Version = '2.1.2',
+    [string]$Version = '2.1.3',
     [string]$PythonEmbed = '3.12.8',
     [string]$Postgres = '16.4-1'
 )

@@ -11,6 +11,8 @@ $exe = Join-Path $ConfigDir 'servicio\SICOM-MUNI-Servicio.exe'
 if (Test-Path $exe) { & $exe uninstall 2>&1 | Out-Null }
 Stop-Service $SvcBd -Force -ErrorAction SilentlyContinue
 try { (Get-Service $SvcBd -ErrorAction Stop).WaitForStatus('Stopped', '00:00:60') } catch { }
+# procesos que hayan quedado abiertos (bloquean los archivos y no dejan desinstalar ni actualizar)
+Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.Path -and ($_.Path -like "$InstallDir\*") } | Stop-Process -Force -ErrorAction SilentlyContinue
 $pgctl = Join-Path $InstallDir 'pgsql\bin\pg_ctl.exe'
 if (Test-Path $pgctl) { & $pgctl unregister -N $SvcBd 2>&1 | Out-Null }
 & sc.exe delete $SvcApp 2>&1 | Out-Null

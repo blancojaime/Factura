@@ -5,7 +5,7 @@ on:
     inputs:
       version:
         description: 'Versión del instalador'
-        default: '2.1.2'
+        default: '2.1.3'
       publicar:
         description: 'Publicar como Release de GitHub'
         type: boolean
@@ -18,7 +18,7 @@ permissions:
   contents: write
 
 env:
-  VERSION: ${{ github.event.inputs.version || '2.1.2' }}
+  VERSION: ${{ github.event.inputs.version || '2.1.3' }}
 
 jobs:
   windows:
@@ -113,8 +113,12 @@ jobs:
         shell: pwsh
         run: |
           $setup = (Get-ChildItem instalador/windows/_salida -Filter '*.exe' | Select-Object -First 1).FullName
+          # proceso colgado de la instalación anterior (bloquea python.exe): el instalador debe cerrarlo
+          $colgado = Start-Process -FilePath "$env:ProgramFiles\\SICOM-MUNI\\python\\python.exe" -ArgumentList '-c', 'import time; time.sleep(900)' -PassThru
+          Start-Sleep -Seconds 2
           $p = Start-Process -FilePath $setup -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/ENTIDAD=GAM de Prueba', '/CIUDAD=El Alto', '/ADMIN=admin', '/CLAVE=Prueba#Segura2026', '/PUERTO=8090', '/DEMO=NO' -PassThru
           if (-not $p.WaitForExit(900000)) { throw 'La actualización no terminó en 15 minutos' }
+          if (-not $colgado.HasExited) { $colgado.Kill(); throw 'El instalador no cerró el proceso que bloqueaba los archivos' }
           if (Test-Path "$env:ProgramFiles\SICOM-MUNI\INSTALACION-INCOMPLETA.txt") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Tail 60; throw 'La actualización dejó la instalación incompleta' }
           ./instalador/windows/probar-recuperacion.ps1 -Puerto 8090
 

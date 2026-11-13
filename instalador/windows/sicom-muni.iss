@@ -1,7 +1,7 @@
 ﻿; Instalador de SICOM-MUNI para Windows (servidor de red local)
-; Compilar:  ISCC /DVersion=2.1.2 sicom-muni.iss      (el contenido de _stage lo prepara construir.ps1)
+; Compilar:  ISCC /DVersion=2.1.3 sicom-muni.iss      (el contenido de _stage lo prepara construir.ps1)
 #ifndef Version
-  #define Version "2.1.2"
+  #define Version "2.1.3"
 #endif
 #define Nombre "SICOM-MUNI"
 
@@ -192,6 +192,10 @@ begin
   { Actualización: se detienen los servicios para poder reemplazar los archivos }
   Exec(ExpandConstant('{sys}\net.exe'), 'stop SICOM-MUNI', '', SW_HIDE, ewWaitUntilTerminated, Codigo);
   Exec(ExpandConstant('{sys}\net.exe'), 'stop SICOM-MUNI-BD', '', SW_HIDE, ewWaitUntilTerminated, Codigo);
+  { Procesos que quedaron abiertos (p. ej. postgres.exe de un intento anterior) bloquean los archivos: se cierran }
+  Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
+       '-NoProfile -ExecutionPolicy Bypass -Command "Get-Process | Where-Object { $_.Path -and $_.Path -like ''' + ExpandConstant('{app}') + '\*'' } | Stop-Process -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 3"',
+       '', SW_HIDE, ewWaitUntilTerminated, Codigo);
 end;
 
 procedure EscribirAccesos(const Puerto: String);
