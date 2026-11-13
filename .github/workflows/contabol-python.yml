@@ -25,7 +25,7 @@ jobs:
 
   pruebas_win7:
     name: "Pruebas (Windows 7: Python 3.8 + PySide2)"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Python 3.8 ya no está disponible en ubuntu-latest
     defaults: { run: { working-directory: ContaBolPy } }
     steps:
       - uses: actions/checkout@v4
