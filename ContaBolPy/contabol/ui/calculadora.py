@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ast
 import operator
+import sys
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QDialog, QGridLayout, QLineEdit, QPushButton, QVBoxLayout
@@ -19,8 +20,10 @@ def evaluar(expr: str) -> float:
     def ev(n):
         if isinstance(n, ast.Expression):
             return ev(n.body)
-        if isinstance(n, ast.Constant) and isinstance(n.value, (int, float)):
+        if isinstance(n, ast.Constant) and isinstance(n.value, (int, float)) and not isinstance(n.value, bool):
             return float(n.value)
+        if sys.version_info < (3, 8) and isinstance(n, ast.Num):  # Python 3.7 (Windows 7): los números son ast.Num
+            return float(n.n)
         if isinstance(n, ast.BinOp) and type(n.op) in _OPS:
             return _OPS[type(n.op)](ev(n.left), ev(n.right))
         if isinstance(n, ast.UnaryOp) and type(n.op) in _OPS:
