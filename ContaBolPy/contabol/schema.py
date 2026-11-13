@@ -1,4 +1,6 @@
 """Esquemas SQL. Sistema (maestro) y Gestión (una base por empresa y año)."""
+from __future__ import annotations
+
 
 VERSION_ESQUEMA = 3
 

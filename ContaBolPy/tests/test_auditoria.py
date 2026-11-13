@@ -1,3 +1,4 @@
+from __future__ import annotations
 import pytest
 
 from contabol.permisos import permisos_de_rol

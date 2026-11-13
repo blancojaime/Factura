@@ -1,5 +1,5 @@
 ---
-title: "CONTA JB 2.3 — Manual de Pruebas de Aceptación"
+title: "CONTA JB 2.4 — Manual de Pruebas de Aceptación"
 subtitle: "Guía paso a paso con datos de ejemplo, resultados esperados y capturas reales del aplicativo"
 lang: es
 ---
@@ -64,6 +64,29 @@ La versión se **aprueba** si todos los casos marcados ★ (críticos) están �
 **Resultado esperado:** el asistente tiene solo tres pasos (Instalar → progreso → Finalizar), aparece el acceso directo con el icono **JB** y se abre la pantalla de ingreso con el logotipo de Jaime Blanco. No se requiere instalar ni Python ni Access ni ningún otro programa.
 
 **Si falla:** anote el mensaje del instalador y la versión de Windows. Alternativa sin instalar: `ContaJB_portable.zip` (descomprimir y ejecutar `ContaJB.exe`).
+
+## A1b ★ Instalación en Windows 7 (edición Windows 7)
+
+**Objetivo:** comprobar que CONTA JB funciona en un equipo con **Windows 7 SP1 de 64 bits** con la misma apariencia que en Windows 10/11.
+
+**Pasos**
+
+1. Descargue `ContaJB_Setup_Win7.exe` desde *Releases* y haga doble clic. Pulse **Instalar** y luego **Finalizar**.
+2. En la pantalla de ingreso, mire el pie: debe decir **«Versión 2.4.0 · Edición Windows 7»**. Ingrese (`admin` / `admin`) y elija una contraseña nueva.
+3. Cree la empresa de demostración (*Crear empresa de demostración*) y recorra: **Control de comprobantes** (F2), **Balance General** y **Notas a los Estados Financieros** (botones PDF, Excel y Word), **Auditoría financiera (MAF)**, **Planilla de sueldos** y **Ayuda > Activación de la licencia**.
+4. Compare con las capturas de este manual (tomadas en la edición Windows 10/11).
+
+| Verificación | Esperado |
+|---|---|
+| Instalación | 3 pasos, sin permisos de administrador; acceso directo **CONTA JB** con el icono JB |
+| Apariencia | Barra de menús azul oscuro, barra de accesos con iconos de colores, tablas con encabezado azul, botones redondeados, fuente Segoe UI: igual que en las capturas |
+| Funciones | Todos los casos de las Partes B a F dan los mismos resultados que en Windows 10/11 (mismas cifras) |
+| Informes | PDF, Excel y Word se generan y abren |
+| Copias de seguridad | Una copia hecha en Windows 7 se restaura en Windows 10/11 y viceversa |
+
+**Si falla:** anote el mensaje exacto. Si Windows indica que falta `api-ms-win-crt-…`, instale la actualización **KB2999226** (Universal C Runtime) y reintente. Verifique que sea Windows 7 **con Service Pack 1** y de **64 bits** (*Panel de control > Sistema*).
+
+> **Nota sobre la verificación:** la edición Windows 7 se prueba automáticamente con las mismas pruebas que la de Windows 10/11 (Python 3.8 + PySide2) y con la autoprueba del paquete en cada publicación. La comprobación final en un equipo real con Windows 7 es la de este caso A1b.
 
 ## A2 ★ Primer ingreso y cambio de contraseña
 

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from contabol.util import fmt, parse_num
 
 

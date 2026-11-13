@@ -16,3 +16,8 @@ python tools/generar_manuales.py
 ```
 
 Manuales (PDF y Word) en `docs/`: *Manual de Implementación* y *Manual de Pruebas*, con capturas reales del aplicativo.
+
+## Ediciones
+
+- **Windows 10/11:** `ContaJB_Setup.exe` (Python 3.12 + PySide6).
+- **Windows 7 SP1 (64 bits):** `ContaJB_Setup_Win7.exe` (Python 3.8 + PySide2, `requirements-win7.txt`). Mismas funciones y apariencia.

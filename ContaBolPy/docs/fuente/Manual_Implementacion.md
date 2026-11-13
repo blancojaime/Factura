@@ -1,5 +1,5 @@
 ---
-title: "CONTA JB 2.3 — Manual de Implementación"
+title: "CONTA JB 2.4 — Manual de Implementación"
 subtitle: "Instalación, configuración, puesta en marcha, operación y mantenimiento"
 lang: es
 ---
@@ -30,7 +30,7 @@ lang: es
 
 | Capa | Tecnología | Función |
 |---|---|---|
-| Interfaz | PySide6 (Qt 6) | Ventanas, formularios, tablero |
+| Interfaz | PySide6 (Qt 6); en la edición Windows 7, PySide2 (Qt 5.15) | Ventanas, formularios, tablero (mismo código y mismo estilo en ambas) |
 | Servicios | Python | Reglas contables, tributarias y laborales (sin dependencia de la interfaz) |
 | Informes | ReportLab y openpyxl | PDF y Excel desde una sola definición |
 | Datos | SQLite (modo WAL, claves foráneas, `synchronous=FULL`) | Un archivo por empresa y gestión + sistema maestro |
@@ -43,7 +43,7 @@ lang: es
 
 | Elemento | Mínimo | Recomendado |
 |---|---|---|
-| Sistema operativo | Windows 10 (64 bits) | Windows 11 |
+| Sistema operativo | Windows 10 (64 bits) — o **Windows 7 SP1 (64 bits)** con la *edición Windows 7* (ver 3.1b) | Windows 11 |
 | Procesador / RAM | 2 núcleos / 4 GB | 4 núcleos / 8 GB |
 | Disco | 500 MB + datos y respaldos | SSD, 5 GB libres |
 | Pantalla | 1280 × 720 | 1366 × 768 o superior |
@@ -71,6 +71,26 @@ lang: es
 ```
 
 Para usar **otra carpeta de datos** (otro disco), cree antes de abrir la aplicación la variable de entorno `CONTABOL_DATOS` con la ruta deseada.
+
+## 3.1b Edición para Windows 7
+
+Para equipos con **Windows 7 SP1 (64 bits)** existe una edición equivalente: **`ContaJB_Setup_Win7.exe`** (y su versión portable `ContaJB_portable_Win7.zip`), publicada en la misma página de *Releases*. Tiene **las mismas funciones** (contabilidad, impuestos, comercial, inventarios, activos, planillas, costos, estados financieros, informes en PDF/Excel/Word, auditoría MAF/MAI, control de comprobantes, activación, copias de seguridad) y **la misma apariencia** que la edición de Windows 10/11: mismos colores, iconos, tipografía Segoe UI y distribución de pantallas.
+
+| Tema | Windows 10 / 11 | Windows 7 |
+|---|---|---|
+| Instalador | `ContaJB_Setup.exe` | `ContaJB_Setup_Win7.exe` |
+| Tecnología interna | Python 3.12 + Qt 6 (PySide6) | Python 3.8 + Qt 5.15 (PySide2): son las últimas versiones que funcionan en Windows 7 |
+| Requisitos | Windows 10 de 64 bits | **Windows 7 con Service Pack 1, 64 bits** |
+| Datos y copias de seguridad | `%LOCALAPPDATA%\ContaJB` | Igual: son **compatibles entre ambas ediciones** (puede restaurar en un equipo nuevo la copia hecha en el antiguo) |
+| Identificación | Pie de la ventana de ingreso: «Versión 2.4.0» | «Versión 2.4.0 · **Edición Windows 7**» |
+
+**Instalación en Windows 7:** igual que en 3.1, con `ContaJB_Setup_Win7.exe`: doble clic → **Instalar** → **Finalizar** (sin permisos de administrador). Si Windows 7 no abre el programa o indica que falta un archivo `api-ms-win-crt-…`, instale la actualización de Microsoft *Universal C Runtime* (**KB2999226**) y reintente.
+
+**Advertencias:**
+
+- Microsoft ya **no entrega actualizaciones de seguridad** para Windows 7, y Python 3.8 y Qt 5.15 tampoco: use la edición Windows 7 solo si el equipo no puede actualizarse, evitando navegar por Internet en él.
+- Solo existe para **64 bits**. Los equipos de 32 bits no están soportados.
+- Cada versión nueva del programa se publica en ambas ediciones; al actualizar use el instalador que corresponde a su Windows.
 
 ## 3.2 Ejecutable portátil
 
@@ -352,6 +372,7 @@ El proyecto incluye **pruebas automáticas** (`python -m pytest`) que cubren las
 
 # 14. Limitaciones conocidas
 
+- La edición **Windows 7** usa componentes (Python 3.8, Qt 5.15) que ya no reciben actualizaciones de seguridad.
 - Aplicación de escritorio de **un equipo a la vez** por carpeta de datos (ver capítulo 9).
 - Las normas tributarias y laborales cambian con frecuencia: los valores incluidos deben ser verificados por el contador de la empresa.
 - La emisión de **facturas electrónicas** se realiza en los sistemas del SIN; CONTA JB registra las facturas en los libros LCV y exporta su detalle, pero no las firma ni las transmite.

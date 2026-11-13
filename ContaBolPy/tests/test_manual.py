@@ -1,4 +1,6 @@
 """Las cifras del Manual de Pruebas se verifican automáticamente aquí: si el cálculo cambia, el manual debe actualizarse."""
+from __future__ import annotations
+
 import pytest
 
 from tests.conftest import Entorno

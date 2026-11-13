@@ -1,3 +1,4 @@
+from __future__ import annotations
 from contabol.sistema import ErrorNegocio
 import pytest
 from tests.conftest import CAJA, CAPITAL

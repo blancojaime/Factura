@@ -2,6 +2,8 @@
 
 Formato: código;nombre;indicadores   U=moneda extranjera, A=ajustable, B=banco, F/V=costo fijo/variable, -=regularizadora.
 """
+from __future__ import annotations
+
 
 LINEAS = [
     "1;ACTIVO",

@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import QDialog, QFrame, QHBoxLayout, QLabel, QLineEdit, QListWidget, QListWidgetItem, QVBoxLayout, QWidget, QCheckBox, QSpinBox
 
-from .. import APP_NAME, __version__
+from .. import _qtcompat, APP_NAME, __version__
 from ..sistema import ErrorNegocio, Sistema
 from . import tema
 from .formularios import Campo, FormDialog
@@ -54,12 +54,12 @@ class LoginDialog(QDialog):
         self.b.setMinimumHeight(38)
         self.b.setDefault(True)
         lay.addWidget(self.b)
-        self.b_olvido = boton("¿Olvidó la contraseña o el usuario está bloqueado?  Restablecer administrador", "")
+        self.b_olvido = boton("¿Olvidó la contraseña?  Restablecer administrador", "")
         self.b_olvido.setFlat(True)
         self.b_olvido.setStyleSheet(f"color:{tema.AZUL_MED}; border:none; text-decoration: underline; padding:2px;")
         self.b_olvido.clicked.connect(self.restablecer)
         lay.addWidget(self.b_olvido)
-        pie = QLabel(f"Versión {__version__}  ·  Normativa boliviana vigente")
+        pie = QLabel(f"Versión {__version__}{'  ·  Edición Windows 7' if _qtcompat.USANDO_PYSIDE2 else ''}  ·  Normativa boliviana vigente")
         pie.setObjectName("sub")
         pie.setAlignment(Qt.AlignCenter)
         lay.addSpacing(6)

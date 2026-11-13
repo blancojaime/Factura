@@ -1,4 +1,6 @@
 """Catálogo de opciones de permiso y roles predefinidos."""
+from __future__ import annotations
+
 
 OPCIONES: list[tuple[str, str, str]] = [
     ("ADM.PARAMETROS", "Parámetros de la empresa y normativa", "Administración"),

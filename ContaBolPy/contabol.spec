@@ -17,7 +17,7 @@ a = Analysis(
     binaries=[],
     datas=[("contabol/recursos", "contabol/recursos")] + collect_data_files("docx"),
     hiddenimports=hidden,
-    excludes=["tkinter", "PySide6.QtWebEngineCore", "PySide6.QtQml", "PySide6.QtQuick", "PySide6.Qt3DCore", "PySide6.QtMultimedia"],
+    excludes=["tkinter"] + [q + m for q in ("PySide6.", "PySide2.") for m in ("QtWebEngineCore", "QtWebEngineWidgets", "QtQml", "QtQuick", "Qt3DCore", "QtMultimedia", "QtCharts", "QtDataVisualization")],
     noarchive=False,
 )
 pyz = PYZ(a.pure)

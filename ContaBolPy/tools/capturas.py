@@ -14,6 +14,7 @@ from datetime import date
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import contabol  # noqa: E402,F401  (activa la compatibilidad PySide2 antes de importar Qt)
 from PySide6.QtCore import QPoint, Qt  # noqa: E402
 from PySide6.QtWidgets import QApplication, QDialog  # noqa: E402
 
@@ -23,7 +24,7 @@ from contabol.reports import catalogo, pdf  # noqa: E402
 from contabol.sistema import Sistema  # noqa: E402
 from contabol.ui import tema  # noqa: E402
 
-SALIDA = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs", "img")
+SALIDA = os.environ.get("CONTABOL_CAPTURAS") or (sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "docs", "img"))
 os.makedirs(SALIDA, exist_ok=True)
 ANIO = 2025
 app = QApplication([])
@@ -66,19 +67,22 @@ def main():
     pausa()
     guardar(w, "04_inicio")
     # menú desplegado
-    for nombre, idx in (("05_menu_contabilidad", 1), ("06_menu_estados_financieros", 8)):
-        m = w.menuBar().actions()[idx].menu()
-        g = w.menuBar().actionGeometry(w.menuBar().actions()[idx])
-        m.popup(w.menuBar().mapToGlobal(QPoint(g.left(), g.bottom())))
-        pausa()
-        from PySide6.QtGui import QPainter
-        base = w.grab()
-        pos = w.mapFromGlobal(m.mapToGlobal(QPoint(0, 0)))
-        pt = QPainter(base)
-        pt.drawPixmap(pos, m.grab())
-        pt.end()
-        base.save(os.path.join(SALIDA, nombre + ".png"))
-        m.hide()
+    try:
+        for nombre, idx in (("05_menu_contabilidad", 1), ("06_menu_estados_financieros", 8)):
+            m = w.menuBar().actions()[idx].menu()
+            g = w.menuBar().actionGeometry(w.menuBar().actions()[idx])
+            m.popup(w.menuBar().mapToGlobal(QPoint(g.left(), g.bottom())))
+            pausa()
+            from PySide6.QtGui import QPainter
+            base = w.grab()
+            pos = w.mapFromGlobal(m.mapToGlobal(QPoint(0, 0)))
+            pt = QPainter(base)
+            pt.drawPixmap(pos, m.grab())
+            pt.end()
+            base.save(os.path.join(SALIDA, nombre + ".png"))
+            m.hide()
+    except RuntimeError:  # PySide2 (Windows 7): el menú desplegable no se puede capturar fuera de pantalla
+        print('   (menús desplegables omitidos)')
     from contabol.ui import p_admin, p_comercial, p_contab, p_inventario, p_iva, p_rrhh
     from contabol.ui.reportes_ui import CentroReportes
 

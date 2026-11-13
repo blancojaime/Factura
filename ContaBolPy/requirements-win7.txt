@@ -1,0 +1,10 @@
+# Variante para Windows 7 SP1 (64 bits): Python 3.8 + PySide2 (Qt 5.15). Mismas funciones y misma apariencia que la edición Windows 10/11.
+PySide2==5.15.2.1
+shiboken2==5.15.2.1
+reportlab==4.0.9
+Pillow<11
+openpyxl<3.2
+python-docx<1.2
+cryptography<44
+pytest>=7
+pyinstaller==5.13.2
