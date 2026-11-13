@@ -20,5 +20,5 @@ Manuales (PDF y Word) en `docs/`: *Manual de Implementación* y *Manual de Prueb
 ## Ediciones
 
 - **Windows 10/11:** `ContaJB_Setup.exe` (Python 3.12 + PySide6).
-- **Windows 7 SP1 (64 bits):** `ContaJB_Setup_Win7.exe` (Python 3.8 + PySide2, `requirements-win7.txt`). Mismas funciones y apariencia.
-- **Windows 7 SP1 (32 bits):** `ContaJB_Setup_Win7_32bits.exe` (misma pila, Python 3.8 de 32 bits; `scripts/instalador_win7_32.iss`).
+- **Windows 7 SP1 (64 bits):** `ContaJB_Setup_Win7.exe` (Python 3.7 + PySide2, `requirements-win7.txt`). Mismas funciones y apariencia.
+- **Windows 7 SP1 (32 bits):** `ContaJB_Setup_Win7_32bits.exe` (misma pila, Python 3.7 de 32 bits; `scripts/instalador_win7_32.iss`).

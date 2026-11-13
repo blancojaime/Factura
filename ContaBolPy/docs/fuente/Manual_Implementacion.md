@@ -79,16 +79,16 @@ Para equipos con **Windows 7 SP1** existen dos instaladores equivalentes, public
 | Tema | Windows 10 / 11 | Windows 7 |
 |---|---|---|
 | Instalador | `ContaJB_Setup.exe` | `ContaJB_Setup_Win7.exe` (64 bits) · `ContaJB_Setup_Win7_32bits.exe` (32 bits) |
-| Tecnología interna | Python 3.12 + Qt 6 (PySide6) | Python 3.8 + Qt 5.15 (PySide2): son las últimas versiones que funcionan en Windows 7 |
+| Tecnología interna | Python 3.12 + Qt 6 (PySide6) | Python 3.7 + Qt 5.15 (PySide2): Python 3.7 es la versión que funciona en Windows 7 **sin exigir actualizaciones previas de Windows** |
 | Requisitos | Windows 10 de 64 bits | **Windows 7 con Service Pack 1**, 32 o 64 bits |
 | Datos y copias de seguridad | `%LOCALAPPDATA%\ContaJB` | Igual: son **compatibles entre ambas ediciones** (puede restaurar en un equipo nuevo la copia hecha en el antiguo) |
 | Identificación | Pie de la ventana de ingreso: «Versión 2.4.0» | «Versión 2.4.0 · **Edición Windows 7**» (64 bits) o «… **Edición Windows 7 · 32 bits**» |
 
-**Instalación en Windows 7:** igual que en 3.1, con `ContaJB_Setup_Win7.exe`: doble clic → **Instalar** → **Finalizar** (sin permisos de administrador). Si Windows 7 no abre el programa o indica que falta un archivo `api-ms-win-crt-…`, instale la actualización de Microsoft *Universal C Runtime* (**KB2999226**) y reintente.
+**Instalación en Windows 7:** igual que en 3.1, con `ContaJB_Setup_Win7.exe`: doble clic → **Instalar** → **Finalizar** (sin permisos de administrador). El paquete **ya incluye** el runtime de C de Microsoft y no exige actualizaciones previas de Windows 7 (solo el Service Pack 1). Si aun así el programa no abre, anote el mensaje exacto; como recurso, instale las actualizaciones de Microsoft **KB2999226** (Universal C Runtime) y **KB2533623**, y reintente.
 
 **Advertencias:**
 
-- Microsoft ya **no entrega actualizaciones de seguridad** para Windows 7, y Python 3.8 y Qt 5.15 tampoco: use la edición Windows 7 solo si el equipo no puede actualizarse, evitando navegar por Internet en él.
+- Microsoft ya **no entrega actualizaciones de seguridad** para Windows 7, y Python 3.7 y Qt 5.15 tampoco: use la edición Windows 7 solo si el equipo no puede actualizarse, evitando navegar por Internet en él.
 - **Equipos de 32 bits:** un programa de 32 bits solo puede usar unos 2 GB de memoria; es suficiente para empresas pequeñas y medianas, pero en gestiones con decenas de miles de comprobantes conviene un equipo de 64 bits.
 - Cada versión nueva del programa se publica en ambas ediciones; al actualizar use el instalador que corresponde a su Windows.
 
@@ -372,7 +372,7 @@ El proyecto incluye **pruebas automáticas** (`python -m pytest`) que cubren las
 
 # 14. Limitaciones conocidas
 
-- La edición **Windows 7** usa componentes (Python 3.8, Qt 5.15) que ya no reciben actualizaciones de seguridad.
+- La edición **Windows 7** usa componentes (Python 3.7, Qt 5.15) que ya no reciben actualizaciones de seguridad.
 - Aplicación de escritorio de **un equipo a la vez** por carpeta de datos (ver capítulo 9).
 - Las normas tributarias y laborales cambian con frecuencia: los valores incluidos deben ser verificados por el contador de la empresa.
 - La emisión de **facturas electrónicas** se realiza en los sistemas del SIN; CONTA JB registra las facturas en los libros LCV y exporta su detalle, pero no las firma ni las transmite.

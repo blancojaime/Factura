@@ -84,9 +84,9 @@ La versión se **aprueba** si todos los casos marcados ★ (críticos) están �
 | Informes | PDF, Excel y Word se generan y abren |
 | Copias de seguridad | Una copia hecha en Windows 7 se restaura en Windows 10/11 y viceversa |
 
-**Si falla:** anote el mensaje exacto. Si Windows indica que falta `api-ms-win-crt-…`, instale la actualización **KB2999226** (Universal C Runtime) y reintente. Verifique que sea Windows 7 **con Service Pack 1** (*Panel de control > Sistema*) y que haya elegido el instalador que corresponde a 32 o 64 bits.
+**Si falla:** anote el mensaje exacto. El paquete incluye el runtime de C y no exige actualizaciones previas. Si aun así falla, anote el mensaje exacto (por ejemplo «DLL load failed … El parámetro no es correcto» o «falta api-ms-win-crt-…») y, como recurso, instale las actualizaciones de Microsoft **KB2533623** y **KB2999226**, y reintente. Verifique que sea Windows 7 **con Service Pack 1** (*Panel de control > Sistema*) y que haya elegido el instalador que corresponde a 32 o 64 bits.
 
-> **Nota sobre la verificación:** la edición Windows 7 se prueba automáticamente con las mismas pruebas que la de Windows 10/11 (Python 3.8 + PySide2) y con la autoprueba del paquete en cada publicación. La comprobación final en un equipo real con Windows 7 es la de este caso A1b.
+> **Nota sobre la verificación:** la edición Windows 7 se prueba automáticamente con las mismas pruebas que la de Windows 10/11 (Python 3.7 + PySide2) y con la autoprueba del paquete en cada publicación. La comprobación final en un equipo real con Windows 7 es la de este caso A1b.
 
 ## A2 ★ Primer ingreso y cambio de contraseña
 

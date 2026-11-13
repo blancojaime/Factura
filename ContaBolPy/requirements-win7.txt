@@ -1,4 +1,4 @@
-# Variante para Windows 7 SP1 (64 bits): Python 3.8 + PySide2 (Qt 5.15). Mismas funciones y misma apariencia que la edición Windows 10/11.
+# Variante para Windows 7 SP1 (32 y 64 bits): Python 3.7 + PySide2 (Qt 5.15). Python 3.7 no exige la actualización KB2533623 de Windows 7. Mismas funciones y misma apariencia que la edición Windows 10/11.
 PySide2==5.15.2.1
 shiboken2==5.15.2.1
 reportlab==4.0.9
