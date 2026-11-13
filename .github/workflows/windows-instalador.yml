@@ -132,7 +132,7 @@ jobs:
           if (-not $p.WaitForExit(900000)) { throw 'La reinstalación no terminó en 15 minutos' }
           if (Test-Path "$env:ProgramFiles\SICOM-MUNI\INSTALACION-INCOMPLETA.txt") { Get-Content "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Tail 80; throw 'La reinstalación con contraseña distinta dejó la instalación incompleta' }
           Select-String -Path "$env:ProgramData\SICOM-MUNI\logs\instalacion.log" -Pattern 'contraseña interna' | Select-Object -Last 1 | ForEach-Object { Write-Host $_.Line }
-          if (Select-String -Path "$env:ProgramData\SICOM-MUNI\pgdata\pg_hba.conf" -Pattern 'trust' -Quiet) { throw 'pg_hba.conf quedó abierto (trust)' }
+          if (Get-Content "$env:ProgramData\SICOM-MUNI\pgdata\pg_hba.conf" | Where-Object { $_ -notmatch '^\s*#' -and $_ -match '\btrust\b' }) { throw 'pg_hba.conf quedó abierto (trust)' }
           # la base conserva los datos: el administrador entra con su clave
           $r = Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:8090/api/v1/auth/login' -ContentType 'application/json' -Body '{"username":"admin","password":"Prueba#Segura2026"}'
           if (-not $r.access_token) { throw 'No se puede iniciar sesión tras reparar la contraseña' }
