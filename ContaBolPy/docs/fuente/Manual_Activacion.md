@@ -94,10 +94,10 @@ El propio sistema valida la forma del código de solicitud (22 caracteres con pr
 
 ## 3.4 Generar un par de claves nuevo (casos excepcionales)
 
-Solo si la clave privada se perdió o se filtró. Un técnico con Python ejecuta:
+Solo si la clave privada se perdió o se filtró. Un técnico con Python, desde la carpeta del código fuente, ejecuta:
 
 ```
-python -c "from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey as K; from cryptography.hazmat.primitives import serialization as S; k=K.generate(); open('clave_privada_contajb.pem','wb').write(k.private_bytes(S.Encoding.PEM,S.PrivateFormat.PKCS8,S.NoEncryption())); print(k.public_key().public_bytes(S.Encoding.Raw,S.PublicFormat.Raw).hex())"
+python -c "from contabol.licencia import generar_par; pem, pub = generar_par(); open('clave_privada_contajb.pem','wb').write(pem); print(pub)"
 ```
 
 El texto impreso (clave **pública**) se coloca en `contabol/licencia.py` (`CLAVE_PUBLICA_HEX`) y se publica una nueva versión; los clientes deberán actualizar y volver a activar.

@@ -94,6 +94,8 @@ jobs:
           }
           if (Test-Path dist\ContaJB\python38.dll) { throw "El paquete usa Python 3.8, que exige KB2533623 en Windows 7" }
           Get-ChildItem dist\ContaJB\python3*.dll, dist\ContaJB\ucrtbase.dll | ForEach-Object { "$($_.Name) $($_.Length)" }
+      - name: Comprobar que ningún archivo del paquete use funciones que Windows 7 no tiene
+        run: python tools\verificar_win7.py dist\ContaJB
       - name: Autoprueba del paquete
         run: dist\ContaJB\ContaJB.exe --autoprueba
       - name: Instalador (Inno Setup 6.4, compatible con Windows 7)
@@ -142,6 +144,8 @@ jobs:
           }
           if (Test-Path dist\ContaJB\python38.dll) { throw "El paquete usa Python 3.8, que exige KB2533623 en Windows 7" }
           Get-ChildItem dist\ContaJB\python3*.dll, dist\ContaJB\ucrtbase.dll | ForEach-Object { "$($_.Name) $($_.Length)" }
+      - name: Comprobar que ningún archivo del paquete use funciones que Windows 7 no tiene
+        run: python tools\verificar_win7.py dist\ContaJB
       - name: Autoprueba del paquete
         run: dist\ContaJB\ContaJB.exe --autoprueba
       - name: Instalador (Inno Setup 6.4, compatible con Windows 7)

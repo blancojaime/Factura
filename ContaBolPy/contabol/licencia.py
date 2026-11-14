@@ -14,14 +14,17 @@ import sys
 import uuid
 from datetime import date, timedelta
 
-from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
+from . import _ed25519
 
 CLAVE_PUBLICA_HEX = "24a757ecc4a15f6b25877f3e24f504e1f99f7e25301517194d171ff58414c367"
 DIAS_PRUEBA = 30
 BASE = date(2000, 1, 1)
 VERSION = 1
+
+
+def generar_par() -> tuple:
+    """(clave privada PEM, clave pública hex) nuevos. Ver el Manual de Activación, sección «par de claves nuevo»."""
+    return _ed25519.generar_par()
 
 
 # ----------------------------------------------------------------- equipo
@@ -62,10 +65,7 @@ def emitir(clave_privada_pem: bytes, solicitud: str, vence: date | None) -> str:
     if vence is not None and dias <= 0:
         raise ValueError("La fecha de vencimiento no es válida.")
     payload = bytes([VERSION]) + dias.to_bytes(4, "big")
-    k = serialization.load_pem_private_key(clave_privada_pem, password=None)
-    if not isinstance(k, Ed25519PrivateKey):
-        raise ValueError("La clave privada no es Ed25519.")
-    firma = k.sign(_mensaje(sol, payload))
+    firma = _ed25519.firmar(_ed25519.semilla_desde_pem(clave_privada_pem), _mensaje(sol, payload))
     txt = base64.b32encode(payload + firma).decode().rstrip("=")
     return "-".join(txt[i:i + 8] for i in range(0, len(txt), 8))
 
@@ -85,10 +85,11 @@ def verificar(codigo: str, solicitud: str | None = None, hoy: date | None = None
     if payload[0] != VERSION:
         raise ValueError("Versión de código no reconocida.")
     try:
-        pub = Ed25519PublicKey.from_public_bytes(bytes.fromhex(clave_publica_hex or CLAVE_PUBLICA_HEX))
-        pub.verify(firma, _mensaje(solicitud or codigo_solicitud(), payload))
-    except (InvalidSignature, ValueError):
-        raise ValueError("El código de activación no corresponde a este equipo o no es auténtico.") from None
+        valida = _ed25519.verificar(bytes.fromhex(clave_publica_hex or CLAVE_PUBLICA_HEX), _mensaje(solicitud or codigo_solicitud(), payload), firma)
+    except ValueError:
+        valida = False
+    if not valida:
+        raise ValueError("El código de activación no corresponde a este equipo o no es auténtico.")
     dias = int.from_bytes(payload[1:], "big")
     vence = None if dias == 0 else BASE + timedelta(days=dias)
     if vence is not None and (hoy or date.today()) > vence:

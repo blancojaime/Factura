@@ -215,11 +215,9 @@ def main():
     guardar(p_admin.PermisosDialog(sis, uid, ctx.empresa, "Juan Pérez (operador)", w), "48_permisos_usuario", 560, 640)
     guardar(p_admin.AcercaDe(ctx, w), "49_acerca_de")
     # activación de la licencia (con claves de ejemplo descartables: los códigos mostrados no activan nada)
-    from cryptography.hazmat.primitives import serialization as _S
-    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
     from contabol import licencia
     from contabol.ui.p_activacion import ActivacionDialog, EmisionDialog
-    _pem = Ed25519PrivateKey.generate().private_bytes(_S.Encoding.PEM, _S.PrivateFormat.PKCS8, _S.NoEncryption())
+    _pem, _ = licencia.generar_par()
     _sol = "JB-7K3Q-M2XA-9PLD-4HVE-ZT8R"
     ad = ActivacionDialog(sis, w, al_inicio=True)
     ad.c_cod.setPlainText(licencia.emitir(_pem, _sol, None))

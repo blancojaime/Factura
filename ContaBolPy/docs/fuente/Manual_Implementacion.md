@@ -263,7 +263,7 @@ CONTA JB funciona **30 días en modo de prueba**; después exige un **código de
 | Tema | Detalle |
 |---|---|
 | Código de solicitud | `JB-` + 20 caracteres derivados de un hash del identificador del equipo (MachineGuid de Windows) |
-| Código de activación | Firma **Ed25519** del código de solicitud y de la fecha de vencimiento (o perpetua). Funciona sin Internet |
+| Código de activación | Firma **Ed25519** del código de solicitud y de la fecha de vencimiento (o perpetua). Funciona sin Internet. Está implementada en **Python puro** (sin bibliotecas nativas), por lo que también funciona en la edición Windows 7 |
 | Dónde se guarda | Tabla `config` de `sistema.db` (`lic_codigo`, `lic_inicio`, `lic_ultimo_uso`); sobrevive a reinstalaciones y actualizaciones |
 | Clave pública | Dentro del programa (`contabol/licencia.py`); solo verifica |
 | **Clave privada** | Archivo `clave_privada_contajb.pem`, **solo en poder del proveedor**; nunca en el repositorio, instalador ni equipos de clientes |

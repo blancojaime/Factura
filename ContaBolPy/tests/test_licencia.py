@@ -2,16 +2,12 @@ from __future__ import annotations
 from datetime import date, timedelta
 
 import pytest
-from cryptography.hazmat.primitives import serialization as S
-from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-
-from contabol import licencia
+from contabol import _ed25519, licencia
 
 
 @pytest.fixture(scope="module")
 def llaves():
-    k = Ed25519PrivateKey.generate()
-    return (k.private_bytes(S.Encoding.PEM, S.PrivateFormat.PKCS8, S.NoEncryption()), k.public_key().public_bytes(S.Encoding.Raw, S.PublicFormat.Raw).hex())
+    return licencia.generar_par()
 
 
 def test_codigo_solicitud_estable_y_con_formato():
@@ -36,7 +32,7 @@ def test_emision_y_verificacion(llaves):
     with pytest.raises(ValueError):
         licencia.verificar(mal, sol, clave_publica_hex=pub)
     # firmado con otra clave
-    otra = Ed25519PrivateKey.generate().private_bytes(S.Encoding.PEM, S.PrivateFormat.PKCS8, S.NoEncryption())
+    otra, _ = licencia.generar_par()
     with pytest.raises(ValueError, match="auténtico"):
         licencia.verificar(licencia.emitir(otra, sol, None), sol, clave_publica_hex=pub)
     with pytest.raises(ValueError, match="Ingrese"):
@@ -108,3 +104,38 @@ def test_dialogo_de_activacion(env, monkeypatch, llaves):
     assert "No se pudo" in e.err.text()
     os.unlink(f.name)
     assert app
+
+
+def test_ed25519_vectores_rfc8032_y_pem():
+    # RFC 8032, prueba 1 (mensaje vacío)
+    sec = bytes.fromhex("9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60")
+    pub = bytes.fromhex("d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a")
+    sig = bytes.fromhex("e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b")
+    assert _ed25519.clave_publica(sec) == pub and _ed25519.firmar(sec, b"") == sig and _ed25519.verificar(pub, b"", sig)
+    assert not _ed25519.verificar(pub, b"x", sig) and not _ed25519.verificar(pub, b"", sig[:-1] + bytes([sig[-1] ^ 1]))
+    assert _ed25519.semilla_desde_pem(_ed25519.pem_desde_semilla(sec)) == sec
+    for malo in (b"", b"-----BEGIN PRIVATE KEY-----\nAAAA\n-----END PRIVATE KEY-----\n", b"texto cualquiera"):
+        with pytest.raises(ValueError):
+            _ed25519.semilla_desde_pem(malo)
+
+
+def test_ed25519_coincide_con_cryptography_si_esta_instalada():
+    """En el desarrollo se contrasta con la biblioteca `cryptography`; la edición de Windows 7 no la incluye."""
+    pytest.importorskip("cryptography")
+    import os
+    from cryptography.hazmat.primitives import serialization as S
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+    for i in range(8):
+        sem, msg = os.urandom(32), os.urandom(i * 11)
+        k = Ed25519PrivateKey.from_private_bytes(sem)
+        assert _ed25519.firmar(sem, msg) == k.sign(msg)
+        assert _ed25519.clave_publica(sem) == k.public_key().public_bytes(S.Encoding.Raw, S.PublicFormat.Raw)
+        assert k.private_bytes(S.Encoding.PEM, S.PrivateFormat.PKCS8, S.NoEncryption()) == _ed25519.pem_desde_semilla(sem)
+
+
+def test_el_paquete_no_depende_de_cryptography():
+    """cryptography (Rust) no funciona en Windows 7: el código de la aplicación no debe importarla."""
+    import pathlib
+    raiz = pathlib.Path(__file__).resolve().parent.parent / "contabol"
+    for f in raiz.rglob("*.py"):
+        assert "import cryptography" not in f.read_text(encoding="utf-8") and "from cryptography" not in f.read_text(encoding="utf-8"), f

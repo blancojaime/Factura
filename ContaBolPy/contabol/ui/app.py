@@ -52,6 +52,9 @@ def autoprueba() -> int:
     excel.exportar(rep, os.path.join(raiz, "prueba.xlsx"))
     from .. import licencia
     assert licencia.codigo_solicitud().startswith("JB-")
+    pem, pub = licencia.generar_par()                       # firma Ed25519 real (Python puro, sin bibliotecas nativas)
+    cod = licencia.emitir(pem, licencia.codigo_solicitud(), None)
+    assert licencia.verificar(cod, clave_publica_hex=pub)["perpetua"]
     from ..reports import word
     word.exportar(rep, os.path.join(raiz, "prueba.docx"))
     assert os.path.getsize(os.path.join(raiz, "prueba.docx")) > 5000
