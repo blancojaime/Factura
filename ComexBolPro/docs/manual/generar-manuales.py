@@ -5,28 +5,29 @@ sys.path.insert(0, os.path.dirname(__file__))
 from docgen import Manual
 
 AQUI = os.path.dirname(os.path.abspath(__file__)); C = AQUI + "/capturas/"; A = C + "anotadas/"; I = C + "instalador/"
-VERSION, FECHA = "1.2.0", "2 de noviembre de 2026"
+VERSION, FECHA = "1.3.0", "22 de noviembre de 2026"
 
 # ============================================================== MANUAL DE USUARIO
 def manual_usuario():
     m = Manual("Manual de Usuario", "COMEX JB: decidir, acompañar y documentar una importación paso a paso", VERSION, FECHA)
     m.contenido(["Qué es y para qué sirve", "Instalación en un clic", "Ingreso al sistema", "Conociendo la ventana", "Arancel: cargar y mantener",
-        "Crear y eliminar importaciones", "Registrar mercancías (selector de partida, editar y eliminar)", "Valoración aduanera (DAV)", "Liquidación detallada y costo nacionalizado", "Decidir: comparar escenarios",
-        "Despacho aduanero (DIM, canales y descargos)", "Acompañar: ruta crítica y semáforos", "Documentar: legajo y bitácora", "Costos reales", "Leer facturas con OCR", "Contrastar con la DIM real",
-        "Configuración (tipos de cambio, UFV, parámetros, perfil, usuarios, respaldo)", "Exportar (Excel, JSON y expediente)", "Problemas frecuentes y límites"])
+        "Crear y eliminar importaciones", "Registrar mercancías (selector de partida, editar y eliminar)", "Valoración aduanera (DAV)", "Liquidación detallada, medidas arancelarias y costo nacionalizado", "Decidir: comparar escenarios",
+        "Despacho aduanero (DIM, canales y descargos)", "Guía de procedimiento y control del expediente", "Acompañar: ruta crítica y semáforos", "Documentar: legajo y bitácora", "Costos reales", "Leer facturas con OCR", "Contrastar con la DIM real",
+        "Configuración (tipos de cambio, UFV, parámetros, perfil, usuarios, respaldo)", "Exportar (Excel, JSON, Hoja SUMA y expediente)", "Problemas frecuentes y límites"])
 
     m.h1("1. Qué es y para qué sirve")
     m.p("**COMEX JB** es un asistente de escritorio para Windows que le ayuda en tres cosas durante una **importación a Bolivia**:")
     m.bullets(["**Decidir:** calcula cuánto pagará de tributos, cuánto le cuesta cada unidad puesta en su almacén y qué oferta (FOB, CIF, DAP…) le conviene.",
                "**Valorar y liquidar:** guía la declaración del valor (Decisión 571 de la CAN), calcula cada tributo con su fórmula a la vista y llega hasta el costo por unidad puesto en su almacén.",
+               "**Seguir el procedimiento:** la pestaña Guía recorre los 11 pasos del manual de importación de maquinaria y los 12 controles del expediente.",
                "**Acompañar:** le muestra los 12 pasos de la importación con fechas y semáforos, prepara y valida la DIM y le guía según el canal (verde, amarillo, rojo).",
                "**Documentar:** guarda automáticamente una bitácora, controla qué documentos faltan, compara lo proyectado con lo realmente pagado y genera el expediente."])
     m.caja("Importante", "COMEX JB es una **herramienta de apoyo**. Las cifras se calculan con el Arancel Aduanero de Importaciones 2026 y los parámetros "
            "tributarios configurados, pero **la liquidación oficial la determina la Aduana Nacional**. Antes de usarlo en operaciones reales, "
-           "contraste el cálculo con 3 importaciones ya despachadas (sección 16) y consulte a su despachante.")
+           "contraste el cálculo con 3 importaciones ya despachadas (sección 17) y consulte a su despachante.")
 
     m.h1("2. Instalación en un clic")
-    m.bullets(["Haga doble clic en **ComexJB-Setup-1.2.0.exe**. No necesita permisos de administrador: el instalador incluye todo (también el lector OCR).",
+    m.bullets(["Haga doble clic en **ComexJB-Setup-1.3.0.exe**. No necesita permisos de administrador: el instalador incluye todo (también el lector OCR).",
                "Si Windows muestra «**Windows protegió su PC**» (SmartScreen), pulse **Más información → Ejecutar de todas formas**. Aparece porque el instalador aún no tiene firma digital comercial.",
                "Espere la barra de progreso (menos de un minuto). Al terminar, la aplicación se abre sola y se crean accesos directos en el Escritorio y en el menú Inicio.",
                "Si tenía instalada la versión anterior «ComexBol Pro», el instalador la reemplaza y **conserva sus datos** (se copian solos al primer inicio).",
@@ -87,6 +88,7 @@ def manual_usuario():
     m.figura(C + "09-selector-partida.png", "Escribiendo «tablet»: lista de partidas sugeridas.")
     m.figura(C + "10-selector-por-codigo.png", "Escribiendo «84713000»: las partidas que empiezan con ese código.")
     m.p("Si escribe el código completo de 10 dígitos de una partida que existe, la descripción también se completa sola. Puede **editar la descripción** libremente (por ejemplo, para poner el modelo comercial).")
+    m.caja("Fecha de la DIM en los ejemplos", "Los ejemplos de este manual usan **Fecha de la DIM = 01/06/2026** (régimen anterior al D.S. 5646) para que las cifras sean comparables con las del manual de pruebas. Con la fecha de hoy rigen las medidas arancelarias vigentes (sección 9), que cambian el Gravamen Arancelario.")
     m.figura(C + "11-formulario-item.png", "Partida elegida (GA 10 %, unidad «u»), descripción automática, y valor, peso y costos digitados.")
     m.tabla([["Campo", "Qué escribir"],
         ["Valor factura (USD), Cantidad, Peso bruto (kg)", "Valor total de la factura de esa mercancía, las **unidades** (sirven para el precio unitario y el costo por unidad) y su peso bruto."],
@@ -94,7 +96,9 @@ def manual_usuario():
         ["Marca, Modelo, N.º de serie, País de origen", "Ficha técnica: salen en el JSON para la DMI y en el expediente."],
         ["Acuerdo comercial, Desgravación %", "Solo si tiene Certificado de Origen. Con desgravación 0 se toma la preferencia del arancel para ese acuerdo."],
         ["ICE % (manual)", "Solo si el arancel no trae la tasa (bebidas alcohólicas, tabaco)."],
-        ["Flete internacional, Seguro (USD)", "Solo los que su Incoterm **no** incluye. Se conservan al agregar más ítems."]], [6, 11])
+        ["Flete internacional, Seguro, Carga y descarga (USD)", "Solo los que su Incoterm **no** incluye. Se conservan al agregar más ítems. La carga y descarga se suma al valor en aduana y entra completa a la base del GA."],
+        ["Beneficio D.S. 5516", "Marque la casilla solo si la subpartida figura en los Anexos del D.S. 5516 (maquinaria de ciertas industrias): GA 0 % hasta el 31/12/2026."],
+        ["Fecha de la DIM", "Fecha en que se aceptará la declaración. **Define las medidas arancelarias vigentes** (D.S. 5646 desde el 06/07/2026). Se propone la fecha de hoy."]], [6, 11])
     m.p("Pulse **Agregar ítem**. El sistema **valida antes de guardar**: la partida debe tener 10 dígitos y existir en el arancel, la descripción es obligatoria, el valor debe ser mayor que 0, etc. Un ítem inválido no se guarda.")
     m.figura(C + "12-item-agregado.png", "Ítem agregado: aparece en la lista de la izquierda con su GA.")
     m.h3("Editar un ítem")
@@ -152,6 +156,16 @@ def manual_usuario():
                "**Costo unitario** por ítem y **flujo de caja requerido** = tributos + gastos de despacho (lo que debe tener disponible).",
                "Gastos que puede anotar (Bs): agencia despachante, almacenaje, transporte interno y otros (por ejemplo el canon ASP-B). **Estimar almacenaje** propone el monto con la tarifa del recinto (Bs por tonelada y día) y los días libres que usted configure; el sistema **no supone tarifas**."])
     m.figura(C + "42-liquidacion-gastos.png", "Gastos de despacho (agencia Bs 3.000, transporte Bs 2.000, 5 días) y costo unitario resultante.")
+    m.h3("Medidas arancelarias vigentes (D.S. 5646 y D.S. 5516)")
+    m.p("El Gravamen Arancelario depende de la **fecha de la DIM**. COMEX JB aplica automáticamente:")
+    m.tabla([["Medida", "Qué cambia", "Vigencia"],
+        ["D.S. 5646", "Reduce **5 puntos** las alícuotas del Arancel 2026 (40→35, 35→30, 30→25, 25→20, 20→15, 15→10, **10→5, 5→0**). Además **cambia la base imponible del GA**: valor de transacción + carga y descarga + **10 %** del transporte y seguro hasta la frontera (el IVA y el ICE siguen sobre el CIF completo).", "06/07/2026 a 31/12/2027 (la nueva base, sin fecha final)"],
+        ["D.S. 5516", "GA **0 %** para maquinaria de ciertas industrias (Anexos 3 y 4, por subpartida). Se marca por ítem con «Beneficio D.S. 5516».", "13/01/2026 a 31/12/2026"]], [2.8, 10.5, 3.7])
+    m.figura(C + "47-liquidacion-regimen-vigente.png", "Liquidación con el régimen vigente: base del GA (D.S. 5646), alícuota 10 % → 5 % y las fórmulas a la vista.")
+    m.p("El bloque **Impacto de las medidas arancelarias** compara, en bolivianos, el **régimen anterior** (Arancel 2026 sin decretos y GA sobre el CIF), el efecto del **D.S. 5646** y lo **realmente aplicado**, con el ahorro.")
+    m.figura(C + "48-liquidacion-impacto.png", "Impacto: tributos de Bs 77.179,88 con el régimen anterior frente a Bs 59.698,26 con el D.S. 5646 (ahorro Bs 17.481,62).")
+    m.caja("Avisos de vencimiento", "Si un ítem tiene el beneficio D.S. 5516 y la DIM se acepta dentro de los 45 días previos al 31/12/2026, el sistema avisa que **después de esa fecha el GA será el de la tabla del D.S. 5646**. Pasado el 31/12/2026, el beneficio ya no se aplica. **Verifique las subpartidas del Anexo con su despachante**: COMEX JB no trae los Anexos.", "FFF4D6")
+    m.p("**Precio de venta sugerido:** con la cantidad de cada ítem, el costeo calcula el precio que deja el **margen objetivo** (por defecto 30 % sobre el precio) sin IVA y con IVA de venta (13 %). Ambos valores se configuran en Configuración.")
     m.caja("Base legal y límites", "Los tributos siguen la cascada: **GA** sobre el CIF; **ICE** sobre (CIF + GA); **IEHD** por litro; **IVA** (14,94 % efectivo) sobre (CIF + GA + ICE + IEHD). La tarifa de almacenaje y el ICE de bebidas y tabaco **no vienen en el arancel**: usted los ingresa. La liquidación oficial la determina siempre la Aduana.")
 
     m.h1("10. Decidir: comparar escenarios")
@@ -161,6 +175,8 @@ def manual_usuario():
                "Pulse **Comparar**."], num=True)
     m.figura(C + "18-decision-escenarios.png", "Tres ofertas cargadas.")
     m.figura(C + "19-decision-resultados.png", "Resultado: comparación ordenada de menor a mayor costo unitario, con margen y veredicto.")
+    m.p("Además de la oferta, puede comparar **origen y beneficio**: la columna **Desgrav. %** admite la preferencia de un acuerdo comercial (100 % con Certificado de Origen, p. ej. un proveedor de Brasil o Argentina) y la casilla **DS 5516** el beneficio arancelario. La columna **GA Bs** muestra la diferencia entre escenarios.")
+    m.figura(C + "54-decision-origen-preferencias.png", "Comparación de proveedores: arancel 2026, preferencia del 100 % y beneficio D.S. 5516.")
     m.p("**Veredicto:** *Viable* si el margen alcanza el objetivo, *Ajustado* si es positivo pero menor, *No viable* si es negativo. El precio de mercado se compara **sin IVA**, porque el IVA pagado en la importación se recupera como crédito fiscal. "
         "Con las cifras del Caso 2 del manual de pruebas, los costos unitarios son Bs 1.628,35 (FOB), 1.630,26 (CIF) y 1.660,88 (DAP).")
 
@@ -194,7 +210,17 @@ def manual_usuario():
                "**Generar borrador de descargos:** si la Aduana emite un Acta de Reconocimiento o un Informe de Variación de Valor (duda razonable), el sistema redacta una carta con sus datos (importador, NIT, agencia, N.º de DIM, valor declarado), la observación transcrita y la **lista de pruebas** a adjuntar: factura, contrato u orden de compra, comprobante de pago al exterior (SWIFT, transferencia o carta de crédito), estado de cuenta, lista de precios o catálogo del fabricante, facturas anteriores, póliza y flete."])
     m.caja("Es un borrador", "La plantilla de descargos **no sustituye** al despachante ni a un abogado: revísela y complétela antes de presentarla. Las listas de control resumen buenas prácticas; los procedimientos oficiales los fija la Aduana Nacional.")
 
-    m.h1("12. Acompañar: ruta crítica y semáforos")
+    m.h1("12. Guía de procedimiento y control del expediente")
+    m.p("La pestaña **Guía** reúne el **manual de procedimientos de importación de maquinaria** dentro de cada operación:")
+    m.bullets(["**Procedimiento (P-01 a P-11):** formalización (NIT, SEPREC, Padrón de la Aduana), compra (clasificación, Incoterm, pago SWIFT), logística (embarque, DAM, tránsito), despacho (Parte de Recepción, DAV y DIM, pago y canal, levante) y tienda (costeo y crédito fiscal).",
+               "**Control del expediente (C-01 a C-12):** 12 verificaciones con el emisor y el criterio de aprobación.",
+               "Al elegir una fila ve a la derecha: qué hacer, responsables, documentos, normativa y un **consejo práctico**. Marque **Hecho** al cumplirla y escriba una nota (queda en la bitácora).",
+               "La columna **Sugerido por datos** indica los pasos que lo ya cargado en COMEX JB respalda (perfil con NIT, documento SWIFT, DIM completa, canal asignado, levante, gastos)."], num=True)
+    m.figura(C + "51-guia-procedimiento.png", "Guía de procedimiento: avance, pasos y controles.")
+    m.figura(C + "52-guia-paso-marcado.png", "Un paso marcado como hecho, con su detalle a la derecha.")
+    m.caja("Plazos del manual", "Los plazos y montos de la guía (por ejemplo «20 días para la DAM») son los del manual del usuario y **deben confirmarse en la normativa vigente de la Aduana**: el de la DAM no pudo verificarse en fuentes oficiales.")
+
+    m.h1("13. Acompañar: ruta crítica y semáforos")
     m.p("La pestaña **Ruta** lista los 12 pasos de la importación, desde verificar la mercancía hasta el retiro con pase de salida. Las fechas se calculan a partir del día de creación.")
     m.figura(C + "22-ruta-critica.png", "Ruta crítica: la primera etapa en Alerta; la segunda se marcó «Cumplida» (verde).")
     m.tabla([["Color", "Estado", "Significado"], ["Gris", "Pendiente", "Aún no corresponde iniciar"], ["Azul", "En curso", "Ya empezó y está dentro de plazo"],
@@ -202,19 +228,19 @@ def manual_usuario():
     m.p("Cuando una etapa termine, pulse **Marcar cumplida**: se registra la fecha real y la bitácora anota si hubo retraso. La columna «Crítica» indica las etapas que, si se atrasan, atrasan toda la importación.")
     m.caja("Plazos orientativos", "Las duraciones de cada etapa son estimaciones, **no plazos legales**. Los plazos oficiales (vigencia de la DIM, almacenaje, etc.) deben verificarse en la normativa vigente.")
 
-    m.h1("13. Documentar: legajo y bitácora")
+    m.h1("14. Documentar: legajo y bitácora")
     m.figura(C + "23-legajo-bitacora.png", "A la izquierda, los documentos exigidos y cuáles faltan; a la derecha, la bitácora automática con el usuario que hizo cada acción.")
     m.p("El **legajo** muestra los documentos que exige su operación (factura, embarque, lista de empaque, seguro, respaldo bancario, certificado de origen, permisos previos…) con **OK** o **FALTA**. "
         "La **bitácora** registra con fecha, hora y **usuario** cada ítem agregado, modificado o eliminado, cada liquidación (con su versión), cada etapa cumplida y cada documento leído: es la memoria del proceso.")
 
-    m.h1("14. Costos reales")
+    m.h1("15. Costos reales")
     m.p("La pestaña **Costos** compara **lo proyectado con lo realmente pagado** para conocer el costo exacto de su importación.")
     m.bullets(["Pulse **Cargar proyectado desde la liquidación**: se crean las filas (FOB, flete, seguro, GA, IVA, etc.) con los montos calculados.",
                "En la columna **Real (Bs)** escriba lo que efectivamente pagó (tributos de la DIM, agencia despachante, almacén, transporte).",
                "Use **Agregar costo** para conceptos que no están en la lista y **Guardar hoja** al terminar. La columna **Diferencia** muestra el sobrecosto o el ahorro."], num=True)
     m.figura(C + "21-costos-reales.png", "Hoja de costos: proyectado frente a real.")
 
-    m.h1("15. Leer facturas con OCR")
+    m.h1("16. Leer facturas con OCR")
     m.p("Si tiene la factura escaneada o en PDF, el sistema puede leerla y **proponer** los datos. Usted siempre revisa y confirma: el OCR puede equivocarse con dígitos.")
     m.bullets(["Con la operación seleccionada, en la pestaña Mercancías pulse **Leer factura** y elija la imagen (JPG, PNG) o el PDF.",
                "El documento aparece en el visor y el sistema propone: N.º de factura, proveedor, Incoterm, moneda, valor total y peso, con la **confianza** de cada dato (Alta / Media / Baja).",
@@ -222,14 +248,14 @@ def manual_usuario():
     m.figura(C + "34-ocr-propuesta.png", "Factura leída con su propuesta de datos.")
     m.figura(C + "35-ocr-confirmado.png", "Datos confirmados y trasladados al formulario.")
 
-    m.h1("16. Contrastar con la DIM real")
+    m.h1("17. Contrastar con la DIM real")
     m.p("Esta pestaña le permite **probar que el sistema calcula igual que la Aduana**. Es la comprobación más importante antes de usarlo en serio.")
     m.bullets(["Registre una importación **ya despachada** con los mismos valores, flete, seguro y tipo de cambio de esa fecha, y pulse Calcular.",
                "Abra la pestaña **Contraste** y escriba los tributos que la Aduana liquidó en la DIM (GA, ICE, IEHD, IVA).", "Pulse **Contrastar**."], num=True)
     m.figura(C + "20-contraste.png", "Contraste: cada concepto se marca OK o REVISAR con su diferencia en Bs.")
     m.p("Si hay diferencias, revise el tipo de cambio, el flete y seguro, y los **parámetros tributarios** (Configuración): IVA efectivo, redondeo, base del ICE. Cada contraste queda en la bitácora.")
 
-    m.h1("17. Configuración")
+    m.h1("18. Configuración")
     m.p("El menú **Configuración** concentra el mantenimiento de los datos de referencia. Las pestañas de parámetros y usuarios son solo para administradores.")
     m.h3("Tipos de cambio")
     m.p("Registre el **tipo de cambio oficial de venta (BCB)** por fecha y moneda. El sistema usa el último valor vigente a la fecha de cada operación. Si registra otra vez la misma fecha y moneda, **corrige** el valor; con **Eliminar** borra el registro seleccionado.")
@@ -240,8 +266,9 @@ def manual_usuario():
     m.h3("Parámetros tributarios")
     m.p("Valores que cambian por decreto: IVA efectivo en importaciones (14,94 %), umbral de bancarización (Bs 50.000 – D.S. 772), alícuota máxima de GA aceptada, seguro presunto, redondeo (dos decimales o Bs enteros) y reparto del flete y seguro entre ítems (por valor o por peso). **Verifíquelos con su despachante antes de modificarlos**; afectan a todos los cálculos. **Restaurar valores por defecto** los devuelve al estado de fábrica.")
     m.figura(C + "26-config-parametros.png", "Parámetros del cálculo de tributos.")
+    m.p("En **Parámetros tributarios** (abajo) también configura la tarifa de almacenaje, los días libres, las tolerancias de precio y de peso, si el IVA es crédito fiscal, el **margen comercial objetivo** y el **IVA de venta** para el precio sugerido.")
     m.h3("Perfil del importador")
-    m.p("Razón social, NIT, tipo de importador, dirección, contacto y agencia despachante habitual. Se incluye en el expediente y en el JSON para la DMI.")
+    m.p("Razón social, NIT, **tipo de importador (Habitual u Ocasional)**, dirección, contacto y agencia despachante habitual. Si es **Ocasional**, la validación de la DIM controla el tope de **USD 2.000 FOB por despacho y USD 4.000 por año**; al superarlo debe registrarse como Importador Habitual en el Padrón de Operadores. Se incluye en el expediente y en el JSON para la DMI.")
     m.figura(C + "27-config-perfil.png", "Perfil del importador.")
     m.h3("Usuarios")
     m.p("El administrador crea usuarios (usuario, nombre, clave, rol), cambia claves, **activa o desactiva** cuentas y cambia el rol. Siempre debe quedar al menos **un administrador activo**.")
@@ -250,13 +277,14 @@ def manual_usuario():
     m.p("Toda su información está en un único archivo (comex.db). **Crear copia de seguridad…** guarda una copia consistente en la carpeta que elija (por ejemplo un pendrive o la nube); **Abrir la carpeta de datos** la muestra en el Explorador. Haga copias periódicas.")
     m.figura(C + "29-config-respaldo.png", "Respaldo de la base de datos.")
 
-    m.h1("18. Exportar (Excel, JSON y expediente)")
-    m.bullets(["**Excel:** libro con las hojas Resumen, Ítems, Liquidación, Ruta crítica y Bitácora. Los totales son fórmulas.",
-               "**JSON (SUMA):** archivo estructurado con los datos de la operación (importador, ítems con ficha técnica, valores y liquidación) para **transcribir a la DMI** en el sistema de la Aduana. Aún no transmite nada por sí mismo.",
+    m.h1("19. Exportar (Excel, JSON, Hoja SUMA y expediente)")
+    m.bullets(["**Hoja SUMA:** Excel con las hojas **DAV**, **DIM-General** y **DIM-Ítems**, ordenadas para transcribir los datos al SUMA (importador, transacción, cuestionario, ajustes, valor en aduana, transporte, ítems con marca, modelo y serie, y tributos por ítem). Es un borrador de transcripción.",
+               "**Excel:** libro con las hojas Resumen, Ítems, Liquidación, Ruta crítica y Bitácora. Los totales son fórmulas.",
+               "**JSON:** archivo estructurado con los datos de la operación (importador, ítems con ficha técnica, valores y liquidación) para **transcribir a la DMI** en el sistema de la Aduana. Aún no transmite nada por sí mismo.",
                "**Expediente:** documento de texto con resumen, mercancías, liquidación vigente, ruta, legajo y bitácora completa."])
     m.figura(C + "31-acerca-de.png", "Acerca de: versión, ubicación de datos y avisos de licencias.")
 
-    m.h1("19. Problemas frecuentes y límites")
+    m.h1("20. Problemas frecuentes y límites")
     m.tabla([["Situación", "Qué hacer"],
         ["«El arancel NO está cargado»", "Arancel → Importar arancel (PDF)… con los 3 archivos (sección 5)."],
         ["«La partida … no existe en el arancel cargado»", "Revise el código de 10 dígitos o agréguela en Arancel → Nueva partida."],
@@ -291,15 +319,15 @@ def manual_implementacion():
         ["Internet", "No necesario para operar"]], [5, 12])
 
     m.h1("2. Instalación en un clic")
-    m.bullets(["Copie **ComexJB-Setup-1.2.0.exe** al equipo y haga doble clic.",
+    m.bullets(["Copie **ComexJB-Setup-1.3.0.exe** al equipo y haga doble clic.",
                "Si aparece SmartScreen («Windows protegió su PC»): **Más información → Ejecutar de todas formas**. Es normal: el instalador no tiene firma digital comercial (la firma requiere un certificado de pago; se recomienda adquirirlo antes de distribuir ampliamente).",
                "Espere la barra de progreso; al finalizar la aplicación se abre sola.",
                "Se crean: carpeta de programa en `%LocalAppData%\\Programs\\ComexJB`, accesos directos en el Escritorio y en Inicio → COMEX JB (incluye «Manual del usuario» y «Desinstalar»)."], num=True)
     for f, t in (("01-progreso.png", "Instalador en curso (pantalla única con barra de progreso)."), ("02-terminado.png", "Instalación completada.")):
         m.figura(I + f, t, 13)
     m.h1("3. Instalación para varios equipos")
-    m.bullets(["**Silenciosa** (sin pantallas): `ComexJB-Setup-1.2.0.exe /S`", "**Desinstalación silenciosa:** `\"%LocalAppData%\\Programs\\ComexJB\\Desinstalar.exe\" /S`",
-               "Para instalar en una carpeta distinta: `ComexJB-Setup-1.2.0.exe /S /D=C:\\Ruta\\ComexJB` (la ruta va al final y sin comillas).",
+    m.bullets(["**Silenciosa** (sin pantallas): `ComexJB-Setup-1.3.0.exe /S`", "**Desinstalación silenciosa:** `\"%LocalAppData%\\Programs\\ComexJB\\Desinstalar.exe\" /S`",
+               "Para instalar en una carpeta distinta: `ComexJB-Setup-1.3.0.exe /S /D=C:\\Ruta\\ComexJB` (la ruta va al final y sin comillas).",
                "Cada usuario de Windows tiene su propia base de datos; para compartir información entre equipos copie el archivo `comex.db` (sección 4)."])
 
     m.h1("4. Datos, respaldos y actualización")
@@ -324,8 +352,8 @@ def manual_implementacion():
     m.h1("6. Pruebas automáticas")
     m.p("El código incluye pruebas automáticas que se ejecutan en una consola (equipo técnico):")
     m.code("for t in tests/*/; do (cd $t && dotnet test); done")
-    m.tabla([["Proyecto", "Pruebas", "Cubre"], ["ComexBol.Core", "41", "Liquidación, Incoterms, ruta crítica, lectura del arancel (Markdown), valoración (cuestionario, Art. 8, validador de precios), costeo, despacho"], ["ComexBol.Data", "50", "Base de datos, catálogo, ICE por antigüedad, preferencias, usuarios y claves (PBKDF2), configuración, costos reales, edición/eliminación, respaldo"],
-        ["ComexBol.Documentos", "15", "OCR real (Tesseract), PDF (Poppler), Excel, lectura del arancel en PDF con páginas reales"], ["ComexBol.Presentation", "30", "Lógica de las pantallas (operaciones, selector de partida, inicio de sesión, configuración, arancel), regresiones halladas en uso real"], ["**Total**", "**136**", ""]], [5, 2.5, 9.5])
+    m.tabla([["Proyecto", "Pruebas", "Cubre"], ["ComexBol.Core", "54", "Liquidación, Incoterms, ruta crítica, lectura del arancel (Markdown), valoración, costeo, despacho, medidas arancelarias (D.S. 5646 y 5516), guía de procedimiento y simulador del manual de hornos"], ["ComexBol.Data", "56", "Base de datos, catálogo, ICE por antigüedad, preferencias, usuarios y claves (PBKDF2), configuración, costos reales, edición/eliminación, respaldo"],
+        ["ComexBol.Documentos", "16", "OCR real (Tesseract), PDF (Poppler), Excel, lectura del arancel en PDF con páginas reales"], ["ComexBol.Presentation", "33", "Lógica de las pantallas (operaciones, selector de partida, inicio de sesión, configuración, arancel), regresiones halladas en uso real"], ["**Total**", "**159**", ""]], [5, 2.5, 9.5])
     m.p("Con el arancel completo en PDF: `COMEXBOL_ARANCEL_PDF_DIR=<carpeta con los 3 PDF> dotnet test` (PowerShell: `$env:COMEXBOL_ARANCEL_PDF_DIR=\"C:\\arancel\"`). Verifica 8.132 partidas, 97 capítulos, 76 prohibidas y 180 con tasas ICE.")
 
     m.h1("7. Manual de pruebas")
@@ -429,6 +457,36 @@ def manual_implementacion():
                "**Generar borrador de descargos…** → guarde el .txt: contiene su razón social y NIT (Configuración → Perfil), el N.º de DIM, el valor declarado y 8 pruebas numeradas."], num=True)
     m.figura(C + "45-despacho-canal-rojo.png", "Resultado esperado del Caso 26 (canal Rojo).")
 
+    m.h2("Caso 27 — Medidas arancelarias vigentes (D.S. 5646)")
+    m.p("**Importante:** los Casos 1 a 26 se calculan con **Fecha de la DIM = 01/06/2026** (régimen anterior al D.S. 5646), para conservar sus cifras. Los Casos 27 a 33 usan la fecha de hoy.")
+    m.p("Repita el Caso 1 (tablets 8471.30.00.10, FOB USD 40.000, flete 1.800, seguro 150, cantidad 200) dejando la **Fecha de la DIM = fecha de hoy** (por ejemplo 22/11/2026). Esperado: CIF **291.972,00** (igual); **base del GA 279.757,20** (278.400 + 10 % × 13.572); alícuota 10 % → **5 %**; GA **13.987,86**; IVA **45.710,40** (sigue sobre el CIF + GA); total **59.698,26**. El bloque «Impacto de las medidas» muestra Régimen anterior 77.179,88 · Con D.S. 5646 59.698,26 · Ahorro **17.481,62**. Las fórmulas indican «base del GA 279.757,20 (D.S. 5646) × 5 %».")
+    m.figura(C + "47-liquidacion-regimen-vigente.png", "Resultado esperado del Caso 27.")
+    m.figura(C + "48-liquidacion-impacto.png", "Impacto de las medidas (Caso 27).")
+    m.h2("Caso 28 — Carga y descarga")
+    m.p("Al Caso 27 agregue **Carga y descarga = 200** (USD). Esperado: CIF **293.364,00**; base del GA **281.149,20** (la carga y descarga entra completa); GA **14.057,46**; IVA **45.928,77**; total **59.986,23**.")
+    m.h2("Caso 29 — Beneficio D.S. 5516 y su vencimiento")
+    m.bullets(["Con el Caso 27, marque **Beneficio D.S. 5516** y use Fecha de la DIM **20/11/2026**: GA **0,00**; IVA **43.620,62**; total **43.620,62**. (Es un ejemplo: la partida 8471.30.00.10 no está necesariamente en el Anexo.)",
+               "Fecha **10/12/2026**: GA 0,00 y el aviso «el beneficio D.S. 5516 (GA 0 %) vence el 31/12/2026; si la DIM se acepta después, el GA será 5 %».",
+               "Fecha **01/02/2027**: el beneficio ya venció y rige la tabla del D.S. 5646: GA **13.987,86**; total **59.698,26** (nota «El beneficio D.S. 5516 venció el 31/12/2026»)."], num=True)
+    m.figura(C + "49-beneficio-ds5516.png", "Casilla del beneficio y fecha de la DIM en el formulario (Caso 29).")
+    m.h2("Caso 30 — Hornos a gas para pizzas (caso del manual del usuario)")
+    m.p("Cree `IMP-2026-031`, partida **8417.20.90.00** (el arancel cargado la trae con GA 0 %), valor USD **8.080** (lote de 4 modelos del simulador del manual), cantidad **10**, peso 1.200 kg, flete USD **1.450**, seguro USD **180**, beneficio D.S. 5516 marcado, Fecha de la DIM 20/11/2026. Esperado: CIF **67.581,60** (USD 9.710); GA **0,00**; IVA **10.096,69** (USD 1.450,67, igual al simulador del manual); total tributos **10.096,69**.")
+    m.p("Con gastos de despacho de USD 620 (Bs 4.315,20): costo nacionalizado **71.896,80** (el IVA es crédito fiscal), factor **1,2785** y costo unitario **7.189,68**. Para reproducir la columna «sin beneficio» del manual (GA 10 %): Fecha de la DIM vacía y alícuota 10 % → GA Bs 6.758,16 y total de tributos Bs 17.864,52 (USD 2.566,74).")
+    m.figura(C + "50-caso-hornos.png", "Resultado esperado del Caso 30.")
+    m.h2("Caso 31 — Importador no habitual")
+    m.p("En Configuración → Perfil del importador elija **Ocasional**. En una operación con FOB de USD 8.080 pulse **Validar la DIM** en Despacho: ERROR «Como importador no habitual el tope es USD 2.000 FOB por despacho…». Con FOB USD 1.500 y USD 1.000 ya acumulados en el año: sin error; con USD 1.900 y USD 2.500 acumulados: ERROR por el acumulado anual (tope USD 4.000). Cambie a **Habitual**: el error desaparece.")
+    m.h2("Caso 32 — Guía de procedimiento")
+    m.bullets(["Abra la pestaña **Guía**: «Procedimiento: 0 de 11 pasos cumplidos · Expediente: 0 de 12 controles».",
+               "Marque **Hecho** en P-01 y escriba la nota «NIT vigente»: el avance pasa a 1 de 11 y la bitácora registra «P-01 cumplido. NIT vigente».",
+               "Con el perfil del importador con NIT, P-01, P-02, C-01 y C-02 aparecen como **Sugerido por datos**; con la DIM completa y la DAV respondida, P-08 y C-11; con el canal asignado, P-09; con el levante, P-10."], num=True)
+    m.figura(C + "51-guia-procedimiento.png", "Resultado esperado del Caso 32.")
+    m.h2("Caso 33 — Comparar origen y beneficio")
+    m.p("En Decisión, con una operación de la partida 8412.90.00.00 (GA 10 %) de USD 20.000, 10 unidades y fecha de hoy, cree tres escenarios CIF de USD 20.000: «China (arancel 2026)», «Brasil con Certificado de Origen» (Desgrav. % = **100**) y «China con beneficio D.S. 5516» (casilla **DS 5516**). Esperado: GA **6.960,00** (5 % sobre 139.200), **0,00** y **0,00**.")
+    m.figura(C + "54-decision-origen-preferencias.png", "Resultado esperado del Caso 33.")
+    m.h2("Caso 34 — Hoja SUMA")
+    m.p("Con el Caso 30 liquidado y la DIM completa, pulse **Hoja SUMA** y guarde el .xlsx. Esperado: hojas **DAV**, **DIM-General**, **DIM-Ítems** y **Nota**; en DIM-Ítems, la partida 8417209000, «Beneficio D.S. 5516 = SÍ», alícuota aplicada, base del GA y GA 0.")
+    m.figura(C + "53-hoja-suma-dialogo.png", "Botón Hoja SUMA y cuadro para guardar el archivo.")
+
     m.h1("8. Pruebas de aceptación")
     m.tabla([["#", "Prueba", "Resultado esperado", "Cumple"],
         ["P-01", "Importar los 3 archivos del arancel", "8.132 partidas / 97 capítulos", "☐"], ["P-02", "Contrastar 20 partidas con el arancel impreso", "GA, unidad y documento coinciden", "☐"],
@@ -440,12 +498,14 @@ def manual_implementacion():
         ["P-12", "Casos 16 y 17", "Ingreso con roles; selector de partida completa la descripción", "☐"], ["P-13", "Caso 18", "Editar y eliminar ítems y operaciones sin errores", "☐"],
         ["P-14", "Casos 19 y 20", "Arancel y configuración se mantienen desde pantalla", "☐"], ["P-15", "Actualizar sobre «ComexBol Pro» 1.0.0", "Instala COMEX JB y conserva las operaciones anteriores", "☐"],
         ["P-16", "Casos 21 a 23", "Ajustes del Art. 8, cuestionario y validador con las cifras del manual", "☐"], ["P-17", "Caso 24", "Costeo y flujo de caja idénticos a los del manual", "☐"],
-        ["P-18", "Casos 25 y 26", "DIM validada; canales, levante y descargos funcionan", "☐"]], [1.4, 6.2, 7.2, 2])
+        ["P-18", "Casos 25 y 26", "DIM validada; canales, levante y descargos funcionan", "☐"],
+        ["P-19", "Casos 27 a 29", "Medidas arancelarias por fecha: GA, base e impacto idénticos a los del manual", "☐"], ["P-20", "Caso 30", "Caso del manual de hornos: CIF, IVA y costo unitario idénticos", "☐"],
+        ["P-21", "Casos 31 a 34", "Topes del importador, guía, comparación de origen y Hoja SUMA", "☐"], ["P-22", "**Contraste de una DIM despachada después del 06/07/2026**", "Los tributos de COMEX JB (con la fecha real de la DIM) coinciden con los de la Aduana", "☐"]], [1.4, 6.2, 7.2, 2])
     m.caja("La prueba más importante", "**P-09** confirma los supuestos tributarios que ningún dato de prueba puede verificar. Tome 3 importaciones ya liquidadas por la Aduana y repita el cálculo; cualquier diferencia indica un parámetro por corregir (sección 9).")
 
     m.h1("9. Parámetros que debe validar un despachante")
     m.tabla([["Parámetro", "Valor por defecto"], ["IVA efectivo en aduana", "14,94 %"], ["Base del ICE ad valorem", "(CIF + GA) × tasa"], ["Redondeo", "2 decimales (alternativa: Bs enteros)"],
-        ["Umbral de bancarización", "Bs 50.000"], ["Seguro presunto sin póliza", "0 % (solo advierte)"], ["Tarifa de almacenaje / días libres", "0 (no se estima hasta que la configure con la tarifa de su recinto)"], ["Tolerancia de precio / de peso", "30 % frente al historial / 5 % frente al manifiesto"], ["IVA como crédito fiscal", "Sí (no entra al costo)"], ["Límite del CEDEIM", "Se exige como dato (sin pantalla aún)"], ["Tipo de cambio", "Se digita en la barra superior"]], [8, 9])
+        ["Umbral de bancarización", "Bs 50.000"], ["Seguro presunto sin póliza", "0 % (solo advierte)"], ["Medidas arancelarias 2026", "D.S. 5646 (−5 puntos y nueva base del GA desde 06/07/2026 hasta 31/12/2027) y D.S. 5516 (GA 0 % hasta 31/12/2026): confirme alícuotas, base y Anexos"], ["Topes de importador no habitual", "USD 2.000 por despacho y USD 4.000 por año (según el manual y la Aduana)"], ["Margen objetivo / IVA de venta", "30 % sobre el precio / 13 %"], ["Tarifa de almacenaje / días libres", "0 (no se estima hasta que la configure con la tarifa de su recinto)"], ["Tolerancia de precio / de peso", "30 % frente al historial / 5 % frente al manifiesto"], ["IVA como crédito fiscal", "Sí (no entra al costo)"], ["Límite del CEDEIM", "Se exige como dato (sin pantalla aún)"], ["Tipo de cambio", "Se digita en la barra superior"]], [8, 9])
 
     m.h1("10. Construcción del instalador (equipo técnico)")
     m.p("El instalador se construye con NSIS desde Linux, macOS o Windows. Pasos desde Linux:")
@@ -465,6 +525,7 @@ def manual_implementacion():
         ["Mensaje de Decisión visible en Contraste; nombres técnicos en el legajo; botón cortado", "Confusión", "Mensajes separados, nombres legibles, columna ensanchada"],
         ["Llamada de nota «( * )» del arancel leída como documento exigido", "Aviso falso de permiso en vehículos", "Se ignora; prueba con la partida real"],
         ["Arancel sin cargar: GA en 0 % sin aviso visible", "Liquidación subestimada", "Aviso permanente en pantalla y tarjeta «Arancel cargado» en el Panel"],
+        ["El GA se calculaba sobre el CIF completo y sin vigencias, ignorando el D.S. 5646 (vigente desde el 06/07/2026: −5 puntos y nueva base) y el vencimiento del D.S. 5516 (hallazgo al contrastar el manual de procedimientos con la Gaceta Oficial)", "Liquidación sobrestimada en despachos posteriores al 06/07/2026", "Medidas por fecha de la DIM, nueva base del GA, bloque de impacto y avisos de vencimiento; pruebas con el simulador del manual"],
         ["Un ítem con partida inválida se guardaba y luego impedía «Calcular»; no había forma de borrarlo ni editarlo (hallazgo del usuario con la versión 1.0.0)", "Operación bloqueada", "Se valida antes de guardar; se agregan Editar/Eliminar ítem y Eliminar operación; pruebas de regresión"],
         ["Con el navegador de fuentes de Wine, la aplicación se cerraba al usar una fuente inexistente; el PBKDF2 del sistema no existe en Wine", "Cierres solo en el entorno de pruebas", "Fuente Segoe UI explícita y PBKDF2-SHA256 propio, verificado idéntico a la implementación de .NET"],
         ["El arancel convertido a Markdown leía mal el GA de 17 partidas (p. ej. «Para rayos X»: 10 % leído como 0 %) y perdía 11 partidas", "Gravamen subestimado en esas partidas", "Se lee directamente el PDF oficial celda por celda; verificado con una segunda lectura independiente"]], [6.8, 4.7, 5.5])

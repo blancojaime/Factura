@@ -33,7 +33,8 @@ public sealed record ItemImportacion(
     decimal IceEspecificoPorUnidad = 0m,   // Bs por unidad
     decimal UnidadesIce = 0m,
     decimal IehdBsPorLitro = 0m,
-    decimal Litros = 0m);
+    decimal Litros = 0m,
+    bool BeneficioDs5516 = false);   // maquinaria del Anexo 3/4 del D.S. 5516: GA 0 % hasta el 31/12/2026
 
 public sealed record OperacionImportacion(
     Incoterm Incoterm,
@@ -46,14 +47,17 @@ public sealed record OperacionImportacion(
     Money? DeduccionesPostFrontera = null,   // DAP/DPU/DDP: transporte interno, tributos incluidos en el precio
     decimal OtrasErogacionesBob = 0m,
     Money? AdicionesArt8 = null,             // Art. 8 (comisiones, envases, assists, royalties, reversiones): se suman siempre
-    Money? DeduccionesArt8 = null);          // armado/transporte posterior/impuestos en Bolivia desglosados: se restan siempre
+    Money? DeduccionesArt8 = null,
+    DateOnly? FechaDeclaracion = null,       // fecha de aceptación de la DIM: determina las medidas arancelarias (null = régimen anterior)
+    Money? CargaDescarga = null);            // gastos de carga y descarga (integran el valor en aduana y el 100 % de la base del GA)          // armado/transporte posterior/impuestos en Bolivia desglosados: se restan siempre
 
 public sealed record LineaValor(string Concepto, decimal Bob, string Nota = "");
 
 public sealed record ItemLiquidado(
     int Numero, string CodigoArancelario,
     decimal ValorFobBob, decimal CifBob,
-    decimal GA, decimal ICE, decimal IEHD, decimal OtrasErogaciones, decimal IVA)
+    decimal GA, decimal ICE, decimal IEHD, decimal OtrasErogaciones, decimal IVA,
+    decimal BaseGA = 0m, decimal AlicuotaGAAplicada = 0m, string NotaGA = "")
 {
     public decimal TotalTributos => GA + ICE + IEHD + IVA;
 }
@@ -113,6 +117,7 @@ public static class CalculadoraTributaria
         else Adicionar(cob.Seguro, op.Seguro, "Seguro");
         // Gastos entre puerto de tránsito y frontera: siempre por cuenta del importador salvo que el vendedor los cubra (DAP/DPU/DDP).
         Adicionar(cob.Destino, op.OtrosGastosHastaFrontera, "Gastos hasta frontera");
+        var cargaDescarga = Bob(op.CargaDescarga); if (cargaDescarga > 0) { adiciones += cargaDescarga; desglose.Add(new("(+) Carga y descarga", cargaDescarga)); }
         var adArt8 = Bob(op.AdicionesArt8); if (adArt8 > 0) { adiciones += adArt8; desglose.Add(new("(+) Ajustes del Art. 8", adArt8, "comisiones, envases, assists, royalties, reversiones")); }
         var deducciones = cob.Destino ? Bob(op.DeduccionesPostFrontera) : 0m;
         if (deducciones > 0) desglose.Add(new("(−) Costos posteriores a la frontera", -deducciones, "DAP/DPU/DDP"));
@@ -121,6 +126,16 @@ public static class CalculadoraTributaria
         if (cob.Destino && deducciones == 0m) adv.Add($"Incoterm {op.Incoterm}: declare los costos posteriores a la frontera (y tributos en DDP) para excluirlos del valor en aduana.");
 
         var neto = adiciones - deducciones;
+        // D.S. 5646: base del GA = valor de transacción (con ajustes Art. 8) + carga y descarga + 10 % del transporte y seguro hasta la frontera.
+        decimal netoGa = neto;
+        if (MedidasArancelarias.RigeNuevaBaseGa(op.FechaDeclaracion))
+        {
+            decimal Inc(bool incluido, Money? m) => incluido ? 0m : Bob(m);
+            var transporteSeguro = Inc(cob.Origen, op.GastosOrigen) + Inc(cob.Flete, op.Flete) + Inc(cob.Destino, op.OtrosGastosHastaFrontera)
+                + (!cob.Seguro && Bob(op.Seguro) == 0m ? fobBob * p.SeguroPresuntoPct : Inc(cob.Seguro, op.Seguro));
+            netoGa = adArt8 + cargaDescarga - deducciones + MedidasArancelarias.FraccionTransporteSeguro * transporteSeguro;
+            adv.Add($"D.S. 5646: la base del GA incluye solo el {MedidasArancelarias.FraccionTransporteSeguro:P0} del transporte y seguro hasta la frontera (el IVA y el ICE siguen sobre el CIF completo).");
+        }
         var cifTotal = fobBob + neto;
         if (cifTotal <= 0) throw new InvalidOperationException("Valor en aduana no positivo tras deducciones.");
         desglose.Add(new("Valor en aduana (CIF frontera)", cifTotal, "base de todos los tributos"));
@@ -136,12 +151,16 @@ public static class CalculadoraTributaria
             var fobI = tc.ABob(new Money(it.ValorFactura, op.MonedaFactura));
             var cuota = porPeso ? it.PesoBrutoKg / pesoTotal : fobI / fobBob;
             var cif = R(fobI + neto * cuota);
-            var ga = R(cif * it.AlicuotaGA * (1m - it.DesgravacionPreferencial));
+            var (alic, notaGa) = MedidasArancelarias.AlicuotaGa(it.AlicuotaGA, it.BeneficioDs5516, op.FechaDeclaracion);
+            var baseGa = R(fobI + netoGa * cuota);
+            var ga = R((MedidasArancelarias.RigeNuevaBaseGa(op.FechaDeclaracion) ? baseGa : cif) * alic * (1m - it.DesgravacionPreferencial));
             var ice = R((cif + ga) * it.AlicuotaIceAdValorem + it.IceEspecificoPorUnidad * it.UnidadesIce);
             var iehd = R(it.IehdBsPorLitro * it.Litros);
             var otras = op.OtrasErogacionesBob * (cif / cifTotal);
             var iva = R(p.TasaIvaEfectiva * (cif + ga + ice + iehd + otras));
-            items.Add(new(it.Numero, it.CodigoArancelario, R(fobI), cif, ga, ice, iehd, R(otras), iva));
+            items.Add(new(it.Numero, it.CodigoArancelario, R(fobI), cif, ga, ice, iehd, R(otras), iva, MedidasArancelarias.RigeNuevaBaseGa(op.FechaDeclaracion) ? baseGa : cif, alic, notaGa));
+            if (it.BeneficioDs5516 && op.FechaDeclaracion is { } fd && fd <= MedidasArancelarias.Ds5516Hasta && fd >= MedidasArancelarias.Ds5516Hasta.AddDays(-45))
+                adv.Add($"Ítem {it.Numero}: el beneficio D.S. 5516 (GA 0 %) vence el 31/12/2026; si la DIM se acepta después, el GA será {Math.Max(0m, it.AlicuotaGA - 0.05m):P0} (D.S. 5646).");
         }
 
         var ga_ = items.Sum(i => i.GA); var ice_ = items.Sum(i => i.ICE);

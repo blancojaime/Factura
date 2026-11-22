@@ -25,7 +25,8 @@ public abstract class ModuloOperacionVm(ComexDb db, Func<int?> operacionId) : Ob
 
 // ===================================================================== LIQUIDACIÓN DETALLADA Y COSTEO
 public sealed record FilaTributoItem(string N, string Partida, string Fob, string Cif, string GA, string ICE, string IEHD, string IVA, string Total);
-public sealed record FilaCosteo(string N, string Partida, string Cantidad, string Cif, string Tributos, string Gastos, string Costo, string Factor, string Unitario);
+public sealed record FilaCosteo(string N, string Partida, string Cantidad, string Cif, string Tributos, string Gastos, string Costo, string Factor, string Unitario, string PrecioSinIva, string PrecioConIva);
+public sealed record FilaImpactoVm(string Concepto, string Anterior, string ConDs5646, string Aplicado, string Ahorro, bool Destacada);
 
 public sealed class LiquidacionDetalleViewModel : ModuloOperacionVm
 {
@@ -41,6 +42,8 @@ public sealed class LiquidacionDetalleViewModel : ModuloOperacionVm
     public ObservableCollection<FilaTributoItem> Items { get; } = [];
     public ObservableCollection<string> Pasos { get; } = [];
     public ObservableCollection<FilaCosteo> Costeo { get; } = [];
+    public ObservableCollection<FilaImpactoVm> Impacto { get; } = [];
+    string _notaImpacto = ""; public string NotaImpacto { get => _notaImpacto; set => Set(ref _notaImpacto, value); }
     string _resumen = ""; public string ResumenCosteo { get => _resumen; set => Set(ref _resumen, value); }
     string _flujo = ""; public string FlujoCaja { get => _flujo; set => Set(ref _flujo, value); }
     bool _hay; public bool HayLiquidacion { get => _hay; set => Set(ref _hay, value); }
@@ -70,11 +73,15 @@ public sealed class LiquidacionDetalleViewModel : ModuloOperacionVm
         Almacenaje = Costeo_.EstimarAlmacenaje(peso, DiasAlmacenaje, a.AlmacenDiasLibres, a.AlmacenTarifaBsTonDia);
         Mensaje = $"Almacenaje estimado: {DiasAlmacenaje} días ({a.AlmacenDiasLibres} libres) × {F(peso / 1000m)} t × Bs {F(a.AlmacenTarifaBsTonDia)}. Verifique con la tarifa de su recinto.";
     });
-    static class Costeo_ { public static decimal EstimarAlmacenaje(decimal p, int d, int l, decimal t) => ComexBol.Core.Costeo.EstimarAlmacenaje(p, d, l, t); }
+    static class Costeo_
+    {
+        public static decimal EstimarAlmacenaje(decimal p, int d, int l, decimal t) => ComexBol.Core.Costeo.EstimarAlmacenaje(p, d, l, t);
+        public static (decimal SinIva, decimal ConIva) Precio(decimal costo, AjustesOperativos a) => ComexBol.Core.Costeo.PrecioSugerido(costo, a.MargenObjetivo, a.IvaVenta);
+    }
 
     public async Task CargarAsync()
     {
-        Desglose.Clear(); Items.Clear(); Pasos.Clear(); Costeo.Clear(); ResumenCosteo = FlujoCaja = ""; HayLiquidacion = false;
+        Desglose.Clear(); Items.Clear(); Pasos.Clear(); Costeo.Clear(); Impacto.Clear(); NotaImpacto = ""; ResumenCosteo = FlujoCaja = ""; HayLiquidacion = false;
         var id = OpId(); if (id is null) return;
         await Seguro(async () =>
         {
@@ -90,15 +97,28 @@ public sealed class LiquidacionDetalleViewModel : ModuloOperacionVm
             // Pasos de la fórmula: se reconstruye la operación con los mismos datos del cálculo guardado
             var p = JsonSerializer.Deserialize<ParametrosTributarios>(ult.ParametrosJson) ?? new();
             Money? M(decimal v) => v == 0 ? null : new Money(v, op.MonedaFactura);
-            var core = new OperacionImportacion(op.Incoterm, op.MonedaFactura, op.Items.OrderBy(i => i.Numero).Select(i => i.ToCore()).ToList(), M(op.GastosOrigen), M(op.Flete), M(op.Seguro), M(op.OtrosGastosFrontera), M(op.Deducciones), op.OtrasErogacionesBob);
+            var core = new OperacionImportacion(op.Incoterm, op.MonedaFactura, op.Items.OrderBy(i => i.Numero).Select(i => i.ToCore()).ToList(), M(op.GastosOrigen), M(op.Flete), M(op.Seguro), M(op.OtrosGastosFrontera), M(op.Deducciones), op.OtrasErogacionesBob,
+                M(op.Ajustes().TotalAdiciones), M(op.Ajustes().TotalDeducciones), op.FechaDeclaracion, M(op.CargaDescarga));
             foreach (var s in ExplicadorLiquidacion.Pasos(core, r, p, Bo)) Pasos.Add(s);
 
+            // Impacto de las medidas arancelarias (régimen anterior vs D.S. 5646 vs lo aplicado)
+            decimal tasa = 0m;
+            try { using var j = JsonDocument.Parse(ult.TipoCambioJson); if (j.RootElement.TryGetProperty("TasaBobPorUnidad", out var t)) tasa = t.GetDecimal(); } catch (JsonException) { }
+            var valorTotal = op.Items.Sum(i => i.ValorFactura); if (tasa <= 0 && valorTotal > 0) tasa = r.ValorFobBob / valorTotal;
+            if (tasa > 0 && op.FechaDeclaracion is not null)
+            {
+                var tcTabla = new TipoCambioTable(ult.TipoCambioFecha, new Dictionary<string, decimal> { [op.MonedaFactura] = tasa });
+                foreach (var f in ImpactoMedidas.Comparar(core, tcTabla, p))
+                    Impacto.Add(new(f.Concepto, F(f.Anterior), F(f.ConDs5646), F(f.Aplicado), F(f.AhorroVsAnterior), f.Concepto.StartsWith("TOTAL")));
+                NotaImpacto = "Régimen anterior = Arancel 2026 sin decretos y GA sobre el CIF completo. Verifique con su despachante que la DIM consigne las medidas.";
+            }
             var aj = await _cfg.ObtenerAjustesAsync();
             var c = await _val.CostearAsync(id.Value, aj.IvaRecuperable);
             if (c is not null)
             {
-                foreach (var x in c.Items) Costeo.Add(new(x.Numero.ToString(), x.Codigo, x.Cantidad > 0 ? x.Cantidad.ToString("0.##", Bo) : "—", F(x.CifBob), F(x.TributosNoRecuperables), F(x.GastosProrrateados), F(x.CostoNacionalizadoBob), x.Factor.ToString("0.0000", Bo), x.Cantidad > 0 ? F(x.CostoUnitarioBob) : "indique la cantidad"));
-                ResumenCosteo = $"Costo nacionalizado Bs {F(c.CostoTotalBob)} · factor de importación {c.FactorGlobal.ToString("0.0000", Bo)} (por cada Bs de FOB) · IVA como crédito fiscal Bs {F(c.IvaCreditoFiscalTotal)}" + (aj.IvaRecuperable ? "" : " (IVA tratado como costo)");
+                foreach (var x in c.Items) Costeo.Add(new(x.Numero.ToString(), x.Codigo, x.Cantidad > 0 ? x.Cantidad.ToString("0.##", Bo) : "—", F(x.CifBob), F(x.TributosNoRecuperables), F(x.GastosProrrateados), F(x.CostoNacionalizadoBob), x.Factor.ToString("0.0000", Bo), x.Cantidad > 0 ? F(x.CostoUnitarioBob) : "indique la cantidad",
+                    x.Cantidad > 0 ? F(Costeo_.Precio(x.CostoUnitarioBob, aj).SinIva) : "—", x.Cantidad > 0 ? F(Costeo_.Precio(x.CostoUnitarioBob, aj).ConIva) : "—"));
+                ResumenCosteo = $"Precio de venta sugerido con margen {aj.MargenObjetivo:P0} sobre el precio (sin IVA y con IVA {aj.IvaVenta:P0}) en las últimas columnas. Costo nacionalizado Bs {F(c.CostoTotalBob)} · factor de importación {c.FactorGlobal.ToString("0.0000", Bo)} (por cada Bs de FOB) · IVA como crédito fiscal Bs {F(c.IvaCreditoFiscalTotal)}" + (aj.IvaRecuperable ? "" : " (IVA tratado como costo)");
                 FlujoCaja = $"Flujo de caja requerido: tributos Bs {F(r.TotalTributos)} + gastos de despacho Bs {F(c.GastosLocalesBob)} = Bs {F(c.CashFlowRequeridoBob)}";
             }
         });
@@ -311,5 +331,53 @@ public sealed class DespachoViewModel : ModuloOperacionVm
             Canal = op.Canal; ObservacionAduana = op.ObservacionAduana; FechaLevante = op.FechaLevante?.ToDateTime(TimeOnly.MinValue);
             await CargarTareasAsync(id.Value);
         });
+    }
+}
+
+
+// ===================================================================== GUÍA DE PROCEDIMIENTO (manual de importación de maquinaria)
+public sealed class FilaGuia(FilaProcedimiento f, Func<string, bool, string, Task> alCambiar) : ObservableObject
+{
+    public string Codigo { get; } = f.Codigo; public string Titulo { get; } = f.Titulo; public string Detalle { get; } = f.Detalle; public string Responsables { get; } = f.Responsables;
+    public string Documentos { get; } = f.Documentos; public string Tiempo { get; } = f.Tiempo; public string Normativa { get; } = f.Normativa; public string Consejo { get; } = f.Consejo; public string Fase { get; } = f.Fase;
+    public bool EsControl { get; } = f.EsControl; public bool Sugerido { get; } = f.Sugerido;
+    public string Marca => Sugerido ? "Sugerido por datos" : "";
+    string _nota = f.Nota; public string Nota { get => _nota; set { if (Set(ref _nota, value) && _hecho) _ = alCambiar(Codigo, true, value); } }
+    bool _hecho = f.Hecho; public bool Hecho { get => _hecho; set { if (Set(ref _hecho, value)) _ = alCambiar(Codigo, value, Nota); } }
+}
+
+public sealed class GuiaViewModel : ModuloOperacionVm
+{
+    readonly ServicioProcedimiento _srv;
+    public GuiaViewModel(ComexDb db, Func<int?> opId) : base(db, opId) { _srv = new(db); }
+    public string Usuario { set => _srv.Usuario = value; }
+    public ObservableCollection<FilaGuia> Pasos { get; } = [];
+    public ObservableCollection<FilaGuia> Control { get; } = [];
+    string _avance = ""; public string Avance { get => _avance; set => Set(ref _avance, value); }
+    FilaGuia? _sel; public FilaGuia? Seleccionado { get => _sel; set => Set(ref _sel, value); }
+
+    public async Task CargarAsync()
+    {
+        Pasos.Clear(); Control.Clear(); Avance = ""; Seleccionado = null;
+        var id = OpId(); if (id is null) return;
+        await Seguro(async () =>
+        {
+            var filas = await _srv.ListarAsync(id.Value);
+            foreach (var f in filas) (f.EsControl ? Control : Pasos).Add(new(f, MarcarAsync));
+            ActualizarAvance(filas);
+        });
+    }
+
+    void ActualizarAvance(IReadOnlyList<FilaProcedimiento> filas)
+    {
+        var (h, t) = ServicioProcedimiento.Avance(filas, false); var (hc, tc) = ServicioProcedimiento.Avance(filas, true);
+        var sug = filas.Count(f => f.Sugerido && !f.Hecho);
+        Avance = $"Procedimiento: {h} de {t} pasos cumplidos  ·  Expediente: {hc} de {tc} controles" + (sug > 0 ? $"  ·  {sug} con datos que ya lo respaldan (márquelos si corresponde)" : "");
+    }
+
+    async Task MarcarAsync(string codigo, bool hecho, string nota)
+    {
+        var id = OpId(); if (id is null) return;
+        await Seguro(async () => { await _srv.MarcarAsync(id.Value, codigo, hecho, nota); ActualizarAvance(await _srv.ListarAsync(id.Value)); });
     }
 }

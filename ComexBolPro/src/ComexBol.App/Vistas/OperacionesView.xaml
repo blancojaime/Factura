@@ -57,6 +57,7 @@
             </StackPanel>
             <Button Content="Excel" Style="{StaticResource BtnExito}" Click="ExportarExcel_Click" Margin="0,0,6,0" VerticalAlignment="Center"/>
             <Button Content="JSON (SUMA)" Style="{StaticResource BtnSecundario}" Click="ExportarJson_Click" Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="Datos estructurados para transcribir a la DMI"/>
+            <Button Content="Hoja SUMA" Style="{StaticResource BtnSecundario}" Click="ExportarSuma_Click" Margin="0,0,6,0" VerticalAlignment="Center" ToolTip="Excel con los datos de la DAV y la DIM para transcribir al SUMA"/>
             <Button Content="Expediente" Style="{StaticResource BtnSecundario}" Click="ExportarExpediente_Click" Margin="0" VerticalAlignment="Center"/>
           </StackPanel>
         </Grid>
@@ -152,13 +153,22 @@
                       <StackPanel Grid.Column="2"><TextBlock Text="Desgravación %" Style="{StaticResource Etiqueta}" ToolTip="Con 0, se toma la preferencia del arancel para el acuerdo elegido"/><TextBox Text="{Binding ItemDesgravacionPct}" ToolTip="Con 0, se toma la preferencia del arancel para el acuerdo elegido"/></StackPanel>
                       <StackPanel Grid.Column="4"><TextBlock Text="ICE % (manual)" Style="{StaticResource Etiqueta}" ToolTip="Solo si el arancel no trae la tasa (bebidas, tabaco)"/><TextBox Text="{Binding ItemIcePct}" ToolTip="Solo si el arancel no trae la tasa (bebidas, tabaco)"/></StackPanel>
                     </Grid>
+                    <CheckBox IsChecked="{Binding ItemBeneficio}" Margin="0,8,0,2" ToolTip="Maquinaria y equipos de los Anexos 3 y 4 del D.S. 5516 (por subpartida). Verifique el anexo con su despachante.">
+                      <TextBlock Text="Beneficio D.S. 5516 (GA 0 % hasta 31/12/2026)"/>
+                    </CheckBox>
                     <Border Background="{StaticResource MentaClara}" CornerRadius="6" Padding="10,8" Margin="0,2,0,10">
                       <StackPanel>
                         <TextBlock Text="Costos de la operación (en USD; solo los que el Incoterm no incluye)" Style="{StaticResource Etiqueta}"/>
                         <StackPanel Orientation="Horizontal">
                           <StackPanel Margin="0,0,10,0"><TextBlock Text="Flete internacional" Style="{StaticResource Etiqueta}"/><TextBox Width="130" Text="{Binding Flete}" Margin="0"/></StackPanel>
-                          <StackPanel><TextBlock Text="Seguro" Style="{StaticResource Etiqueta}"/><TextBox Width="130" Text="{Binding Seguro}" Margin="0"/></StackPanel>
+                          <StackPanel Margin="0,0,10,0"><TextBlock Text="Seguro" Style="{StaticResource Etiqueta}"/><TextBox Width="130" Text="{Binding Seguro}" Margin="0"/></StackPanel>
+                          <StackPanel><TextBlock Text="Carga y descarga" Style="{StaticResource Etiqueta}"/><TextBox Width="130" Text="{Binding CargaDescarga}" Margin="0"/></StackPanel>
                         </StackPanel>
+                        <Grid Margin="0,6,0,0">
+                          <Grid.ColumnDefinitions><ColumnDefinition Width="190"/><ColumnDefinition Width="10"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                          <StackPanel><TextBlock Text="Fecha de la DIM" Style="{StaticResource Etiqueta}" ToolTip="Define las medidas arancelarias vigentes"/><DatePicker SelectedDate="{Binding FechaDim}"/></StackPanel>
+                          <TextBlock Grid.Column="2" Text="{Binding AvisoMedidas}" TextWrapping="Wrap" Foreground="#8A5A00" FontSize="11" VerticalAlignment="Bottom"/>
+                        </Grid>
                       </StackPanel>
                     </Border>
 
@@ -296,6 +306,21 @@
             </Grid>
             <Border Style="{StaticResource Card}" DataContext="{Binding Detalle}">
               <StackPanel>
+                <TextBlock Text="Impacto de las medidas arancelarias (Bs)" Style="{StaticResource Subtitulo}"/>
+                <DataGrid ItemsSource="{Binding Impacto}" IsReadOnly="True" MinHeight="70" MaxHeight="160">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="Concepto" Binding="{Binding Concepto}" Width="2*"/>
+                    <DataGridTextColumn Header="Anterior" Binding="{Binding Anterior}" Width="*"/>
+                    <DataGridTextColumn Header="Con D.S. 5646" Binding="{Binding ConDs5646}" Width="*"/>
+                    <DataGridTextColumn Header="Aplicado" Binding="{Binding Aplicado}" Width="*"/>
+                    <DataGridTextColumn Header="Ahorro" Binding="{Binding Ahorro}" Width="*"/>
+                  </DataGrid.Columns>
+                </DataGrid>
+                <TextBlock Text="{Binding NotaImpacto}" Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,6,0,0"/>
+              </StackPanel>
+            </Border>
+            <Border Style="{StaticResource Card}" DataContext="{Binding Detalle}">
+              <StackPanel>
                 <TextBlock Text="4 · Liquidación por ítem (Bs)" Style="{StaticResource Subtitulo}"/>
                 <DataGrid ItemsSource="{Binding Items}" IsReadOnly="True" MinHeight="70" MaxHeight="240">
                   <DataGrid.Columns>
@@ -333,13 +358,14 @@
                   <DataGrid.Columns>
                     <DataGridTextColumn Header="N.º" Binding="{Binding N}" Width="44"/>
                     <DataGridTextColumn Header="Partida" Binding="{Binding Partida}" Width="112"/>
-                    <DataGridTextColumn Header="Cantidad" Binding="{Binding Cantidad}" Width="*"/>
-                    <DataGridTextColumn Header="CIF" Binding="{Binding Cif}" Width="*"/>
+                    <DataGridTextColumn Header="Cant." Binding="{Binding Cantidad}" Width="70"/>
                     <DataGridTextColumn Header="Tributos*" Binding="{Binding Tributos}" Width="*"/>
                     <DataGridTextColumn Header="Gastos" Binding="{Binding Gastos}" Width="*"/>
                     <DataGridTextColumn Header="Costo" Binding="{Binding Costo}" Width="*"/>
                     <DataGridTextColumn Header="Factor" Binding="{Binding Factor}" Width="*"/>
                     <DataGridTextColumn Header="Unitario" Binding="{Binding Unitario}" Width="*"/>
+                    <DataGridTextColumn Header="P. s/IVA" Binding="{Binding PrecioSinIva}" Width="*"/>
+                    <DataGridTextColumn Header="P. c/IVA" Binding="{Binding PrecioConIva}" Width="*"/>
                   </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock Text="{Binding ResumenCosteo}" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,8,0,0"/>
@@ -472,7 +498,9 @@
                     <DataGridTextColumn Header="Valor oferta" Binding="{Binding ValorFactura}" Width="100"/>
                     <DataGridTextColumn Header="Flete" Binding="{Binding Flete}" Width="80"/>
                     <DataGridTextColumn Header="Seguro" Binding="{Binding Seguro}" Width="80"/>
-                    <DataGridTextColumn Header="Deduc. post-frontera" Binding="{Binding DeduccionesPostFrontera}" Width="140"/>
+                    <DataGridTextColumn Header="Deduc." Binding="{Binding DeduccionesPostFrontera}" Width="80"/>
+                    <DataGridTextColumn Header="Desgrav. %" Binding="{Binding DesgravacionPct}" Width="86"/>
+                    <DataGridCheckBoxColumn Header="DS 5516" Binding="{Binding Beneficio, UpdateSourceTrigger=PropertyChanged}" Width="84"/>
                     <DataGridTemplateColumn Width="80"><DataGridTemplateColumn.CellTemplate><DataTemplate>
                       <Button Content="Quitar" Style="{StaticResource BtnPeligro}" Margin="0" Padding="8,3" Command="{Binding DataContext.QuitarEscenarioCmd, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
                     </DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
@@ -489,6 +517,7 @@
                     <DataGridTextColumn Header="Escenario" Binding="{Binding Nombre}" Width="*"/>
                     <DataGridTextColumn Header="Incoterm" Binding="{Binding Incoterm}" Width="80"/>
                     <DataGridTextColumn Header="CIF Bs" Binding="{Binding CifBob}" Width="110"/>
+                    <DataGridTextColumn Header="GA Bs" Binding="{Binding Ga}" Width="100"/>
                     <DataGridTextColumn Header="Tributos Bs" Binding="{Binding Tributos}" Width="110"/>
                     <DataGridTextColumn Header="Costo unit. Bs" Binding="{Binding CostoUnitario}" Width="120"/>
                     <DataGridTextColumn Header="Margen" Binding="{Binding MargenPct}" Width="80"/>
@@ -597,6 +626,63 @@
                 </ListBox>
               </DockPanel>
             </Border>
+          </Grid>
+        </TabItem>
+        <!-- ===================== GUÍA DE PROCEDIMIENTO ===================== -->
+        <TabItem Header="Guía">
+          <Grid Margin="0,8,0,0" DataContext="{Binding Guia}">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="1.25*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+            <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel>
+              <Border Style="{StaticResource Card}">
+                <StackPanel>
+                  <TextBlock Text="{Binding Avance}" FontWeight="SemiBold" TextWrapping="Wrap" Foreground="{StaticResource TurquesaOscuro}"/>
+                  <TextBlock Style="{StaticResource Suave}" TextWrapping="Wrap" Margin="0,4,0,0" Text="Los 11 pasos del manual de importación de maquinaria. Marque cada paso al cumplirlo; la columna «Sugerido» indica los que sus datos en COMEX JB ya respaldan."/>
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource Card}">
+                <StackPanel>
+                  <TextBlock Text="Procedimiento (P-01 a P-11)" Style="{StaticResource Subtitulo}"/>
+                  <DataGrid ItemsSource="{Binding Pasos}" SelectedItem="{Binding Seleccionado}" AutoGenerateColumns="False" CanUserAddRows="False" MinHeight="120">
+                    <DataGrid.Columns>
+                      <DataGridCheckBoxColumn Header="Hecho" Binding="{Binding Hecho, UpdateSourceTrigger=PropertyChanged}" Width="62"/>
+                      <DataGridTextColumn Header="Paso" Binding="{Binding Codigo}" IsReadOnly="True" Width="56"/>
+                      <DataGridTextColumn Header="Proceso" Binding="{Binding Titulo}" IsReadOnly="True" Width="*"/>
+                      <DataGridTextColumn Header="Sugerido" Binding="{Binding Marca}" IsReadOnly="True" Width="130"/>
+                    </DataGrid.Columns>
+                  </DataGrid>
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource Card}">
+                <StackPanel>
+                  <TextBlock Text="Control del expediente (C-01 a C-12)" Style="{StaticResource Subtitulo}"/>
+                  <DataGrid ItemsSource="{Binding Control}" SelectedItem="{Binding Seleccionado}" AutoGenerateColumns="False" CanUserAddRows="False" MinHeight="120">
+                    <DataGrid.Columns>
+                      <DataGridCheckBoxColumn Header="Hecho" Binding="{Binding Hecho, UpdateSourceTrigger=PropertyChanged}" Width="62"/>
+                      <DataGridTextColumn Header="N.º" Binding="{Binding Codigo}" IsReadOnly="True" Width="56"/>
+                      <DataGridTextColumn Header="Documento o requisito" Binding="{Binding Titulo}" IsReadOnly="True" Width="*"/>
+                      <DataGridTextColumn Header="Sugerido" Binding="{Binding Marca}" IsReadOnly="True" Width="130"/>
+                    </DataGrid.Columns>
+                  </DataGrid>
+                </StackPanel>
+              </Border>
+            </StackPanel></ScrollViewer>
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+              <Border Style="{StaticResource Card}" Margin="0">
+                <StackPanel DataContext="{Binding Seleccionado}">
+                  <TextBlock Text="{Binding Codigo}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource TurquesaOscuro}"/>
+                  <TextBlock Text="{Binding Titulo}" FontWeight="Bold" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                  <TextBlock Text="{Binding Fase}" Style="{StaticResource Suave}"/>
+                  <TextBlock Text="Qué hacer" Style="{StaticResource Etiqueta}" Margin="0,10,0,0"/><TextBlock Text="{Binding Detalle}" TextWrapping="Wrap"/>
+                  <TextBlock Text="Plazo del manual / obligatoriedad" Style="{StaticResource Etiqueta}" Margin="0,10,0,0"/><TextBlock Text="{Binding Tiempo}" TextWrapping="Wrap"/>
+                  <TextBlock Text="Responsables / emisor" Style="{StaticResource Etiqueta}" Margin="0,10,0,0"/><TextBlock Text="{Binding Responsables}" TextWrapping="Wrap"/>
+                  <TextBlock Text="Documentos" Style="{StaticResource Etiqueta}" Margin="0,10,0,0"/><TextBlock Text="{Binding Documentos}" TextWrapping="Wrap"/>
+                  <TextBlock Text="Normativa" Style="{StaticResource Etiqueta}" Margin="0,10,0,0"/><TextBlock Text="{Binding Normativa}" TextWrapping="Wrap"/>
+                  <TextBlock Text="Consejo práctico" Style="{StaticResource Etiqueta}" Margin="0,10,0,0"/><TextBlock Text="{Binding Consejo}" TextWrapping="Wrap" Foreground="#8A5A00"/>
+                  <TextBlock Text="Nota (queda en el expediente)" Style="{StaticResource Etiqueta}" Margin="0,10,0,0"/>
+                  <TextBox Text="{Binding Nota, UpdateSourceTrigger=LostFocus}" TextWrapping="Wrap" AcceptsReturn="True" MinHeight="60" VerticalContentAlignment="Top"/>
+                </StackPanel>
+              </Border>
+            </ScrollViewer>
           </Grid>
         </TabItem>
       </TabControl>

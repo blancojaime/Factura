@@ -44,7 +44,7 @@ public sealed class MainViewModel : ObservableObject
         _db = db; _hoy = hoy ?? (() => DateOnly.FromDateTime(DateTime.Today));
         _ops = new(db); _cat = new(db); _cfg = new(db); _costos = new(db);
         Decision = new DecisionViewModel(db, () => Seleccionada?.Id, () => TipoCambioUsd, _hoy);
-        Detalle = new(db, () => Seleccionada?.Id); Valoracion = new(db, () => Seleccionada?.Id); Despacho = new(db, () => Seleccionada?.Id);
+        Detalle = new(db, () => Seleccionada?.Id); Valoracion = new(db, () => Seleccionada?.Id); Despacho = new(db, () => Seleccionada?.Id); Guia = new(db, () => Seleccionada?.Id);
         CargarCmd = new(_ => CargarAsync());
         NuevaImportacionCmd = new(_ => NuevaImportacionAsync());
         AgregarItemCmd = new(_ => AgregarItemAsync(), _ => Seleccionada is not null);
@@ -65,6 +65,7 @@ public sealed class MainViewModel : ObservableObject
     public LiquidacionDetalleViewModel Detalle { get; }
     public ValoracionViewModel Valoracion { get; }
     public DespachoViewModel Despacho { get; }
+    public GuiaViewModel Guia { get; }
 
     // --- Lista y selección ---
     public ObservableCollection<Operacion> Operaciones { get; } = [];
@@ -80,7 +81,7 @@ public sealed class MainViewModel : ObservableObject
     public IReadOnlyList<Incoterm> Incoterms { get; } = Enum.GetValues<Incoterm>();
     decimal _tc = 6.96m; public decimal TipoCambioUsd { get => _tc; set => Set(ref _tc, value); }   // se propone el de la tabla de configuración; el usuario lo confirma
     string _tcInfo = ""; public string TcInfo { get => _tcInfo; set => Set(ref _tcInfo, value); }
-    string _usuario = ""; public string UsuarioActual { get => _usuario; set { if (Set(ref _usuario, value)) { _ops.Usuario = value; Valoracion.Usuario = value; Despacho.Usuario = value; if (_docs is not null) _docs.Usuario = value; } } }
+    string _usuario = ""; public string UsuarioActual { get => _usuario; set { if (Set(ref _usuario, value)) { _ops.Usuario = value; Valoracion.Usuario = value; Despacho.Usuario = value; Guia.Usuario = value; if (_docs is not null) _docs.Usuario = value; } } }
     string _filtroOps = ""; public string FiltroOperaciones { get => _filtroOps; set { if (Set(ref _filtroOps, value)) AplicarFiltroOperaciones(); } }
     ItemFila? _itemSel; public ItemFila? ItemSeleccionado { get => _itemSel; set { if (Set(ref _itemSel, value)) { EditarItemCmd.Refresh(); EliminarItemCmd.Refresh(); } } }
     bool _enEdicion; public bool EnEdicion { get => _enEdicion; set { if (Set(ref _enEdicion, value)) PropiedadCambiada(nameof(TextoGuardarItem)); } }
@@ -88,12 +89,19 @@ public sealed class MainViewModel : ObservableObject
     public string TextoGuardarItem => EnEdicion ? "Guardar cambios del ítem" : "Agregar ítem";
     decimal _flete; public decimal Flete { get => _flete; set => Set(ref _flete, value); }
     decimal _seguro; public decimal Seguro { get => _seguro; set => Set(ref _seguro, value); }
+    decimal _carga; public decimal CargaDescarga { get => _carga; set => Set(ref _carga, value); }
+    DateTime? _fechaDim; public DateTime? FechaDim { get => _fechaDim; set { if (Set(ref _fechaDim, value)) PropiedadCambiada(nameof(AvisoMedidas)); } }
+    /// <summary>Qué medidas arancelarias rigen para la fecha de DIM elegida.</summary>
+    public string AvisoMedidas => FechaDim is not { } f ? "Sin fecha: régimen anterior (sin decretos 2026)."
+        : DateOnly.FromDateTime(f) >= MedidasArancelarias.Ds5646Desde ? "Rige el D.S. 5646 (GA −5 puntos y nueva base) y, con el beneficio marcado, el D.S. 5516."
+        : "Antes del 06/07/2026: régimen anterior (GA sobre el CIF).";
     string _partida = "";
     public string ItemPartida
     {
         get => _partida;
         set { if (Set(ref _partida, value) && !_silenciar) _ = BuscarSugerenciasAsync(value); }
     }
+    bool _ben; public bool ItemBeneficio { get => _ben; set => Set(ref _ben, value); }
     decimal _cant; public decimal ItemCantidad { get => _cant; set => Set(ref _cant, value); }
     string _desc = ""; public string ItemDescripcion { get => _desc; set => Set(ref _desc, value); }
     string _marca = ""; public string ItemMarca { get => _marca; set => Set(ref _marca, value); }
@@ -187,6 +195,7 @@ public sealed class MainViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(NuevaCarpeta)) throw new ArgumentException("Indique el N.º de carpeta.");
         var op = await _ops.CrearImportacionAsync(NuevaCarpeta.Trim(), NuevoIncoterm, "USD", _hoy());
+        (await _db.Operaciones.FirstAsync(o => o.Id == op.Id)).FechaDeclaracion = _hoy(); await _db.SaveChangesAsync();   // fecha de DIM propuesta: hoy (rige el régimen arancelario de esa fecha)
         NuevaCarpeta = "";
         await CargarAsync();
         Seleccionada = Operaciones.First(o => o.Id == op.Id);
@@ -197,14 +206,14 @@ public sealed class MainViewModel : ObservableObject
     ItemMercancia ItemDelFormulario(int numero) => new()
     {
         Numero = numero, CodigoNandina = new string(ItemPartida.Where(char.IsDigit).ToArray()), Descripcion = ItemDescripcion, ValorFactura = ItemValor,
-        PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto, Cantidad = ItemCantidad, AntiguedadAnios = ItemAntiguedad, AlicuotaIce = ItemIcePct / 100m,
+        PesoBrutoKg = ItemPesoBruto, PesoNetoKg = ItemPesoBruto, Cantidad = ItemCantidad, BeneficioDs5516 = ItemBeneficio, AntiguedadAnios = ItemAntiguedad, AlicuotaIce = ItemIcePct / 100m,
         AcuerdoPreferencial = ItemAcuerdo, Desgravacion = ItemDesgravacionPct / 100m, Marca = ItemMarca ?? "", Modelo = ItemModelo ?? "", Serie = ItemSerie ?? "", PaisOrigen = ItemPais ?? ""
     };
 
     void LimpiarFormularioItem()
     {
         _silenciar = true;
-        ItemPartida = ItemDescripcion = ItemMarca = ItemModelo = ItemSerie = ItemPais = ""; ItemValor = ItemPesoBruto = ItemIcePct = ItemDesgravacionPct = ItemCantidad = 0; ItemAntiguedad = 0; ItemAcuerdo = "";
+        ItemPartida = ItemDescripcion = ItemMarca = ItemModelo = ItemSerie = ItemPais = ""; ItemValor = ItemPesoBruto = ItemIcePct = ItemDesgravacionPct = ItemCantidad = 0; ItemBeneficio = false; ItemAntiguedad = 0; ItemAcuerdo = "";
         _silenciar = false; InfoPartida = ""; Sugerencias.Clear(); MostrarSugerencias = false; EnEdicion = false; _itemEditId = 0; ItemSeleccionado = null;
     }
 
@@ -237,7 +246,7 @@ public sealed class MainViewModel : ObservableObject
         var fila = ItemSeleccionado ?? throw new InvalidOperationException("Seleccione un ítem de la lista.");
         var it = await _db.Items.AsNoTracking().FirstAsync(i => i.Id == fila.Id);
         _silenciar = true;
-        ItemPartida = it.CodigoNandina; ItemDescripcion = it.Descripcion; ItemValor = it.ValorFactura; ItemPesoBruto = it.PesoBrutoKg; ItemCantidad = it.Cantidad; ItemAntiguedad = it.AntiguedadAnios;
+        ItemPartida = it.CodigoNandina; ItemDescripcion = it.Descripcion; ItemValor = it.ValorFactura; ItemPesoBruto = it.PesoBrutoKg; ItemCantidad = it.Cantidad; ItemBeneficio = it.BeneficioDs5516; ItemAntiguedad = it.AntiguedadAnios;
         ItemIcePct = it.AlicuotaIce * 100m; ItemAcuerdo = it.AcuerdoPreferencial; ItemDesgravacionPct = it.Desgravacion * 100m;
         ItemMarca = it.Marca; ItemModelo = it.Modelo; ItemSerie = it.Serie; ItemPais = it.PaisOrigen ?? "";
         _silenciar = false; Sugerencias.Clear(); MostrarSugerencias = false;
@@ -307,13 +316,13 @@ public sealed class MainViewModel : ObservableObject
     async Task GuardarCostosAsync(int opId)
     {
         var o = await _db.Operaciones.FirstAsync(x => x.Id == opId);
-        o.Flete = Flete; o.Seguro = Seguro; await _db.SaveChangesAsync();
+        o.Flete = Flete; o.Seguro = Seguro; o.CargaDescarga = CargaDescarga; o.FechaDeclaracion = FechaDim is { } f ? DateOnly.FromDateTime(f) : null; await _db.SaveChangesAsync();
     }
 
     public Task LiquidarAsync() => Seguro_(async () =>
     {
         var op = await _db.Operaciones.FirstAsync(o => o.Id == Seleccionada!.Id);
-        op.Flete = Flete; op.Seguro = Seguro; await _db.SaveChangesAsync();
+        op.Flete = Flete; op.Seguro = Seguro; op.CargaDescarga = CargaDescarga; op.FechaDeclaracion = FechaDim is { } f ? DateOnly.FromDateTime(f) : null; await _db.SaveChangesAsync();
         var tc = new TipoCambioTable(_hoy(), new Dictionary<string, decimal> { ["USD"] = TipoCambioUsd });
         var r = await _ops.LiquidarAsync(op.Id, tc, await _cfg.ObtenerParametrosAsync());
         await RefrescarAsync();
@@ -379,6 +388,14 @@ public sealed class MainViewModel : ObservableObject
         return ok;
     }
 
+    public async Task<bool> ExportarSumaAsync(string ruta)
+    {
+        if (Seleccionada is null) return false;
+        var ok = false;
+        await Seguro_(async () => { await ExportadorSuma.ExportarAsync(_db, Seleccionada.Id, ruta); Mensaje = $"Hoja de transcripción para el SUMA guardada en {ruta}"; ok = true; });
+        return ok;
+    }
+
     // ---------- Hoja de costos reales vs proyectados ----------
     void RecalcularTotalesCostos()
     {
@@ -436,12 +453,12 @@ public sealed class MainViewModel : ObservableObject
     {
         Items.Clear(); Etapas.Clear(); Liquidacion.Clear(); Legajo.Clear(); Bitacora.Clear(); Avisos.Clear(); Costos.Clear(); TotalesCostos = "";
         ResumenSemaforos = ProximoVencimiento = "";
-        if (Seleccionada is null) { await Detalle.CargarAsync(); await Valoracion.CargarAsync(); await Despacho.CargarAsync(); return; }
+        if (Seleccionada is null) { await Detalle.CargarAsync(); await Valoracion.CargarAsync(); await Despacho.CargarAsync(); await Guia.CargarAsync(); return; }
         await Seguro_(async () =>
         {
             var id = Seleccionada.Id; var hoy = _hoy();
             var op = await _db.Operaciones.AsNoTracking().Include(o => o.Items).Include(o => o.Bitacora).Include(o => o.Liquidaciones).FirstAsync(o => o.Id == id);
-            Flete = op.Flete; Seguro = op.Seguro;
+            Flete = op.Flete; Seguro = op.Seguro; CargaDescarga = op.CargaDescarga; FechaDim = op.FechaDeclaracion?.ToDateTime(TimeOnly.MinValue);
             // Sin respaldo del arancel, el GA podría estar mal: se avisa siempre, no solo al agregar el ítem.
             var codigos = op.Items.Select(i => i.CodigoNandina).ToList();
             var enCatalogo = (await _db.Partidas.Where(p => codigos.Contains(p.Codigo)).Select(p => p.Codigo).ToListAsync()).ToHashSet();
@@ -479,7 +496,7 @@ public sealed class MainViewModel : ObservableObject
             foreach (var e in op.Bitacora.OrderByDescending(e => e.Fecha).Take(100)) Bitacora.Add($"{e.Fecha:dd/MM HH:mm} · {e.Categoria} · {e.Detalle}" + (string.IsNullOrEmpty(e.Usuario) ? "" : $"  [{e.Usuario}]"));
             foreach (var c in await _costos.ListarAsync(id)) Costos.Add(new() { Id = c.Id, Concepto = c.Concepto, Proyectado = c.ProyectadoBob, Real = c.RealBob, Nota = c.Nota });
             RecalcularTotalesCostos();
-            await Detalle.CargarAsync(); await Valoracion.CargarAsync(); await Despacho.CargarAsync();
+            await Detalle.CargarAsync(); await Valoracion.CargarAsync(); await Despacho.CargarAsync(); await Guia.CargarAsync();
         });
     }
 }

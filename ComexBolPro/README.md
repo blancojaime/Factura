@@ -32,6 +32,15 @@ for t in tests/*/; do (cd $t && dotnet test); done
 
 Manual completo de implementación y pruebas: [`docs/04-Manual-de-Implementacion-y-Pruebas.md`](docs/04-Manual-de-Implementacion-y-Pruebas.md).
 
+## Novedades de la versión 1.3.0 (manual de procedimientos de maquinaria)
+- **Medidas arancelarias por fecha de la DIM**: D.S. 5646 (−5 puntos y nueva base del GA desde el 06/07/2026) y D.S. 5516 (GA 0 % hasta el 31/12/2026) con avisos de vencimiento e **impacto** frente al régimen anterior.
+- **Guía de procedimiento** (11 pasos del manual) y **control del expediente** (12 verificaciones) con avance, notas y sugerencias a partir de los datos.
+- **Importador habitual / no habitual**: topes de USD 2.000 por despacho y USD 4.000 por año en la validación de la DIM.
+- **Decisión** compara origen (preferencia con Certificado de Origen) y beneficio; **precio de venta sugerido** en el costeo.
+- **Hoja SUMA** (Excel con DAV, DIM general y DIM por ítem) para transcribir al SUMA.
+- Nuevo documento: **Plan de Complementación** (`docs/manual/Plan-de-Complementacion.pdf`).
+- Descarga todo en uno: [Release «COMEX JB - instalador y manuales»](https://github.com/blancojaime/Factura/releases/tag/comexjb-instalador).
+
 ## Novedades de la versión 1.2.0 (módulos aduaneros)
 - **Valoración (DAV)**: cuestionario de descarte del Primer Método (Decisión 571 CAN), ajustes del Art. 8, validador de precios contra el historial propio.
 - **Liquidación detallada**: valor en aduana línea por línea, fórmulas con sus números, liquidación por ítem, gastos de despacho, costo nacionalizado, factor de importación y flujo de caja.

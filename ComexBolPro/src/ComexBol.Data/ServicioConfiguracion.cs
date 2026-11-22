@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ComexBol.Data;
 
-public sealed record AjustesOperativos(decimal AlmacenTarifaBsTonDia = 0m, int AlmacenDiasLibres = 0, decimal TolerancePrecio = 0.30m, decimal TolerancePeso = 0.05m, bool IvaRecuperable = true);
+public sealed record AjustesOperativos(decimal AlmacenTarifaBsTonDia = 0m, int AlmacenDiasLibres = 0, decimal TolerancePrecio = 0.30m, decimal TolerancePeso = 0.05m, bool IvaRecuperable = true,
+    decimal MargenObjetivo = 0.30m, decimal IvaVenta = 0.13m);
 
 /// <summary>Mantenimiento de tipos de cambio, UFV, parámetros tributarios, perfil del importador y respaldo.</summary>
 public sealed class ServicioConfiguracion(ComexDb db)
@@ -97,7 +98,7 @@ public sealed class ServicioConfiguracion(ComexDb db)
         var def = new AjustesOperativos();
         decimal Dec(string k, decimal x) => d.TryGetValue(k, out var v) && decimal.TryParse(v, NumberStyles.Number, Inv, out var r) ? r : x;
         return new(Dec("almacen_tarifa_ton_dia", def.AlmacenTarifaBsTonDia), (int)Dec("almacen_dias_libres", def.AlmacenDiasLibres),
-            Dec("tolerancia_precio", def.TolerancePrecio), Dec("tolerancia_peso", def.TolerancePeso), Dec("iva_recuperable", def.IvaRecuperable ? 1 : 0) != 0);
+            Dec("tolerancia_precio", def.TolerancePrecio), Dec("tolerancia_peso", def.TolerancePeso), Dec("iva_recuperable", def.IvaRecuperable ? 1 : 0) != 0, Dec("margen_objetivo", def.MargenObjetivo), Dec("iva_venta", def.IvaVenta));
     }
 
     public async Task GuardarAjustesAsync(AjustesOperativos a)
@@ -109,6 +110,10 @@ public sealed class ServicioConfiguracion(ComexDb db)
         await Poner("almacen_dias_libres", a.AlmacenDiasLibres.ToString(Inv), "Días de almacenaje sin cobro");
         await Poner("tolerancia_precio", a.TolerancePrecio.ToString(Inv), "Desviación del precio unitario frente al historial desde la cual hay riesgo de duda razonable (fracción)");
         await Poner("tolerancia_peso", a.TolerancePeso.ToString(Inv), "Diferencia aceptada entre el peso de los ítems y el del manifiesto (fracción)");
+        if (a.MargenObjetivo is < 0 or >= 1) throw new ArgumentException("El margen objetivo debe estar entre 0 % y 99 %.");
+        if (a.IvaVenta is < 0 or > 0.5m) throw new ArgumentException("El IVA de venta debe estar entre 0 % y 50 %.");
+        await Poner("margen_objetivo", a.MargenObjetivo.ToString(Inv), "Margen comercial objetivo sobre el precio de venta (fracción)");
+        await Poner("iva_venta", a.IvaVenta.ToString(Inv), "IVA nominal de venta para el precio sugerido con factura (fracción)");
         await Poner("iva_recuperable", a.IvaRecuperable ? "1" : "0", "El IVA de importación se recupera como crédito fiscal (1) o es costo (0)");
         await db.SaveChangesAsync();
     }

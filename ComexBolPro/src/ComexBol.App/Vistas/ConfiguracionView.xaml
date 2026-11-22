@@ -80,7 +80,9 @@
                 <TextBlock Text="Días de almacenaje sin cobro" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding AlmacenDiasLibres}"/>
                 <CheckBox Content="El IVA de importación se recupera como crédito fiscal" IsChecked="{Binding IvaRecuperable}" Margin="0,10,0,0"/></StackPanel>
               <StackPanel Grid.Column="2"><TextBlock Text="Tolerancia de precio vs. historial (%)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding TolerancePrecioPct}"/>
-                <TextBlock Text="Tolerancia de peso vs. manifiesto (%)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding TolerancePesoPct}"/></StackPanel>
+                <TextBlock Text="Tolerancia de peso vs. manifiesto (%)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding TolerancePesoPct}"/>
+                <TextBlock Text="Margen comercial objetivo (% sobre el precio)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding MargenObjetivoPct}"/>
+                <TextBlock Text="IVA de venta para el precio sugerido (%)" Style="{StaticResource Etiqueta}"/><TextBox Text="{Binding IvaVentaPct}"/></StackPanel>
             </Grid>
             <StackPanel Orientation="Horizontal"><Button Content="Guardar parámetros" Command="{Binding GuardarParametrosCmd}" Style="{StaticResource BtnExito}"/><Button Content="Restaurar valores por defecto" Command="{Binding RestaurarParametrosCmd}" Style="{StaticResource BtnSuave}" Margin="0"/></StackPanel>
           </StackPanel>

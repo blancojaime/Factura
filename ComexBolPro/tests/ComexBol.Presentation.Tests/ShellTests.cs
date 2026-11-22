@@ -28,7 +28,7 @@ public class ShellTests : IDisposable
     async Task<MainViewModel> Operacion(string carpeta = "IMP-T1")
     {
         var vm = new MainViewModel(_db, () => Hoy) { UsuarioActual = "jaime" };
-        vm.NuevaCarpeta = carpeta; await vm.NuevaImportacionCmd.ExecuteAsync(); return vm;
+        vm.NuevaCarpeta = carpeta; await vm.NuevaImportacionCmd.ExecuteAsync(); vm.FechaDim = new DateTime(2026, 6, 1); return vm;
     }
 
     // ---------- Inicio de sesión ----------
@@ -113,7 +113,7 @@ public class ShellTests : IDisposable
 
     [Fact] public async Task Eliminar_Una_Operacion_Equivocada()
     {
-        var vm = await Operacion("IMP-ERRONEA"); vm.NuevaCarpeta = "IMP-BUENA"; await vm.NuevaImportacionCmd.ExecuteAsync();
+        var vm = await Operacion("IMP-ERRONEA"); vm.NuevaCarpeta = "IMP-BUENA"; await vm.NuevaImportacionCmd.ExecuteAsync(); vm.FechaDim = new DateTime(2026, 6, 1);
         vm.Seleccionada = vm.Operaciones.First(o => o.Carpeta == "IMP-ERRONEA"); await vm.RefrescarAsync();
         await vm.EliminarOperacionAsync();
         Assert.Equal(new[] { "IMP-BUENA" }, vm.Operaciones.Select(o => o.Carpeta).ToArray()); Assert.Null(vm.Seleccionada); Assert.Contains("eliminada", vm.Mensaje);

@@ -23,7 +23,7 @@ public class MainViewModelTests : IDisposable
     public async Task Flujo_Completo_De_La_Ventana()
     {
         _vm.NuevaCarpeta = "IMP-UI-1"; _vm.NuevoIncoterm = Incoterm.FOB;
-        await _vm.NuevaImportacionCmd.ExecuteAsync();
+        await _vm.NuevaImportacionCmd.ExecuteAsync(); _vm.FechaDim = new DateTime(2026, 6, 1);
         Assert.Equal("IMP-UI-1", _vm.Seleccionada?.Carpeta);
         Assert.Equal(12, _vm.Etapas.Count);
 
@@ -46,7 +46,7 @@ public class MainViewModelTests : IDisposable
     public async Task Errores_Se_Muestran_Sin_Romper_La_Ventana()
     {
         _vm.NuevaCarpeta = " ";
-        await _vm.NuevaImportacionCmd.ExecuteAsync();
+        await _vm.NuevaImportacionCmd.ExecuteAsync(); _vm.FechaDim = new DateTime(2026, 6, 1);
         Assert.StartsWith("AVISO", _vm.Mensaje);
         Assert.False(_vm.LiquidarCmd.CanExecute(null));
     }
@@ -63,7 +63,7 @@ public class OcrViewModelTests : IDisposable
     public async Task Ocr_Propone_Y_Solo_Aplica_Al_Confirmar()
     {
         var vm = new MainViewModel(_db, () => new DateOnly(2026, 11, 1), new OcrFalso("Invoice No: INV-1\nSupplier: ACME\nIncoterm: CIF\nCurrency: USD\nGross Weight: 80 kg\nTotal Amount: USD 5,000.00"));
-        vm.NuevaCarpeta = "IMP-OCR"; vm.NuevoIncoterm = Incoterm.FOB; await vm.NuevaImportacionCmd.ExecuteAsync();
+        vm.NuevaCarpeta = "IMP-OCR"; vm.NuevoIncoterm = Incoterm.FOB; await vm.NuevaImportacionCmd.ExecuteAsync(); vm.FechaDim = new DateTime(2026, 6, 1);
         await vm.ProcesarDocumentoAsync("/tmp/factura-x.png");
         Assert.Equal(Incoterm.FOB, _db.Operaciones.Single().Incoterm);              // aún no se aplicó nada
         Assert.True(vm.ConfirmarPropuestaCmd.CanExecute(null));
@@ -89,7 +89,7 @@ public class DecisionViewModelTests : IDisposable
 
     async Task OperacionTablets()
     {
-        _vm.NuevaCarpeta = "IMP-DEC"; await _vm.NuevaImportacionCmd.ExecuteAsync();
+        _vm.NuevaCarpeta = "IMP-DEC"; await _vm.NuevaImportacionCmd.ExecuteAsync(); _vm.FechaDim = new DateTime(2026, 6, 1);
         _vm.ItemPartida = "8471300010"; _vm.ItemDescripcion = "Tablets"; _vm.ItemValor = 40_000; _vm.ItemPesoBruto = 800;
         await _vm.AgregarItemCmd.ExecuteAsync();
         _db.Items.Single().AlicuotaGA = 0.10m; await _db.SaveChangesAsync();       // sin catálogo cargado en esta prueba
@@ -140,7 +140,7 @@ public class ExcelYPdfTests : IDisposable
     [Fact]
     public async Task Excel_Contiene_Liquidacion_Con_Totales_Como_Formulas()
     {
-        _vm.NuevaCarpeta = "IMP-XLS"; await _vm.NuevaImportacionCmd.ExecuteAsync();
+        _vm.NuevaCarpeta = "IMP-XLS"; await _vm.NuevaImportacionCmd.ExecuteAsync(); _vm.FechaDim = new DateTime(2026, 6, 1);
         _vm.ItemPartida = "8471300010"; _vm.ItemDescripcion = "Tablets"; _vm.ItemValor = 40_000; _vm.ItemPesoBruto = 800;
         await _vm.AgregarItemCmd.ExecuteAsync();
         _db.Items.Single().AlicuotaGA = 0.10m; await _db.SaveChangesAsync();
@@ -170,7 +170,7 @@ public class RegresionesTests : IDisposable
     [Fact] // Hallazgo de la primera ejecución real: "Agregar ítem" borraba el flete y el seguro recién digitados.
     public async Task Agregar_Item_No_Borra_El_Flete_Ni_El_Seguro_Digitados()
     {
-        _vm.NuevaCarpeta = "IMP-REG"; await _vm.NuevaImportacionCmd.ExecuteAsync();
+        _vm.NuevaCarpeta = "IMP-REG"; await _vm.NuevaImportacionCmd.ExecuteAsync(); _vm.FechaDim = new DateTime(2026, 6, 1);
         _vm.Flete = 1800; _vm.Seguro = 150;
         _vm.ItemPartida = "8471300010"; _vm.ItemDescripcion = "Tablets"; _vm.ItemValor = 40_000; _vm.ItemPesoBruto = 800;
         await _vm.AgregarItemCmd.ExecuteAsync();
@@ -196,7 +196,7 @@ public class SeleccionWpfTests : IDisposable
     {
         var vm = new MainViewModel(_db, () => new DateOnly(2026, 11, 2), new OcrFalso2("Invoice No: INV-9\nIncoterm: CIF\nCurrency: USD\nTotal Amount: USD 5,000.00"));
         vm.Operaciones.CollectionChanged += (_, e) => { if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Reset) vm.Seleccionada = null; };
-        vm.NuevaCarpeta = "IMP-SEL"; await vm.NuevaImportacionCmd.ExecuteAsync();
+        vm.NuevaCarpeta = "IMP-SEL"; await vm.NuevaImportacionCmd.ExecuteAsync(); vm.FechaDim = new DateTime(2026, 6, 1);
         await vm.ProcesarDocumentoAsync("/tmp/f.png");
         await vm.ConfirmarPropuestaCmd.ExecuteAsync();
         Assert.StartsWith("Datos confirmados", vm.Mensaje);
@@ -214,7 +214,7 @@ public class AvisosArancelTests : IDisposable
     [Fact]
     public async Task Sin_Arancel_Cargado_Se_Avisa_Aunque_Se_Recalcule()
     {
-        _vm.NuevaCarpeta = "IMP-SIN"; await _vm.NuevaImportacionCmd.ExecuteAsync();
+        _vm.NuevaCarpeta = "IMP-SIN"; await _vm.NuevaImportacionCmd.ExecuteAsync(); _vm.FechaDim = new DateTime(2026, 6, 1);
         _vm.ItemPartida = "8471300010"; _vm.ItemDescripcion = "x"; _vm.ItemValor = 100; _vm.ItemPesoBruto = 1;
         await _vm.AgregarItemCmd.ExecuteAsync();
         await _vm.LiquidarCmd.ExecuteAsync();

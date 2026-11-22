@@ -277,17 +277,19 @@ public sealed class ConfiguracionViewModel : ObservableObject
     int _diasL; public int AlmacenDiasLibres { get => _diasL; set => Set(ref _diasL, value); }
     decimal _tolP = 30m; public decimal TolerancePrecioPct { get => _tolP; set => Set(ref _tolP, value); }
     decimal _tolW = 5m; public decimal TolerancePesoPct { get => _tolW; set => Set(ref _tolW, value); }
+    decimal _marg = 30m; public decimal MargenObjetivoPct { get => _marg; set => Set(ref _marg, value); }
+    decimal _ivaV = 13m; public decimal IvaVentaPct { get => _ivaV; set => Set(ref _ivaV, value); }
     bool _ivaRec = true; public bool IvaRecuperable { get => _ivaRec; set => Set(ref _ivaRec, value); }
     public RelayCommand GuardarParametrosCmd { get; }
     public RelayCommand RestaurarParametrosCmd { get; }
     void Mostrar(ParametrosTributarios p) { IvaPct = p.TasaIvaEfectiva * 100m; UmbralBancarizacion = p.UmbralBancarizacionBob; SeguroPresuntoPct = p.SeguroPresuntoPct * 100m; MaxGaPct = p.MaxAlicuotaGA * 100m; Redondeo = p.Redondeo.ToString(); Prorrateo = p.Prorrateo.ToString(); }
-    void MostrarAjustes(AjustesOperativos a) { AlmacenTarifa = a.AlmacenTarifaBsTonDia; AlmacenDiasLibres = a.AlmacenDiasLibres; TolerancePrecioPct = a.TolerancePrecio * 100m; TolerancePesoPct = a.TolerancePeso * 100m; IvaRecuperable = a.IvaRecuperable; }
+    void MostrarAjustes(AjustesOperativos a) { AlmacenTarifa = a.AlmacenTarifaBsTonDia; AlmacenDiasLibres = a.AlmacenDiasLibres; TolerancePrecioPct = a.TolerancePrecio * 100m; TolerancePesoPct = a.TolerancePeso * 100m; IvaRecuperable = a.IvaRecuperable; MargenObjetivoPct = a.MargenObjetivo * 100m; IvaVentaPct = a.IvaVenta * 100m; }
     async Task CargarParametrosAsync() { Mostrar(await _cfg.ObtenerParametrosAsync()); MostrarAjustes(await _cfg.ObtenerAjustesAsync()); }
     public Task GuardarParametrosAsync() => Seguro(async () =>
     {
         await _cfg.GuardarParametrosAsync(new ParametrosTributarios { TasaIvaEfectiva = IvaPct / 100m, UmbralBancarizacionBob = UmbralBancarizacion, SeguroPresuntoPct = SeguroPresuntoPct / 100m, MaxAlicuotaGA = MaxGaPct / 100m,
             Redondeo = Enum.Parse<ModoRedondeo>(Redondeo), Prorrateo = Enum.Parse<CriterioProrrateo>(Prorrateo) });
-        await _cfg.GuardarAjustesAsync(new(AlmacenTarifa, AlmacenDiasLibres, TolerancePrecioPct / 100m, TolerancePesoPct / 100m, IvaRecuperable));
+        await _cfg.GuardarAjustesAsync(new(AlmacenTarifa, AlmacenDiasLibres, TolerancePrecioPct / 100m, TolerancePesoPct / 100m, IvaRecuperable, MargenObjetivoPct / 100m, IvaVentaPct / 100m));
         Mensaje = "Parámetros guardados: se aplican a los próximos cálculos";
     });
     public Task RestaurarParametrosAsync() => Seguro(async () => { var d = new ParametrosTributarios(); Mostrar(d); await _cfg.GuardarParametrosAsync(d); var ad = new AjustesOperativos(); MostrarAjustes(ad); await _cfg.GuardarAjustesAsync(ad); Mensaje = "Parámetros restaurados a los valores por defecto"; });

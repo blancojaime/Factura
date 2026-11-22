@@ -18,10 +18,22 @@ jobs:
       - name: Construir instalador (incluye OCR)
         working-directory: ComexBolPro
         run: bash installer/construir-instalador.sh
+      - name: Paquete completo (instalador + manuales + plan)
+        working-directory: ComexBolPro
+        run: |
+          V=$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' src/ComexBol.App/ComexBol.App.csproj)
+          P="COMEX-JB-Paquete-Completo-$V"
+          mkdir -p "dist/$P/Manuales"
+          cp dist/ComexJB-Setup-*.exe "dist/$P/"
+          cp docs/manual/Manual-de-Usuario.* docs/manual/Manual-de-Instalacion-y-Pruebas.* docs/manual/Plan-de-Complementacion.* "dist/$P/Manuales/" 2>/dev/null || true
+          printf 'COMEX JB %s\n\n1. Ejecute ComexJB-Setup-%s.exe (instalador de un clic, incluye OCR).\n2. Si Windows muestra SmartScreen: Mas informacion > Ejecutar de todas formas.\n3. Los manuales (PDF y Word) y el plan de complementacion estan en la carpeta Manuales.\n' "$V" "$V" > "dist/$P/LEEME.txt"
+          (cd dist && zip -qr "$P.zip" "$P")
       - uses: actions/upload-artifact@v4
         with:
           name: ComexJB-Setup
-          path: ComexBolPro/dist/ComexJB-Setup-*.exe
+          path: |
+            ComexBolPro/dist/ComexJB-Setup-*.exe
+            ComexBolPro/dist/COMEX-JB-Paquete-Completo-*.zip
           retention-days: 30
       - name: Publicar como Release (descarga directa del .exe)
         env:
@@ -29,5 +41,5 @@ jobs:
         run: |
           TAG=comexjb-instalador
           gh release delete "$TAG" --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
-          gh release create "$TAG" ComexBolPro/dist/ComexJB-Setup-*.exe --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
-            --title "COMEX JB - instalador (con OCR)" --notes "Descargue ComexJB-Setup-*.exe y haga doble clic. Si Windows muestra SmartScreen: Más información > Ejecutar de todas formas."
+          gh release create "$TAG" ComexBolPro/dist/ComexJB-Setup-*.exe ComexBolPro/dist/COMEX-JB-Paquete-Completo-*.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+            --title "COMEX JB - instalador y manuales" --notes "Descargue COMEX-JB-Paquete-Completo-*.zip (instalador con OCR + manuales PDF y Word + plan de complementacion) o solo ComexJB-Setup-*.exe. Si Windows muestra SmartScreen: Mas informacion > Ejecutar de todas formas."

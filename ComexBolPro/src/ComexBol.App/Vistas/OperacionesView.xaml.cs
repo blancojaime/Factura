@@ -73,6 +73,13 @@ public partial class OperacionesView : UserControl
         if (dlg.ShowDialog() == true) await System.IO.File.WriteAllTextAsync(dlg.FileName, texto, System.Text.Encoding.UTF8);
     }
 
+    async void ExportarSuma_Click(object s, RoutedEventArgs e)
+    {
+        if (Vm.Seleccionada is null) return;
+        var dlg = new SaveFileDialog { Filter = "Excel|*.xlsx", FileName = $"SUMA-{Vm.Seleccionada.Carpeta}.xlsx" };
+        if (dlg.ShowDialog() == true) await Vm.ExportarSumaAsync(dlg.FileName);
+    }
+
     async void ExportarJson_Click(object s, RoutedEventArgs e)
     {
         if (Vm.Seleccionada is null) return;

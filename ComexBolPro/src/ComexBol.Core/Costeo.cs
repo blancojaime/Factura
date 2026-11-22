@@ -36,6 +36,14 @@ public static class Costeo
             lista.Sum(x => x.IvaCreditoFiscal), r.TotalTributos + gastos.Total);
     }
 
+    /// <summary>Precio de venta que deja el margen objetivo sobre el precio (sin IVA) y con el IVA de venta (13 % nominal) incluido.</summary>
+    public static (decimal SinIva, decimal ConIva) PrecioSugerido(decimal costoUnitarioBob, decimal margenSobrePrecio, decimal ivaVenta = 0.13m)
+    {
+        if (costoUnitarioBob <= 0 || margenSobrePrecio < 0 || margenSobrePrecio >= 1) return (0m, 0m);
+        var sin = Math.Round(costoUnitarioBob / (1m - margenSobrePrecio), 2, MidpointRounding.AwayFromZero);
+        return (sin, Math.Round(sin * (1m + ivaVenta), 2, MidpointRounding.AwayFromZero));
+    }
+
     /// <summary>Estimación de almacenaje: toneladas × días cobrables × tarifa (Bs por tonelada y día). Las tarifas las fija el concesionario: se configuran, no se suponen.</summary>
     public static decimal EstimarAlmacenaje(decimal pesoBrutoKg, int dias, int diasLibres, decimal tarifaBsPorTonDia)
         => Math.Round(Math.Max(0, dias - diasLibres) * (pesoBrutoKg / 1000m) * tarifaBsPorTonDia, 2, MidpointRounding.AwayFromZero);
@@ -53,7 +61,9 @@ public static class ExplicadorLiquidacion
         {
             var x = r.Items.FirstOrDefault(i => i.Numero == it.Numero); if (x is null) continue;
             l.Add($"Ítem {it.Numero} · {it.CodigoArancelario} · FOB {F(x.ValorFobBob)} → CIF {F(x.CifBob)} (incluye {F(x.CifBob - x.ValorFobBob)} de adiciones netas prorrateadas).");
-            l.Add($"   GA  = CIF {F(x.CifBob)} × {P(it.AlicuotaGA)}{(it.DesgravacionPreferencial > 0 ? $" × (1 − {P(it.DesgravacionPreferencial)} preferencia)" : "")} = {F(x.GA)}");
+            var alic = x.BaseGA > 0 ? x.AlicuotaGAAplicada : it.AlicuotaGA; var nuevaBase = x.BaseGA > 0 && x.BaseGA != x.CifBob;
+            l.Add($"   GA  = {(nuevaBase ? $"base del GA {F(x.BaseGA)} (D.S. 5646)" : $"CIF {F(x.CifBob)}")} × {P(alic)}{(it.DesgravacionPreferencial > 0 ? $" × (1 − {P(it.DesgravacionPreferencial)} preferencia)" : "")} = {F(x.GA)}");
+            if (!string.IsNullOrEmpty(x.NotaGA)) l.Add($"   Alícuota: {x.NotaGA}");
             if (x.ICE > 0) l.Add($"   ICE = (CIF + GA {F(x.CifBob + x.GA)}) × {P(it.AlicuotaIceAdValorem)}{(it.IceEspecificoPorUnidad > 0 ? $" + {F(it.IceEspecificoPorUnidad)} × {it.UnidadesIce:0.##} unid." : "")} = {F(x.ICE)}");
             if (x.IEHD > 0) l.Add($"   IEHD = {F(it.IehdBsPorLitro)} Bs/litro × {it.Litros:0.##} litros = {F(x.IEHD)}");
             l.Add($"   IVA = {P(p.TasaIvaEfectiva)} × (CIF + GA + ICE + IEHD{(x.OtrasErogaciones > 0 ? " + otras erogaciones" : "")}) {F(x.CifBob + x.GA + x.ICE + x.IEHD + x.OtrasErogaciones)} = {F(x.IVA)}");

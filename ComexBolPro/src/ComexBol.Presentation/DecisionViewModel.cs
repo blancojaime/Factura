@@ -15,9 +15,11 @@ public sealed class EscenarioFila : ObservableObject
     decimal _f; public decimal Flete { get => _f; set => Set(ref _f, value); }
     decimal _s; public decimal Seguro { get => _s; set => Set(ref _s, value); }
     decimal _d; public decimal DeduccionesPostFrontera { get => _d; set => Set(ref _d, value); }
+    decimal _dg; public decimal DesgravacionPct { get => _dg; set => Set(ref _dg, value); }       // preferencia por acuerdo comercial con Certificado de Origen (p. ej. proveedor de Brasil o Argentina: 100)
+    bool _ben; public bool Beneficio { get => _ben; set => Set(ref _ben, value); }                 // beneficio D.S. 5516 (GA 0 % hasta 31/12/2026)
 }
 
-public sealed record ResultadoEscenarioFila(string Nombre, string Incoterm, string CifBob, string Tributos, string CostoUnitario, string MargenPct, string Veredicto, bool EsMejor);
+public sealed record ResultadoEscenarioFila(string Nombre, string Incoterm, string CifBob, string Ga, string Tributos, string CostoUnitario, string MargenPct, string Veredicto, bool EsMejor);
 public sealed record LineaContraste(string Concepto, string App, string Dim, string Diferencia, string Estado);
 
 /// <summary>Pantallas "Decisión" (escenarios + viabilidad) y "Contraste con DIM real" (prueba P-09).</summary>
@@ -77,14 +79,16 @@ public sealed class DecisionViewModel : ObservableObject
             var lista = Escenarios.Select(e =>
             {
                 var k = e.ValorFactura / baseTotal;      // los ítems se escalan proporcionalmente a la oferta
-                var items = op.Items.OrderBy(i => i.Numero).Select(i => i.ToCore() with { ValorFactura = i.ValorFactura * k }).ToList();
-                return new Escenario(e.Nombre, new(e.Incoterm, op.MonedaFactura, items, null, M(e.Flete), M(e.Seguro), null, M(e.DeduccionesPostFrontera), op.OtrasErogacionesBob));
+                var items = op.Items.OrderBy(i => i.Numero).Select(i => i.ToCore() with { ValorFactura = i.ValorFactura * k,
+                    DesgravacionPreferencial = e.DesgravacionPct > 0 ? e.DesgravacionPct / 100m : i.Desgravacion, BeneficioDs5516 = e.Beneficio || i.BeneficioDs5516 }).ToList();
+                return new Escenario(e.Nombre, new(e.Incoterm, op.MonedaFactura, items, null, M(e.Flete), M(e.Seguro), null, M(e.DeduccionesPostFrontera), op.OtrasErogacionesBob,
+                    M(op.Ajustes().TotalAdiciones), M(op.Ajustes().TotalDeducciones), op.FechaDeclaracion, M(op.CargaDescarga)));
             }).ToList();
 
             var res = ComexBol.Core.Escenarios.Comparar(lista, tc, GastosLocalesBob, Unidades, PrecioMercadoConIva, MargenObjetivoPct / 100m);
             var mejor = res.First().Nombre;      // ordenado por costo unitario
             foreach (var r in res)
-                Resultados.Add(new(r.Nombre, Escenarios.First(e => e.Nombre == r.Nombre).Incoterm.ToString(), F(r.Liquidacion.CifBob), F(r.Liquidacion.TotalTributos),
+                Resultados.Add(new(r.Nombre, Escenarios.First(e => e.Nombre == r.Nombre).Incoterm.ToString(), F(r.Liquidacion.CifBob), F(r.Liquidacion.GA), F(r.Liquidacion.TotalTributos),
                     F(r.Viabilidad.CostoUnitario), r.Viabilidad.MargenPct.ToString("P1", Bo), r.Veredicto, r.Nombre == mejor));
             Mensaje = PrecioMercadoConIva <= 0 ? "Ingrese el precio de mercado para ver margen y veredicto." : $"Menor costo unitario: {mejor}";
         }

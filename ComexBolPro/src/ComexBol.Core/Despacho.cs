@@ -28,9 +28,14 @@ public static class Despacho
 
     /// <summary>Valida la consistencia de la DIM antes de entregarla a la agencia despachante o transmitirla en el SUMA.</summary>
     public static IReadOnlyList<Hallazgo> Validar(DatosDespacho d, decimal pesoBrutoItemsKg, int numeroItems, bool hayLiquidacion, bool davResuelta,
-        bool bancarizacionPendiente, int documentosFaltantes, decimal toleranciaPeso = 0.05m)
+        bool bancarizacionPendiente, int documentosFaltantes, decimal toleranciaPeso = 0.05m, ReglaImportador? regla = null)
     {
         var h = new List<Hallazgo>();
+        if (regla is { TipoImportador: "Ocasional" })
+        {
+            if (regla.FobUsdDespacho > regla.TopeDespachoUsd) h.Add(new(NivelHallazgo.Error, $"Como importador no habitual el tope es USD {regla.TopeDespachoUsd:N0} FOB por despacho y este despacho es de USD {regla.FobUsdDespacho:N2}: regístrese como Importador Habitual en el Padrón de Operadores."));
+            else if (regla.AcumuladoAnualUsd + regla.FobUsdDespacho > regla.TopeAnualUsd) h.Add(new(NivelHallazgo.Error, $"Con este despacho el acumulado anual (USD {regla.AcumuladoAnualUsd + regla.FobUsdDespacho:N2}) supera el tope de USD {regla.TopeAnualUsd:N0} del importador no habitual."));
+        }
         void Req(string valor, string nombre) { if (string.IsNullOrWhiteSpace(valor)) h.Add(new(NivelHallazgo.Error, $"Falta {nombre}.")); }
         Req(d.TipoDespacho, "el tipo de despacho"); Req(d.Regimen, "el régimen aduanero"); Req(d.AduanaIngreso, "la aduana de ingreso");
         Req(d.AduanaDestino, "la aduana de destino"); Req(d.CodigoDeclarante, "el código de declarante / agencia despachante");

@@ -32,6 +32,10 @@ public class Operacion
     public List<EventoBitacora> Bitacora { get; set; } = [];
     public List<CostoOperacion> Costos { get; set; } = [];
     public List<TareaDespacho> TareasDespacho { get; set; } = [];
+    public List<EstadoPaso> Pasos { get; set; } = [];
+    /// <summary>Fecha de aceptación de la DIM: determina las medidas arancelarias vigentes (null = régimen anterior sin decretos 2026).</summary>
+    public DateOnly? FechaDeclaracion { get; set; }
+    public decimal CargaDescarga { get; set; }   // moneda de la factura
 
     // --- Valoración aduanera (DAV): cuestionario de descarte y ajustes del Art. 8 (en la moneda de la factura) ---
     public bool CuestionarioRespondido { get; set; }
@@ -81,6 +85,17 @@ public class Operacion
     public DatosDespacho DatosDim() => new(TipoDespacho, Regimen, AduanaIngreso, AduanaDestino, CodigoDeclarante, ModalidadTransporte, NroDocEmbarque, Bultos, PesoBrutoManifiestoKg, NroManifiesto, NroDav, NroDim);
 }
 
+/// <summary>Avance de un paso de la guía de procedimiento (P-01…P-11) o de la lista de control del expediente (C-01…C-12).</summary>
+public class EstadoPaso
+{
+    public int Id { get; set; }
+    public int OperacionId { get; set; }
+    public string Codigo { get; set; } = "";
+    public bool Hecho { get; set; }
+    public DateOnly? Fecha { get; set; }
+    public string Nota { get; set; } = "";
+}
+
 /// <summary>Tarea de la lista de control del canal de selectividad (Verde/Amarillo/Rojo).</summary>
 public class TareaDespacho
 {
@@ -117,9 +132,10 @@ public class ItemMercancia
     public decimal Litros { get; set; }
     public string AcuerdoPreferencial { get; set; } = "";   // CAN, ACE 22, ACE 36, ACE 47, ACE 66, VEN... (lo elige el usuario con el Certificado de Origen)
     public int AntiguedadAnios { get; set; }      // vehículos: 0 = nuevo (para el ICE del Apéndice I)
+    public bool BeneficioDs5516 { get; set; }     // maquinaria del Anexo 3/4 del D.S. 5516: GA 0 % hasta el 31/12/2026
 
     public ItemImportacion ToCore() => new(Numero, CodigoNandina, Descripcion, ValorFactura, PesoBrutoKg, PesoNetoKg,
-        AlicuotaGA, Desgravacion, AlicuotaIce, IceEspecificoPorUnidad, UnidadesIce, IehdBsPorLitro, Litros);
+        AlicuotaGA, Desgravacion, AlicuotaIce, IceEspecificoPorUnidad, UnidadesIce, IehdBsPorLitro, Litros, BeneficioDs5516);
 }
 
 public class EtapaRuta
@@ -245,6 +261,7 @@ public class ComexDb(Microsoft.EntityFrameworkCore.DbContextOptions<ComexDb> o) 
     public Microsoft.EntityFrameworkCore.DbSet<PerfilImportador> Perfiles => Set<PerfilImportador>();
     public Microsoft.EntityFrameworkCore.DbSet<CostoOperacion> Costos => Set<CostoOperacion>();
     public Microsoft.EntityFrameworkCore.DbSet<TareaDespacho> TareasDespacho => Set<TareaDespacho>();
+    public Microsoft.EntityFrameworkCore.DbSet<EstadoPaso> EstadosPaso => Set<EstadoPaso>();
 
     protected override void OnModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder b)
     {

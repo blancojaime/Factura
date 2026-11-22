@@ -33,7 +33,16 @@ public sealed class ServicioDespacho(ComexDb db)
             bancarizacion = r.RequiereBancarizacion && string.IsNullOrWhiteSpace(op.NroComprobantePago);
         }
         var dav = op.CuestionarioRespondido && Valoracion.Descartar(op.Cuestionario(), op.Ajustes()).PrimerMetodoAplicable;
-        return Despacho.Validar(op.DatosDim(), op.Items.Sum(i => i.PesoBrutoKg), op.Items.Count, ult is not null, dav, bancarizacion, faltan, toleranciaPeso);
+        ReglaImportador? regla = null;
+        var perfil = await db.Perfiles.AsNoTracking().FirstOrDefaultAsync();
+        if (perfil is { TipoImportador: "Ocasional" } && op.MonedaFactura == "USD")
+        {
+            var anio = (op.FechaDeclaracion ?? op.FechaInicio).Year;
+            var otros = await db.Operaciones.AsNoTracking().Include(o => o.Items).Where(o => o.Id != opId && o.MonedaFactura == "USD").ToListAsync();
+            var acumulado = otros.Where(o => (o.FechaDeclaracion ?? o.FechaInicio).Year == anio).Sum(o => o.Items.Sum(i => i.ValorFactura));
+            regla = new("Ocasional", op.Items.Sum(i => i.ValorFactura), acumulado);
+        }
+        return Despacho.Validar(op.DatosDim(), op.Items.Sum(i => i.PesoBrutoKg), op.Items.Count, ult is not null, dav, bancarizacion, faltan, toleranciaPeso, regla);
     }
 
     /// <summary>Asigna el canal y genera su lista de control (reemplaza la lista del canal anterior).</summary>

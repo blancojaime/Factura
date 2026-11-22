@@ -45,7 +45,7 @@ public sealed class ServicioOperaciones(ComexDb db)
         var it = await db.Items.FirstAsync(i => i.Id == nuevo.Id);
         it.CodigoNandina = nuevo.CodigoNandina; it.Descripcion = nuevo.Descripcion; it.ValorFactura = nuevo.ValorFactura; it.PesoBrutoKg = nuevo.PesoBrutoKg; it.PesoNetoKg = nuevo.PesoNetoKg;
         it.Cantidad = nuevo.Cantidad; it.AlicuotaGA = nuevo.AlicuotaGA; it.Desgravacion = nuevo.Desgravacion; it.AcuerdoPreferencial = nuevo.AcuerdoPreferencial; it.AlicuotaIce = nuevo.AlicuotaIce;
-        it.AntiguedadAnios = nuevo.AntiguedadAnios; it.Marca = nuevo.Marca; it.Modelo = nuevo.Modelo; it.Serie = nuevo.Serie; it.PaisOrigen = nuevo.PaisOrigen;
+        it.AntiguedadAnios = nuevo.AntiguedadAnios; it.BeneficioDs5516 = nuevo.BeneficioDs5516; it.Marca = nuevo.Marca; it.Modelo = nuevo.Modelo; it.Serie = nuevo.Serie; it.PaisOrigen = nuevo.PaisOrigen;
         if (it.Desgravacion > 0) (await db.Operaciones.FirstAsync(o => o.Id == it.OperacionId)).UsaPreferenciaArancelaria = true;
         await Log(it.OperacionId, "Ítem", $"Ítem {it.Numero} modificado: {it.CodigoNandina} «{it.Descripcion}» por {it.ValorFactura:N2}.");
         await db.SaveChangesAsync();
@@ -103,14 +103,14 @@ public sealed class ServicioOperaciones(ComexDb db)
         Money? M(decimal v) => v == 0 ? null : new Money(v, op.MonedaFactura);
         var core = new OperacionImportacion(op.Incoterm, op.MonedaFactura, op.Items.OrderBy(i => i.Numero).Select(i => i.ToCore()).ToList(),
             M(op.GastosOrigen), M(op.Flete), M(op.Seguro), M(op.OtrosGastosFrontera), M(op.Deducciones), op.OtrasErogacionesBob,
-            M(op.Ajustes().TotalAdiciones), M(op.Ajustes().TotalDeducciones));
+            M(op.Ajustes().TotalAdiciones), M(op.Ajustes().TotalDeducciones), op.FechaDeclaracion, M(op.CargaDescarga));
         var r = CalculadoraTributaria.Calcular(core, tc, p);
 
         var version = op.Liquidaciones.Count + 1;
         db.Liquidaciones.Add(new()
         {
             OperacionId = opId, Version = version, CalculadaEn = DateTime.Now, TipoCambioFecha = tc.Fecha,
-            TipoCambioJson = JsonSerializer.Serialize(new { tc.Fecha, op.MonedaFactura }), ParametrosJson = JsonSerializer.Serialize(p, Json),
+            TipoCambioJson = JsonSerializer.Serialize(new { tc.Fecha, op.MonedaFactura, TasaBobPorUnidad = tc.ABob(new Money(1m, op.MonedaFactura)) }), ParametrosJson = JsonSerializer.Serialize(p, Json),
             ResultadoJson = JsonSerializer.Serialize(r, Json), CifBob = r.CifBob, TotalTributos = r.TotalTributos
         });
         await Log(opId, "Liquidación", $"v{version}: CIF Bs {r.CifBob:N2}, tributos Bs {r.TotalTributos:N2} (TC al {tc.Fecha}).");

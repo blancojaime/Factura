@@ -18,7 +18,7 @@ public class ModulosAduanerosTests : IDisposable
         await new ServicioCatalogo(_db).ImportarResultadoAsync(new([new("8471300010", "Tablet", 0.10m, "u", false, [], "TEST")], []), "2026");
         await new ServicioConfiguracion(_db).GuardarTipoCambioAsync(Hoy, "USD", 6.96m);
         var vm = new MainViewModel(_db, () => Hoy) { UsuarioActual = "jaime" };
-        vm.NuevaCarpeta = "IMP-M1"; await vm.NuevaImportacionCmd.ExecuteAsync();
+        vm.NuevaCarpeta = "IMP-M1"; await vm.NuevaImportacionCmd.ExecuteAsync(); vm.FechaDim = new DateTime(2026, 6, 1);
         vm.ItemPartida = "8471300010"; vm.ItemDescripcion = "Tablets"; vm.ItemValor = 40_000m; vm.ItemPesoBruto = 800m; vm.ItemCantidad = cantidad; vm.Flete = 1_800m; vm.Seguro = 150m;
         await vm.AgregarItemCmd.ExecuteAsync(); await vm.LiquidarCmd.ExecuteAsync();
         return vm;
@@ -91,5 +91,62 @@ public class ModulosAduanerosTests : IDisposable
         c.AlmacenTarifa = 3m; c.AlmacenDiasLibres = 2; c.TolerancePrecioPct = 25m; c.IvaRecuperable = false;
         await c.GuardarParametrosCmd.ExecuteAsync();
         var a = await new ServicioConfiguracion(_db).ObtenerAjustesAsync(); Assert.Equal(3m, a.AlmacenTarifaBsTonDia); Assert.Equal(0.25m, a.TolerancePrecio); Assert.False(a.IvaRecuperable);
+    }
+
+    [Fact] public async Task Operacion_Nueva_Propone_La_Fecha_De_Hoy_Y_Aplica_El_Ds5646_Con_Impacto_Y_Precio_Sugerido()
+    {
+        var vm = await OpConItem(200);
+        vm.FechaDim = null; await Task.CompletedTask;
+        // se vuelve a crear con la fecha por defecto: hoy (2026-11-02) → rige el D.S. 5646
+        var v2 = new MainViewModel(_db, () => Hoy) { UsuarioActual = "jaime" }; v2.NuevaCarpeta = "IMP-N2"; await v2.NuevaImportacionCmd.ExecuteAsync();
+        Assert.Equal(new DateTime(2026, 11, 2), v2.FechaDim); Assert.Contains("D.S. 5646", v2.AvisoMedidas);
+        v2.ItemPartida = "8471300010"; v2.ItemDescripcion = "Tablets"; v2.ItemValor = 40_000m; v2.ItemPesoBruto = 800m; v2.ItemCantidad = 200m; v2.Flete = 1_800m; v2.Seguro = 150m;
+        await v2.AgregarItemCmd.ExecuteAsync(); await v2.LiquidarCmd.ExecuteAsync();
+        // base GA = 278.400 + 10 % × 13.572 = 279.757,20 ; GA 5 % = 13.987,86 ; IVA = 14,94 % × (291.972 + 13.987,86)
+        Assert.Contains(v2.Detalle.Items, i => i.Partida == "TOTAL" && i.GA == "13.987,86");
+        var tot = v2.Detalle.Impacto.Single(x => x.Destacada); Assert.Equal("77.179,88", tot.Anterior); Assert.NotEqual(tot.Anterior, tot.Aplicado);
+        Assert.Contains(v2.Detalle.Impacto, x => x.Concepto.StartsWith("Gravamen") && x.Anterior == "29.197,20" && x.ConDs5646 == "13.987,86");
+        var c = v2.Detalle.Costeo.Single(); Assert.NotEqual("—", c.PrecioSinIva); Assert.Contains("margen 30", v2.Detalle.ResumenCosteo);
+        Assert.Contains(v2.Detalle.Pasos, p => p.Contains("D.S. 5646"));
+    }
+
+    [Fact] public async Task Beneficio_Ds5516_Del_Item_Se_Marca_Desde_El_Formulario()
+    {
+        var vm = new MainViewModel(_db, () => Hoy) { UsuarioActual = "jaime" };
+        await new ServicioCatalogo(_db).ImportarResultadoAsync(new([new("8417209000", "Hornos de panadería, no eléctricos", 0.10m, "u", false, [], "TEST")], []), "2026");
+        vm.NuevaCarpeta = "IMP-B"; await vm.NuevaImportacionCmd.ExecuteAsync();
+        vm.ItemPartida = "8417209000"; vm.ItemDescripcion = "Horno a gas"; vm.ItemValor = 10_000m; vm.ItemCantidad = 5; vm.ItemBeneficio = true; vm.Flete = 1_000m;
+        await vm.AgregarItemCmd.ExecuteAsync(); await vm.LiquidarCmd.ExecuteAsync();
+        Assert.Contains(vm.Detalle.Items, i => i.Partida == "TOTAL" && i.GA == "0,00");
+        Assert.Contains(vm.Detalle.Pasos, p => p.Contains("D.S. 5516") || p.Contains("GA"));
+        var g = vm.Guia; Assert.Equal(11, g.Pasos.Count); Assert.Equal(12, g.Control.Count); Assert.Contains("0 de 11", g.Avance);
+        g.Pasos[0].Hecho = true; await Task.Delay(300); Assert.Contains("1 de 11", g.Avance);
+    }
+}
+
+public class DecisionConMedidasTests : IDisposable
+{
+    readonly SqliteConnection _cn = new("Data Source=:memory:"); readonly ComexDb _db;
+    static readonly DateOnly Hoy = new(2026, 11, 2);
+    public DecisionConMedidasTests() { _cn.Open(); _db = new(new DbContextOptionsBuilder<ComexDb>().UseSqlite(_cn).Options); _db.AsegurarEsquema(); }
+    public void Dispose() { _db.Dispose(); _cn.Dispose(); }
+
+    [Fact] public async Task Escenarios_Comparan_Origenes_Con_Preferencia_Y_Beneficio_Segun_La_Fecha_De_La_Dim()
+    {
+        await new ServicioCatalogo(_db).ImportarResultadoAsync(new([new("8412900000", "Partes de motores", 0.10m, "u", false, [], "TEST")], []), "2026");
+        await new ServicioConfiguracion(_db).GuardarTipoCambioAsync(Hoy, "USD", 6.96m);
+        var vm = new MainViewModel(_db, () => Hoy) { UsuarioActual = "jaime" }; vm.NuevaCarpeta = "IMP-ESC"; await vm.NuevaImportacionCmd.ExecuteAsync();   // fecha de DIM = hoy (D.S. 5646)
+        vm.ItemPartida = "8412900000"; vm.ItemDescripcion = "Partes"; vm.ItemValor = 20_000m; vm.ItemCantidad = 10; vm.ItemPesoBruto = 500; await vm.AgregarItemCmd.ExecuteAsync();
+        var d = vm.Decision; d.Unidades = 10; d.PrecioMercadoConIva = 4_000m;
+        d.AgregarEscenarioCmd.Execute(null); d.AgregarEscenarioCmd.Execute(null); d.AgregarEscenarioCmd.Execute(null);
+        foreach (var e in d.Escenarios) { e.Incoterm = Incoterm.CIF; e.ValorFactura = 20_000m; }
+        d.Escenarios[0].Nombre = "China (arancel 2026)";
+        d.Escenarios[1].Nombre = "Brasil con Certificado de Origen"; d.Escenarios[1].DesgravacionPct = 100;
+        d.Escenarios[2].Nombre = "China con beneficio D.S. 5516"; d.Escenarios[2].Beneficio = true;
+        await d.CompararCmd.ExecuteAsync();
+        var por = d.Resultados.ToDictionary(r => r.Nombre);
+        Assert.Equal("6.960,00", por["China (arancel 2026)"].Ga.Replace(" ", ""));      // 20.000 × 6,96 = 139.200 × 5 % (10 % − 5 puntos del D.S. 5646)
+        Assert.Equal("0,00", por["Brasil con Certificado de Origen"].Ga); Assert.Equal("0,00", por["China con beneficio D.S. 5516"].Ga);
+        Assert.NotEqual(por["China (arancel 2026)"].Tributos, por["Brasil con Certificado de Origen"].Tributos);
     }
 }

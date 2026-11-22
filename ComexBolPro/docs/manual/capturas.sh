@@ -5,21 +5,24 @@
 # Uso: capturas.sh <carpeta-salida>
 set -u
 OUT="${1:-capturas}"; mkdir -p "$OUT"
-export WINEPREFIX="${WINEPREFIX:-/tmp/wp5}" DISPLAY=:99 WINEDEBUG=-all
+mkdir -p /run/user/0 && chmod 700 /run/user/0
+export XDG_RUNTIME_DIR=/run/user/0 WINEPREFIX="${WINEPREFIX:-/tmp/wp5}" DISPLAY=:99 WINEDEBUG=-all
 RAW=$(mktemp -d)
 shot(){ sleep 0.8; import -window root "$RAW/$1.png" && convert "$RAW/$1.png" -crop 1492x866+104+80 +repage "$OUT/$1.png"; }
 click(){ xdotool mousemove "$1" "$2" click 1; sleep 1; }
+fechadim(){ click 1190 731; xdotool key ctrl+a; xdotool type --delay 40 -- "$1"; xdotool key Tab; sleep 0.5; }
 field(){ click "$1" "$2"; xdotool key ctrl+a; xdotool type --delay 40 -- "$3"; sleep 0.3; }
 cell(){ click "$1" "$2"; xdotool type --delay 40 -- "$3"; xdotool key Return; sleep 0.5; }
+cerrar_wine(){ ps -eo pid,comm | grep -iE "wine|ComexJB|services|explorer|winedevice|plugplay|rpcss|svchost|conhost" | awk '{print $1}' | xargs -r kill -9 2>/dev/null; }
 pgrep Xvfb >/dev/null || { Xvfb :99 -screen 0 1700x1000x24 >/dev/null 2>&1 & sleep 2; }
-wineserver -k 2>/dev/null; sleep 1
+cerrar_wine; sleep 1
 rm -f "$WINEPREFIX/drive_c/users/root/AppData/Local/ComexJB/comex.db"*     # base vacía
 (cd "$WINEPREFIX/drive_c/cb" && WINEDLLOVERRIDES="mshtml=d" nohup wine ComexJB.exe --ventana >/tmp/capturas-app.log 2>&1 &)
 for i in $(seq 1 60); do xdotool search --name "COMEX JB" >/dev/null 2>&1 && break; sleep 1; done; sleep 6
 
 # Navegación lateral y pestañas (coordenadas de pantalla)
 NAV_PANEL="180 287"; NAV_OPS="180 327"; NAV_ARA="180 367"; NAV_CFG="180 408"; NAV_ACE="180 448"
-T_MER="700 212"; T_VAL="806 212"; T_LIQ="913 212"; T_DES="1019 212"; T_DEC="1115 212"; T_CON="1210 212"; T_COS="1300 212"; T_RUT="1373 212"; T_LEG="1445 212"
+T_MER="700 212"; T_VAL="806 212"; T_LIQ="913 212"; T_DES="1019 212"; T_DEC="1115 212"; T_CON="1210 212"; T_COS="1300 212"; T_RUT="1373 212"; T_LEG="1445 212"; T_GUI="1517 212"
 C_TC="430 167"; C_UFV="533 167"; C_PAR="655 167"; C_PER="831 167"; C_USU="962 167"; C_DAT="1081 167"
 
 # ---- Inicio de sesión (primer uso: crea al administrador) ----
@@ -40,29 +43,49 @@ field 495 168 "IMP-2026-001"; shot 08-nueva-importacion
 click 495 259; sleep 3; click 1330 311; xdotool type --delay 60 "tablet"; sleep 3; shot 09-selector-partida
 xdotool key ctrl+a; xdotool type --delay 60 "84713000"; sleep 3; shot 10-selector-por-codigo
 click 1300 355; sleep 2
-field 1170 475 "40000"; field 1270 475 "200"; field 1390 475 "500"; field 1175 657 "1800"; field 1315 657 "150"; shot 11-formulario-item
-click 1162 704; sleep 3; click 740 330; sleep 1; shot 12-item-agregado
-click 1385 676; sleep 3; click $T_LIQ; sleep 2; shot 13-liquidacion
+field 1150 475 "40000"; field 1265 475 "200"; field 1375 475 "500"; field 1175 682 "1800"; field 1315 682 "150"; fechadim "6/1/2026"; shot 11-formulario-item
+click 1162 786; sleep 3; click 740 330; sleep 1; shot 12-item-agregado
+click 1385 758; sleep 3; click $T_LIQ; sleep 2; shot 13-liquidacion
 click $T_MER; sleep 1; click 740 330; click 700 680; sleep 2; shot 14-editar-item
-click 1162 704; sleep 3; shot 15-item-editado
+click 1162 786; sleep 3; shot 15-item-editado
 click 740 330; click 840 680; sleep 2; shot 16-confirmar-eliminar-item
 xdotool key y; sleep 2; shot 17-item-eliminado
 # ---- Decisión, contraste, costos, ruta, legajo ----
-click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3; click 1170 475; xdotool key ctrl+a; xdotool type "40000"; click 1270 475; xdotool key ctrl+a; xdotool type "200"; click 1390 475; xdotool key ctrl+a; xdotool type "500"; click 1162 704; sleep 3; click 1385 676; sleep 3
+click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3; click 1150 475; xdotool key ctrl+a; xdotool type "40000"; click 1265 475; xdotool key ctrl+a; xdotool type "200"; click 1375 475; xdotool key ctrl+a; xdotool type "500"; fechadim "6/1/2026"; click 1162 786; sleep 3; click 1385 758; sleep 3
 # ---- Valoración aduanera (DAV) ----
 click $T_VAL; sleep 1.5; click 668 331; sleep 1; shot 36-valoracion-cuestionario
 # operación anterior de la misma partida, para el historial de precios
 click $NAV_OPS; sleep 2; field 495 168 "IMP-2025-099"; click 495 259; sleep 3
 click $T_MER; sleep 1.5
-click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3; click 1170 475; xdotool key ctrl+a; xdotool type "30000"; click 1270 475; xdotool key ctrl+a; xdotool type "200"; click 1390 475; xdotool key ctrl+a; xdotool type "500"; click 1162 704; sleep 3
+click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3; click 1150 475; xdotool key ctrl+a; xdotool type "30000"; click 1265 475; xdotool key ctrl+a; xdotool type "200"; click 1375 475; xdotool key ctrl+a; xdotool type "500"; click 1162 786; sleep 3
 click 495 439; sleep 3; click $T_VAL; sleep 1.5; click 668 331; click 1566 700; sleep 1
 field 877 346 "500"; field 877 398 "1000"; click 1327 418; xdotool type --delay 30 "Royalty por licencia + diseno del fabricante"; click 746 572; sleep 2; shot 37-valoracion-ajustes
 click 730 706; sleep 3; click 1566 700; sleep 1; shot 38-valoracion-precios
 click 1566 300; sleep 1; shot 39-valoracion-resultado
-click $T_MER; sleep 1.5; click 1385 676; sleep 3
+click $T_MER; sleep 1.5; click 1385 758; sleep 3
 click $T_LIQ; sleep 2; shot 40-liquidacion-valor
 click 1566 700; sleep 1; shot 41-liquidacion-items-costeo
+click 1566 800; sleep 1
 field 755 604 "3000"; field 1150 604 "2000"; field 1497 604 "5"; click 732 649; sleep 3; shot 42-liquidacion-gastos
+# ---- se quitan los ajustes del Art. 8 para volver a las cifras base de los casos (Decisión, contraste y costos) ----
+click $T_VAL; sleep 1.5; click 1566 700; sleep 1; field 877 346 "0"; field 877 398 "0"; click 746 572; sleep 2; click $T_MER; sleep 1.5; click 1385 758; sleep 3
+# ---- Régimen arancelario vigente (D.S. 5646 / D.S. 5516): fecha de la DIM = hoy ----
+click $NAV_OPS; sleep 2; field 495 168 "IMP-2026-030"; click 495 259; sleep 3; click $T_MER; sleep 1.5
+click 1330 311; xdotool type --delay 40 "8471300010"; sleep 3
+field 1150 475 "40000"; field 1265 475 "200"; field 1375 475 "500"; field 1175 682 "1800"; field 1315 682 "150"; shot 46-formulario-fecha-dim
+click 1162 786; sleep 3; click 1385 758; sleep 3; click $T_LIQ; sleep 2; shot 47-liquidacion-regimen-vigente
+click 1566 260; click 1566 260; click 1566 260; for i in 1 2 3 4 5 6 7 8; do click 1566 817; done; sleep 1; shot 48-liquidacion-impacto
+# ---- Caso del manual de procedimientos: hornos a gas para pizzas con beneficio D.S. 5516 ----
+click $NAV_OPS; sleep 2; field 495 168 "IMP-2026-031"; click 495 259; sleep 3; click $T_MER; sleep 1.5
+click 1330 311; xdotool type --delay 40 "8417209000"; sleep 3
+field 1155 447 "8080"; field 1270 447 "10"; field 1390 447 "1200"; click 1107 590; field 1175 653 "1450"; field 1315 653 "180"; shot 49-beneficio-ds5516
+click 1162 758; sleep 3; click 1385 758; sleep 3; click $T_LIQ; sleep 2; shot 50-caso-hornos
+# ---- Guía de procedimiento ----
+click $T_GUI; sleep 2; shot 51-guia-procedimiento
+click 690 467; sleep 1; click 810 497; sleep 2; shot 52-guia-paso-marcado
+# ---- Hoja de transcripción para el SUMA ----
+click $T_MER; sleep 1; click 1390 140; sleep 3; shot 53-hoja-suma-dialogo; xdotool key Escape; sleep 1
+click $NAV_OPS; sleep 1; click 495 497; sleep 2     # vuelve a IMP-2026-001 (lista: 031, 030, 099, 001)
 # ---- Despacho aduanero (DIM) ----
 click $T_DES; sleep 2; click 705 515; sleep 1; click 823 515; sleep 2; shot 43-despacho-validacion-errores
 field 730 364 "Tambo Quemado"; field 880 364 "La Paz"; field 1030 364 "ADA-0123"
@@ -73,10 +96,11 @@ click 1230 347; xdotool type --delay 90 "Roj"; xdotool key Return; sleep 0.5; cl
 click $T_DEC; sleep 1.5
 field 706 311 "200"; field 824 311 "4500"; field 976 311 "2800"
 click 743 347; click 743 347; click 743 347; sleep 1; shot 18-decision-escenarios
-cell 697 479 "FOB + flete propio"; cell 1089 479 "40000"; cell 1192 479 "1800"; cell 1271 479 "150"
-cell 697 520 "CIF del proveedor"; click 1014 520; xdotool type --delay 90 "CIF"; xdotool key Return; sleep 0.5; cell 1089 520 "42000"
-cell 697 559 "DAP del proveedor"; click 1014 559; xdotool type --delay 90 "DAP"; xdotool key Return; sleep 0.5; cell 1089 559 "44000"; cell 1350 559 "1200"
+cell 697 480 "FOB + flete propio"; cell 1000 480 "40000"; cell 1075 480 "1800"; cell 1155 480 "150"
+cell 697 520 "CIF del proveedor"; click 905 520; xdotool type --delay 90 "CIF"; xdotool key Return; sleep 0.5; cell 1000 520 "42000"
+cell 697 560 "DAP del proveedor"; click 905 560; xdotool type --delay 90 "DAP"; xdotool key Return; sleep 0.5; cell 1000 560 "44000"; cell 1235 560 "1200"
 click 882 347; sleep 3; shot 19-decision-resultados
+cell 1335 520 "100"; click 1442 560; click 882 347; sleep 3; shot 54-decision-origen-preferencias
 click $T_CON; sleep 1.5; field 710 311 "29197,20"; field 840 311 "0"; field 1085 311 "47982,68"; click 716 347; sleep 2; shot 20-contraste
 click $T_COS; sleep 1.5; click 800 336; sleep 2; shot 21-costos-reales
 click $T_RUT; sleep 2; click 1453 302; sleep 2; shot 22-ruta-critica
@@ -97,4 +121,4 @@ click $NAV_PANEL; sleep 2; shot 30-panel
 click $NAV_ACE; sleep 2; shot 31-acerca-de
 click $NAV_OPS; sleep 2; click 495 440; sleep 1; click 495 896; sleep 2; shot 32-confirmar-eliminar-operacion
 xdotool key y; sleep 2; shot 33-operacion-eliminada
-wineserver -k 2>/dev/null; echo "Capturas en $OUT"; ls "$OUT" | wc -l
+cerrar_wine; echo "Capturas en $OUT"; ls "$OUT" | wc -l
