@@ -8,7 +8,7 @@ use App\Services\Correspondencia as C;
 /** Ventanilla única: registro de correspondencia externa (ciudadanos, comunidades, instituciones). */
 final class VentanillaController extends Controller
 {
-    protected array $roles = ['index' => ['admin', 'ventanilla'], 'nueva' => ['admin', 'ventanilla'], 'cargo' => ['admin', 'ventanilla']];
+    protected array $roles = ['index' => ['admin', 'ventanilla'], 'nueva' => ['admin', 'ventanilla'], 'cargo' => ['admin', 'ventanilla'], 'sello' => ['admin', 'ventanilla']];
 
     public function index(): void
     {
@@ -64,5 +64,19 @@ final class VentanillaController extends Controller
         $solo = in_array($this->in('solo'), ['cargo', 'etiqueta'], true) ? $this->in('solo') : '';
         $copias = max(1, min(12, $this->inInt('copias') ?: ($solo === 'etiqueta' ? 6 : 2)));
         $this->view('ventanilla/cargo', ['h' => $h, 'der' => $der, 'solo' => $solo, 'copias' => $copias, 'titulo' => 'Recepción ' . $h['nur']], 'layout_print');
+    }
+
+    /** Sello de recepción: escudo + QR para imprimir sobre la copia de la nota de presentación. */
+    public function sello(): void
+    {
+        $h = C::hoja($this->inInt('id'));
+        if ($h['origen'] !== 'externo') throw new \RuntimeException('Esta hoja no es de correspondencia externa.');
+        $validas = ['sd' => 'Superior derecha', 'md' => 'Media derecha', 'id' => 'Inferior derecha', 'si' => 'Superior izquierda', 'mi' => 'Media izquierda', 'ii' => 'Inferior izquierda'];
+        $pos = array_values(array_intersect(array_keys($validas), (array)($_GET['pos'] ?? [])));
+        if (!$pos && !isset($_GET['f'])) $pos = ['sd'];
+        $tam = in_array($this->in('tam'), ['p', 'm', 'g'], true) ? $this->in('tam') : 'm';
+        $dx = max(-30, min(30, (int)$this->in('dx', '0'))); $dy = max(-30, min(30, (int)$this->in('dy', '0')));
+        if (!isset($_GET['f'])) Audit::log('sello_qr', 'hoja', (int)$h['id'], implode(',', $pos));
+        $this->view('ventanilla/sello', ['h' => $h, 'pos' => $pos, 'validas' => $validas, 'tam' => $tam, 'dx' => $dx, 'dy' => $dy, 'titulo' => 'Sello QR ' . $h['nur']], 'layout_print');
     }
 }

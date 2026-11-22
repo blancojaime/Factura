@@ -88,3 +88,28 @@ function select_usuarios(string $name, int $excluirId = 0, string $extra = ''): 
     }
     return $h . '</select>';
 }
+
+/** Color y descripción formal de cada tipo de documento (por prefijo del CITE). */
+function tipo_estilo(string $prefijo): array
+{
+    static $m = [
+        'INF' => ['#16457a', 'Informa hechos, avances o resultados.'],
+        'CAR' => ['#8b1e3f', 'Comunicación formal hacia otra institución o persona.'],
+        'CIR' => ['#1f6f3d', 'Disposición general dirigida a varias unidades.'],
+        'MEM' => ['#3f3d9a', 'Instrucción o comunicación de una autoridad.'],
+        'NI'  => ['#0f766e', 'Comunicación entre unidades de la misma entidad.'],
+        'INS' => ['#a16207', 'Instrucciones de cumplimiento obligatorio.'],
+        'CER' => ['#475569', 'Acredita un hecho o una situación.'],
+        'RA'  => ['#7c3f1d', 'Decisión administrativa con efecto legal.'],
+        'IL'  => ['#6d28d9', 'Opinión jurídica sobre un asunto.'],
+        'EXT' => ['#c2410c', 'Comunicación externa recibida en ventanilla.'],
+        'SOL' => ['#1d6fa5', 'Petición formal de un servicio o trámite.'],
+    ];
+    $x = $m[strtoupper($prefijo)] ?? ['#475569', 'Documento oficial.'];
+    return ['color' => $x[0], 'desc' => $x[1]];
+}
+
+function tipo_badge(string $prefijo, string $nombre): string
+{
+    return '<span class="tbadge" style="--tc:' . e(tipo_estilo($prefijo)['color']) . '"><i>' . e($prefijo) . '</i>' . e($nombre) . '</span>';
+}

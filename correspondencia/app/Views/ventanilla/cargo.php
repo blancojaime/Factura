@@ -17,6 +17,7 @@ $base = ['id' => $h['id']]; ?>
   <a class="btn" href="<?= url('ventanilla/cargo', $base) ?>">Cargo + etiquetas</a>
   <a class="btn" href="<?= url('ventanilla/cargo', $base + ['solo' => 'cargo']) ?>">Solo cargo</a>
   <a class="btn" href="<?= url('ventanilla/cargo', $base + ['solo' => 'etiqueta']) ?>">Solo etiquetas</a>
+  <a class="btn sello" href="<?= url('ventanilla/sello', $base) ?>">Sello QR con escudo (copia de la nota)</a>
   <a class="btn" href="<?= url('ventanilla/index') ?>">Volver</a></div>
 <section class="pagina rc-pagina">
 <?php if ($solo !== 'etiqueta'): ?>

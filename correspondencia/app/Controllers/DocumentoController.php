@@ -57,7 +57,7 @@ final class DocumentoController extends Controller
             redirect('documento/editar', ['id' => $d['id']]);
         }
         $adj = DB::all('SELECT * FROM adjuntos WHERE documento_id=? ORDER BY id', [$d['id']]);
-        $this->pag('documento/form', 'Editar ' . $d['cite'], ['tipo' => ['nombre' => $d['tipo']], 'doc' => $d, 'hoja' => C::hoja((int)$d['hoja_id']), 'nuevo' => false, 'adjuntos' => $adj, 'tab' => $this->in('tab', 'edicion')]);
+        $this->pag('documento/form', 'Editar ' . $d['cite'], ['tipo' => ['nombre' => $d['tipo'], 'prefijo' => $d['prefijo']], 'doc' => $d, 'hoja' => C::hoja((int)$d['hoja_id']), 'nuevo' => false, 'adjuntos' => $adj, 'tab' => $this->in('tab', 'edicion')]);
     }
 
     public function ver(): void
@@ -73,8 +73,8 @@ final class DocumentoController extends Controller
     {
         $u = Auth::user();
         $tipo = $this->inInt('tipo');
-        $conteo = DB::all('SELECT t.id, t.nombre, COUNT(d.id) n FROM tipos_documento t LEFT JOIN documentos d ON d.tipo_id=t.id AND d.creado_por=? WHERE t.activo=1 GROUP BY t.id, t.nombre HAVING n>0 ORDER BY t.nombre', [$u['id']]);
-        $docs = DB::all('SELECT d.id, d.cite, d.referencia, d.destinatario_nombre, d.destinatario_cargo, d.creado_en, t.nombre AS tipo, h.id AS hoja_id, h.nur
+        $conteo = DB::all('SELECT t.id, t.nombre, t.prefijo, COUNT(d.id) n FROM tipos_documento t LEFT JOIN documentos d ON d.tipo_id=t.id AND d.creado_por=? WHERE t.activo=1 GROUP BY t.id, t.nombre, t.prefijo HAVING n>0 ORDER BY t.nombre', [$u['id']]);
+        $docs = DB::all('SELECT d.id, d.cite, d.referencia, d.destinatario_nombre, d.destinatario_cargo, d.creado_en, t.nombre AS tipo, t.prefijo, h.id AS hoja_id, h.nur
             FROM documentos d JOIN tipos_documento t ON t.id=d.tipo_id JOIN hojas_ruta h ON h.id=d.hoja_id
             WHERE d.creado_por=?' . ($tipo ? ' AND d.tipo_id=' . $tipo : '') . ' ORDER BY d.id DESC LIMIT 100', [$u['id']]);
         $this->pag('documento/creados', 'Documentos creados', ['conteo' => $conteo, 'docs' => $docs, 'tipo' => $tipo]);

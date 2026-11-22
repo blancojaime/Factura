@@ -1,6 +1,7 @@
 <?php
-$d = $doc; $tab = $tab ?? 'edicion'; $u = App\Core\Auth::user();
-if ($nuevo): ?><p class="muted">Llene correctamente los datos. El NUR y el CITE se asignan automáticamente.</p><?php else: ?>
+$d = $doc; $tab = $tab ?? 'edicion'; $u = App\Core\Auth::user(); $est = tipo_estilo((string)($tipo['prefijo'] ?? ''));
+?><div class="tipo-banner" style="--tc:<?= e($est['color']) ?>"><i><?= e($tipo['prefijo'] ?? '') ?></i><div><b><?= e($tipo['nombre']) ?></b><small><?= e($est['desc']) ?></small></div></div>
+<?php if ($nuevo): ?><p class="muted">Llene correctamente los datos. El NUR y el CITE se asignan automáticamente.</p><?php else: ?>
 <p><b>NUR:</b> <?= e($hoja['nur']) ?> · <b>CITE:</b> <?= e($d['cite']) ?>
   · <a href="<?= url('documento/ver', ['id' => $d['id']]) ?>" target="_blank">Ver / imprimir</a> · <a href="<?= url('hoja/derivar', ['id' => $hoja['id']]) ?>">Derivar</a></p>
 <div class="tabs"><a href="<?= url('documento/editar', ['id' => $d['id']]) ?>" class="<?= $tab === 'edicion' ? 'on' : '' ?>">Edición</a>

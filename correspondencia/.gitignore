@@ -9,3 +9,4 @@ instalador/descargas/
 instalador/*.log
 respaldos/
 CLAVES_TEMPORALES.csv
+tools/manuales/out/

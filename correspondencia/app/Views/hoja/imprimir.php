@@ -40,7 +40,7 @@ $idx = 0; ?>
     <div class="hr-logo"><?php if ($logo): ?><img src="<?= e($logo) ?>" alt="Logo"><?php endif; ?></div>
     <div class="hr-ent"><?php if ($superior): ?><small><?= e($superior) ?></small><?php endif; ?><b><?= e(mb_strtoupper($entidad)) ?></b></div>
     <div class="hr-qr" data-qr="<?= e(TextoQr::hojaRuta($hoja, $doc)) ?>" aria-label="Código QR de la hoja de ruta"></div>
-    <div class="hr-titulo"><span>HOJA DE RUTA <?= $externa ? 'EXTERNA' : 'INTERNA' ?></span><strong><?= e($hoja['nur']) ?></strong></div>
+    <div class="hr-titulo"><span>HOJA DE RUTA <?= $externa ? 'EXTERNA' : 'INTERNA' ?></span><strong><?= e($hoja['nur']) ?></strong><em>Código de control: <b><?= e($hoja['codigo_consulta']) ?></b></em></div>
   </header>
   <div class="hr-datos">
     <div class="hr-g1">

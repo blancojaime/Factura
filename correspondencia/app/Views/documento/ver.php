@@ -1,6 +1,6 @@
 <p class="noprint"><button class="btn primary" data-print>Imprimir / Guardar PDF</button>
   <a class="btn" href="<?= e($volver ?: url('seguimiento/ver', ['id' => $d['hoja_id']])) ?>" onclick="if(history.length>1){history.back();return false}">Volver</a></p>
-<article class="memo">
+<article class="memo" style="--tc:<?= e(tipo_estilo($d['prefijo'])['color']) ?>">
   <header><h2><?= e(App\Core\Config::get('entidad')) ?></h2><h3><?= e(mb_strtoupper($d['tipo'])) ?></h3><p><b><?= e($d['cite']) ?></b><br>NUR: <?= e($d['nur']) ?></p></header>
   <table class="datos">
     <tr><th>A:</th><td><b><?= e($d['destinatario_nombre']) ?></b><br><?= e($d['destinatario_cargo']) ?></td></tr>

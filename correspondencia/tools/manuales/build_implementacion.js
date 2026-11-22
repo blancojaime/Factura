@@ -1,0 +1,203 @@
+const L = require('./lib.js'); const { h1, h2, h3, p, ul, ol, note, img, table, pb } = L;
+h1('Capítulo 1. ¿Qué es este sistema y para qué sirve?');
+p('El **Sistema de Correspondencia** es un programa que funciona en el navegador (Chrome, Edge o Firefox) y reemplaza el cuaderno de entradas y salidas de documentos de una entidad pública. Está inspirado en el sistema CODICE y adaptado a un municipio rural: usa PHP 8 y MariaDB (gratuitos), corre en una sola computadora para pruebas y puede pasar después a un servidor o hosting económico.');
+h2('1.1 Qué puede hacer');
+ul(['Crear documentos oficiales (Informe, Carta, Circular, Memorándum…) con numeración automática: el **NUR** (número único de trámite) y el **CITE** (numeración oficial del documento).', 'Derivar (enviar) la correspondencia entre funcionarios, con copias, urgencia y seguimiento de quién la tiene.', 'Imprimir la **hoja de ruta** en Carta vertical, con código QR y **código de control**.', 'Registrar la correspondencia **externa** en Ventanilla, imprimir el cargo de recepción, las etiquetas y el **sello QR con escudo** sobre la copia de la nota.', 'Permitir que el ciudadano **consulte su trámite** con el NUR y el código de control, y vea por dónde pasó y **dónde está ahora**.', 'Agrupar, archivar, buscar, y sacar reportes para los jefes.']);
+h2('1.2 Novedades de la versión 1.2');
+table(['Novedad', 'Qué cambia para el usuario'], [
+ ['Documentos con colores', 'Cada tipo de documento (Informe, Carta, Circular…) tiene su color formal para distinguirlo de un vistazo (Capítulo 6.1).'],
+ ['Nombre y cargo arriba a la derecha', 'En toda pantalla se ve **quién** ha ingresado: nombre, apellido y cargo.'],
+ ['Ventanilla en colores', 'El registro de correspondencia externa se presenta en cuatro secciones numeradas y coloreadas (Capítulo 8.1).'],
+ ['Sello QR con escudo', 'La encargada de Ventanilla marca con casillas dónde imprimir el sello sobre la copia de la nota: arriba, al medio o abajo (Capítulo 8.2).'],
+ ['Consulta con código de control', 'El ciudadano ingresa NUR + código de control y ve la trazabilidad y la ubicación actual (Capítulo 8.4).'],
+ ['Código de control en la hoja de ruta', 'Se imprime junto al NUR y dentro del QR de la hoja de ruta (Capítulo 6.13).']], [2600, 6760]);
+h2('1.3 Cómo viaja una correspondencia');
+ol(['El funcionario (o Ventanilla) **crea o registra** el documento: el sistema entrega el NUR y la hoja de ruta.', 'Lo **deriva** a otro funcionario con un proveído (instrucción).', 'El destinatario la ve en **Entrada** y la **recepciona**; pasa a **Pendientes**.', 'La atiende: la responde (mismo NUR), la deriva a otro, o la **archiva**.', 'Todo queda registrado: se puede consultar por **Seguimiento** (funcionarios) o por la **Consulta pública** (ciudadano).']);
+h2('1.4 Palabras que verá en el sistema');
+table(['Palabra', 'Significado sencillo'], [['NUR', 'Número único del trámite, ej. GAME/2026-00006. Acompaña al trámite de principio a fin.'], ['CITE', 'Número oficial del documento, ej. INF/GAME/DAM Nº 0001/2026.'], ['Hoja de ruta', 'La “ficha de viaje”: lista de los pasos y funcionarios por donde pasa el trámite.'], ['Código de control', 'Clave de 6 caracteres de la hoja de ruta. Junto al NUR permite consultar el trámite sin ingresar al sistema.'], ['Derivar', 'Enviar el trámite a otra persona. Puede ser **oficial** (responsable) o **copia** (solo conocimiento).'], ['Proveído', 'La instrucción escrita al derivar (“Para su atención”).'], ['Entrada / Pendientes / Archivados', 'Buzones: lo que llegó, lo que debo atender, lo guardado.'], ['Ventanilla', 'Puesto que recibe la correspondencia externa (vecinos, comunidades, instituciones).']], [2400, 6960]);
+
+h1('Capítulo 2. Antes de empezar');
+h2('2.1 Qué necesita');
+ul(['Una computadora con Windows 10 u 11 (para la prueba en una sola máquina), con conexión a internet solo durante la instalación.', 'Un navegador moderno (Chrome, Edge o Firefox).', 'La carpeta del sistema descargada de GitHub (archivo ZIP) y el archivo Excel de oficinas y cargos.', 'Una impresora (o la opción “Guardar como PDF”) para probar las impresiones.']);
+h2('2.2 Qué se instalará');
+p('El instalador coloca, dentro de la misma carpeta, un PHP y una MariaDB “portátiles”. No modifica otros programas de la computadora y se puede borrar eliminando la carpeta.');
+note('warn', 'Los instaladores **INSTALAR.bat**, **ACTUALIZAR.bat** y los scripts de la carpeta *instalador* se desarrollaron y revisaron, pero **no pudieron ejecutarse en una máquina Windows real** en el entorno de desarrollo. Las pantallas negras de este manual son **ilustraciones**. Si algo falla, anote el mensaje (Capítulo 9) y use la alternativa XAMPP (Capítulo 11.2).');
+h2('2.3 Quién hace qué');
+table(['Rol', 'Qué hace'], [['Administrador', 'Instala, importa oficinas y cargos, entrega claves, asigna nombres, respalda.'], ['Jefe / funcionario', 'Crea documentos, deriva, recepciona, responde, archiva y consulta reportes.'], ['Ventanilla', 'Registra la correspondencia externa, imprime cargo, etiquetas y sello QR.'], ['Ciudadano', 'Consulta su trámite con NUR y código de control (sin usuario).']], [2400, 6960]);
+
+h1('Capítulo 3. Instalación con INSTALAR.bat (una sola computadora)');
+h2('3.1 Paso a paso');
+ol(['Descargue el ZIP del sistema (enlace en el Capítulo 13) y **extráigalo** (clic derecho → Extraer todo) en, por ejemplo, el Escritorio.', 'Abra la carpeta **correspondencia** y haga doble clic en **INSTALAR.bat**.', 'Si Windows pregunta, elija “Más información → Ejecutar de todas formas”.', 'Responda las preguntas: nombre de su entidad, sigla (ej. GAMA) y la clave del administrador.', 'Espere. Verá una pantalla negra con pasos [1/6] … [6/6].', 'Al terminar se abre el navegador en el sistema.']);
+img('80-consola-instalar.jpg', 'Ilustración de la pantalla del instalador (simulada: no se probó en Windows).', 520);
+h2('3.2 Uso diario');
+p('Para trabajar, haga doble clic en **INICIAR.bat** (o el acceso directo del Escritorio) y abra el navegador en **http://127.0.0.1:8080**. Para terminar, cierre la ventana negra.');
+h2('3.3 Si el instalador muestra un error');
+ul(['Anote el mensaje exacto (o saque una foto de la pantalla).', 'Pruebe ejecutar de nuevo como administrador (clic derecho → Ejecutar como administrador).', 'Verifique la conexión a internet y que el antivirus no bloquee la descarga.', 'Si no se resuelve, use la instalación con XAMPP (Capítulo 11.2).']);
+
+h1('Capítulo 4. Primer ingreso y recorrido por la pantalla');
+h2('4.1 Ingresar al sistema');
+p('Abra el navegador en **http://127.0.0.1:8080**. Escriba su **usuario** y su **contraseña** y pulse el botón azul. Si se equivoca, el sistema lo avisa y no revela cuál de los dos datos falló.');
+img('01-login.jpg', 'Pantalla de ingreso. 1 usuario, 2 contraseña, 3 botón Ingresar, 4 consulta pública de trámites.', 480);
+img('02-login-error.jpg', 'Mensaje cuando el usuario o la contraseña no son correctos.', 480);
+note('info', 'Tras varios intentos fallidos el sistema bloquea temporalmente el ingreso, como medida contra quien intenta adivinar claves.');
+h2('4.2 Su primera vez: cambio de clave obligatorio');
+p('Las claves que entrega el administrador son **temporales**. Al ingresar por primera vez se le pide elegir una clave propia (mínimo 8 caracteres, con letras y números).');
+img('03-primer-ingreso.jpg', 'Cambio obligatorio de clave. 1 aviso, 2 clave actual (la temporal), 3 clave nueva, 4 repetirla.', 480);
+h2('4.3 La pantalla de Inicio y el nombre en la esquina');
+p('**Novedad v1.2:** en la parte superior derecha, junto al buscador, siempre se muestra su **nombre y apellido** (en negrita) y debajo su **cargo**. Si usted atiende varias cuentas o comparte una computadora, así sabe con quién está trabajando. Al pasar el mouse sobre el nombre se ve además su oficina.');
+img('04-inicio.jpg', 'Pantalla de Inicio. 1 menú, 2 buscador, 3 Bandeja, 4 Documentos, 5 Estadísticas, 6 Usuario, 7 nombre y cargo del usuario.', 560);
+h2('4.4 Mis datos');
+img('36-cambiar-datos.jpg', 'Cambiar mis datos (nombre, cargo, correo).', 480);
+img('35-cambiar-clave.jpg', 'Cambiar mi contraseña.', 480);
+img('37-info-usuario.jpg', 'Información de mi usuario (oficina, cargo, rol).', 480);
+
+h1('Capítulo 5. El administrador: preparar el sistema');
+h2('5.1 Importar las oficinas y cargos desde Excel');
+p('Menú **Administración → Importar**. Suba el archivo Excel de oficinas y cargos. El sistema crea una oficina por cada una y un usuario por cada cargo, con su clave temporal.');
+img('61-admin-importar.jpg', 'Pantalla de importación del Excel de oficinas y cargos.', 540);
+h2('5.2 Entregar las claves temporales');
+img('62-admin-credenciales.jpg', 'Lista de usuarios con su clave temporal para imprimir y entregar en sobre cerrado.', 540);
+note('warn', 'Entregue cada clave solo a su dueño. La clave temporal deja de servir en cuanto la persona elige la suya.');
+h2('5.3 Asignar los nombres reales');
+p('El Excel trae cargos, no personas. En **Nombres** el administrador escribe el nombre real de quien ocupa cada cargo.');
+img('63-admin-nombres.jpg', 'Asignación de nombres reales a los cargos.', 540);
+h2('5.4 Usuarios y oficinas');
+img('64-admin-usuarios.jpg', 'Lista de usuarios: roles, estado, reiniciar clave.', 540);
+img('65-admin-oficinas.jpg', 'Lista de oficinas y su sigla (se usa en el CITE).', 540);
+h2('5.5 Tipos de documento');
+p('Los tipos (Informe, Carta, Circular…) y su prefijo se administran en **Tipos**. Cada prefijo recibe automáticamente su color (ver 6.1).');
+img('66-admin-tipos.jpg', 'Tipos de documento y su prefijo.', 540);
+h2('5.6 Auditoría: quién hizo qué');
+img('67-admin-auditoria.jpg', 'Registro de auditoría: ingresos, creaciones, derivaciones, impresiones del sello QR.', 540);
+h2('5.7 Datos de la entidad: nombre oficial y escudo');
+p('En **Entidad** se escribe el nombre oficial y se sube el **escudo/logo** (PNG o JPG). Ese mismo escudo se imprime en la hoja de ruta, en el cargo, en las etiquetas, en el **sello QR** y en la consulta pública.');
+img('68-admin-entidad.jpg', 'Datos de la entidad y carga del escudo.', 540);
+
+h1('Capítulo 6. El funcionario: trabajar con la correspondencia');
+h2('6.1 Crear un documento (ahora con colores por tipo)');
+p('Menú **Documentos → Crear nuevo documento**. **Novedad v1.2:** cada tipo se muestra como una tarjeta con su propio color formal y su prefijo, para reconocerlo al instante. Se mantiene en el formulario, en las listas y en la vista impresa.');
+table(['Prefijo', 'Tipo', 'Color'], [['INF', 'Informe', 'Azul marino'], ['CAR', 'Carta', 'Burdeos'], ['CIR', 'Circular', 'Verde bosque'], ['MEM', 'Memorándum', 'Índigo'], ['NI', 'Nota Interna', 'Turquesa oscuro'], ['INS', 'Instructivo', 'Ocre'], ['CER', 'Certificación', 'Gris pizarra'], ['RA', 'Resolución Administrativa', 'Marrón'], ['IL', 'Informe Legal', 'Violeta'], ['EXT', 'Comunicación Externa', 'Naranja quemado'], ['SOL', 'Solicitud', 'Azul acero']], [1500, 4300, 3560]);
+img('05-tipos-documento.jpg', 'Menú de documentos con tarjetas de colores. 1 tarjetas por tipo, 2 opción del menú lateral.', 560);
+p('Al elegir una tarjeta se abre el formulario con una **franja del mismo color**. Complete el destinatario, la referencia y el contenido, y pulse **Guardar**.');
+img('06-form-documento.jpg', 'Formulario de un Informe. 1 franja de color, 2 destinatario, 3 nombre/cargo manual, 4 referencia, 5 contenido, 6 Guardar.', 560);
+img('07-documento-creado.jpg', 'Documento creado: el sistema entrega el NUR y el CITE.', 560);
+h2('6.2 Adjuntar archivos');
+img('08-adjuntos.jpg', 'Pestaña Adjuntos: suba PDF, Word, imágenes.', 540);
+h2('6.3 Mis hojas de ruta');
+img('09-hojas-lista.jpg', 'Lista de hojas de ruta: Derivar, ver documento, filtro.', 540);
+h2('6.4 Derivar (enviar) la correspondencia');
+img('10-derivar-form.jpg', 'Formulario de derivación. 1 destinatario, 2 acción, 3 proveído, 4 urgente, 5 enviar como oficial, 6 enviar como copia.', 560);
+img('11-derivado-hecho.jpg', 'Derivación registrada: una oficial y dos copias.', 560);
+note('tip', 'La derivación **oficial** es para quien debe atender el trámite; las **copias** son solo para conocimiento y no exigen respuesta.');
+h2('6.5 Enviados y cancelar una derivación');
+img('12-enviados.jpg', 'Bandeja Enviados. 1 lista, 2 cancelar, 3 cuaderno de derivaciones, 4 seleccionar todo.', 560);
+p('Mientras el destinatario **no la haya recepcionado**, se puede cancelar y el trámite vuelve a Pendientes.');
+img('71-cancelado-ok.jpg', 'Derivación cancelada.', 440);
+img('72-volvio-pendientes.jpg', 'El trámite vuelve a Pendientes del que lo envió.', 440);
+h2('6.6 Entrada: recibir correspondencia');
+img('14-entrada.jpg', 'Entrada: 1 filtro, 2 contador, 3 etiqueta URGENTE, 4 Recepcionar, 5 seleccionar todo, 6 recepcionar varias.', 560);
+img('70-recibido-ok.jpg', 'Confirmación de recepción.', 440);
+h2('6.7 Pendientes y el semáforo');
+p('Pendientes muestra lo que usted debe atender. El **semáforo** indica los días: verde (reciente), amarillo (4 a 7 días), rojo (más de 7 días).');
+img('15-pendientes.jpg', 'Pendientes. 1 rojo, 2 amarillo, 3 verde, 4 Derivar, 5 Generar respuesta, 6 filtro, 7 acciones en lote.', 560);
+h2('6.8 Generar una respuesta (mismo NUR)');
+img('16-respuesta-tipo.jpg', 'Se elige el tipo de la respuesta (también en colores).', 560);
+img('17-respuesta-form.jpg', 'Formulario de la respuesta: conserva el mismo NUR.', 560);
+h2('6.9 Ver e imprimir un documento');
+img('18-documento-imprimible.jpg', 'Documento listo para imprimir; la franja de color identifica el tipo.', 560);
+img('19-derivar-respuesta.jpg', 'Derivar la respuesta al destinatario.', 560);
+h2('6.10 Agrupar hojas de ruta');
+img('20-agrupar.jpg', 'Elegir la hoja principal de la agrupación.', 500);
+img('21-agrupacion-detalle.jpg', 'Carátula de la agrupación.', 500);
+img('22-agrupados.jpg', 'Bandeja Agrupados.', 500);
+h2('6.11 Archivar y desarchivar');
+img('23-archivar.jpg', 'Archivar en una carpeta.', 500);
+img('24-archivados.jpg', 'Carpetas de archivados.', 500);
+img('25-archivados-carpeta.jpg', 'Contenido de una carpeta; se puede desarchivar.', 500);
+h2('6.12 Cuaderno de derivaciones (impresión)');
+img('26-enviados-secretaria.jpg', 'Se marcan los trámites enviados y se elige la posición inicial.', 540);
+img('27-cuaderno.jpg', 'Cuaderno generado en PDF.', 540);
+h2('6.13 Imprimir la hoja de ruta (Carta vertical, con QR y código de control)');
+p('Desde la hoja de ruta, pulse **Imprimir (Carta vertical)**. En la cabecera se ve el escudo, el **QR** y, **novedad v1.2**, el **código de control** de 6 caracteres debajo del NUR. Ese código es el que el ciudadano necesita para consultar su trámite.');
+img('48-hoja-ruta-control.jpg', 'Hoja de ruta. 1 código de control, 2 código QR.', 560);
+p('El QR de la hoja de ruta contiene el texto: HOJA DE RUTA, CODIGO DE CONTROL, procedencia, referencia, fecha. Se verificó leyéndolo con un lector de códigos.');
+h2('6.14 Hoja de ruta en blanco y hojas anexas');
+p('En la misma pantalla se elige **Contenido: en blanco** o con derivaciones y el número de **hojas anexas** (que llevan arriba el NUR del trámite) para seguir anotando derivaciones a mano.');
+h2('6.15 Seguimiento: dónde está un trámite');
+img('30-seguimiento-lista.jpg', 'Lista de trámites bajo seguimiento.', 520);
+img('29-seguimiento.jpg', 'Detalle: 1 datos y código de control, 2 paso actual, 3 historial completo con nombres.', 560);
+h2('6.16 Buscar');
+img('31-busqueda.jpg', 'Búsqueda por NUR, CITE o referencia, con filtros.', 540);
+
+h1('Capítulo 7. Jefes: reportes y usuarios dependientes');
+img('38-inicio-con-dependientes.jpg', 'El jefe ve los pendientes de sus dependientes.', 540);
+img('32-reporte-oficina.jpg', 'Pendientes de la oficina.', 540);
+img('33-reporte-recibida.jpg', 'Correspondencia recibida y enviada (con CSV).', 540);
+img('34-reporte-personalizado.jpg', 'Reporte personalizado por estado y fechas.', 540);
+
+h1('Capítulo 8. Ventanilla y consulta pública del ciudadano');
+h2('8.1 Registrar correspondencia externa (nuevo diseño)');
+p('Ingrese como usuario de Ventanilla. En **Ventanilla → Registrar nueva** el formulario se divide en **cuatro secciones numeradas, cada una de un color formal**: 1 Datos del remitente (azul), 2 Documento presentado (verde), 3 Derivación (ocre), 4 Observaciones (violeta).');
+img('40-ventanilla-lista-vacia.jpg', 'Ventanilla: encabezado institucional y botón “Registrar correspondencia externa”.', 540);
+img('41-ventanilla-nueva.jpg', 'Formulario de registro. Secciones 1 a 4 y botón Registrar y derivar (5).', 560);
+p('Al pulsar **Registrar y derivar** el sistema crea el NUR y el código de control, deriva al funcionario elegido y muestra los enlaces para imprimir.');
+img('42-ventanilla-registrada.jpg', 'Registro exitoso con enlaces de impresión.', 540);
+img('43-ventanilla-lista.jpg', 'Lista de registros externos. 1 botón Sello QR, 2 código de control.', 540);
+h2('8.2 Cargo de recepción y etiquetas');
+img('44-cargo.jpg', 'Cargo de recepción (una página Carta con el cargo y las etiquetas). 1 enlace al sello QR, 2 NUR, 3 QR de recepción.', 560);
+p('El QR de recepción contiene: CODIGO DE CONTROL (el NUR), tipo de entrada, fecha y hora de registro, referencia, remitente, fojas, anexos y celular de contacto.');
+h2('8.3 Sello QR con escudo sobre la copia de la nota (nuevo)');
+p('Cuando el ciudadano trae su nota y una **copia**, la encargada de Ventanilla puede sellar la copia con el **escudo y el QR**, **en el lugar donde haya espacio libre**:');
+ol(['En la lista de registros pulse **Sello QR** (o desde el cargo: “Sello QR con escudo”).', 'Mire la copia de la nota y **marque con una casilla** dónde hay espacio: Superior derecha, Media derecha, Inferior derecha (o las del lado izquierdo). Puede marcar más de una.', 'Elija el **tamaño** (pequeño, mediano o grande).', 'Si al probar el sello sale corrido, use el **ajuste horizontal y vertical** en milímetros.', 'Coloque **la copia de la nota en la bandeja** de la impresora y pulse **Imprimir sello (Carta vertical)**. Solo se imprime el sello; el resto de la hoja queda en blanco.']);
+img('45-sello-form.jpg', 'Pantalla del sello. 1 casillas de posición, 2 tamaño, 3 ajuste fino, 4 imprimir, 5 vista previa de la hoja Carta.', 560);
+img('46-sello-tres-posiciones.jpg', 'El sello (escudo + NUR + QR + fecha) sobre una copia de nota, en las tres posiciones: superior, media e inferior derecha. Composición ilustrativa con una nota de ejemplo.', 600);
+note('tip', 'Haga primero una prueba en una hoja común: coloque la hoja impresa contra la copia a trasluz para comprobar que el sello cae en el espacio libre.');
+note('info', 'Cada impresión del sello queda anotada en la **Auditoría** (acción “sello_qr”).');
+h2('8.4 El ciudadano consulta su trámite (con NUR + código de control)');
+p('Cualquier persona puede entrar a la **Consulta de trámite** (enlace en la pantalla de ingreso, sin usuario) y escribir el **NUR** y el **código de control** que figuran en su comprobante.');
+img('50-consulta-form.jpg', 'Consulta pública. 1 NUR, 2 código de control, 3 Consultar.', 520);
+img('51-consulta-error.jpg', 'Si el código no corresponde, el sistema no da ninguna información.', 520);
+img('52-consulta-resultado.jpg', 'Resultado. 1 estado del trámite, 2 **dónde se encuentra ahora**, 3 trazabilidad completa.', 560);
+table(['Qué muestra', 'Detalle'], [['Ficha', 'NUR, código de control, fecha de registro, tiempo transcurrido, asunto y oficina de origen.'], ['Estado', 'En trámite / Concluido o archivado / Registrado, pendiente de derivación.'], ['Dónde está ahora', 'Oficina y cargo que tiene el trámite, desde cuándo y cuántos días lleva ahí.'], ['Trazabilidad', 'Cada paso: fecha de envío y recepción, de qué oficina-cargo a cuál, días en cada puesto.']], [2400, 6960]);
+note('info', '**Privacidad:** el ciudadano ve solo **oficinas y cargos**; no se muestran nombres de personas, proveídos ni el contenido de los documentos. Hay un límite de intentos por seguridad.');
+
+h1('Capítulo 9. Casos especiales y mensajes del sistema');
+table(['Mensaje o situación', 'Qué hacer'], [['“Usuario o contraseña incorrectos”', 'Revise mayúsculas; si olvidó la clave, pida al administrador que la reinicie.'], ['“Demasiados intentos”', 'Espere unos minutos y reintente.'], ['“No tiene permiso para esta acción” (403)', 'Su rol no incluye esa opción (por ejemplo, Ventanilla solo la usa Ventanilla).'], ['“Código de control no corresponde” (consulta)', 'Verifique el NUR y el código tal como están impresos; cuide 0/O y 1/I.'], ['El sello sale corrido', 'Use el ajuste en mm y pruebe en hoja común.'], ['No aparece el escudo', 'El administrador debe subirlo en Entidad.'], ['No puedo cancelar una derivación', 'Solo se cancela antes de que el destinatario la recepcione.'], ['Una página sale en blanco al imprimir', 'En el diálogo de impresión elija Carta, márgenes “Predeterminados” y desactive “Encabezados y pies de página”.']], [3700, 5660]);
+
+h1('Capítulo 10. Seguridad, respaldos y mantenimiento');
+ul(['Cada persona usa **su propia cuenta** y nunca presta su clave.', 'Cambie la clave del administrador de prueba antes de usar el sistema en serio.', '**Respaldo diario:** copie la carpeta **storage** y exporte la base de datos (ACTUALIZAR.bat hace una copia de seguridad antes de actualizar).', 'Guarde el respaldo en otro disco o memoria USB, fuera de la computadora.']);
+h2('10.1 Actualizar a una nueva versión');
+p('Descargue el ZIP nuevo, extráigalo y ejecute **ACTUALIZAR.bat** dentro de la carpeta ya instalada: respalda, copia los archivos nuevos y aplica los cambios de base de datos. **La versión 1.2 no requiere cambios de base de datos.**');
+img('81-consola-actualizar.jpg', 'Ilustración de ACTUALIZAR.bat (simulada: no se probó en Windows).', 520);
+h2('10.2 Dónde está cada cosa');
+table(['Carpeta', 'Contenido'], [['app', 'Programa (controladores, vistas, servicios).'], ['public', 'Lo que ve el navegador: estilos, scripts, imágenes.'], ['database', 'Estructura de la base y migraciones.'], ['storage', 'Archivos subidos, respaldos y registros. ¡Respáldela!'], ['docs', 'Estos manuales (Word y PDF).'], ['tests', 'Pruebas automáticas.']], [2400, 6960]);
+
+h1('Capítulo 11. Otras formas de instalar y paso a un servidor real');
+h2('11.1 Varias computadoras en la misma oficina');
+p('Instale en una computadora “servidor”, conéctela a la red local y abra desde las demás **http://IP-DEL-SERVIDOR:8080**. Pida a un técnico abrir el puerto en el firewall.');
+h2('11.2 Alternativa: instalar con XAMPP');
+ol(['Instale XAMPP (PHP 8 + MariaDB) y copie la carpeta **public** a *htdocs*.', 'Cree una base de datos vacía y ejecute `php bin/install.php` con las variables indicadas en el README.', 'Abra http://localhost/ en el navegador.']);
+h2('11.3 Contratar un hosting');
+p('Cualquier hosting con PHP 8 y MySQL/MariaDB sirve. Suba el sistema, cree la base, ejecute el instalador web y active HTTPS.');
+
+h1('Capítulo 12. Puesta en marcha en el municipio');
+ol(['**Semana 1:** instalar, importar el Excel, entregar claves y capacitar a 3–5 personas piloto.', '**Semana 2:** correspondencia real en paralelo con el cuaderno actual.', '**Semana 3–4:** corregir y ampliar a todas las oficinas; usar la consulta pública.']);
+
+h1('Capítulo 13. Cómo probar las novedades de la versión 1.2');
+h2('13.1 Dónde descargar');
+p('Todo está en GitHub, repositorio **blancojaime/Factura**, rama **claude/beautiful-brahmagupta-ajj7co**. El ZIP del sistema se descarga en: https://github.com/blancojaime/Factura/archive/refs/heads/claude/beautiful-brahmagupta-ajj7co.zip . Los manuales (Word y PDF) están dentro de la carpeta **correspondencia/docs**.');
+h2('13.2 Cómo poner la versión nueva');
+ol(['Descargue y extraiga el ZIP.', 'Si ya tenía instalado el sistema: ejecute **ACTUALIZAR.bat** de la carpeta nueva (apuntando a su instalación). Si no: ejecute **INSTALAR.bat**.', 'Abra el sistema y compruebe que arriba a la derecha aparece su nombre y cargo.']);
+h2('13.3 Pruebas rápidas de las novedades');
+L.check(['Documentos → Crear nuevo: cada tipo tiene un color distinto.', 'Arriba a la derecha se ve nombre, apellido y cargo.', 'Ventanilla → Registrar nueva: cuatro secciones de colores; se registra y se obtiene el NUR.', 'En la lista de registros: Sello QR → marcar “Superior derecha” → vista previa con escudo y QR.', 'Imprimir el sello sobre una copia en las tres posiciones y leer el QR con el celular.', 'La hoja de ruta impresa muestra el “Código de control”.', 'Consulta pública con NUR + código correcto: aparece “Dónde se encuentra ahora” y la trazabilidad.', 'Consulta con un código equivocado: no revela nada.', 'La consulta pública no muestra nombres de personas.']);
+p('Para una batería completa, use el **Manual de Pruebas** (documento aparte) y el **Manual de Capacitación** para practicar paso a paso.');
+h2('13.4 Qué mirar si algo no sale');
+ul(['Presione **Ctrl + F5** para recargar sin memoria del navegador (a veces se ven los colores antiguos).', 'Verifique que ingresó con el usuario correcto (se ve arriba a la derecha).', 'Anote el mensaje y la hora, y repórtelo (Anexo C).']);
+
+h1('Anexo A. Resumen de pantallas y menús');
+table(['Menú', 'Opciones'], [['Inicio', 'Panel con Bandeja, Documentos, Estadísticas, Usuario.'], ['Bandeja', 'Entrada, Pendientes, Enviados, Archivados, Agrupados.'], ['Documentos', 'Crear nuevo (tarjetas de color), Documentos creados, Archivos digitales.'], ['Hojas de Ruta', 'Lista, imprimir, en blanco, derivar.'], ['Seguimiento', 'Lista y detalle de trámites.'], ['Reportes', 'Oficina, recibida/enviada, personalizado.'], ['Ventanilla', 'Registros externos, Registrar nueva, Cargo, Etiquetas, Sello QR.'], ['Administración', 'Importar, Credenciales, Nombres, Usuarios, Oficinas, Tipos, Auditoría, Entidad.']], [2400, 6960]);
+h1('Anexo B. Registro de incidencias de la prueba');
+table(['N.º', 'Fecha', 'Pantalla', 'Qué pasó', 'Mensaje', 'Gravedad (A/M/B)'], [['1', '', '', '', '', ''], ['2', '', '', '', '', ''], ['3', '', '', '', '', ''], ['4', '', '', '', '', ''], ['5', '', '', '', '', '']], [600, 1200, 1800, 3000, 1600, 1160]);
+h1('Anexo C. Glosario');
+table(['Término', 'Definición'], [['Escudo', 'Logo oficial de la entidad que se imprime en documentos y sellos.'], ['QR', 'Cuadrado de puntos que el celular lee y muestra un texto.'], ['Trazabilidad', 'Historial completo del camino de un trámite.'], ['Migración', 'Cambio ordenado en la estructura de la base de datos al actualizar.'], ['Respaldo', 'Copia de seguridad de la información.'], ['Auditoría', 'Registro de quién hizo qué y cuándo.'], ['Semáforo', 'Colores que muestran los días que lleva un trámite pendiente.']], [2400, 6960]);
+L.generar({ entidad: 'Gobierno Autónomo Municipal', titulo: 'Manual de Implementación', subtitulo: 'Sistema de Correspondencia', version: '1.2', fecha: 'noviembre de 2026', portada: '05-tipos-documento.jpg', lema: 'Escrito para quien no sabe de informática. Las capturas son del sistema real en funcionamiento.' }, process.argv[2]);

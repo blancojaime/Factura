@@ -115,6 +115,19 @@ ok(str_contains($qr2, "CODIGO DE CONTROL: $nur1") && str_contains($qr2, 'REMITEN
 App\Services\Ajustes::set('entidad_nombre', 'Municipio X');
 ok(App\Services\Ajustes::entidad() === 'Municipio X' && App\Services\Ajustes::logoUrl() === null, 'Ajustes: nombre de entidad y sin logo');
 
+echo "== v1.2: estilos, código de control y trazabilidad pública\n";
+$e1 = tipo_estilo('INF'); $e2 = tipo_estilo('CAR');
+ok(preg_match('/^#[0-9a-f]{6}$/i', $e1['color']) && $e1['color'] !== $e2['color'], 'tipo_estilo: color propio por tipo de documento');
+$hh = DB::one('SELECT * FROM hojas_ruta WHERE id=?', [$h1]);
+ok(str_contains(App\Services\TextoQr::hojaRuta($hh, null), 'CODIGO DE CONTROL: ' . $hh['codigo_consulta']), 'QR de hoja de ruta incluye el código de control');
+$rm = new ReflectionMethod(App\Controllers\ConsultaController::class, 'trazabilidad'); $rm->setAccessible(true);
+$tz = $rm->invoke(null, $hh);
+ok(!empty($tz['actual']) || $tz['estado'] !== 'En trámite', 'Consulta: indica dónde está el documento (o que concluyó)');
+$json = json_encode($tz, JSON_UNESCAPED_UNICODE);
+$nombres = DB::all('SELECT nombre FROM usuarios WHERE nombre<>"" LIMIT 50'); $fuga = false;
+foreach ($nombres as $n) if (mb_strlen($n['nombre']) > 6 && str_contains($json, $n['nombre'])) $fuga = true;
+ok(!$fuga, 'Consulta pública no revela nombres de personas');
+
 echo "== Migraciones repetibles\n";
 DB::exec('DROP TABLE IF EXISTS migraciones'); DB::exec('DROP TABLE IF EXISTS ajustes');
 DB::exec('ALTER TABLE hojas_ruta DROP COLUMN ext_anexos'); DB::exec('ALTER TABLE hojas_ruta DROP COLUMN ext_celular');

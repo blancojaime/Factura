@@ -97,3 +97,61 @@ body.print{background:#e9edf2}.hoja-a4{width:210mm;height:297mm;margin:1rem auto
 .rc-etiq-logo{height:18mm;display:flex;align-items:center;justify-content:center}.rc-etiq-logo img{max-height:18mm;max-width:50mm}.rc-etiq-logo b{font-size:8pt}
 .rc-etiq-cod{font-size:12pt;font-weight:700;letter-spacing:.02em}.rc-etiq-qr{width:38mm;height:38mm}.rc-etiq-fecha{font-size:9pt;color:#222}
 @media print{.rc-pagina{margin:0;box-shadow:none;width:199.9mm}}
+
+/* ===== v1.2: usuario en cabecera ===== */
+.who{gap:1rem}.who .quien{display:flex;flex-direction:column;align-items:flex-end;text-decoration:none;line-height:1.15;max-width:340px}.who .quien b{font-size:.98rem;color:#fff}.who .quien small{color:#cfe0f7;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:340px}
+@media(max-width:800px){.who .quien small{display:none}}
+
+/* ===== v1.2: menú Documentos con colores por tipo ===== */
+.tipos-vivos{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+.tipo-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--bor);border-radius:12px;overflow:hidden;text-decoration:none;color:var(--txt);box-shadow:0 1px 3px rgba(16,24,40,.08);transition:transform .12s,box-shadow .12s}
+.tipo-card:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(16,24,40,.16);border-color:var(--tc)}
+.tc-top{display:flex;align-items:center;justify-content:center;height:62px;background:linear-gradient(135deg,var(--tc),color-mix(in srgb,var(--tc) 70%,#000));position:relative}
+.tc-top:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.35)}
+.tc-top i{font-style:normal;font-weight:800;letter-spacing:.12em;font-size:1.35rem;color:#fff;border:2px solid rgba(255,255,255,.85);border-radius:8px;padding:.1rem .7rem}
+.tc-cuerpo{padding:.8rem 1rem 1rem;display:flex;flex-direction:column;gap:.25rem}.tc-cuerpo b{font-size:1.08rem;color:var(--tc)}.tc-cuerpo em{font-style:normal;font-size:.85rem;color:#47566a;min-height:2.4em}.tc-cuerpo small{color:#6b7785;font-size:.72rem;border-top:1px dashed var(--bor);padding-top:.35rem;margin-top:.2rem}
+.tipo-banner{display:flex;gap:.9rem;align-items:center;background:linear-gradient(90deg,var(--tc),color-mix(in srgb,var(--tc) 78%,#000));color:#fff;border-radius:10px;padding:.7rem 1rem;margin:.4rem 0 1rem}
+.tipo-banner i{font-style:normal;font-weight:800;letter-spacing:.1em;font-size:1.2rem;border:2px solid rgba(255,255,255,.85);border-radius:8px;padding:.15rem .6rem}.tipo-banner b{display:block;font-size:1.15rem}.tipo-banner small{opacity:.9}
+.tbadge{display:inline-flex;align-items:center;gap:.4rem;border:1px solid var(--tc);color:var(--tc);border-radius:999px;padding:.05rem .6rem .05rem .1rem;font-size:.8rem;font-weight:600;background:#fff}.tbadge i{font-style:normal;background:var(--tc);color:#fff;border-radius:999px;padding:.05rem .5rem;font-size:.7rem;letter-spacing:.05em}
+.chips a.tchip{border-color:var(--tc);color:var(--tc);font-weight:600}.chips a.tchip.on{background:var(--tc);color:#fff}
+.memo{border-top:8px solid var(--tc,#16457a)}.memo h3{color:var(--tc,#111)}
+
+/* ===== v1.2: Ventanilla con color ===== */
+.vent-head{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;background:linear-gradient(100deg,#0f2f57,#16457a 60%,#1d6fa5);color:#fff;border-radius:12px;padding:1rem 1.3rem;margin-bottom:1rem;border-bottom:4px solid #d4a017}
+.vent-head h2{margin:0;color:#fff;font-size:1.35rem;letter-spacing:.03em}.vent-head p{margin:.1rem 0 0;color:#d7e6fb}.vent-chip{background:#d4a017;color:#1d2733;font-weight:700;border-radius:999px;padding:.25rem .9rem;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase}
+.vent-nuevo{background:#d4a017;border-color:#b8870f;color:#1d2733;font-weight:700}.vent-nuevo:hover{background:#e3b32f}
+.vent-form{max-width:900px}.vent-sec{border:1px solid var(--bor);border-left:6px solid var(--sc);border-radius:10px;padding:.4rem 1rem .8rem;margin:.9rem 0;background:linear-gradient(#fff,color-mix(in srgb,var(--sc) 6%,#fff))}
+.vent-sec legend{display:flex;align-items:center;gap:.5rem;font-weight:700;color:var(--sc);padding:0 .5rem}.vent-sec legend i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--sc);color:#fff;font-size:.85rem}
+.vent-sec.s1{--sc:#16457a}.vent-sec.s2{--sc:#1f6f3d}.vent-sec.s3{--sc:#a16207}.vent-sec.s4{--sc:#6d28d9}
+.vent-btn{padding:.7rem 1.6rem;font-size:1.05rem;background:#1f6f3d;border-color:#175a31}.vent-btn:hover{background:#175a31}
+.vent-tabla th{background:#16457a;color:#fff;border-bottom:3px solid #d4a017}.vent-tabla tbody tr:nth-child(even){background:#f4f8fd}
+.vbadge{display:inline-block;border-radius:999px;padding:.1rem .7rem;font-size:.78rem;font-weight:700}.vbadge.ok{background:#e1f4e7;color:#1f6f3d;border:1px solid #9bd3a8}.vbadge.pend{background:#fff1d6;color:#a16207;border:1px solid #e6cf86}
+.btn.sello{background:#16457a;border-color:#0f2f57;color:#fff}.btn.sello:hover{background:#0f2f57}
+
+/* ===== v1.2: sello QR sobre la copia de la nota ===== */
+.sello-barra{max-width:215mm;margin:12px auto;background:#fff;border:1px solid var(--bor);border-left:6px solid #16457a;border-radius:10px;padding:.8rem 1rem}
+.sello-barra form{display:flex;flex-wrap:wrap;gap:.7rem 1rem;align-items:center}.sb-titulo{flex:1 1 100%}.sb-titulo b{display:block;color:#16457a;font-size:1.1rem}.sb-titulo span{color:#47566a}
+.sb-pos{border:1px solid var(--bor);border-radius:8px;flex:1 1 100%;display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}.sb-pos legend{font-weight:700;font-size:.85rem;color:#16457a}.sb-chk{display:flex;align-items:center;gap:.4rem;font-weight:600}.sb-chk input{width:18px;height:18px}
+.sello-barra label{font-size:.85rem;font-weight:600;display:flex;gap:.4rem;align-items:center}.sello-barra input[type=number],.sello-barra select{width:auto}
+.sello-hoja{page:carta;position:relative;width:199mm;height:262mm;margin:12px auto;background:#fff;box-shadow:0 1px 8px rgba(0,0,0,.3);overflow:hidden;box-sizing:border-box;background-image:linear-gradient(#e9eef5 1px,transparent 1px);background-size:100% 14mm}
+.sello-guia{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#b6c2d1;font-size:11pt;text-align:center;pointer-events:none}
+.sello-q{position:absolute;text-align:center;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#111;display:flex;flex-direction:column;align-items:center;gap:1mm;padding:1.5mm;border:.25mm solid #444;border-radius:2mm}
+.sq-esc{height:var(--eh,16mm);display:flex;align-items:center;justify-content:center}.sq-esc img{max-height:var(--eh,16mm);max-width:var(--sw,44mm)}.sq-esc b{font-size:6.5pt}
+.sq-nur{font-size:var(--fs,9pt);font-weight:700;letter-spacing:.02em}.sq-qr{width:var(--qs,34mm);height:var(--qs,34mm)}.sq-qr svg{width:100%;height:100%;display:block}.sq-fecha{font-size:var(--ff,7pt)}
+.tam-p{--sw:34mm;--qs:26mm;--eh:12mm;--fs:7.5pt;--ff:6pt}.tam-m{--sw:44mm;--qs:34mm;--eh:16mm;--fs:9pt;--ff:7pt}.tam-g{--sw:56mm;--qs:44mm;--eh:20mm;--fs:10.5pt;--ff:8pt}
+.sello-q{width:var(--sw)}
+.pos-sd{top:calc(8mm + var(--dy));right:calc(8mm - var(--dx))}.pos-si{top:calc(8mm + var(--dy));left:calc(8mm + var(--dx))}
+.pos-md{top:calc(50% + var(--dy));transform:translateY(-50%);right:calc(8mm - var(--dx))}.pos-mi{top:calc(50% + var(--dy));transform:translateY(-50%);left:calc(8mm + var(--dx))}
+.pos-id{bottom:calc(8mm - var(--dy));right:calc(8mm - var(--dx))}.pos-ii{bottom:calc(8mm - var(--dy));left:calc(8mm + var(--dx))}
+@media print{.sello-hoja{margin:0;box-shadow:none;background:none;width:199.9mm;height:262.5mm}.sello-barra,.sello-guia{display:none!important}.sello-q{border-color:#888}}
+
+/* ===== v1.2: consulta pública con trazabilidad ===== */
+.consulta{max-width:1000px}.consulta h1{color:#16457a}
+.cs-ficha{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.6rem;margin:.6rem 0}.cs-ficha div{background:#eef4fb;border:1px solid #cfe0f7;border-left:5px solid #16457a;border-radius:8px;padding:.5rem .8rem}.cs-ficha span{display:block;font-size:.72rem;color:#47566a;text-transform:uppercase;letter-spacing:.04em}.cs-ficha b{font-size:1rem;color:#16457a}
+.cs-estado{display:flex;justify-content:space-between;align-items:center;border-radius:10px;padding:.7rem 1rem;margin:.6rem 0;font-weight:700}.cs-estado span{font-weight:600;font-size:.85rem}.cs-estado.curso{background:#fff7d6;border:1px solid #e6cf86;color:#7a5a00}.cs-estado.fin{background:#e1f4e7;border:1px solid #9bd3a8;color:#1f6f3d}.cs-estado b{font-size:1.15rem}
+.cs-actual{background:linear-gradient(100deg,#e1f4e7,#f3fbf5);border:2px solid #2f9e44;border-radius:12px;padding:.8rem 1.1rem;margin:.4rem 0}.cs-actual b{display:block;font-size:1.15rem;color:#1f6f3d}.cs-actual span{display:block;font-weight:600}.cs-actual small{color:#47566a}
+.cs-linea tr.vigente td{background:#e8f6ec}.cs-linea tr.copia td{color:#6b7785}
+@media print{.simple{background:#fff}.consulta .btn,.consulta form,.consulta .muted a{display:none}}
+
+/* hoja de ruta: código de control bajo el NUR */
+.hr-titulo em{display:block;font-style:normal;font-size:7.5pt;color:#333;margin-top:.5mm}.hr-titulo em b{font-size:9pt;letter-spacing:.12em}

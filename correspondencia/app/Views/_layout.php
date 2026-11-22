@@ -28,7 +28,7 @@ $actual = $_GET['r'] ?? '';
 <header class="top">
   <div class="brand"><a href="<?= url('dashboard/index') ?>"><strong>Correspondencia</strong><small><?= e(App\Core\Config::get('entidad', '')) ?></small></a></div>
   <form class="search" action="<?= url() ?>" method="get"><input type="hidden" name="r" value="busqueda/index"><input name="q" placeholder="Buscar NUR, CITE o referencia" aria-label="Buscar"><button>Buscar</button></form>
-  <div class="who"><a href="<?= url('usuario/info') ?>" title="Mi información"><?= e($u['nombre']) ?></a>
+  <div class="who"><a class="quien" href="<?= url('usuario/info') ?>" title="<?= e($u['nombre'] . ' — ' . $u['cargo'] . ' (' . $u['oficina'] . ')') ?>"><b><?= e($u['nombre']) ?></b><small><?= e($u['cargo']) ?></small></a>
     <form method="post" action="<?= url('auth/salir') ?>"><?= csrf_field() ?><button class="link">Salir</button></form></div>
 </header>
 <nav class="main"><?php foreach ($nav as $k => [$t, $r]): ?><a href="<?= url($r) ?>" class="<?= $menu === $k ? 'on' : '' ?>"><?= e($t) ?></a><?php endforeach; ?></nav>

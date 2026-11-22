@@ -35,11 +35,19 @@ Roles: `admin`, `jefe` (reportes de su oficina), `usuario`, `ventanilla`.
 Instalación por consola: `php bin/install.php host base usuario clave "Entidad" SIGLA admin clave_admin`.
 Datos de ejemplo (capacitación): `php bin/demo.php` (usuarios `alcalde`, `finanzas`, `obras`, `ventanilla`… clave `Demo12345`).
 
-**Instalación más simple (Windows, una sola máquina):** extraiga el ZIP, doble clic en `INSTALAR.bat` (ver `LEEME-PRIMERO.txt`). Manual completo con capturas: `docs/Manual_Implementacion_Correspondencia.docx`.
+**Instalación más simple (Windows, una sola máquina):** extraiga el ZIP, doble clic en `INSTALAR.bat` (ver `LEEME-PRIMERO.txt`). Manual completo con capturas: `docs/Manual_Implementacion_Correspondencia_v1.2.docx (y .pdf)`.
 
 Guía para quien no sabe de informática (instalación en Windows con XAMPP y pruebas): ver `GUIA-PRUEBAS.md`.
 
 Requisitos PHP: `pdo_mysql`, `mbstring`, `fileinfo`, `dom` (y `zip` para el respaldo). Se recomienda HTTPS.
+
+## Novedades v1.2
+- **Documentos por colores:** cada tipo (Informe, Carta, Circular…) tiene su color formal en el menú, formulario y listas.
+- **Nombre y cargo** del usuario arriba a la derecha en todas las pantallas.
+- **Ventanilla** con secciones de colores y **Sello QR con escudo** (`?r=ventanilla/sello`): casillas para elegir posición (superior/media/inferior, derecha o izquierda), tamaño y ajuste fino; se imprime solo el sello sobre la copia de la nota.
+- **Consulta pública con código de control** (NUR + código de la hoja de ruta): estado, ubicación actual y trazabilidad completa, solo oficinas y cargos (sin nombres ni contenido). El código se imprime en la hoja de ruta y va en su QR.
+- Sin cambios de base de datos.
+- **Manuales (Word y PDF) en `docs/`:** Implementación, Capacitación y Pruebas, con capturas reales. Se regeneran con `tools/manuales/` (`reset.sh`, `capturas*.js`, `build_*.js`).
 
 ## Hoja de ruta con QR, hojas en blanco y recepción (v1.1)
 

@@ -32,6 +32,7 @@ final class TextoQr
         $externa = $hoja['origen'] === 'externo';
         return self::armar([
             'HOJA DE RUTA' => $hoja['nur'] . ($externa ? ' (EXTERNA)' : ' (INTERNA)'),
+            'CODIGO DE CONTROL' => (string)($hoja['codigo_consulta'] ?? ''),
             'CITE ORIGINAL' => $doc['cite'] ?? '',
             'FECHA/HORA' => date('d/m/Y H:i:s', strtotime($doc['creado_en'] ?? $hoja['creado_en'])),
             'PROCEDENCIA' => self::limpio($externa ? ($hoja['ext_institucion'] ?: $hoja['ext_remitente']) : ($doc['oficina'] ?? ''), 80),
