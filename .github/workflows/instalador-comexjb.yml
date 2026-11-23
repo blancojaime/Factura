@@ -35,11 +35,20 @@ jobs:
             ComexBolPro/dist/ComexJB-Setup-*.exe
             ComexBolPro/dist/COMEX-JB-Paquete-Completo-*.zip
           retention-days: 30
-      - name: Publicar como Release (descarga directa del .exe)
+      - name: Publicar como Release (descarga directa)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG=comexjb-instalador
-          gh release delete "$TAG" --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
+          # elimina cualquier release anterior con ese tag (incluidos borradores) y el tag
+          for id in $(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" --paginate -q ".[] | select(.tag_name==\"$TAG\") | .id"); do
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$id" || true
+          done
+          gh api -X DELETE "repos/$GITHUB_REPOSITORY/git/refs/tags/$TAG" || true
+          sleep 5
           gh release create "$TAG" ComexBolPro/dist/ComexJB-Setup-*.exe ComexBolPro/dist/COMEX-JB-Paquete-Completo-*.zip --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
             --title "COMEX JB - instalador y manuales" --notes "Descargue COMEX-JB-Paquete-Completo-*.zip (instalador con OCR + manuales PDF y Word + plan de complementacion) o solo ComexJB-Setup-*.exe. Si Windows muestra SmartScreen: Mas informacion > Ejecutar de todas formas."
+          # garantiza que quede publicado (no borrador)
+          for id in $(gh api "repos/$GITHUB_REPOSITORY/releases?per_page=100" --paginate -q ".[] | select(.tag_name==\"$TAG\" or .name==\"COMEX JB - instalador y manuales\") | select(.draft==true) | .id"); do
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/$id" -F draft=false
+          done
