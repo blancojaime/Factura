@@ -217,7 +217,7 @@ def manual_usuario():
                "Al elegir una fila ve a la derecha: qué hacer, responsables, documentos, normativa y un **consejo práctico**. Marque **Hecho** al cumplirla y escriba una nota (queda en la bitácora).",
                "La columna **Sugerido por datos** indica los pasos que lo ya cargado en COMEX JB respalda (perfil con NIT, documento SWIFT, DIM completa, canal asignado, levante, gastos)."], num=True)
     m.figura(C + "51-guia-procedimiento.png", "Guía de procedimiento: avance, pasos y controles.")
-    m.figura(C + "52-guia-paso-marcado.png", "Un paso marcado como hecho, con su detalle a la derecha.")
+    m.figura(C + "52-guia-paso-marcado.png", "Detalle de un paso: qué hacer, responsables, documentos, plazo, normativa, consejo y nota.")
     m.caja("Plazos del manual", "Los plazos y montos de la guía (por ejemplo «20 días para la DAM») son los del manual del usuario y **deben confirmarse en la normativa vigente de la Aduana**: el de la DAM no pudo verificarse en fuentes oficiales.")
 
     m.h1("13. Acompañar: ruta crítica y semáforos")
@@ -477,7 +477,7 @@ def manual_implementacion():
     m.p("En Configuración → Perfil del importador elija **Ocasional**. En una operación con FOB de USD 8.080 pulse **Validar la DIM** en Despacho: ERROR «Como importador no habitual el tope es USD 2.000 FOB por despacho…». Con FOB USD 1.500 y USD 1.000 ya acumulados en el año: sin error; con USD 1.900 y USD 2.500 acumulados: ERROR por el acumulado anual (tope USD 4.000). Cambie a **Habitual**: el error desaparece.")
     m.h2("Caso 32 — Guía de procedimiento")
     m.bullets(["Abra la pestaña **Guía**: «Procedimiento: 0 de 11 pasos cumplidos · Expediente: 0 de 12 controles».",
-               "Marque **Hecho** en P-01 y escriba la nota «NIT vigente»: el avance pasa a 1 de 11 y la bitácora registra «P-01 cumplido. NIT vigente».",
+               "Seleccione P-01, marque **Hecho** y escriba la nota «NIT vigente»: el avance pasa a 1 de 11 y la bitácora registra «P-01 cumplido. NIT vigente».",
                "Con el perfil del importador con NIT, P-01, P-02, C-01 y C-02 aparecen como **Sugerido por datos**; con la DIM completa y la DAV respondida, P-08 y C-11; con el canal asignado, P-09; con el levante, P-10."], num=True)
     m.figura(C + "51-guia-procedimiento.png", "Resultado esperado del Caso 32.")
     m.h2("Caso 33 — Comparar origen y beneficio")
